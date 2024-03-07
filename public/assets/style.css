@@ -1,0 +1,43 @@
+#body_sesion{
+    position: relative;
+    height: 100vh;
+    background-image: url('img-session-2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    z-index: 1;
+}
+#body_sesion:before{
+    content: '';
+    background-color: #f3ffd33d;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+}
+
+#body_sesion_resgister{
+    position: relative;
+    /* height: 100vh; */
+    background-image: url('img-session-5.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    z-index: 1;
+}
+#body_sesion_resgister:before{
+    content: '';
+    background-color: #f3ffd33d;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.title_resgister_form{
+    font-size: 14px;
+}
+.link{
+    font-size: 13px;
+}
