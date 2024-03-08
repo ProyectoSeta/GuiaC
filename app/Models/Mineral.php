@@ -9,6 +9,7 @@ class Mineral extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id_mineral';
     protected $fillable = [
         'mineral',
     ];

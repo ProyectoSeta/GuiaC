@@ -195,14 +195,14 @@ return [
     */
 
     'classes_body' => '',
-    'classes_brand' => 'bg-dark',
+    'classes_brand' => 'bg-primary',
     'classes_brand_text' => '',
-    'classes_content_wrapper' => 'bg-white',
+    'classes_content_wrapper' => 'bg-light',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-light-primary elevation-4',
+    'classes_sidebar' => 'sidebar-light-primary elevation-4 ',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-white navbar-light ',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Users;
 use App\Models\User;
 use App\Models\Cantera;
+use App\Models\Mineral;
 use App\Models\SujetoPasivo;
 use App\Models\Produccion;
 use Illuminate\Http\Request;
@@ -21,13 +22,7 @@ class CanteraController extends Controller
         $id_sp = $sp->id_sujeto;
         $canteras = DB::table('canteras')->where('id_sujeto', $id_sp)->get();
 
-        // var_dump($user);
-        
-
-        // $minerales = DB::table('produccions')->where('id_cantera', $id)->get();
        return view('cantera', compact('canteras'));
-
-
 
     }
 
@@ -47,39 +42,52 @@ class CanteraController extends Controller
         $sp = SujetoPasivo::select('id_sujeto')->find($user);
         $id_sp = $sp->id_sujeto;
 
+        $nombre = $request->post('nombre');
+        $direccion = $request->post('direccion');
 
-        $cantera = Cantera::create([
-            'id_sujeto'=> $id_sp,
-            'direccion'=>$request->post('direccion'),
-            'nombre'=>$request->post('nombre')
-        ]);
-
-        if($cantera->save()){ // insercion en la tabla cantera creando el usuario
-            $identificador = $cantera->id; // Aca se Obtiene el ID del usuario creado
+        $cantera = DB::table('canteras')->insert([
+                                'id_sujeto' =>  $id_sp,
+                                'nombre' => $nombre,
+                                'direccion' => $direccion,
+                                'status' => 'Verificando']);
+        if($cantera){
+            $id_cantera = DB::table('canteras')->max('id_cantera');
+           
             $minerales = $request->post('mineral');
-            $status_save = '';
-            foreach ($minerales as $mineral) {
-                $produccion = new Produccion(); // SE llama al modelo sujetopasivo
-                $produccion = Produccion::create([
-                    'id_cantera'=>$identificador,
-                    'mineral' => $mineral
-                ]);
+            foreach($minerales as $mineral){
+                if($mineral != null){
+                    $id_min = '';
+                    $query_min = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
 
-                if($produccion->save()){
-                    $status_save = true;
-                }else{
-                    $status_save = false;
-                }
-            }
+                    if(count($query_min) > 0 ){
+                        foreach ($query_min as $min) {
+            
+                            $id_min = $min->id_mineral;
 
-            if($status_save == true){
-                return response()->json(['success' => true]);
-            }else{
-                return response()->json(['success' => false]);
-            }
+                        }
+                    }else{
+                        ///el mineral NO existe en la tabla minerals
+                        $new_min = DB::table('minerals')->insert(['mineral' => $mineral]);
+                        if ($new_min) {
+                            $query_new = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
+                            foreach ($query_new as $new) {
+            
+                                $id_min = $new->id_mineral;
+    
+                            }
+                        }
 
-
-        } ////cierra if ($cantera->save())
+                    }
+                    // var_dump($id_min);
+                    $produccions = DB::table('produccions')->insert(['id_cantera' => $id_cantera,'id_mineral' => $id_min]);
+                    
+                } /////cierra if ($mineral != null)
+            }//////cierra foreach
+            return response()->json(['success' => true]);
+        } ///cierra if($cantera)
+        else{
+            return response()->json(['success' => false]);
+         }       
      }
 
     /**
@@ -87,7 +95,8 @@ class CanteraController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // $id_cantera = $request->post('cantera');
+        // var_dump($id_cantera);
     }
 
     /**

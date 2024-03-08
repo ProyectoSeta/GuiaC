@@ -18,6 +18,7 @@ class Cantera extends Model
     protected $fillable = [
         'nombre',
         'direccion',
+        'status',
     ];
 
     public function produccions(){

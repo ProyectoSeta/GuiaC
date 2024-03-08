@@ -48,7 +48,7 @@
                                 <!-- R.I.F input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="rif">R.I.F.</label><span class="text-danger"> *</span>
-                                    <input type="text" id="rif" class="form-control form-control-sm" name="rif"/>
+                                    <input type="text" id="rif" class="form-control form-control-sm" name="rif"  autofocus/>
                                 </div>
 
                                 <!-- razon social input -->
@@ -122,7 +122,7 @@
                                 <!-- correo input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="name">Nombre</label><span class="text-danger"> *</span>
-                                    <input type="text" id="name" class="form-control form-control-sm @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                    <input type="text" id="name" class="form-control form-control-sm @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name">
                                     @error('name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

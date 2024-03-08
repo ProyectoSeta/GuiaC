@@ -39,6 +39,7 @@ Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->nam
 
 Route::get('/cantera', [App\Http\Controllers\CanteraController::class, 'index'])->name('cantera');
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
+// Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'show'])->name('cantera.show');
 
 //Sujeto Pasivo
 Route::get('/sujeto', [App\Http\Controllers\SujetoController::class, 'index'])->name('sujeto');

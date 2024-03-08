@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('id_cantera')->unsigned();
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
             $table->integer('id_mineral')->unsigned();
-            $table->foreign('id_mineral')->references('id_mineral')->on('minerales')->onDelete('cascade');
+            $table->foreign('id_mineral')->references('id_mineral')->on('minerals')->onDelete('cascade');
 
             $table->timestamps();
         });
