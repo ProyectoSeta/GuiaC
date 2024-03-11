@@ -39,16 +39,12 @@ Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->nam
 
 Route::get('/cantera', [App\Http\Controllers\CanteraController::class, 'index'])->name('cantera');
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
-// Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'show'])->name('cantera.show');
+Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
+Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'destroy'])->name('cantera.destroy');
 
 //Sujeto Pasivo
 Route::get('/sujeto', [App\Http\Controllers\SujetoController::class, 'index'])->name('sujeto');
 /////////VISTAS: CLIC SIDEBAR
-
-// Route::post('/cantera', function () {
-//     return Request::all();
-// })->name('cantera.store');
-
 
 
 

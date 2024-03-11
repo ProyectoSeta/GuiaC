@@ -31,7 +31,7 @@
                
                 @foreach ( $canteras as $cantera )            
                     <tr>
-                        <td></td>
+                        <td>{{ $cantera->id_cantera }}</td>
                         <td>{{ $cantera->nombre }}</td>
                         <td>{{ $cantera->direccion }}</td>
                         <td>
@@ -45,7 +45,7 @@
                             @endif
                         </td>
                         <td>
-                            <span class="badge me-1 delete_cantera" style="background-color: #ed0000;" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_delete_cantera">
+                            <span class="badge me-1 delete_cantera" style="background-color: #ed0000;" role="button" id_cantera='{{ $cantera->id_cantera }}' nombre="{{ $cantera->nombre }}">
                                 <i class='bx bx-trash-alt fs-6'></i>
                             </span>
                         </td>
@@ -63,7 +63,7 @@
     
     
   <!--****************** MODALES **************************-->
-    <!-- ********* NUEVA SOLICITUD ******** -->
+    <!-- ********* NUEVA CANTERA ******** -->
     <div class="modal" id="modal_new_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -75,7 +75,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="font-size:14px;">
-                    <form id='add_cantera' class="p-3">
+                    <form id="agregar_cantera" class="p-3">
                     @csrf
                         <!-- nombre cantera -->
                         <div class="row g-3 align-items-center mb-2">
@@ -201,8 +201,8 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-     <!-- ********* ELIMINAR SOLICITUD ******** -->
-     <div class="modal" id="modal_delete_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <!-- ********* ELIMINAR CANTERA ******** -->
+     <!-- <div class="modal" id="modal_delete_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
@@ -210,8 +210,6 @@
                         <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>
                         <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Eliminar cantera</h1>
                     </div>
-                    
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
                 <div class="modal-body" style="font-size:14px;">
                     
@@ -247,12 +245,12 @@
                     </div> 
 
 
-                 </div>  <!-- cierra modal-body -->
-            </div>  <!-- cierra modal-content -->
-        </div>  <!-- cierra modal-dialog -->
-    </div>
+                 </div>  
+            </div>
+        </div> 
+    </div> -->
 
-    <!-- ********* ELIMINAR SOLICITUD ******** -->
+    <!-- ********* INFO CANTERA ******** -->
     <div class="modal" id="modal_info_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -268,9 +266,8 @@
                 </div>
                 <div class="modal-body" style="font-size:15px;">
                     
-                    <div class="d-flex flex-column text-center">
-                        <span>Caolin</span>
-                        <span>Arena lavada</span>    
+                    <div class="d-flex flex-column text-center" id="info_produccion">
+                        
                     </div>
 
                 </div>  <!-- cierra modal-body -->
@@ -337,8 +334,8 @@
     </script>
 
 <script type="text/javascript">
-        $(document).ready(function () {
-            ////////AGREGAR CAMPOS A OTRO(S) MINERAL
+    $(document).ready(function () {
+        ////////AGREGAR CAMPOS A OTRO(S) MINERAL
             var maxField = 10; //Input fields increment limitation
             var addButton = $('.add_button'); //Add button selector
             var wrapper = $('.otros_minerales'); //Input field wrapper
@@ -366,12 +363,13 @@
                 x--; //Decrement field counter
             });
 
-            ///////REGISTRAR CANTERA
-            $('#add_cantera').submit(function(e) {
+        ///////REGISTRAR CANTERA
+            $('#agregar_cantera').submit(function(e) {
                 e.preventDefault(e);    
                 $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{ route("cantera.store") }}',
+                    url: '{{route("cantera.store") }}',
                     data: $(this).serialize(),
                     success: function(response) {
                        if (response.success) {
@@ -389,16 +387,44 @@
                 });
             });
 
-            ///////MODAL: INFO CANTERA
-            $('#info_cantera').click(function(e) {
-                e.preventDefault(e);    
-                var $cantera = $(this).attr('id_cantera');
+
+        ///////MODAL: INFO CANTERA
+            $(document).on('click','.info_cantera', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                // alert(cantera);
                 $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '',
-                    data: cantera,
+                    url: '{{route("cantera.minerales") }}',
+                    data: {cantera:cantera},
                     success: function(response) {
-                      console.log(response);
+                        // alert(response);                 
+                        $('#info_produccion').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+        //////ELIMINAR CANTERA
+            $(document).on('click','.delete_cantera', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                var nombre = $(this).attr('nombre');
+                confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA CANTERA: " + nombre + "?");
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("cantera.destroy") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        if (response.success){
+                            alert("CANTERA ELIMINADA EXITOSAMENTE");
+                            window.location.href = "{{ route('cantera')}}";
+                        } else{
+                            alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA CANTERA");
+                        }              
                     },
                     error: function() {
                     }
@@ -406,7 +432,7 @@
             });
             
 
-        });
+    });
     </script>
 
 

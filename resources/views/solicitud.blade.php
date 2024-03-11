@@ -227,24 +227,49 @@
     <script src="{{ asset('jss/datatable.bootstrap.js') }}" ></script>
     <script src="{{ asset('jss/toastr.js') }}" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" ></script>
     <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#example').DataTable(
-                        {
-        "language": {
-            "lengthMenu": " Mostrar  _MENU_  Registros por página",
-            "zeroRecords": "No se encontraron registros",
-            "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "No se encuentran Registros",
-            "infoFiltered": "(filtered from _MAX_ total records)",
-            'search':"Buscar",
-            'paginate':{
-                'next':'Siguiente',
-                'previous':'Anterior'
-            }
-        }
-    }
-                    );
-                    
-                    });
-            </script> 
+        $(document).ready(function () {
+            $('#example').DataTable({
+                "language": {
+                    "lengthMenu": " Mostrar  _MENU_  Registros por página",
+                    "zeroRecords": "No se encontraron registros",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No se encuentran Registros",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    'search':"Buscar",
+                    'paginate':{
+                        'next':'Siguiente',
+                        'previous':'Anterior'
+                    }
+                }
+            });
+        });
+    </script> 
+    <script type="text/javascript">
+        $(document).ready(function (){
+            ///////CALCULAR MONTO TOTAL
+            $('#agregar_cantera').submit(function(e) {
+                e.preventDefault(e);    
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("cantera.store") }}',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                       if (response.success) {
+                            alert('La cantera ha sido registrada exitosamente');
+                            $('#add_cantera')[0].reset();
+                            $('#modal_new_cantera').modal('hide');
+                            window.location.href = "{{ route('cantera')}}";
+                            
+                        } else {
+                            alert('Ha ocurrido un error al registar la cantera');
+                       }
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+        });  
+    </script>
 @stop

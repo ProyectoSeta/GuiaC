@@ -88,15 +88,55 @@ class CanteraController extends Controller
         else{
             return response()->json(['success' => false]);
          }       
-     }
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+
+    public function minerales(Request $request)
     {
-        // $id_cantera = $request->post('cantera');
-        // var_dump($id_cantera);
+        $idCantera = $request->post('cantera');
+        $query = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
+         
+        if($query){
+            $html = '';
+            foreach ($query as $id_min) {
+                $id = $id_min->id_mineral;
+                $query_min = DB::table('minerals')->select('mineral')->where('id_mineral','=',$id)->get();
+                if($query_min){
+                    foreach ($query_min as $mineral) {
+                        $name_mineral = $mineral->mineral;
+                        $html .= '<span>'.$name_mineral.'</span>';
+                    }
+                } 
+            }
+
+            return response($html);
+
+        }
+    }
+
+    public function show(Request $request){
+        // $idCantera = $request->post('cantera');
+        // $query = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
+         
+        // if($query){
+        //     $html = '';
+        //     foreach ($query as $id_min) {
+        //         $id = $id_min->id_mineral;
+        //         $query_min = DB::table('minerals')->select('mineral')->where('id_mineral','=',$id)->get();
+        //         if($query_min){
+        //             foreach ($query_min as $mineral) {
+        //                 $name_mineral = $mineral->mineral;
+        //                 $html .= '<span>'.$name_mineral.'</span>';
+        //             }
+        //         } 
+        //     }
+
+        //     return response($html);
+
+        // }
     }
 
     /**
@@ -118,8 +158,14 @@ class CanteraController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $idCantera = $request->post('cantera');
+        $delete = DB::table('canteras')->where('id_cantera', '=', $idCantera)->delete();
+        if($delete){
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 }
