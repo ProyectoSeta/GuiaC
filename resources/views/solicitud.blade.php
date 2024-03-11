@@ -92,43 +92,51 @@
                     <div class="text-center mb-2">
                         <span class="fs-6 fw-bold" style="color: #0072ff">Datos de la Solicitud</span>
                     </div>
-                    
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <label for="">Tipo de Talonario</label>
-                            <select class="form-select form-select-sm mb-3" aria-label="Default select example">
-                                <option selected>Selecciona el tipo de talonario</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
+                    <form id="form_calcular">
+                        @csrf
+                        <div class="otro_talonario">
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label for="">Tipo de Talonario</label>
+                                    <select class="form-select form-select-sm mb-3" aria-label="Default select example" name="tipo" id="tipo">
+                                        <option selected>Selecciona el tipo de talonario</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <label for="cant_talonario">Cantidad</label>
+                                    <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad">
+                                </div>
+                                <div class="col-2 d-flex align-items-center pt-3">
+                                    <a  href="javascript:void(0);" class="btn add_button">
+                                        <i class='bx bx-plus fs-4' style='color:#038ae4'></i>
+                                    </a>
+                                </div>
+                            </div> 
+                        </div> <!-- cierra .otro_talonario -->
+                        <div class="d-flex justify-content-center">
+                            <button type="sumbit" class="btn btn-outline-secondary btn-sm" id="button_calcular">Calcular</button>
                         </div>
-                        <div class="col-4">
-                            <label for="cant_talonario">Cantidad</label>
-                            <input class="form-control form-control-sm mb-3" type="number">
-                        </div>
-                        <div class="col-2 d-flex align-items-center pt-3">
-                            <button type="button" class="btn" 
-                                    data-bs-toggle="tooltip" data-bs-placement="right" 
-                                    data-bs-title="Agregar talonario">
-                                    <i class='bx bx-plus fs-4' style='color:#038ae4'></i>
-                            </button>
-                        </div>
-                    </div>  
+                    </form>
 
+                    
+                    
+                    
                     <label for="cant_talonario">Monto Total</label>
-                    <input class="form-control form-control-sm mb-3" type="text" value="3522.012,15" aria-label="" disabled>
+                    <input class="form-control form-control-sm mb-3" type="text" id="monto_talonario" aria-label="" disabled>
 
                     <div class="mb-3">
-                        <label for="formFileSm" class="form-label">Referencia del pago</label>
-                        <input class="form-control form-control-sm" id="formFileSm" type="file">
+                        <label for="ref_pago" class="form-label">Referencia del pago</label>
+                        <input class="form-control form-control-sm" id="ref_pago" type="file">
                     </div>
 
                     <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:</span> El <span class="fw-bold">Tipo de talonario</span> es definido por el número de guías que contenga este.
-                         Y la <span class="fw-bold">Cantidad</span>, es el número de talonarios de este tipo que quiera solicitar</p>
+                         Y la <span class="fw-bold">Cantidad</span>, es el número de talonarios de este tipo que quiera solicitar.</p>
 
                     <div class="d-flex justify-content-center mt-3 mb-3" >
                         <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success btn-sm">Aceptar</button>
+                        <button type="button" class="btn btn-success btn-sm" id="btn_aceptar" disabled>Aceptar</button>
                     </div>
                  </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
@@ -244,32 +252,82 @@
             });
         });
     </script> 
+
     <script type="text/javascript">
         $(document).ready(function (){
-            ///////CALCULAR MONTO TOTAL
-            $('#agregar_cantera').submit(function(e) {
-                e.preventDefault(e);    
+            ////////AGREGAR CAMPOS A OTRO(S) MINERAL
+            var maxField = 2; //Input fields increment limitation
+            var addButton = $('.add_button'); //Add button selector
+            var wrapper = $('.otro_talonario'); //Input field wrapper
+            var fieldHTML = '<div class="row mt-2">'+
+                                '<div class="col-6">'+
+                                    '<label for="">Tipo de Talonario</label>'+
+                                    '<select class="form-select form-select-sm mb-3" aria-label="Default select example" name="tipo2" id="tipo2">'+
+                                        '<option selected>Selecciona el tipo de talonario</option>'+
+                                        '<option value="25">25</option>'+
+                                        '<option value="50">50</option>'+
+                                    '</select>'+
+                                '</div>'+
+                                '<div class="col-4">'+
+                                    '<label for="cant_talonario">Cantidad</label>'+
+                                    '<input class="form-control form-control-sm mb-3" type="number" name="cantidad2" id="cantidad2">'+
+                                '</div>'+
+                                '<div class="col-2 d-flex align-items-center pt-3">'+
+                                    '<a  href="javascript:void(0);" class="btn remove_button">'+
+                                        '<i class="bx bx-x fs-4" style="color:#038ae4"></i>'+
+                                    '</a>'+
+                                '</div>'+
+                            '</div>';
+            var x = 1; //Initial field counter is 1
+            $(addButton).click(function(){ //Once add button is clicked
+                if(x < maxField){ //Check maximum number of input fields
+                    x++; //Increment field counter
+                    $(wrapper).append(fieldHTML); // Add field html
+                }
+            });
+            $(wrapper).on('click', '.remove_button', function(e){ //Once remove button is clicked
+                e.preventDefault();
+                $(this).parent('div').parent('div').remove(); //Remove field html
+                x--; //Decrement field counter
+            });
+
+
+            ///////CALCULAR MONTO A PAGAR: DATOS
+            $('#form_calcular').submit(function(e) {
+                e.preventDefault(); 
+                var tipo = $('#tipo').val();
+                var cantidad = $('#cantidad').val();
+                var tipo2 = $('#tipo2').val();
+                var cantidad2 = $('#cantidad2').val();
+
                 $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("cantera.store") }}',
+                    url: '{{route("solicitud.calcular") }}',
                     data: $(this).serialize(),
                     success: function(response) {
-                       if (response.success) {
-                            alert('La cantera ha sido registrada exitosamente');
-                            $('#add_cantera')[0].reset();
-                            $('#modal_new_cantera').modal('hide');
-                            window.location.href = "{{ route('cantera')}}";
-                            
-                        } else {
-                            alert('Ha ocurrido un error al registar la cantera');
-                       }
+                    //    alert(response);
+                       $('#monto_talonario').val(response);
                     },
                     error: function() {
                     }
                 });
             });
 
+            $('#ref_pago').on('change', function(e) {
+                e.preventDefault(); 
+                $('#btn_aceptar').attr('disabled', false);
+            });
+
+
+
+
         });  
+
+
+
+        function calcular(){
+            
+        }
     </script>
 @stop

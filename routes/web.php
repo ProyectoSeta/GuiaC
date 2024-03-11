@@ -21,9 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
-// Route::view('/solicitud','solicitud.index');
-
+// Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
 
 /*Usuario sujeto pasivo*/
 
@@ -42,12 +40,16 @@ Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'store']
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'destroy'])->name('cantera.destroy');
 
-//Sujeto Pasivo
+///////SUJETO PASIVO
 Route::get('/sujeto', [App\Http\Controllers\SujetoController::class, 'index'])->name('sujeto');
+
+
+////////SOLICITUD
+Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
+Route::post('/solicitud', [App\Http\Controllers\SolicitudController::class, 'calcular'])->name('solicitud.calcular');
+
+
 /////////VISTAS: CLIC SIDEBAR
-
-
-
 Route::get('/registro_guia', function () { 
     return view('registro_guia');
 })->name('registro_guia');
