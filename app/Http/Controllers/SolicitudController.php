@@ -100,7 +100,7 @@ class SolicitudController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
         $user = auth()->id();
         $sp = SujetoPasivo::select('id_sujeto')->find($user);
         $id_sp = $sp->id_sujeto;
@@ -108,25 +108,59 @@ class SolicitudController extends Controller
         $tipo = $request->post('tipo');
         $cant = $request->post('cantidad');
         $monto = $request->post('monto_talonario');
-        $photo = $request->post('ref_pago');
+        $photo = $request->file('ref_pago');
+        return response($photo);
+  
+        $year = date("Y");
+        $mes = date("F");
 
-        $otroC = $request->post('status_otro_tipo');
+        if ($request->hasFile("ref_pago")) {
+            if (!is_dir('../public/assets/dd/'.$year)){ ////existe la carpeta correspondiente a este año? No
+                mkdir('../public/assets/dd/'.$year, 0777); /////se crea la carpeta del presente año y del mes (este caso se debe presentar en enero)   
+                mkdir('../public/assets/dd/'.$year.'/'.$mes, 0777);
+            }
+            else{
+                if (!is_dir('../public/assets/dd/'.$year.'/'.$mes)) {
+                    mkdir('../public/assets/dd/'.$year.'/'.$mes, 0777);
+                }
+            }
 
-        if ($otroC == 'true') {
-            $tipo2 = $request->post('tipo2');
-            $cant2 = $request->post('cantidad2');
-
-            
-
-            $register_1 = DB::table('solicituds')->insert(['id_sujeto' => $id_sp,'tipo_talonario' => $tipo,'cantidad' => $cant,
-                                                            'monto' => $monto,'estado' => 'Verificando', 'id_pago']);
-
-
-
-
-        }else{
+            $photo         =   $request->file('ref_pago');
+            $nombreimagen   =   $photo->getClientOriginalName();
+            $ruta           =   public_path('../public/assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
+            copy($photo->getRealPath(),$ruta);
+            // return response('llego');
 
         }
+       
+
+        // if (is_dir('../public/assets/dd')){
+        //     mkdir('../public/assets/dd/'.$year, 0777);
+        //     return response('existe');
+        // }else{
+        //     return response('no existe');
+        // }
+       
+
+        // $otroC = $request->post('status_otro_tipo');
+
+        // if ($otroC == 'true') {
+        //     $tipo2 = $request->post('tipo2');
+        //     $cant2 = $request->post('cantidad2');
+
+
+
+        //     // $register_1 = DB::table('solicituds')->insert(['id_sujeto' => $id_sp,'tipo_talonario' => $tipo,'cantidad' => $cant,
+        //     //                                                 'monto' => $monto,'estado' => 'Verificando', 'id_pago']);
+
+
+
+
+        // }else{
+
+        // }
+
+
     }
 
     /**

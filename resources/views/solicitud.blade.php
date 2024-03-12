@@ -88,7 +88,7 @@
                     <div class="text-center mb-2">
                         <span class="fs-6 fw-bold" style="color: #0072ff">Datos de la Solicitud</span>
                     </div>
-                    <form id="form_generar_solicitud">
+                    <form id="form_generar_solicitud" enctype="multipart/form-data">
                         @csrf
                         <div class="otro_talonario">
                             <div class="row mt-2">
@@ -340,6 +340,9 @@
             ////////GENERAR LA SOLICITUD
             $('#form_generar_solicitud').submit(function(e) {
                 e.preventDefault(); 
+                var photo = $('#ref_pago').val();
+                alert(photo);
+
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
