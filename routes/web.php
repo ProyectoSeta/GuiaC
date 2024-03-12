@@ -46,7 +46,8 @@ Route::get('/sujeto', [App\Http\Controllers\SujetoController::class, 'index'])->
 
 ////////SOLICITUD
 Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
-Route::post('/solicitud', [App\Http\Controllers\SolicitudController::class, 'calcular'])->name('solicitud.calcular');
+Route::post('/solicitud/calcular', [App\Http\Controllers\SolicitudController::class, 'calcular'])->name('solicitud.calcular');
+Route::post('/solicitud/store', [App\Http\Controllers\SolicitudController::class, 'store'])->name('solicitud.store');
 
 
 /////////VISTAS: CLIC SIDEBAR

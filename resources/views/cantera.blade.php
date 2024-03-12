@@ -374,7 +374,7 @@
                     success: function(response) {
                        if (response.success) {
                             alert('La cantera ha sido registrada exitosamente');
-                            $('#add_cantera')[0].reset();
+                            $('#agregar_cantera')[0].reset();
                             $('#modal_new_cantera').modal('hide');
                             window.location.href = "{{ route('cantera')}}";
                             

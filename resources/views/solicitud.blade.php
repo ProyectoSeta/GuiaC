@@ -15,11 +15,7 @@
     <div class="">
         <button type="button" class="btn btn-primary  btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud"><i class='bx bx-plus'></i>Nueva solicitud</button>
     </div>
-    <script type="text/javascript">
-  $(document).on("click","#add",function(e){
-    alert("Hola");
-  });    
-</script>
+    
     <div class="row">
         <div class="col-12">
             <br><br>
@@ -92,21 +88,17 @@
                     <div class="text-center mb-2">
                         <span class="fs-6 fw-bold" style="color: #0072ff">Datos de la Solicitud</span>
                     </div>
-                    <form id="form_calcular">
+                    <form id="form_generar_solicitud">
                         @csrf
                         <div class="otro_talonario">
                             <div class="row mt-2">
-                                <div class="col-6">
+                                <div class="col-6 ps-4">
                                     <label for="">Tipo de Talonario</label>
-                                    <select class="form-select form-select-sm mb-3" aria-label="Default select example" name="tipo" id="tipo">
-                                        <option selected>Selecciona el tipo de talonario</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                    </select>
+                                    <input type="number" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="25" disabled>
                                 </div>
                                 <div class="col-4">
                                     <label for="cant_talonario">Cantidad</label>
-                                    <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad">
+                                    <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" required>
                                 </div>
                                 <div class="col-2 d-flex align-items-center pt-3">
                                     <a  href="javascript:void(0);" class="btn add_button">
@@ -115,29 +107,33 @@
                                 </div>
                             </div> 
                         </div> <!-- cierra .otro_talonario -->
+                        <input type="hidden" name="status_otro_tipo" id="status_otro_tipo">
                         <div class="d-flex justify-content-center">
                             <button type="sumbit" class="btn btn-outline-secondary btn-sm" id="button_calcular">Calcular</button>
                         </div>
+                    
+                        <label for="cant_talonario">Monto Total</label>
+                        <input class="form-control form-control-sm mb-3" type="text" id="monto_talonario" name="monto_talonario" aria-label="" required disabled>
+
+                        <input type="hidden" name="monto_pagar" id="monto_pagar" val>
+
+                        <div class="mb-3">
+                            <label for="ref_pago" class="form-label">Referencia del pago</label>
+                            <input class="form-control form-control-sm" id="ref_pago" type="file" name="ref_pago" required disabled>
+                        </div>
+
+                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                            </span> El <span class="fw-bold">Tipo de talonario </span>
+                            es definido por el número de guías que contenga este. 
+                            Y la <span class="fw-bold">Cantidad</span>
+                            , es el número de talonarios de este tipo que quiera solicitar.
+                        </p>
+
+                        <div class="d-flex justify-content-center mt-3 mb-3" >
+                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success btn-sm" id="btn_generar_solicitud" disabled>Aceptar</button>
+                        </div>
                     </form>
-
-                    
-                    
-                    
-                    <label for="cant_talonario">Monto Total</label>
-                    <input class="form-control form-control-sm mb-3" type="text" id="monto_talonario" aria-label="" disabled>
-
-                    <div class="mb-3">
-                        <label for="ref_pago" class="form-label">Referencia del pago</label>
-                        <input class="form-control form-control-sm" id="ref_pago" type="file">
-                    </div>
-
-                    <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:</span> El <span class="fw-bold">Tipo de talonario</span> es definido por el número de guías que contenga este.
-                         Y la <span class="fw-bold">Cantidad</span>, es el número de talonarios de este tipo que quiera solicitar.</p>
-
-                    <div class="d-flex justify-content-center mt-3 mb-3" >
-                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success btn-sm" id="btn_aceptar" disabled>Aceptar</button>
-                    </div>
                  </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -260,17 +256,13 @@
             var addButton = $('.add_button'); //Add button selector
             var wrapper = $('.otro_talonario'); //Input field wrapper
             var fieldHTML = '<div class="row mt-2">'+
-                                '<div class="col-6">'+
-                                    '<label for="">Tipo de Talonario</label>'+
-                                    '<select class="form-select form-select-sm mb-3" aria-label="Default select example" name="tipo2" id="tipo2">'+
-                                        '<option selected>Selecciona el tipo de talonario</option>'+
-                                        '<option value="25">25</option>'+
-                                        '<option value="50">50</option>'+
-                                    '</select>'+
+                                '<div class="col-6 ps-4">'+
+                                    // '<label for="">Tipo de Talonario</label>'+
+                                    '<input type="number" class="form-control form-control-sm mb-3 text-center" name="tipo2" id="tipo2" value="50" disabled>'+
                                 '</div>'+
                                 '<div class="col-4">'+
-                                    '<label for="cant_talonario">Cantidad</label>'+
-                                    '<input class="form-control form-control-sm mb-3" type="number" name="cantidad2" id="cantidad2">'+
+                                    // '<label for="cant_talonario">Cantidad</label>'+
+                                    '<input class="form-control form-control-sm mb-3" type="number" name="cantidad2" id="cantidad2" required>'+
                                 '</div>'+
                                 '<div class="col-2 d-flex align-items-center pt-3">'+
                                     '<a  href="javascript:void(0);" class="btn remove_button">'+
@@ -283,41 +275,86 @@
                 if(x < maxField){ //Check maximum number of input fields
                     x++; //Increment field counter
                     $(wrapper).append(fieldHTML); // Add field html
+                    $('#status_otro_tipo').val('true');
                 }
             });
             $(wrapper).on('click', '.remove_button', function(e){ //Once remove button is clicked
                 e.preventDefault();
                 $(this).parent('div').parent('div').remove(); //Remove field html
+                $('#status_otro_tipo').val('false');
                 x--; //Decrement field counter
             });
 
 
             ///////CALCULAR MONTO A PAGAR: DATOS
-            $('#form_calcular').submit(function(e) {
+            $('#button_calcular').click(function(e) {
                 e.preventDefault(); 
                 var tipo = $('#tipo').val();
                 var cantidad = $('#cantidad').val();
-                var tipo2 = $('#tipo2').val();
-                var cantidad2 = $('#cantidad2').val();
+                var otro_campo = $('#status_otro_tipo').val();
 
+                if(otro_campo == 'true'){
+                    var tipo2 = $('#tipo2').val();
+                    var cantidad2 = $('#cantidad2').val();
+
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("solicitud.calcular") }}',
+                        data: {tipo:tipo, cantidad:cantidad, otro_campo:otro_campo, tipo2:tipo2, cantidad2:cantidad2},
+                        success: function(response) {
+                            // alert(response);
+                            $('#monto_talonario').val(response);
+                            // $('#monto_pagar').val(response);
+                            $('#ref_pago').attr('disabled', false);
+                        },
+                        error: function() {
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("solicitud.calcular") }}',
+                        data: {tipo:tipo, cantidad:cantidad, otro_campo:otro_campo},
+                        success: function(response) {
+                            // alert(response);
+                            $('#monto_talonario').val(response);
+                            // $('#monto_pagar').val(response);
+                            $('#ref_pago').attr('disabled', false);
+                        },
+                        error: function() {
+                        }
+                    });
+                }
+            });
+
+
+            ////////HABILITAR EL BUTTON PARA GENERAR LA SOLICITUD
+            $('#ref_pago').on('change', function(e) {
+                e.preventDefault(); 
+                $('#btn_generar_solicitud').attr('disabled', false);
+            });
+
+
+            ////////GENERAR LA SOLICITUD
+            $('#form_generar_solicitud').submit(function(e) {
+                e.preventDefault(); 
                 $.ajax({
-                    // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("solicitud.calcular") }}',
+                    url: '{{route("solicitud.store") }}',
                     data: $(this).serialize(),
                     success: function(response) {
-                    //    alert(response);
-                       $('#monto_talonario').val(response);
+                       alert(response);
+                       
                     },
                     error: function() {
                     }
                 });
             });
 
-            $('#ref_pago').on('change', function(e) {
-                e.preventDefault(); 
-                $('#btn_aceptar').attr('disabled', false);
-            });
+
 
 
 
@@ -325,9 +362,5 @@
         });  
 
 
-
-        function calcular(){
-            
-        }
     </script>
 @stop
