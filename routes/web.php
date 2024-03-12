@@ -36,8 +36,8 @@ Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->nam
 /////// CANTERAS
 
 Route::get('/cantera', [App\Http\Controllers\CanteraController::class, 'index'])->name('cantera');
-Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
-Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
+Route::post('/cantera/store', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
+Route::post('/cantera/minerales', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'destroy'])->name('cantera.destroy');
 
 ///////SUJETO PASIVO
