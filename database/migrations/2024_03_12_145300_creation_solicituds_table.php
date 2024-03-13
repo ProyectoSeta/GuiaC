@@ -15,12 +15,8 @@ return new class extends Migration
             $table->increments('id_solicitud');
             $table->integer('id_sujeto')->unsigned();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
-            $table->enum('tipo_talonario',['25','50']);
-            $table->integer('cantidad');
-            $table->string('monto'); 
-            $table->integer('id_pago')->unsigned();
-            $table->foreign('id_pago')->references('id_pago')->on('pagos')->onDelete('cascade');
             $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
+            $table->dateTime('fecha');
             $table->timestamps();
         });
     }

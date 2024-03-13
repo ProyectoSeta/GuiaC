@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SujetoPasivo;
+use App\Models\Solicitud;
 use DB;
 
 class SolicitudController extends Controller
@@ -14,11 +15,63 @@ class SolicitudController extends Controller
     public function index()
     {
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $sp = SujetoPasivo::select('id_sujeto','razon_social', 'rif')->find($user);
         $id_sp = $sp->id_sujeto;
+        $razon = $sp->razon;
+        $rif = $sp->rif;
+
         $solicitudes = DB::table('solicituds')->where('id_sujeto', $id_sp)->get();
 
-        return view('solicitud', compact('solicitudes'));
+        $tr = '';
+        foreach ($solicitudes as $solicitud) {
+            $id_solicitud = $solicitud->id_solicitud;
+            $query_pagos = DB::table('pagos')->select('monto')->where('id_solicitud','=',$id_solicitud)->get();
+            foreach ($query_pagos as $monto) {
+                $monto = $monto->monto;
+            }
+            switch ($solicitud->estado) {
+                case 'Verificando':
+                    $estado = '<span class="badge text-bg-light">Verificando pago</span>';
+                    break;
+                case 'Negada':
+                    $estado = '<span class="badge text-bg-danger">Negada</span>';
+                    break;
+
+                case 'En proceso':
+                    $estado = '<span class="badge text-bg-primary">En proceso</span>';
+                    break;
+                
+                case 'Retirar':
+                    $estado = '<span class="badge" style="background-color: #ef7f00;">Retirar</span>';
+                    break;
+                
+                case 'Retirado':
+                    $estado = '<span class="badge text-bg-success">Retirado</span>';
+                    break;
+            }
+
+            $tr .= '<tr>
+                        <td>'.$id_solicitud.'</td>
+                        <td>'.$razon.'</td>
+                        <td>'.$rif.'</td>
+                        <td>
+                            <p class="text-primary fw-bold info_talonario" role="button" id_talonario="" >Ver más</p>
+                        </td>
+                        <td>'.$monto.'</td>
+                        <td class="text-muted">12/02/2024</td>
+                        <td>
+                            '.$estado.'
+                        </td>
+                        <td>
+                            <span class="badge" style="background-color: #ed0000;" role="button" data-bs-toggle="modal" data-bs-target="#modal_delete_solicitud">
+                                <i class="bx bx-trash-alt fs-6"></i>
+                            </span>
+                        </td>
+                    </tr>';
+        }
+
+
+        return view('solicitud');
 
     }
 
@@ -108,58 +161,80 @@ class SolicitudController extends Controller
         $tipo = $request->post('tipo');
         $cant = $request->post('cantidad');
         $monto = $request->post('monto_talonario');
-        $photo = $request->file('ref_pago');
-        return response($photo);
-  
+
         $year = date("Y");
         $mes = date("F");
-
-        if ($request->hasFile("ref_pago")) {
-            if (!is_dir('../public/assets/dd/'.$year)){ ////existe la carpeta correspondiente a este año? No
-                mkdir('../public/assets/dd/'.$year, 0777); /////se crea la carpeta del presente año y del mes (este caso se debe presentar en enero)   
+        
+        ///////////CREAR CARPETA PARA REFERENCIAS SI NO EXISTE
+        if (!is_dir('../public/assets/dd/'.$year)){   ////no existe la carpeta del año
+            if(mkdir('../public/assets/dd/'.$year, 0777)){
                 mkdir('../public/assets/dd/'.$year.'/'.$mes, 0777);
             }
-            else{
-                if (!is_dir('../public/assets/dd/'.$year.'/'.$mes)) {
-                    mkdir('../public/assets/dd/'.$year.'/'.$mes, 0777);
+        }
+        else{   /////si existe la carpeta del año
+            if (!is_dir('../public/assets/dd/'.$year.'/'.$mes)) {
+                mkdir('../public/assets/dd/'.$year.'/'.$mes, 0777);
+            }
+        }
+
+        $otroC = $request->post('status_otro_tipo');
+
+        if ($otroC == 'true') {     ///////DOS (2) TIPOS DE TALONARIOS
+            $tipo2 = $request->post('tipo2');
+            $cant2 = $request->post('cantidad2');
+
+            if ($request->hasFile('ref_pago')) {
+                $photo         =   $request->file('ref_pago');
+                $nombreimagen  =   $photo->getClientOriginalName();
+                $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
+                $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
+                if(copy($photo->getRealPath(),$ruta)){
+                    
+                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'estado' => 'Verificando']);
+                    
+                    if($query_solicitud){
+                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                        
+                        $query_pago = DB::table('pagos')->insert(['monto' => $monto, 'referencia' => $ruta_n, 'id_solicitud' => $id_solicitud]);
+                        $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
+                        $query_detalle_2 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant2, 'id_solicitud' => $id_solicitud]);
+                        
+                        if($query_detalle_1 && $query_detalle_2){
+                            return response()->json(['success' => true]);
+                        }
+                    }
                 }
+            }else{   
+                return response()->json(['success' => false]);
             }
 
-            $photo         =   $request->file('ref_pago');
-            $nombreimagen   =   $photo->getClientOriginalName();
-            $ruta           =   public_path('../public/assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
-            copy($photo->getRealPath(),$ruta);
-            // return response('llego');
+        }else{      ///////UN (1) TIPO DE TALONARIO
+            
+            if ($request->hasFile('ref_pago')) {
+                $photo         =   $request->file('ref_pago');
+                $nombreimagen  =   $photo->getClientOriginalName();
+                $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
+                $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
+                if(copy($photo->getRealPath(),$ruta)){
+                    
+                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'estado' => 'Verificando']);
+
+                    if($query_solicitud){
+                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                        
+                        $query_pago = DB::table('pagos')->insert(['monto' => $monto, 'referencia' => $ruta_n, 'id_solicitud' => $id_solicitud]);
+                        $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
+                        
+                        if($query_detalle_1){
+                            return response()->json(['success' => true]);
+                        }
+                    }
+                }
+            }else{   
+                return response()->json(['success' => false]);
+            }
 
         }
-       
-
-        // if (is_dir('../public/assets/dd')){
-        //     mkdir('../public/assets/dd/'.$year, 0777);
-        //     return response('existe');
-        // }else{
-        //     return response('no existe');
-        // }
-       
-
-        // $otroC = $request->post('status_otro_tipo');
-
-        // if ($otroC == 'true') {
-        //     $tipo2 = $request->post('tipo2');
-        //     $cant2 = $request->post('cantidad2');
-
-
-
-        //     // $register_1 = DB::table('solicituds')->insert(['id_sujeto' => $id_sp,'tipo_talonario' => $tipo,'cantidad' => $cant,
-        //     //                                                 'monto' => $monto,'estado' => 'Verificando', 'id_pago']);
-
-
-
-
-        // }else{
-
-        // }
-
 
     }
 

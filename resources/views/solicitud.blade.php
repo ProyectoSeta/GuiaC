@@ -12,58 +12,48 @@
 @section('content')
     <p></p>
 
-    <div class="">
+    <div class="mb-3">
         <button type="button" class="btn btn-primary  btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud"><i class='bx bx-plus'></i>Nueva solicitud</button>
     </div>
     
-    <div class="row">
-        <div class="col-12">
-            <br><br>
-        <table id="example" class="table display" style="width:100%; font-size:14px">
-        <thead class="bg-primary">
+    <div class="table-responsive">        
+        <table id="example" class="table display  text-center" style="width:100%; font-size:14px">
+            <thead class="bg-primary">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Razon social</th>
                     <th scope="col">Rif</th>
-                    <th scope="col">Nro. talonario(s)</th>
-                    <th scope="col">Tipo de talonario(s)</th>
+                    <th scope="col">Talonario(s)</th>
                     <th scope="col">Monto total</th>
                     <th scope="col">Fecha de emisión</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Acciones</th>
                 </tr>
-        </thead>
-        <tbody>
-     
-        <tr>
+            </thead>
+            <tbody>
+               
+            
+                <!-- <tr>
                     <td>1</td>
                     <td>Prueba, C.A.</td>
                     <td>J000000001</td>
-                    <td>2</td>
-                    <td>25 - 50</td>
+                    <td>
+                        <p class="text-primary fw-bold info_talonario" role="button" id_talonario='' data-bs-toggle="modal" data-bs-target="#">Ver más</p>
+                    </td>
                     <td>3.522.015,25</td>
                     <td class="text-muted">12/02/2024</td>
                     <td>
                         <span class="badge text-bg-light">Verificando pago</span>
-                        <!-- <span class="badge text-bg-danger">Negada</span>
-                        <span class="badge text-bg-primary">En proceso</span>
-                        <span class="badge" style="background-color: #ef7f00;">Retirar</span>
-                        <span class="badge text-bg-success">Retirado</span> -->
+                       
                     </td>
                     <td>
                         <span class="badge" style="background-color: #ed0000;" role="button" data-bs-toggle="modal" data-bs-target="#modal_delete_solicitud">
                             <i class='bx bx-trash-alt fs-6'></i>
                         </span>
                     </td>
-                </tr>
-       
-        </tbody>
-
-    </table>
-
-    
-    
-       
+                </tr> -->
+            </tbody>
+        </table>
     </div>
 
 
@@ -73,7 +63,7 @@
     
   <!--****************** MODALES **************************-->
     <!-- ********* NUEVA SOLICITUD ******** -->
-    <div class="modal" id="modal_new_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal_new_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -94,7 +84,7 @@
                             <div class="row mt-2">
                                 <div class="col-6 ps-4">
                                     <label for="">Tipo de Talonario</label>
-                                    <input type="number" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="25" disabled>
+                                    <input type="number" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="25" readonly>
                                 </div>
                                 <div class="col-4">
                                     <label for="cant_talonario">Cantidad</label>
@@ -113,7 +103,7 @@
                         </div>
                     
                         <label for="cant_talonario">Monto Total</label>
-                        <input class="form-control form-control-sm mb-3" type="text" id="monto_talonario" name="monto_talonario" aria-label="" required disabled>
+                        <input class="form-control form-control-sm mb-3" type="text" id="monto_talonario" name="monto_talonario" required readonly>
 
                         <input type="hidden" name="monto_pagar" id="monto_pagar" val>
 
@@ -140,7 +130,7 @@
     </div>
 
     <!-- ********* ELIMINAR SOLICITUD ******** -->
-    <div class="modal" id="modal_delete_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal_delete_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
@@ -196,12 +186,6 @@
 <!--************************************************-->
 
 
-
-    
-
-
-
-
 @stop
 
 
@@ -217,13 +201,11 @@
 
 @section('js')
     <script>
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
         const myModal = document.getElementById('myModal');
         const myInput = document.getElementById('myInput');
 
         myModal.addEventListener('shown.bs.modal', () => {
-            myInput.focus();
+            myInput.focus()
         });
     </script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
@@ -340,17 +322,27 @@
             ////////GENERAR LA SOLICITUD
             $('#form_generar_solicitud').submit(function(e) {
                 e.preventDefault(); 
-                var photo = $('#ref_pago').val();
-                alert(photo);
-
+                var formData = new FormData(document.getElementById("form_generar_solicitud"));
+                // alert(formData);
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("solicitud.store") }}',
-                    data: $(this).serialize(),
+                    data: formData,
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
                     success: function(response) {
-                       alert(response);
-                       
+                       if (response.success) {
+                            alert('La solicitud a sido generada exitosamente!');
+                            $('#form_generar_solicitud')[0].reset();
+                            $('#modal_new_solicitud').modal('hide');
+                            window.location.href = "{{ route('solicitud')}}";
+                            
+                        } else {
+                            alert('Ha ocurrido un error al generar la solicitud, por favor vuelva a intentarlo.');
+                       }
                     },
                     error: function() {
                     }

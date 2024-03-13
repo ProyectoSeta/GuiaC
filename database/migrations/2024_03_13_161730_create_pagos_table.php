@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('pagos', function (Blueprint $table) {
             $table->increments('id_pago');
+            $table->string('monto'); 
             $table->string('referencia');
+            $table->integer('id_solicitud')->unsigned();
+            $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
             $table->timestamps();
         });
     }
