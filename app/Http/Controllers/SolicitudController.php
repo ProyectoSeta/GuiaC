@@ -17,61 +17,11 @@ class SolicitudController extends Controller
         $user = auth()->id();
         $sp = SujetoPasivo::select('id_sujeto','razon_social', 'rif')->find($user);
         $id_sp = $sp->id_sujeto;
-        $razon = $sp->razon;
-        $rif = $sp->rif;
 
         $solicitudes = DB::table('solicituds')->where('id_sujeto', $id_sp)->get();
 
-        $tr = '';
-        foreach ($solicitudes as $solicitud) {
-            $id_solicitud = $solicitud->id_solicitud;
-            $query_pagos = DB::table('pagos')->select('monto')->where('id_solicitud','=',$id_solicitud)->get();
-            foreach ($query_pagos as $monto) {
-                $monto = $monto->monto;
-            }
-            switch ($solicitud->estado) {
-                case 'Verificando':
-                    $estado = '<span class="badge text-bg-light">Verificando pago</span>';
-                    break;
-                case 'Negada':
-                    $estado = '<span class="badge text-bg-danger">Negada</span>';
-                    break;
-
-                case 'En proceso':
-                    $estado = '<span class="badge text-bg-primary">En proceso</span>';
-                    break;
-                
-                case 'Retirar':
-                    $estado = '<span class="badge" style="background-color: #ef7f00;">Retirar</span>';
-                    break;
-                
-                case 'Retirado':
-                    $estado = '<span class="badge text-bg-success">Retirado</span>';
-                    break;
-            }
-
-            $tr .= '<tr>
-                        <td>'.$id_solicitud.'</td>
-                        <td>'.$razon.'</td>
-                        <td>'.$rif.'</td>
-                        <td>
-                            <p class="text-primary fw-bold info_talonario" role="button" id_talonario="" >Ver más</p>
-                        </td>
-                        <td>'.$monto.'</td>
-                        <td class="text-muted">12/02/2024</td>
-                        <td>
-                            '.$estado.'
-                        </td>
-                        <td>
-                            <span class="badge" style="background-color: #ed0000;" role="button" data-bs-toggle="modal" data-bs-target="#modal_delete_solicitud">
-                                <i class="bx bx-trash-alt fs-6"></i>
-                            </span>
-                        </td>
-                    </tr>';
-        }
-
-
-        return view('solicitud');
+        // var_dump($solicitudes);
+        return view('solicitud',compact('solicitudes'));
 
     }
 
@@ -190,12 +140,11 @@ class SolicitudController extends Controller
                 $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
                 if(copy($photo->getRealPath(),$ruta)){
                     
-                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'estado' => 'Verificando']);
+                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
                     
                     if($query_solicitud){
                         $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                        
-                        $query_pago = DB::table('pagos')->insert(['monto' => $monto, 'referencia' => $ruta_n, 'id_solicitud' => $id_solicitud]);
+                      
                         $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
                         $query_detalle_2 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant2, 'id_solicitud' => $id_solicitud]);
                         
@@ -217,12 +166,10 @@ class SolicitudController extends Controller
                 $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
                 if(copy($photo->getRealPath(),$ruta)){
                     
-                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'estado' => 'Verificando']);
+                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
 
                     if($query_solicitud){
                         $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                        
-                        $query_pago = DB::table('pagos')->insert(['monto' => $monto, 'referencia' => $ruta_n, 'id_solicitud' => $id_solicitud]);
                         $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
                         
                         if($query_detalle_1){
@@ -237,6 +184,58 @@ class SolicitudController extends Controller
         }
 
     }
+
+    public function talonarios(Request $request){
+
+        $idSolicitud = $request->post('id');
+
+        $user = auth()->id();
+        $sp = SujetoPasivo::select('id_sujeto','razon_social', 'rif')->find($user);
+        $id_sp = $sp->id_sujeto;
+        $razon = $sp->razon_social;
+        $rif = $sp->rif;
+
+        $tr = '';
+
+        $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+        if($detalles){
+            foreach ($detalles as $solicitud) {
+                $tr .= '<tr>
+                            <td>'.$solicitud->tipo_talonario.'</td>
+                            <td>'.$solicitud->cantidad.'</td>
+                        </tr>';
+            }
+        }
+        $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-beetwen">
+                    <div class="ps-3">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">'.$razon.'</h1>
+                        <span class="text-muted">'.$rif.'</span>
+                    </div>
+                    <button type="button" class="btn-close pe-5" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="font-size:14px;">
+                    <h6 class="text-center mb-3">Solicitud de Talonario(s) Realizada</h6>
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tipo de talonario</th>
+                                <th scope="col">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            '.$tr.'
+                        </tbody>
+                    </table>
+                    <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                    </span> El <span class="fw-bold">Tipo de talonario </span>
+                    es definido por el número de guías que contenga este. 
+                </p>
+                </div>';
+
+        return response($html);
+       
+    }
+
 
     /**
      * Display the specified resource.
@@ -265,8 +264,14 @@ class SolicitudController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $idSolicitud = $request->post('solicitud');
+        $delete = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->delete();
+        if($delete){
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 }

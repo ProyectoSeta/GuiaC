@@ -48,6 +48,13 @@ Route::get('/sujeto', [App\Http\Controllers\SujetoController::class, 'index'])->
 Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
 Route::post('/solicitud/calcular', [App\Http\Controllers\SolicitudController::class, 'calcular'])->name('solicitud.calcular');
 Route::post('/solicitud/store', [App\Http\Controllers\SolicitudController::class, 'store'])->name('solicitud.store');
+Route::post('/solicitud/talonarios', [App\Http\Controllers\SolicitudController::class, 'talonarios'])->name('solicitud.talonarios');
+Route::post('/solicitud/pago', [App\Http\Controllers\SolicitudController::class, 'pago'])->name('solicitud.pago');
+Route::post('/solicitud', [App\Http\Controllers\SolicitudController::class, 'destroy'])->name('solicitud.destroy');
+
+
+///////////APROBACIÓN DE SOLICITUDES
+Route::get('/aprobacion_solicitud', [App\Http\Controllers\AprobacionController::class, 'index'])->name('aprobacion');
 
 
 /////////VISTAS: CLIC SIDEBAR
@@ -55,6 +62,3 @@ Route::get('/registro_guia', function () {
     return view('registro_guia');
 })->name('registro_guia');
 
-Route::get('/aprobacion_solicitud', function () { 
-    return view('aprobacion_solicitud');
-})->name('aprobacion_solicitud');

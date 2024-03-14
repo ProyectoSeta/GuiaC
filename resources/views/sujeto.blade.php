@@ -37,12 +37,9 @@
                 </tr>
         </thead>
         <tbody>
-                @foreach( $sujeto as $sujeto)
-
-               
-        <tr>
+            @foreach( $sujeto as $sujeto)               
+                <tr>
                     <td>{{$sujeto->id_sujeto}}</td>
-                   
                     <td>{{$sujeto->rif}}</td>
                     <td>{{$sujeto->tipo_sujeto}}</td>
                     <td>{{$sujeto->razon_social}}</td>
@@ -57,7 +54,7 @@
                         </span>
                     </td>
                 </tr>
-                @endforeach
+            @endforeach
         </tbody>
 
     </table>

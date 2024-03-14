@@ -25,7 +25,7 @@
                 <th>Direccion</th>
                 <th>Producción</th>
                 <th>Estado</th>
-                <th>Acciones</th> 
+                <th>Opciones</th> 
             </thead>
             <tbody id="list_canteras"> 
                

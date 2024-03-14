@@ -20,38 +20,51 @@
         <table id="example" class="table display  text-center" style="width:100%; font-size:14px">
             <thead class="bg-primary">
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Razon social</th>
-                    <th scope="col">Rif</th>
-                    <th scope="col">Talonario(s)</th>
-                    <th scope="col">Monto total</th>
+                    <th scope="col">Cod.</th>
                     <th scope="col">Fecha de emisión</th>
+                    <th scope="col">Talonario(s)</th>
+                    <th scope="col">Monto total ()</th>
                     <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
+                    <th scope="col">Opciones</th>
                 </tr>
             </thead>
             <tbody>
-               
-            
-                <!-- <tr>
-                    <td>1</td>
-                    <td>Prueba, C.A.</td>
-                    <td>J000000001</td>
-                    <td>
-                        <p class="text-primary fw-bold info_talonario" role="button" id_talonario='' data-bs-toggle="modal" data-bs-target="#">Ver más</p>
-                    </td>
-                    <td>3.522.015,25</td>
-                    <td class="text-muted">12/02/2024</td>
-                    <td>
-                        <span class="badge text-bg-light">Verificando pago</span>
-                       
-                    </td>
-                    <td>
-                        <span class="badge" style="background-color: #ed0000;" role="button" data-bs-toggle="modal" data-bs-target="#modal_delete_solicitud">
-                            <i class='bx bx-trash-alt fs-6'></i>
-                        </span>
-                    </td>
-                </tr> -->
+                @foreach( $solicitudes as $solicitud)               
+                    <tr>
+                        <td>{{$solicitud->id_solicitud}}</td>
+                        <td>{{$solicitud->fecha}}</td>
+                        <td>
+                            <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
+                        </td>
+                        <td>
+                            <a target="_blank" class="ver_pago" id_solicitud="{{$solicitud->id_solicitud}}" href="{{ asset($solicitud->referencia) }}">{{$solicitud->monto}}</a>
+                        <td>
+                            @switch($solicitud->estado)
+                                @case('Verificando')
+                                    <span class="badge text-bg-light">Verificando pago</span>
+                                @break
+                                @case('Negada')
+                                    <span class="badge text-bg-danger">Negada</span>
+                                @break
+                                @case('En proceso')
+                                    <span class="badge text-bg-primary">En proceso</span>
+                                @break
+                                @case('Retirar')
+                                    <span class="badge" style="background-color: #ef7f00;">Retirar</span>
+                                @break
+                                @case('Retirado')
+                                    <span class="badge text-bg-success">Retirado</span>
+                                @break
+                  
+                            @endswitch                    
+                        </td>
+                        <td>
+                            <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_solicitud="{{$solicitud->id_solicitud}}">
+                                <i class="bx bx-trash-alt fs-6"></i>
+                            </span>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -178,6 +191,15 @@
 
 
                  </div>  <!-- cierra modal-body -->
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* VER INFO TALONARIO(S) ******** -->
+    <div class="modal fade" id="modal_info_talonario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_info_talonarios">
+                
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -348,6 +370,48 @@
                     }
                 });
             });
+
+            ///////MODAL: INFO TALONARIOS
+             $(document).on('click','.info_talonario', function(e) { 
+                e.preventDefault(e); 
+                var id = $(this).attr('id_solicitud');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("solicitud.talonarios") }}',
+                    data: {id:id},
+                    success: function(response) {              
+                        $('#content_info_talonarios').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+            //////ELIMINAR SOLICITUD
+            $(document).on('click','.delete_solicitud', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+                confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA SOLICITUD CON EL CÓDIGO:   " + solicitud + "?");
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("solicitud.destroy") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {
+                        if (response.success){
+                            alert("SOLICITUD ELIMINADA EXITOSAMENTE");
+                            window.location.href = "{{ route('solicitud')}}";
+                        } else{
+                            alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA SOLICITUD");
+                        }              
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
 
 
 
