@@ -55,6 +55,8 @@ Route::post('/solicitud', [App\Http\Controllers\SolicitudController::class, 'des
 
 ///////////APROBACIÓN DE SOLICITUDES
 Route::get('/aprobacion_solicitud', [App\Http\Controllers\AprobacionController::class, 'index'])->name('aprobacion');
+Route::post('/aprobacion_solicitud/sujeto', [App\Http\Controllers\AprobacionController::class, 'sujeto'])->name('aprobacion.sujeto');
+Route::post('/aprobacion_solicitud/aprobar', [App\Http\Controllers\AprobacionController::class, 'aprobar'])->name('aprobacion.aprobar');
 
 
 /////////VISTAS: CLIC SIDEBAR
