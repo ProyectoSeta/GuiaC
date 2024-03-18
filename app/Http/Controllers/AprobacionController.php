@@ -97,26 +97,28 @@ class AprobacionController extends Controller
     public function aprobar(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+       
         $solicitudes = DB::table('solicituds')
         ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
         ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
-
+       
         $tr = '';
 
         if ($solicitudes) {
             foreach ($solicitudes as $solicitud) {
-                $detalle = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
-                if($detalles){
-                $contador = 0;
-                    foreach ($detalles as $solicitud) {
+                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+                if($detalles){ 
+                    // return response($solicitudes);
+                    $contador = 0;
+                    foreach ($detalles as $i) {
                         $tr .= '<tr>
-                                    <td>'.$solicitud->tipo_talonario.'</td>
-                                    <td>'.$solicitud->cantidad.'</td>
+                                    <td>'.$i->tipo_talonario.'</td>
+                                    <td>'.$i->cantidad.'</td>
                                 </tr>';
 
-                        $contador = $contador + ($solicitud->tipo_talonario * $solicitud->cantidad);
+                        $contador = $contador + ($i->tipo_talonario * $i->cantidad);
 
                     }
                 }
@@ -124,6 +126,21 @@ class AprobacionController extends Controller
                 $total_guias = $contador;
                 $ucds = $total_guias * 5;
 
+                ////////////////fecha de la solicitud
+                $sol_date = DB::table('solicituds')
+                        ->selectRaw('DATE(fecha) AS fecha')
+                        ->where('id_solicitud','=',$idSolicitud)->get();
+                foreach ($sol_date as $d){
+                    $date_sol = $d->fecha;
+                }
+
+                //////////////valor del ucd el dia de la solicitud
+                $query_ucd = DB::table('ucds')
+                        ->select('valor')
+                        ->where('fecha','=', $date_sol)->get();
+                foreach ($query_ucd as $u){
+                    $val_ucd = $u->valor;
+                }
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
@@ -160,7 +177,7 @@ class AprobacionController extends Controller
                                     </tr>
                                     <tr>
                                         <th>Precio del UCD (al día)</th>
-                                        <td>38.57</td>
+                                        <td>'.$val_ucd.'</td>
                                     </tr>
                                     <tr>
                                         <th>Monto total</th>
@@ -168,14 +185,14 @@ class AprobacionController extends Controller
                                     </tr>
                                     <tr>
                                         <th>Referencia</th>
-                                        <td><a target="_blank" href="{{ asset('.$solicitud->referencia.') }}">Ver</a></td>
+                                        <td><a target="_blank" href="{{asset('.$solicitud->referencia.')}}">Ver</a></td>
                                     </tr>
                                 </table>
                             </div>
                             
 
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-success btn-sm me-4">Aprobar</button>
+                                <button class="btn btn-success btn-sm me-4 aprobar_correlativo" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
                                 <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                             </div>
 
@@ -191,6 +208,142 @@ class AprobacionController extends Controller
 
 
 
+    }
+
+    public function correlativo(Request $request)
+    {
+        $idSolicitud = $request->post('solicitud');
+        $idSujeto = $request->post('sujeto');
+        $fecha = $request->post('fecha');
+
+        $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get(); 
+        if ($query_count) {
+            foreach ($query_count as $c) {
+                $count = $c->total;
+            }
+            if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
+                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+                $c = 0;
+                foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
+                    $tipo = $detalle->tipo_talonario;
+                    $cant = $detalle->cantidad;
+
+                    for ($i=1; $i <=$cant; $i++) {                        
+                        $c = $c + 1; 
+                        
+                        if ($c == 1) {
+                           $desde = 1;
+                        }else{
+                            $id_max= DB::table('talonarios')->max('id_talonario');
+                            $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
+                            foreach ($query_hasta as $hasta) {
+                                $prev_hasta = $hasta->hasta;
+                            }
+                            $desde = $prev_hasta + 1;
+                        }
+                        
+                        $hasta = $desde + $tipo;
+
+                        $length = 6;
+                        $string_1 = substr(str_repeat(0, $length).$desde, - $length);
+                        $string_2 = substr(str_repeat(0, $length).$hasta, - $length);
+
+                        $desde_co = 'AB'.$string_1;
+                        $hasta_co = 'AB'.$string_2;
+
+                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
+                                            'desde' => $desde, 'hasta' => $hasta, 'desde_co' => $desde_co,
+                                            'hasta_co' => $hasta_co, 'fecha_emision' => $fecha]);
+                        if ($insert) {
+                            $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                        }
+                    } ////cierra for    
+                }/////cierra foreach
+            }else{   //////////Hay registros en la tabla Talonarios
+                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+                foreach ($detalles as $detalle){
+                    $tipo = $detalle->tipo_talonario;
+                    $cant = $detalle->cantidad;
+
+                    for ($i=1; $i <=$cant; $i++) {  
+                        $id_max= DB::table('talonarios')->max('id_talonario');
+                        $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
+                        foreach ($query_hasta as $hasta) {
+                            $prev_hasta = $hasta->hasta;
+                        }
+                        $desde = $prev_hasta + 1;
+                        $hasta = $desde + $tipo;
+                        
+                        $length = 6;
+                        $string_1 = substr(str_repeat(0, $length).$desde, - $length);
+                        $string_2 = substr(str_repeat(0, $length).$hasta, - $length);
+
+                        $desde_co = 'AB'.$string_1;
+                        $hasta_co = 'AB'.$string_2;
+
+                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
+                                            'desde' => $desde, 'hasta' => $hasta, 'desde_co' => $desde_co,
+                                            'hasta_co' => $hasta_co, 'fecha_emision' => $fecha]);
+                        if ($insert) {
+                            $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                        }
+    
+                    } ////cierra for
+                } ////cierra foreach
+            }
+           
+            return response()->json(['success' => true]);
+        }
+    }
+
+    public function info(Request $request)
+    {
+        $idSolicitud = $request->post('solicitud');
+        $tables = '';
+        $talonarios = DB::table('talonarios')
+        ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+        ->where('id_solicitud','=',$idSolicitud)
+        ->get();
+
+        if ($talonarios) {
+            $i=0;
+            foreach ($talonarios as $talonario) {
+                $i = $i + 1;
+                $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
+                                <table class="table mt-2 mb-3">
+                                    <tr>
+                                        <th>Tipo:</th>
+                                        <td>'.$talonario->tipo_talonario.'</td>
+                                        <th>Desde:</th>
+                                        <td>'.$talonario->desde_co.'</td>
+                                        <th>Hasta:</th>
+                                        <td>'.$talonario->hasta_co.'</td>
+                                    </tr>
+                                </table>';
+            }
+
+            $html = ' <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                            <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">¡La solicitud a sido Aprobada!</h1>
+                                <div class="">
+                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$talonario->razon_social.'</h1>
+                                    <h5 class="modal-title" id="" style="font-size:14px">'.$talonario->rif.'</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="font-size:14px">
+                            <p class="text-center" style="font-size:14px">El correlativo correspondiente a la solicitud generada es el siguiente:</p>
+                                '.$tables.'
+                            <div class="d-flex justify-content-center">
+                                <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo" data-bs-dismiss="modal">Salir</button>
+                            </div>
+                        </div>';
+            return response($html);
+        }
+
+        
     }
 
     /**

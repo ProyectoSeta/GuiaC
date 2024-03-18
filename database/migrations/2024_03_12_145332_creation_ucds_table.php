@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->float('valor');
             $table->string('moneda'); // a cambiar por un enum
-            $table->dateTime('fecha');
+            $table->date('fecha');
             $table->timestamps();
         });
     }

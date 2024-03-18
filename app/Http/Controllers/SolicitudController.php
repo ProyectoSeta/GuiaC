@@ -267,8 +267,15 @@ class SolicitudController extends Controller
     public function destroy(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        $query = DB::table('solicituds')->select('referencia')->where('id_solicitud', '=', $idSolicitud)->get();
+        foreach ($query as $r) {
+            $ruta = $r->referencia;
+        }
+
+        $delete_ref = unlink('../public/'.$ruta);
         $delete = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->delete();
-        if($delete){
+        
+        if($delete && $delete_ref){
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

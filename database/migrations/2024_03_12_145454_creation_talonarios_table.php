@@ -16,8 +16,10 @@ return new class extends Migration
             $table->integer('id_solicitud')->unsigned();
             $table->integer('id_sujeto')->unsigned();
             $table->enum('tipo_talonario',['25','50']);
-            $table->string('desde_nro');
-            $table->string('hasta_nro');
+            $table->integer('desde');
+            $table->integer('hasta');
+            $table->string('desde_co');
+            $table->string('hasta_co');
             $table->date('fecha_emision');
             $table->date('fecha_recibido');
             $table->date('fecha_retiro');
