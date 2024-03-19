@@ -185,7 +185,7 @@ class AprobacionController extends Controller
                                     </tr>
                                     <tr>
                                         <th>Referencia</th>
-                                        <td><a target="_blank" href="{{asset('.$solicitud->referencia.')}}">Ver</a></td>
+                                        <td><a target="_blank" href="'.asset($solicitud->referencia).'">Ver</a></td>
                                     </tr>
                                 </table>
                             </div>
@@ -344,6 +344,11 @@ class AprobacionController extends Controller
         }
 
         
+    }
+
+    public function denegar(Request $request)
+    {
+        $idSolicitud = $request->post('solicitud');
     }
 
     /**
