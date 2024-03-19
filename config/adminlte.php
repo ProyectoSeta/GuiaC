@@ -352,7 +352,12 @@ return [
         [
             'text'       => 'Estado de solicitudes',
             // 'icon_color' => 'fas fa-fw fa-user',
-            'url'        => '#',
+            'url'        => 'estado',
+        ],
+        [
+            'text'       => 'Correlativos',
+            // 'icon_color' => 'fas fa-fw fa-user',
+            'url'        => '/correlativo',
         ],
         ['header' => 'Verificación'],
         [

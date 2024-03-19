@@ -63,8 +63,20 @@ Route::post('/aprobacion_solicitud/denegarInfo', [App\Http\Controllers\Aprobacio
 Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionController::class, 'denegar'])->name('aprobacion.denegar');
 
 
+
+
+///////////ESTADO DE SOLICITUDES
+Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->name('estado');
+Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
+
+
+//////////////CORRELATIVO
+Route::get('/correlativo', [App\Http\Controllers\CorrelativoController::class, 'index'])->name('correlativo');
+
+
+
 /////////VISTAS: CLIC SIDEBAR
-// Route::get('/registro_guia', function () { 
-//     return view('registro_guia');
-// })->name('registro_guia');
+Route::get('/registro_guia', function () { 
+    return view('registro_guia');
+})->name('registro_guia');
 

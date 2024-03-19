@@ -18,7 +18,7 @@ class AprobacionController extends Controller
     {   
         $solicitudes = DB::table('solicituds')
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-            ->select('solicituds.*', 'sujeto_pasivos.razon_social')
+            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
             ->where('estado','=','Verificando')
             ->get();
 
@@ -202,11 +202,6 @@ class AprobacionController extends Controller
             }
 
         }
-
-
-
-
-
 
     }
 
@@ -450,9 +445,10 @@ class AprobacionController extends Controller
         
         $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);
         if ($updates) {
-            return response()->json(['success' => true]);
+            return response('si');
+            // return response()->json(['success' => true]);
         }else{
-            return response()->json(['success' => false]);
+            // return response()->json(['success' => false]);
         }
     }
 

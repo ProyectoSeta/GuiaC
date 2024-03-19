@@ -17,6 +17,7 @@
             <thead>
                 <th>Cod.</th>
                 <th>Razón Social</th>
+                <th>Rif</th>
                 <th>Solicitud</th>
                 <th>Monto</th>
                 <th>Emisión</th>
@@ -29,7 +30,10 @@
                     <tr>
                         <td>{{$solicitud->id_solicitud}}</td>
                         <td>
-                            <span class="fw-bold info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->razon_social}}</span>
+                            <span class="fw-bold">{{$solicitud->razon_social}}</span>
+                        </td>
+                        <td>
+                            <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif}}</a>
                         </td>
                         <td>
                             <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
@@ -101,76 +105,7 @@
     <div class="modal fade" id="modal_denegar_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_denegar_solicitud">
-                <!-- <div class="modal-header  p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>                  
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Denegar la solicitud</h1>
-                    </div>
-                </div>
-                <div class="modal-body" style="font-size:14px">
-                    
-                    <div class="d-flex justify-content-between mb-2">
-                        <table class="table table-borderless table-sm me-3">
-                            <tr>
-                                <th>Solicitud Nro.:</th>
-                                <td> 15</td>
-                            </tr>
-                            <tr>
-                                <th>Fecha de emisión:</th>
-                                <td>2024-03-15</td>
-                            </tr>
-                        </table>
-                        <table class="table table-borderless table-sm">
-                            <tr>
-                                <th>Razon social.:</th>
-                                <td>Prueba Dos, C.A</td>
-                            </tr>
-                            <tr>
-                                <th>R.I.F.:</th>
-                                <td>J00000001</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                   
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Tipo de talonario</th>
-                                <th scope="col">Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>25</td>
-                                <td>2</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="ms-2 me-2">
-                        <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
-                        <textarea class="form-control" id="observacion" name="observacion" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="text-muted text-end" style="font-size:13px">
-                        <span class="text-danger">*</span> Campos Obligatorios
-                    </div>
-
-                    <div class="mt-3">
-                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
-                            </span>Las <span class="fw-bold">Observaciones </span>
-                            cumplen la función de notificar al <span class="fw-bold">Contribuyente</span>
-                            del porque la solicitud ha sido negada. Para que así puede rectificar y cumplir con el deber formal.
-                        </p>
-                    </div>
-
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-danger btn-sm me-4 denegar" id_solicitud="'.$idSolicitud.'">Denegar</button>
-                        <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                    </div>
-
-                </div> -->
+                
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -354,28 +289,28 @@
                 });
             });
 
-            // ///////DENEGAR SOLICITUD
-            // $('#form_denegar_solicitud').submit(function(e) {
-            //     e.preventDefault(e);    
-            //     $.ajax({
-            //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            //         type: 'POST',
-            //         url: '{{route("aprobacion.denegar") }}',
-            //         data: $(this).serialize(),
-            //         success: function(response) {
-            //             alert(response);
-            //             if (response.success) {
-            //                 alert('LA SOLICITUD HA SIDO DENEGADA CORRECTAMENTE');
-            //                 window.location.href = "{{ route('aprobacion')}}";
+            ///////DENEGAR SOLICITUD
+            $('#form_denegar_solicitud').submit(function(e) {
+                e.preventDefault(e);    
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("aprobacion.denegar") }}',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        alert(response);
+                    //     if (response.success) {
+                    //         alert('LA SOLICITUD HA SIDO DENEGADA CORRECTAMENTE');
+                    //         // window.location.href = "{{ route('aprobacion')}}";
                             
-            //             } else {
-            //                 alert('Ha ocurrido un error al denegar la solicitud.');
-            //            }
-            //         },
-            //         error: function() {
-            //         }
-            //     });
-            // });
+                    //     } else {
+                    //         alert('Ha ocurrido un error al denegar la solicitud.');
+                    //    }
+                    },
+                    error: function() {
+                    }
+                });
+            });
 
         });
     </script>
