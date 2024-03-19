@@ -346,9 +346,114 @@ class AprobacionController extends Controller
         
     }
 
-    public function denegar(Request $request)
+    public function denegarInfo(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        $solicitudes = DB::table('solicituds')
+        ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+        ->select('solicituds.fecha','solicituds.id_sujeto', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+        ->where('id_solicitud','=',$idSolicitud)
+        ->get();
+        foreach ($solicitudes as $s) {
+            $razon = $s->razon_social;
+            $rif = $s->rif;
+            $fecha = $s->fecha;
+        }
+
+        $tr = '';
+        $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+        if($detalles){
+            foreach ($detalles as $solicitud) {
+                $tr .= '<tr>
+                            <td>'.$solicitud->tipo_talonario.'</td>
+                            <td>'.$solicitud->cantidad.'</td>
+                        </tr>';
+            }
+        }
+
+        $html = '<div class="modal-header  p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>                  
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Denegar la solicitud</h1>
+                    </div>
+                </div>
+                <div class="modal-body px-4" style="font-size:14px">
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <table class="table table-borderless table-sm me-3">
+                            <tr>
+                                <th>Solicitud Nro.:</th>
+                                <td>'.$idSolicitud.'</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha de emisión:</th>
+                                <td>'.$fecha.'</td>
+                            </tr>
+                        </table>
+                        <table class="table table-borderless table-sm">
+                            <tr>
+                                <th>Razon social.:</th>
+                                <td>'.$razon.'</td>
+                            </tr>
+                            <tr>
+                                <th>R.I.F.:</th>
+                                <td>'.$rif.'</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tipo de talonario</th>
+                                <th scope="col">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            '.$tr.'
+                        </tbody>
+                    </table>
+                    <form id="form_denegar_solicitud">
+                        
+                        <div class="ms-2 me-2">
+                            <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
+                            <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
+                            <input type="hidden" name="id_solicitud" value="'.$idSolicitud.'">
+                        </div>
+                        <div class="text-muted text-end" style="font-size:13px">
+                            <span class="text-danger">*</span> Campos Obligatorios
+                        </div>
+                    
+                        <div class="mt-3 mb-2">
+                            <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                </span>Las <span class="fw-bold">Observaciones </span>
+                                cumplen la función de notificar al <span class="fw-bold">Contribuyente</span>
+                                del porque la solicitud ha sido negada. Para que así, puedan rectificar y cumplir con el deber formal.
+                            </p>
+                        </div>
+
+                        <div class="d-flex justify-content-center m-3">
+                            <button type="submit" class="btn btn-danger btn-sm me-4">Denegar</button>
+                            <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>';
+
+            return response($html);
+    }
+
+    public function denegar(Request $request)
+    {
+        $idSolicitud = $request->post('id_solicitud');
+        $observacion = $request->post('observacion');
+        
+        $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);
+        if ($updates) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 
     /**

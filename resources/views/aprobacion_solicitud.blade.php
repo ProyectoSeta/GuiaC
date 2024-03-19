@@ -100,15 +100,15 @@
     <!-- ********* DENEGAR SOLICITUD ******** -->
     <div class="modal fade" id="modal_denegar_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content" id="content_aprobar_solicitud">
-                <div class="modal-header  p-2 pt-3 d-flex justify-content-center">
+            <div class="modal-content" id="content_denegar_solicitud">
+                <!-- <div class="modal-header  p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
                         <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>                  
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Denegar la solicitud</h1>
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:14px">
-                    <!-- datos -->
+                    
                     <div class="d-flex justify-content-between mb-2">
                         <table class="table table-borderless table-sm me-3">
                             <tr>
@@ -132,7 +132,7 @@
                         </table>
                     </div>
 
-                    <!-- cuerpo -->
+                   
                     <table class="table text-center">
                         <thead>
                             <tr>
@@ -170,7 +170,7 @@
                         <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                     </div>
 
-                </div>
+                </div> -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -302,8 +302,7 @@
                     url: '{{route("aprobacion.correlativo") }}',
                     data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha},
                     success: function(response) {           
-                        // alert(response);
-                        // console.log(response);
+                        
                         if (response.success) {
                             $('#modal_aprobar_solicitud').modal('hide');
                             $('#modal_ver_correlativo').modal('show');
@@ -314,8 +313,7 @@
                                 url: '{{route("aprobacion.info") }}',
                                 data: {solicitud:solicitud},
                                 success: function(response) {           
-                                    // alert(response);
-                                    // console.log(response);
+                                    
                                     $('#content_info_correlativo').html(response);
                                 },
                                 error: function() {
@@ -342,21 +340,42 @@
             $(document).on('click','.denegar_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
-                // alert(solicitud);
+                
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("aprobacion.denegar") }}',
+                    url: '{{route("aprobacion.denegarInfo") }}',
                     data: {solicitud:solicitud},
                     success: function(response) {           
-                        alert(response);
-                        console.log(response);
-                        // $('#content_aprobar_solicitud').html(response);
+                        $('#content_denegar_solicitud').html(response);
                     },
                     error: function() {
                     }
                 });
             });
+
+            // ///////DENEGAR SOLICITUD
+            // $('#form_denegar_solicitud').submit(function(e) {
+            //     e.preventDefault(e);    
+            //     $.ajax({
+            //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            //         type: 'POST',
+            //         url: '{{route("aprobacion.denegar") }}',
+            //         data: $(this).serialize(),
+            //         success: function(response) {
+            //             alert(response);
+            //             if (response.success) {
+            //                 alert('LA SOLICITUD HA SIDO DENEGADA CORRECTAMENTE');
+            //                 window.location.href = "{{ route('aprobacion')}}";
+                            
+            //             } else {
+            //                 alert('Ha ocurrido un error al denegar la solicitud.');
+            //            }
+            //         },
+            //         error: function() {
+            //         }
+            //     });
+            // });
 
         });
     </script>

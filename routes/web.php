@@ -59,11 +59,12 @@ Route::post('/aprobacion_solicitud/sujeto', [App\Http\Controllers\AprobacionCont
 Route::post('/aprobacion_solicitud/aprobar', [App\Http\Controllers\AprobacionController::class, 'aprobar'])->name('aprobacion.aprobar');
 Route::post('/aprobacion_solicitud/correlativo', [App\Http\Controllers\AprobacionController::class, 'correlativo'])->name('aprobacion.correlativo');
 Route::post('/aprobacion_solicitud/info', [App\Http\Controllers\AprobacionController::class, 'info'])->name('aprobacion.info');
+Route::post('/aprobacion_solicitud/denegarInfo', [App\Http\Controllers\AprobacionController::class, 'denegarInfo'])->name('aprobacion.denegarInfo');
 Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionController::class, 'denegar'])->name('aprobacion.denegar');
 
 
 /////////VISTAS: CLIC SIDEBAR
-Route::get('/registro_guia', function () { 
-    return view('registro_guia');
-})->name('registro_guia');
+// Route::get('/registro_guia', function () { 
+//     return view('registro_guia');
+// })->name('registro_guia');
 
