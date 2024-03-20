@@ -19,7 +19,7 @@ class AprobacionController extends Controller
         $solicitudes = DB::table('solicituds')
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
             ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
-            ->where('estado','=','Verificando')
+            ->where('solicituds.estado','=','Verificando')
             ->get();
 
         return view('aprobacion_solicitud', compact('solicitudes'));
