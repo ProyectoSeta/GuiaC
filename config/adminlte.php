@@ -362,7 +362,7 @@ return [
         ['header' => 'Verificación'],
         [
             'text' => 'Nuevos Usuarios',
-            'url'  => 'admin/settings',
+            'url'  => '/verificar_user',
             // 'icon' => 'fas fa-fw fa-user',
         ],
         ['header' => 'Libro de Control'],

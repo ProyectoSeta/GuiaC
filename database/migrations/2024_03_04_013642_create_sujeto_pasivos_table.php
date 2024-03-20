@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('name_repr');
             $table->string('tlf_repr',18);
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->enum('estado',['Verificando','Verificado','Rechazado']);
             $table->timestamps();
         });
     }

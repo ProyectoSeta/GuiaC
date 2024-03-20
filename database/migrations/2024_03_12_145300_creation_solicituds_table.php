@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('referencia');
             $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
             $table->dateTime('fecha');
-            $table->string('observaciones')->nullable();;
+            $table->string('observaciones')->nullable();
             $table->timestamps();
         });
     }

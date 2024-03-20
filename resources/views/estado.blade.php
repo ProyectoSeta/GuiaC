@@ -231,7 +231,7 @@
             });
 
 
-            ///////MODAL: APROBAR SOLICITUD
+            ///////MODAL: VER SOLICITUD
             $(document).on('click','.ver_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');

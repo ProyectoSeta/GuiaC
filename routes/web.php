@@ -72,8 +72,12 @@ Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 
 
 //////////////CORRELATIVO
 Route::get('/correlativo', [App\Http\Controllers\CorrelativoController::class, 'index'])->name('correlativo');
+Route::post('/correlativo/talonario', [App\Http\Controllers\CorrelativoController::class, 'talonario'])->name('correlativo.talonario');
+Route::post('/correlativo/guia', [App\Http\Controllers\CorrelativoController::class, 'guia'])->name('correlativo.guia');
 
 
+////////////////VERIFICAR NUEO USUARIO
+Route::get('/verificar_user', [App\Http\Controllers\VerificarUserController::class, 'index'])->name('verificar_user');
 
 /////////VISTAS: CLIC SIDEBAR
 Route::get('/registro_guia', function () { 

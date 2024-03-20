@@ -69,26 +69,58 @@ class EstadoController extends Controller
                     $val_ucd = $u->valor;
                 }
 
+                $estado = $solicitud->estado;
+                $html_talonarios = '';
+                $tr_talonarios = '';
+                if ($estado == 'En proceso' || $estado == 'Retirar' || $estado == 'Retirado') {
+                    $talonarios = DB::table('talonarios')->where('id_solicitud','=',$idSolicitud)->get();
+                    foreach ($talonarios as $talonario) {
+                        $tr_talonarios .= ' <tr>
+                                                <td>'.$talonario->tipo_talonario.'</td>
+                                                <td class="fst-italic">'.$talonario->desde_co.'</td>
+                                                <td class="fst-italic">'.$talonario->hasta_co.'</td>
+                                            </tr>';
+                    }   
+
+                    $html_talonarios = '<div class="my-3">
+                                            <h6 class="text-center mb-3" style="color: #0064cd;">Talonarios Emitidos</h6>
+                                            <table class="table text-center">
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Desde</th>
+                                                    <th>Hasta</th>
+                                                </tr>
+                                                '.$tr_talonarios.'
+                                            </table>
+                                    </div>';
+                }else{
+                    $html_talonarios = '';
+                }
+
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                            <i class="bx bxs-layer fs-1" style="color:#0c82ff"  ></i>                    
+                                <i class="bx bxs-layer fs-1" style="color:#0c82ff"  ></i>                    
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Datos de la Solicitud</h1>
                             </div>
                         </div>
                         <div class="modal-body" style="font-size:14px;">
-                            <h6 class="text-center mb-3">Solicitud de Talonario(s) Realizada</h6>
-                            <table class="table text-center">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Tipo de talonario</th>
-                                        <th scope="col">Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                   '.$tr.'
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-center mt-3">
+
+                           <div class="mb-3">
+                                <h6 class="text-center mb-3" style="color: #0064cd;">Solicitud de Talonario(s) Realizada</h6>
+                                <table class="table text-center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Tipo de talonario</th>
+                                            <th scope="col">Cantidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    '.$tr.'
+                                    </tbody>
+                                </table>
+                           </div>
+                            '.$html_talonarios.'
+                            <div class="d-flex justify-content-center my-3">
                                 <table class="table table-sm w-75">
                                     <tr>
                                         <th>Total de Guías a emitir</th>

@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('desde_co');
             $table->string('hasta_co');
             $table->date('fecha_emision');
-            $table->date('fecha_recibido');
-            $table->date('fecha_retiro');
+            $table->date('fecha_recibido')->nullable();
+            $table->date('fecha_retiro')->nullable();
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
             $table->timestamps();

@@ -14,26 +14,27 @@
     <div class="table-responsive">
         <table id="example" class="table text-center" style="font-size:14px">
             <thead>
-                <th>#</th>
+                <th>Cod. Talonario</th>
                 <th>Nro. Solicitud</th>
-                <th>Desde</th>
-                <th>Hasta</th>
-                <th>Razón Social</th>
+                <th>Correlativo</th>
                 <th>Rif</th>
+                <th>Razón Social</th>
             </thead>
             <tbody> 
             @foreach ($talonarios as $talonario)
                     <tr>
                         <td>{{$talonario->id_talonario}}</td>
                         <td>{{$talonario->id_solicitud}}</td>
-                        <td>{{$talonario->desde_co}}</td>
-                        <td>{{$talonario->hasta_co}}</td>
                         <td>
-                            <span class="fw-bold">{{$talonario->razon_social}}</span>
+                            <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$talonario->desde_co}} - {{$talonario->hasta_co}}</a>
                         </td>
                         <td>
                             <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif}}</a>
                         </td>
+                        <td>
+                            <span class="fw-bold">{{$talonario->razon_social}}</span>
+                        </td>
+                        
                     </tr>
                @endforeach
                  
@@ -54,6 +55,55 @@
         <div class="modal-dialog">
             <div class="modal-content" id="html_info_sujeto">
                 
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+     <!-- ********* VER GUIAS ******** -->
+     <div class="modal" id="modal_ver_talonario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class="bx bxs-layer fs-1" style="color:#0c82ff"  ></i>                    
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Talonario 450</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:14px">
+                    <table id="example2" class="table table-hover text-center">
+                        <thead>
+                            <tr>
+                                <th>Nro. de Guía</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content_info_talonario">
+                            
+                        </tbody>                      
+                    </table>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+
+     <!-- ********* VER EL REGISTRO DE LA GUÍA ******** -->
+     <div class="modal" id="modal_content_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="info_guia">
+                <div class="modal-header">
+                    <div class="d-flex flex-column">
+                        <h5 style="color: #0072ff">Prueba Dos, C.A.</h5>
+                        <span class="text-muted">J0000002</span>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <h5>Correlativo: AB000001 - AB000026</h5>
+                        <span class="text-muted">Cod. Talonario: 456</span>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:14px">
+
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -117,7 +167,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
              ///////MODAL: INFO SUJETO PASIVO
-             $(document).on('click','.info_sujeto', function(e) { 
+            $(document).on('click','.info_sujeto', function(e) { 
                 e.preventDefault(e); 
                 var sujeto = $(this).attr('id_sujeto');
                 $.ajax({
@@ -127,6 +177,59 @@
                     data: {sujeto:sujeto},
                     success: function(response) {              
                         $('#html_info_sujeto').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+             ///////MODAL: INFO TALONARIO
+             $(document).on('click','.info_talonario', function(e) { 
+                e.preventDefault(e); 
+                var talonario = $(this).attr('id_talonario');
+                // alert(talonario);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.talonario") }}',
+                    data: {talonario:talonario},
+                    success: function(response) {              
+                        // alert(response);
+                        // console.log(response);
+                        $('#content_info_talonario').append(response);
+                        $("#example2").dataTable().fnDestroy();
+                        $('#example2').DataTable({
+                                "language": {
+                                    "lengthMenu": " Mostrar  _MENU_  Registros",
+                                    "zeroRecords": "No se encontraron registros",
+                                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                                    "infoEmpty": "No se encuentran Registros",
+                                    "infoFiltered": "(filtered from _MAX_ total records)",
+                                    'search':"Buscar",
+                                    'paginate':{
+                                        'next':'Siguiente',
+                                        'previous':'Anterior'
+                                    }
+                                }
+                            });
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ////////////////////MODAL: INFO GUIA
+            $(document).on('click','.info_guia', function(e) { 
+                e.preventDefault(e); 
+                var guia = $(this).attr('id_guia');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.guia") }}',
+                    data: {guia:guia},
+                    success: function(response) { 
+                        $('#modal_ver_talonario').modal('hide');             
+                        $('#modal_content_guia').modal('show');
                     },
                     error: function() {
                     }

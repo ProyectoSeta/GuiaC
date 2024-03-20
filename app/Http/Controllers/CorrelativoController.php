@@ -29,6 +29,47 @@ class CorrelativoController extends Controller
         //
     }
 
+    public function talonario(Request $request)
+    {
+        $idTalonario = $request->post('talonario');
+        $talonarios = DB::table('talonarios')->select('desde','hasta')->where('id_talonario','=', $idTalonario)->get();
+        if ($talonarios) {
+            $tr = '';
+            foreach ($talonarios as $talonario) {
+               $desde = $talonario->desde;
+               $hasta = $talonario->hasta;
+
+                for ($i=$desde; $i <= $hasta; $i++) { 
+                    $length = 6;
+                    $string_1 = substr(str_repeat(0, $length).$i, - $length);
+                    $nro_guia = 'AB'.$string_1;
+
+                    $estado = '';
+                    $query = DB::table('control_guias')->where('id_guia','=', $nro_guia)->count();
+                    if ($query == 0) {
+                        $estado = 'Sin reportar';
+                    }else{
+                        $estado = 'Reportada';
+                    }
+
+                    $tr .= '<tr role="button" class="info_guia" id_guia="'.$nro_guia.'">
+                                <td style="color: #0069eb">'.$nro_guia.'</td>
+                                <td>'.$estado.'</td>
+                            </tr>';
+                }/////cierra for
+             
+                return response($tr);
+
+            }////cierra foreach
+        }//// cierra if talonarios
+
+    }
+
+    public function guia(Request $request)
+    {
+        $idGuia = $request->post('guia');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
