@@ -192,7 +192,7 @@ class AprobacionController extends Controller
                             
 
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-success btn-sm me-4 aprobar_correlativo" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
+                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
                                 <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                             </div>
 

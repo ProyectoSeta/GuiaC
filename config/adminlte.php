@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => 'Prueba, C.A.',
+    'logo' => 'Guías MNM',
     // 'logo2' => 'J-00000000-1',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
@@ -318,20 +318,13 @@ return [
         //     'label_color' => 'success',
         // ],
         [
-            'text'        => 'Cantera(s)',
+            'text'        => 'Registro de Cantera(s)',
             'route'         => 'cantera',
             // 'icon'        => 'fas fa-fw fa-user',   
             'label'       => 4,
             'label_color' => 'success',
         ],
-    [
-            'text'          =>'Sujetos',
-            'route'         =>'sujeto',
-            // 'icon'        => 'fas fa-fw fa-user',   
-            'label'       => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'Solicitudes'],
+        ['header' => 'Solicitud'],
         [
             'text' => 'Solicitud de guías',
             'route'  => 'solicitud',
@@ -345,7 +338,7 @@ return [
         ],
         ['header' => 'Control de Solicitudes'],
         [
-            'text'       => 'Aprobación de solicitud',
+            'text'       => 'Aprobación de solicitudes',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/aprobacion_solicitud',
         ],
@@ -354,21 +347,35 @@ return [
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => 'estado',
         ],
-        [
-            'text'       => 'Correlativos',
-            // 'icon_color' => 'fas fa-fw fa-user',
-            'url'        => '/correlativo',
-        ],
         ['header' => 'Verificación'],
         [
             'text' => 'Nuevos Usuarios',
             'url'  => '/verificar_user',
             // 'icon' => 'fas fa-fw fa-user',
         ],
-        ['header' => 'Libro de Control'],
         [
-            'text' => 'Registro de guías',
-            'url'  => 'admin/settings',
+            'text' => 'Canteras',
+            'url'  => '/verificar_cantera',
+            // 'icon' => 'fas fa-fw fa-user',
+        ],
+        ['header' => 'Historial'],
+        [
+            'text'          =>'Sujetos pasivos',
+            'route'         =>'sujeto',
+            // 'icon'        => 'fas fa-fw fa-user',   
+            'label'       => 4,
+            'label_color' => 'success',
+        ],
+        [
+            'text'       => 'Correlativos',
+            // 'icon_color' => 'fas fa-fw fa-user',
+            'url'        => '/correlativo',
+        ],
+        
+        ['header' => 'Usuarios'],
+        [
+            'text' => 'Bitácora',
+            'url'  => '/',
             // 'icon' => 'fas fa-fw fa-user',
         ],
 
@@ -421,22 +428,7 @@ return [
         //         ],
         //     ],
         // ],
-        // ['header' => 'labels'],
-        // [
-        //     'text'       => 'important',
-        //     'icon_color' => 'red',
-        //     'url'        => '#',
-        // ],
-        // [
-        //     'text'       => 'warning',
-        //     'icon_color' => 'yellow',
-        //     'url'        => '#',
-        // ],
-        // [
-        //     'text'       => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url'        => '#',
-        // ],
+
     ],
 
     /*

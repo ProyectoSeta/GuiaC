@@ -39,9 +39,11 @@
                         </td>
                         <td>
                             @if ($cantera->status == 'Verificando')
-                                <span class="badge text-bg-light p-2">Verificando cantera</span>
+                                <span class="badge text-bg-light p-2 d-flex justify-content-center align-items-center"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
                             @elseif ($cantera->status == 'Verificada')
-                                <span class="badge text-bg-success p-2">Cantera verificada</span> 
+                                <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center"><i class='bx bx-check-circle  fs-6 me-2'></i> Cantera verificada</span> 
+                                @elseif ($cantera->status == 'No registrado')
+                            <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center"><i class='bx bx-check-circle  fs-6 me-2'></i> Sin registrar</span> 
                             @endif
                         </td>
                         <td>

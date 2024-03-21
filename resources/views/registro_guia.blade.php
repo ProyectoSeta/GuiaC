@@ -4,6 +4,10 @@
 
 @section('content_header')
     <h1>Libro de Control</h1>
+    <script src="{{ asset('jss/bundle.js') }}" defer></script>
+    <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
+    <script src="{{asset('vendor/sweetalert.js') }}"></script>
+    <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
 @stop
 
 @section('content')
@@ -14,7 +18,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover mt-3 text-center" style="font-size:14px;">
+        <table id="example" class="table table-hover mt-3 text-center" style="font-size:14px;">
             <tbody>
                 <tr>
                     <th scope="col">Nro. Guía</th>
@@ -523,7 +527,7 @@
 @stop
 
 @section('js')
-    <script>
+<script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
         const myModal = document.getElementById('myModal');
@@ -531,6 +535,37 @@
 
         myModal.addEventListener('shown.bs.modal', () => {
             myInput.focus();
+        });
+    </script>
+    <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
+    <script src="{{ asset('jss/datatable.min.js') }}" defer ></script>
+    <script src="{{ asset('jss/datatable.bootstrap.js') }}" ></script>
+    <script src="{{ asset('jss/toastr.js') }}" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" ></script>
+   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example').DataTable(
+                {
+                    "language": {
+                        "lengthMenu": " Mostrar  _MENU_  Registros por página",
+                        "zeroRecords": "No se encontraron registros",
+                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encuentran Registros",
+                        "infoFiltered": "(filtered from _MAX_ total records)",
+                        'search':"Buscar",
+                        'paginate':{
+                            'next':'Siguiente',
+                            'previous':'Anterior'
+                        }
+                    }
+                }
+            );
+
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        
         });
     </script>
     

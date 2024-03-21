@@ -16,12 +16,27 @@
             <thead>
                 <th>Cod.</th>
                 <th>Razón Social</th>
-                <th>Rif</th>
-                <th>Solicitud</th>
-                <th>Estado</th>
-                <th>Emisión</th>
+                <th>R.I.F.</th>
+                <th>Tipo</th>
+                <th>Representante</th>
+                <th>Opciones</th>
             </thead>
             <tbody> 
+            @foreach( $sujetos as $sujeto)               
+                <tr>
+                    <td>{{$sujeto->id_sujeto}}</td>
+                    <td>{{$sujeto->razon_social}}</td>
+                    <td>
+                        <a class="info_sujeto" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sujeto->rif}}</a>
+                    </td>
+                    <td>{{$sujeto->tipo_sujeto}}</td>
+                    <td>{{$sujeto->name_repr}}</td>
+                    <td>
+                        <button type="submit" class="btn btn-success btn-sm aprobar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_sujeto">Aprobar</button>
+                        <button class="btn btn-danger btn-sm denegar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_sujeto">Denegar</button>
+                    </td>
+                </tr>
+            @endforeach
             
                
                         
@@ -38,7 +53,32 @@
     
     
 <!--****************** MODALES **************************-->
-   
+   <!-- ********* INFO SUJETO ******** -->
+    <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_info_sujeto">
+                
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* APROBAR SOLICITUD ******** -->
+    <div class="modal fade" id="modal_aprobar_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_aprobar_sujeto">
+
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+     <!-- ********* DENEGAR SOLICITUD ******** -->
+     <div class="modal fade" id="modal_denegar_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_denegar_solicitud">
+                
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
     
 
 <!--************************************************-->
@@ -99,6 +139,63 @@
     <script type="text/javascript">
         $(document).ready(function () {
             
+
+
+            ///////MODAL: INFO SUJETO PASIVO
+            $(document).on('click','.info_sujeto', function(e) { 
+                e.preventDefault(e); 
+                var sujeto = $(this).attr('id_sujeto');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("aprobacion.sujeto") }}',
+                    data: {sujeto:sujeto},
+                    success: function(response) {              
+                        $('#html_info_sujeto').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////MODAL: INFO APROBAR SUJETO
+            $(document).on('click','.aprobar_sujeto', function(e) { 
+                e.preventDefault(e); 
+                var sujeto = $(this).attr('id_sujeto');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("verificar_user.info") }}',
+                    data: {sujeto:sujeto},
+                    success: function(response) { 
+                        // alert(response);             
+                        $('#content_aprobar_sujeto').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+            ///////MODAL: INFO APROBAR RPUEBA
+            $(document).on('click','#aprobar_sujeto_pasivo', function(e) { 
+                e.preventDefault(e); 
+                var sujeto = $(this).attr('id_sujeto');
+                var limite = document.getElementById("limite");
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("verificar_user.aprobar") }}',
+                    data: {sujeto:sujeto,limite:limite},
+                    success: function(response) { 
+                        alert(response);             
+                      
+                    },
+                    error: function() {
+                    }
+                });
+            });
+           
 
         });
     </script>

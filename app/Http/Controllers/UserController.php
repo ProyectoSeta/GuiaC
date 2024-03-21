@@ -50,7 +50,7 @@ class UserController extends Controller
                     'tlf_repr' => $request->post('tlf_repr')
             ]);
             if ($sujeto->save()) { //insercion en la tabla sujeto pasivo
-                return redirect()->route("solicitud"); // Redirecciona a el controlador que se necesite
+                return redirect()->route("home"); // Redirecciona a el controlador que se necesite
             }
         }
                 

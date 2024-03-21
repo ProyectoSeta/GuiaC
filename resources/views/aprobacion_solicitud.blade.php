@@ -65,7 +65,7 @@
     
     
 <!--****************** MODALES **************************-->
-    <!-- ********* INFO CANTERA ******** -->
+    <!-- ********* INFO SUJETO ******** -->
     <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="html_info_sujeto">

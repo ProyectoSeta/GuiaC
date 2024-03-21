@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\User;
 use App\Models\SujetoPasivo;
+use DB;
 use Illuminate\Http\Request;
 
 class SujetoController extends Controller
@@ -13,6 +15,48 @@ class SujetoController extends Controller
     {
         $sujeto = SujetoPasivo::all();
         return view('sujeto',compact('sujeto'));
+    }
+
+    public function representante(Request $request)
+    {
+        $idSujeto = $request->post('sujeto');
+       
+        $representante = DB::table('sujeto_pasivos')->select('ci_repr','rif_repr','name_repr','tlf_repr')->where('id_sujeto','=',$idSujeto)->get();
+         if ($representante) {
+            $html='';
+            foreach ($representante as $repr) {
+                $html = '<div class="modal-header  p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                                <!-- <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i> -->
+                                <i class="bx bx-briefcase-alt fs-1"></i>
+                                <h1 class="modal-title fs-5" id="" style="color: #0072ff">Datos del Representante</h1>
+                                <h5 class="modal-title" id="" style="font-size:14px">Sujeto Pasivo</h5>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="font-size:14px;">
+                            <div>
+                                <table class="table table-borderless text-center">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <td>'.$repr->name_repr.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>R.I.F.</th>
+                                        <td>'.$repr->rif_repr.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>C.I.</th>
+                                        <td>'.$repr->ci_repr.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Telefono</th>
+                                        <td>'.$repr->tlf_repr.'</td>
+                                    </tr>
+                                </table>
+                            </div>';
+            }
+            return response($html);
+        }
     }
 
     /**

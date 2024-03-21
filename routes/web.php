@@ -42,7 +42,7 @@ Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'destroy
 
 ///////SUJETO PASIVO
 Route::get('/sujeto', [App\Http\Controllers\SujetoController::class, 'index'])->name('sujeto');
-
+Route::post('/sujeto/representante', [App\Http\Controllers\SujetoController::class, 'representante'])->name('sujeto.representante');
 
 ////////SOLICITUD
 Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
@@ -76,8 +76,16 @@ Route::post('/correlativo/talonario', [App\Http\Controllers\CorrelativoControlle
 Route::post('/correlativo/guia', [App\Http\Controllers\CorrelativoController::class, 'guia'])->name('correlativo.guia');
 
 
-////////////////VERIFICAR NUEO USUARIO
+////////////////VERIFICAR NUEVO USUARIO
 Route::get('/verificar_user', [App\Http\Controllers\VerificarUserController::class, 'index'])->name('verificar_user');
+Route::post('/verificar_user/info', [App\Http\Controllers\VerificarUserController::class, 'info'])->name('verificar_user.info');
+Route::post('/verificar_user/aprobar', [App\Http\Controllers\VerificarUserController::class, 'aprobar'])->name('verificar_user.aprobar');
+
+
+////////////////VERIFICAR CANTERA
+Route::get('/verificar_cantera', [App\Http\Controllers\VerificarCanteraController::class, 'index'])->name('verificar_cantera');
+
+
 
 /////////VISTAS: CLIC SIDEBAR
 Route::get('/registro_guia', function () { 
