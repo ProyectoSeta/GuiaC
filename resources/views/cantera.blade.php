@@ -39,11 +39,11 @@
                         </td>
                         <td>
                             @if ($cantera->status == 'Verificando')
-                                <span class="badge text-bg-light p-2 d-flex justify-content-center align-items-center"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
+                                <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
                             @elseif ($cantera->status == 'Verificada')
-                                <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center"><i class='bx bx-check-circle  fs-6 me-2'></i> Cantera verificada</span> 
-                                @elseif ($cantera->status == 'No registrado')
-                            <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center"><i class='bx bx-check-circle  fs-6 me-2'></i> Sin registrar</span> 
+                                <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
+                            @elseif ($cantera->status == 'Denegada')
+                                <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center cantera_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-x-circle fs-6 me-2'></i>Denegada</span> 
                             @endif
                         </td>
                         <td>
@@ -82,7 +82,7 @@
                         <!-- nombre cantera -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-3">
-                                <label for="" class="col-form-label">Nombre <span style="color:red">*</span></label>
+                                <label for="" class="col-form-label">Nombre<span style="color:red">*</span></label>
                             </div>
                             <div class="col-8">
                                 <input type="text" id="" class="form-control form-control-sm" name="nombre" >
@@ -91,85 +91,175 @@
                         <!-- direccion cantera -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-3">
-                                <label for="" class="col-form-label">Dirección <span style="color:red">*</span></label>
+                                <label for="" class="col-form-label">Dirección<span style="color:red">*</span></label>
                             </div>
                             <div class="col-8">
                                 <input type="text" id="" class="form-control form-control-sm" name="direccion" >
                             </div>
                         </div>
                         <!-- produccion cantera -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-3">
-                                <label for="" class="col-form-label">Produccion <span style="color:red">*</span></label>
+                        <div class="row col-12">
+                                <label for="" class="col-form-label ps-1 pb-3">Producción<span style="color:red">*</span></label>
                             </div>
-                            <div class="col-9">
+                        <div class="row g-3 align-items-center mb-2">
+                            
+                            <div class="col-12">
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Mármol" id="marmol">
-                                            <label class="form-check-label" for="marmol">
-                                                Mármol
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Pórfido" id="porfido">
-                                            <label class="form-check-label" for="porfido">
-                                                Pórfido
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Caolín" id="caolin">
-                                            <label class="form-check-label" for="caolin">
-                                                Caolín
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Magnesita" id="magnesita">
-                                            <label class="form-check-label" for="magnesita">
-                                                Magnesita
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena lavada" id="arena">
-                                            <label class="form-check-label" for="arena">
-                                                Arena lavada
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Pizarra" id="pizarra">
-                                            <label class="form-check-label" for="pizarra">
-                                                Pizarra
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Arcilla" id="arcilla">
-                                            <label class="form-check-label" for="arcilla">
-                                                Arcilla
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Caliza" id="caliza">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Caliza (EN BRUTO)" id="caliza">
                                             <label class="form-check-label" for="caliza">
-                                                Caliza
+                                                Caliza (EN BRUTO)
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Yeso" id="yeso">
-                                            <label class="form-check-label" for="yeso">
-                                                Yeso
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value='Piedra Caliza (¾ - 1")' id="piedra_caliza">
+                                            <label class="form-check-label" for="piedra_caliza">
+                                                Piedra Caliza (¾ - 1")
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Turbas" id="turbas">
-                                            <label class="form-check-label" for="turbas">
-                                                Turbas
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value='Arrocillo de Caliza (3/8")' id="caolin">
+                                            <label class="form-check-label" for="caolin">
+                                                Arrocillo de Caliza (3/8")
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Polvillo de Caliza" id="polvillo_caliza">
+                                            <label class="form-check-label" for="polvillo_caliza">
+                                                Polvillo de Caliza
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Carbonato de Calcio" id="carbonato_calcio">
+                                            <label class="form-check-label" for="carbonato_calcio">
+                                                Carbonato de Calcio
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Ripio" id="ripio">
+                                            <label class="form-check-label" for="ripio">
+                                                Ripio
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Dolomita - Dolomita (EN BRUTO)" id="dolomita">
+                                            <label class="form-check-label" for="dolomita">
+                                                Dolomita - Dolomita (EN BRUTO)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Piedra Blanca Dolomita" id="piedra_dolomita">
+                                            <label class="form-check-label" for="piedra_dolomita">
+                                                Piedra Blanca Dolomita
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Cal Hidratada" id="cal_hidratada">
+                                            <label class="form-check-label" for="cal_hidratada">
+                                                Cal Hidratada
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Cal Agrícola" id="cal_agricola">
+                                            <label class="form-check-label" for="cal_agricola">
+                                                Cal Agrícola
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Concreto" id="concreto">
+                                            <label class="form-check-label" for="concreto">
+                                                Concreto
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Cemento" id="cemento">
+                                            <label class="form-check-label" for="cemento">
+                                                Cemento
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena de Río" id="arena_rio">
+                                            <label class="form-check-label" for="arena_rio">
+                                                Arena de Río
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena Lavada" id="arena_lavada">
+                                            <label class="form-check-label" for="arena_lavada">
+                                                Arena Lavada
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena Cernida" id="arena_cernida">
+                                            <label class="form-check-label" for="arena_cernida">
+                                                Arena Cernida
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Gravilla ¾" id="gravilla_3_4">
+                                            <label class="form-check-label" for="gravilla_3_4">
+                                                Gravilla ¾
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Ceramicos" id="Ceramicos">
+                                            <label class="form-check-label" for="Ceramicos">
+                                                Ceramicos
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Arcillas" id="Arcillas">
+                                            <label class="form-check-label" for="Arcillas">
+                                                Arcillas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Adoquines" id="Adoquines">
+                                            <label class="form-check-label" for="Adoquines">
+                                                Adoquines
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value='Gravilla (¾ - 1")' id="gravilla_3_4_1">
+                                            <label class="form-check-label" for="gravilla_3_4_1">
+                                                Gravilla (¾ - 1")
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Bloques" id="Bloques">
+                                            <label class="form-check-label" for="Bloques">
+                                                Bloques
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Piedra Integral" id="piedra_integral">
+                                            <label class="form-check-label" for="piedra_integral">
+                                                Piedra Integral
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Gavión" id="gavion">
+                                            <label class="form-check-label" for="gavion">
+                                                Gavión
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="mineral[]" value="Granzón" id="granzon">
+                                            <label class="form-check-label" for="granzon">
+                                                Granzón
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                </div> <!-- cierra .row  -->
+                                <div class="row pt-3">
+                                    <div class="col-sm-9">
+                                        <div class="form-check ps-0">
                                             <label class="form-check-label" >
                                                 Otro(s)
                                             </label>
@@ -187,7 +277,7 @@
                                             </div>         
                                         </div>
                                     </div>
-                                </div> <!-- cierra .row  -->
+                                </div>
                             </div> <!-- cierra .col-9 produccion -->
                        </div>  <!-- cierra .row produccion -->
                         
@@ -258,8 +348,7 @@
             <div class="modal-content">
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <!-- <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i> -->
-                        <i class='bx bx-cube-alt fs-2'></i>
+                        <i class='bx bxs-hard-hat fs-2' style="color:#ff8f00"></i>
                         <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Producción de la Cantera</h1>
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Agua Viva II</h1>
                     </div>
@@ -273,6 +362,15 @@
                     </div>
 
                 </div>  <!-- cierra modal-body -->
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- *********INFO CANTERA DENEGADA ******** -->
+    <div class="modal" id="modal_info_denegada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_info_denegada">
+                
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -427,6 +525,25 @@
                         } else{
                             alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA CANTERA");
                         }              
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////MODAL: INFO CANTERA DENEGADA
+            $(document).on('click','.cantera_denegada', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("cantera.info_denegada") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        // alert(response);                 
+                        $('#content_info_denegada').html(response);
                     },
                     error: function() {
                     }

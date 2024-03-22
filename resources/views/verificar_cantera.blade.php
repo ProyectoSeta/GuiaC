@@ -19,6 +19,7 @@
                 <th>Nombre</th>
                 <th>Direccion</th>
                 <th>Producción</th>
+                <th>Contribuyente</th>
                 <th>Opciones</th> 
             </thead>
             <tbody id="list_canteras"> 
@@ -32,8 +33,11 @@
                             <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
                         </td>
                         <td>
-                        <button class="btn btn-success btn-sm aprobar_sujeto" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_cantera">Aprobar</button>
-                        <button class="btn btn-danger btn-sm denegar_sujeto" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_cantera">Denegar</button>
+                        <a class="info_sujeto" role="button" id_sujeto='{{ $cantera->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$cantera->rif}}</a>
+                        </td>
+                        <td>
+                            <button class="btn btn-success btn-sm aprobar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_verificar_cantera">Verificar</button>
+                            <button class="btn btn-danger btn-sm denegar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_cantera">Denegar</button>
                         </td>
                     </tr>
                 @endforeach
@@ -49,14 +53,13 @@
     
     
 <!--****************** MODALES **************************-->
- <!-- ********* INFO CANTERA ******** -->
- <div class="modal" id="modal_info_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- ********* INFO CANTERA ******** -->
+    <div class="modal" id="modal_info_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <!-- <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i> -->
-                        <i class='bx bx-cube-alt fs-2'></i>
+                        <i class='bx bxs-hard-hat fs-2' style="color:#ff8f00"></i>
                         <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Producción de la Cantera</h1>
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Agua Viva II</h1>
                     </div>
@@ -70,6 +73,34 @@
                     </div>
 
                 </div>  <!-- cierra modal-body -->
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* INFO SUJETO ******** -->
+    <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_info_sujeto">
+                
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+
+    <!-- ********* VERIFICAR CANTERA ******** -->
+    <div class="modal" id="modal_verificar_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" id="content_verificar_cantera">
+                
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* DENEGAR CANTERA ******** -->
+    <div class="modal" id="modal_denegar_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_denegar_cantera">
+                
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -149,11 +180,117 @@
                     }
                 });
             });
+
+            ///////MODAL: INFO SUJETO PASIVO
+            $(document).on('click','.info_sujeto', function(e) { 
+                e.preventDefault(e); 
+                var sujeto = $(this).attr('id_sujeto');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("aprobacion.sujeto") }}',
+                    data: {sujeto:sujeto},
+                    success: function(response) {              
+                        $('#html_info_sujeto').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////MODAL: VERIFICAR CANTERA
+            $(document).on('click','.aprobar_cantera', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("verificar_cantera.info") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        // alert(response);                 
+                        $('#content_verificar_cantera').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////VERIFICAR CANTERA
+            $(document).on('click','#cantera_verificada', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("verificar_cantera.verificar") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        if (response.success) {
+                            alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
+                            window.location.href = "{{ route('verificar_cantera')}}";
+                        } else {
+                            alert('Ha ocurrido un error al Verificar la Cantera.');
+                        }             
+                       
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////MODAL: DENEGAR CANTERA
+            $(document).on('click','.denegar_cantera', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("verificar_cantera.info_denegar") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        // alert(response);                 
+                        $('#content_denegar_cantera').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
             
 
            
 
         });
+
+        function denegarCantera(){
+            var formData = new FormData(document.getElementById("denegar_cantera"));
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url:'{{route("verificar_cantera.denegar") }}',
+                    type:'POST',
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    data: formData,
+                    success: function(response){
+                        console.log(response);
+                        if (response.success) {
+                            alert('LA VERIFICACIÓN DE LA CANTERA HA SIDO DENEGADA CORRECTAMENTE');
+                            window.location.href = "{{ route('verificar_cantera')}}";
+                        } else {
+                            alert('Ha ocurrido un error al Denegar la verificación de la Cantera.');
+                        }  
+
+                    },
+                    error: function(error){
+                        
+                    }
+                });
+        }
     </script>
   
 @stop

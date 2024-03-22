@@ -72,9 +72,9 @@
     </div>
 
      <!-- ********* DENEGAR SOLICITUD ******** -->
-     <div class="modal fade" id="modal_denegar_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal fade" id="modal_denegar_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content" id="content_denegar_solicitud">
+            <div class="modal-content" id="content_denegar_sujeto">
                 
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -176,28 +176,82 @@
                 });
             });
 
-
-            ///////MODAL: INFO APROBAR RPUEBA
-            $(document).on('click','#aprobar_sujeto_pasivo', function(e) { 
+            ///////MODAL: INFO DENEGAR SUJETO
+            $(document).on('click','.denegar_sujeto', function(e) { 
                 e.preventDefault(e); 
                 var sujeto = $(this).attr('id_sujeto');
-                var limite = document.getElementById("limite");
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("verificar_user.aprobar") }}',
-                    data: {sujeto:sujeto,limite:limite},
-                    success: function(response) { 
-                        alert(response);             
-                      
+                    url: '{{route("verificar_user.info_denegar") }}',
+                    data: {sujeto:sujeto},
+                    success: function(response) {          
+                        $('#content_denegar_sujeto').html(response);
                     },
                     error: function() {
                     }
                 });
             });
+
            
 
         });
+
+        function aprobarUser(){
+            var formData = new FormData(document.getElementById("form_aprobar_user"));
+            console.log("alo");
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("verificar_user.aprobar") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    if (response.success) {
+                        alert('El USUARIO HA SIDO APROBADO CORRECTAMENTE');
+                        window.location.href = "{{ route('verificar_user')}}";
+                    } else {
+                        alert('Ha ocurrido un error al aprobar la verificación del usuario.');
+                    }  
+
+                },
+                error: function(error){
+                    
+                }
+            });
+        }
+
+        function denegarUser(){
+            var formData = new FormData(document.getElementById("form_denegar_sujeto"));
+            console.log("alo");
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("verificar_user.denegar") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    if (response.success) {
+                        alert('LA VERIFICACIÓN DEL USUARIO HA SIDO DENEGADA CORRECTAMENTE');
+                        window.location.href = "{{ route('verificar_user')}}";
+                    } else {
+                        alert('Ha ocurrido un error al denegar la verificación del usuario.');
+                    }  
+
+                },
+                error: function(error){
+                    
+                }
+            });
+        }
     </script>
   
 @stop

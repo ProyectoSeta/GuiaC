@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Correlativos')
+@section('title', 'Talonarios')
 
 @section('content_header')
-    <h1 class="mb-3">Correlativos</h1>
+    <h1 class="mb-3">Talonarios</h1>
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>

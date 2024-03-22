@@ -34,10 +34,10 @@ Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->nam
 //Route::put('/user/{slug?}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 
 /////// CANTERAS
-
 Route::get('/cantera', [App\Http\Controllers\CanteraController::class, 'index'])->name('cantera');
 Route::post('/cantera/store', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
 Route::post('/cantera/minerales', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
+Route::post('/cantera/info_denegada', [App\Http\Controllers\CanteraController::class, 'info_denegada'])->name('cantera.info_denegada');
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'destroy'])->name('cantera.destroy');
 
 ///////SUJETO PASIVO
@@ -68,6 +68,7 @@ Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionCon
 ///////////ESTADO DE SOLICITUDES
 Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->name('estado');
 Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
+Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
 
 
 //////////////CORRELATIVO
@@ -80,11 +81,16 @@ Route::post('/correlativo/guia', [App\Http\Controllers\CorrelativoController::cl
 Route::get('/verificar_user', [App\Http\Controllers\VerificarUserController::class, 'index'])->name('verificar_user');
 Route::post('/verificar_user/info', [App\Http\Controllers\VerificarUserController::class, 'info'])->name('verificar_user.info');
 Route::post('/verificar_user/aprobar', [App\Http\Controllers\VerificarUserController::class, 'aprobar'])->name('verificar_user.aprobar');
+Route::post('/verificar_user/info_denegar', [App\Http\Controllers\VerificarUserController::class, 'info_denegar'])->name('verificar_user.info_denegar');
+Route::post('/verificar_user/denegar', [App\Http\Controllers\VerificarUserController::class, 'denegar'])->name('verificar_user.denegar');
 
 
 ////////////////VERIFICAR CANTERA
 Route::get('/verificar_cantera', [App\Http\Controllers\VerificarCanteraController::class, 'index'])->name('verificar_cantera');
-
+Route::post('/verificar_cantera/info', [App\Http\Controllers\VerificarCanteraController::class, 'info'])->name('verificar_cantera.info');
+Route::post('/verificar_cantera/verificar', [App\Http\Controllers\VerificarCanteraController::class, 'verificar'])->name('verificar_cantera.verificar');
+Route::post('/verificar_cantera/info_denegar', [App\Http\Controllers\VerificarCanteraController::class, 'info_denegar'])->name('verificar_cantera.info_denegar');
+Route::post('/verificar_cantera/denegar', [App\Http\Controllers\VerificarCanteraController::class, 'denegar'])->name('verificar_cantera.denegar');
 
 
 /////////VISTAS: CLIC SIDEBAR

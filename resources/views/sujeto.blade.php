@@ -41,13 +41,13 @@
                         <td>
                         @switch($sujeto->estado)
                                     @case('Verificando')
-                                        <span class="badge text-bg-light">Verificando</span>
+                                        <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando</span>
                                     @break
                                     @case('Verificado')
-                                        <span class="badge text-bg-success">Verificado</span>
+                                        <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Verificado</span>
                                     @break
                                     @case('Rechazado')
-                                        <span class="badge text-bg-danger">Rechazado</span>
+                                        <span class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-x-circle fs-6 me-2'></i>Rechazado</span>
                                     @break
                                 @endswitch
                         </td>
@@ -70,7 +70,7 @@
     
     
   <!--****************** MODALES **************************-->
-    <!-- ********* NUEVA SOLICITUD ******** -->
+    <!-- ********* INFO REPRESENTANTE ******** -->
     <div class="modal" id="modal_info_representante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content" id="content_modal_repr">

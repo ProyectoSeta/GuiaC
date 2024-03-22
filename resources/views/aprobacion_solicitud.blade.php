@@ -289,30 +289,37 @@
                 });
             });
 
-            ///////DENEGAR SOLICITUD
-            $('#form_denegar_solicitud').submit(function(e) {
-                e.preventDefault(e);    
+        });
+
+
+        function denegarSolicitud(){
+            var formData = new FormData(document.getElementById("form_denegar_solicitud"));
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("aprobacion.denegar") }}',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        alert(response);
-                    //     if (response.success) {
-                    //         alert('LA SOLICITUD HA SIDO DENEGADA CORRECTAMENTE');
-                    //         // window.location.href = "{{ route('aprobacion')}}";
-                            
-                    //     } else {
-                    //         alert('Ha ocurrido un error al denegar la solicitud.');
-                    //    }
+                    url:'{{route("aprobacion.denegar") }}',
+                    type:'POST',
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    data: formData,
+                    success: function(response){
+                        // alert(response);
+                        if (response.success) {
+                            alert('LA SOLICITUD HA SIDO DENEGADA CORRECTAMENTE');
+                            window.location.href = "{{ route('aprobacion')}}";
+                        } else {
+                            alert('Ha ocurrido un error al denegar la solicitud.');
+                        }  
+
                     },
-                    error: function() {
+                    error: function(error){
+                        
                     }
                 });
-            });
+        }
 
-        });
+
     </script>
   
 @stop

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('direccion');
             $table->enum('status',['Verificando','Verificado','No registrado']);
-            
+            $table->string('observaciones')->nullable();
             $table->timestamps();
         });
     }

@@ -33,8 +33,7 @@ class AprobacionController extends Controller
             foreach ($query as $sujeto) {
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <!-- <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i> -->
-                                <i class="bx bx-user-circle fs-1"></i>
+                                <i class="bx bx-user-circle fs-1" style="color:#0072ff"></i>
                                 <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$sujeto->razon_social.'</h1>
                                 <h5 class="modal-title" id="" style="font-size:14px">Contribuyente</h5>
                             </div>
@@ -144,7 +143,7 @@ class AprobacionController extends Controller
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2"></i>                       
+                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la siguiente solicitud?</h1>
                                 <div class="">
                                     <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$solicitud->razon_social.'</h1>
@@ -409,7 +408,7 @@ class AprobacionController extends Controller
                             '.$tr.'
                         </tbody>
                     </table>
-                    <form id="form_denegar_solicitud">
+                    <form id="form_denegar_solicitud" method="post" onsubmit="event.preventDefault(); denegarSolicitud()">
                         
                         <div class="ms-2 me-2">
                             <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
@@ -442,13 +441,13 @@ class AprobacionController extends Controller
     {
         $idSolicitud = $request->post('id_solicitud');
         $observacion = $request->post('observacion');
-        
+       
         $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);
+        
         if ($updates) {
-            return response('si');
-            // return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
         }else{
-            // return response()->json(['success' => false]);
+            return response()->json(['success' => false]);
         }
     }
 

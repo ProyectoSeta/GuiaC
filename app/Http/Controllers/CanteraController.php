@@ -117,6 +117,41 @@ class CanteraController extends Controller
         }
     }
 
+    
+    public function info_denegada(Request $request){
+        $idCantera = $request->post('cantera');
+        $query = DB::table('canteras')->select('observaciones')->where('id_cantera','=',$idCantera)->get();
+
+        if ($query) {
+            $html='';
+            foreach ($query as $c) {
+                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                                <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Información</h1>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <span class="fw-bold">Observaciones de la Denegación</span>
+                            <p class="mx-3 mt-1">'.$c->observaciones.'</p>
+
+                            <div class="mt-3 mb-2">
+                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                    </span>Las <span class="fw-bold">Observaciones </span>
+                                    realizadas cumplen con el objetivo de notificarle
+                                    del porque la Cantera no fue verificada. Para que así, pueda rectificar y cumplir con el deber formal.
+                                </p>
+                            </div>
+                        </div>';
+
+            }
+
+            return response($html);
+        }
+
+
+    }
+
     public function show(Request $request){
         
     }

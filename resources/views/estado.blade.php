@@ -101,19 +101,19 @@
                         <td>
                             @switch($solicitud->estado)
                                 @case('Verificando')
-                                    <span class="badge text-bg-light">Verificando pago</span>
+                                    <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando pago</span>
                                 @break
                                 @case('Negada')
-                                    <span class="badge text-bg-danger">Negada</span>
+                                    <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
                                 @break
                                 @case('En proceso')
-                                    <span class="badge text-bg-primary">En proceso</span>
+                                    <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                 @break
-                                @case('Retirar')
-                                    <span class="badge" style="background-color: #ef7f00;">Retirar</span>
+                                @case('Retirar') 
+                                    <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar</span>
                                 @break
                                 @case('Retirado')
-                                    <span class="badge text-bg-success">Retirado</span>
+                                    <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
                                 @break
                   
                             @endswitch                    
@@ -150,6 +150,15 @@
     <div class="modal fade" id="modal_ver_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_ver_solicitud">
+                
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- *********INFO SOLICITUD DENEGADA ******** -->
+    <div class="modal" id="modal_info_denegada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_info_denegada">
                 
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -245,6 +254,25 @@
                         // alert(response);
                         // console.log(response);
                         $('#content_ver_solicitud').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////MODAL: INFO SOLICITUD DENEGADA
+            $(document).on('click','.solicitud_denegada', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.info_denegada") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {
+                        // console.log(response);               
+                        $('#content_info_denegada').html(response);
                     },
                     error: function() {
                     }

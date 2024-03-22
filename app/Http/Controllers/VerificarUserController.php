@@ -25,8 +25,8 @@ class VerificarUserController extends Controller
             foreach ($query as $sujeto) {
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2"></i>                       
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar al siguiente Sujeto pasivo?</h1>
+                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la verificación del siguente Sujeto Pasivo?</h1>
                                 <div class="">
                                     <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$sujeto->razon_social.'</h1>
                                     <h5 class="modal-title" id="" style="font-size:14px">'.$sujeto->rif.'</h5>
@@ -83,18 +83,19 @@ class VerificarUserController extends Controller
                             </table>   
 
                             <h6 class="text-muted text-center" style="font-size:14px;">Límite de Guías</h6>
-                  
+                            <form id="form_aprobar_user" method="post" onsubmit="event.preventDefault(); aprobarUser()">
                                 <div class="row m-3 mb-4">
                                     <label for="limite" class="col-sm-8 col-form-label">Límite de Guías Solicitadas por Mes</label>
                                     <div class="col-sm-4">
-                                        <input type="number" class="form-control" name="limite" id="limite">
+                                        <input type="number" class="form-control" name="limite" required>
+                                        <input type="hidden" class="form-control" name="id_sujeto" value="'.$idSujeto.'">
                                     </div>
                                 </div> 
                                 <div class="d-flex justify-content-center my-2">
-                                    <button class="btn btn-success btn-sm me-4" id="aprobar_sujeto_pasivo" id_sujeto="'.$idSujeto.'">Aprobar</button>
-                                    <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success btn-sm me-4">Aprobar</button>
+                                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                                 </div>
-
+                            </form>
  
                         </div>';
                         
@@ -106,19 +107,134 @@ class VerificarUserController extends Controller
 
     public function aprobar(Request $request)
     {
-        $idSujeto = $request->post('sujeto');
+        $idSujeto = $request->post('id_sujeto');
         $limite = $request->post('limite');
         $mes_actual = date("F");
-        return($limite);
 
-        // $insert = DB::table('limite_guias')->insert(['id_sujeto' => $idSujeto, 'total_guias_mes'=>$limite, 'mes_actual' => $mes_actual, 'total_guias_solicitadas_mes' => '0']);
-        // $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => 'Verificado']);
-        // if ($insert &&$update) {
-        //     return response()->json(['success' => true]);
-        // }else{
-        //     return response()->json(['success' => false]);
-        // }
+        $insert = DB::table('limite_guias')->insert(['id_sujeto' => $idSujeto, 'total_guias_mes'=>$limite, 'mes_actual' => $mes_actual, 'total_guias_solicitadas_mes' => '0']);
+        $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => 'Verificado']);
+        if ($insert &&$update) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
+
+
+
+    public function info_denegar(Request $request)
+    {
+        $idSujeto = $request->post('sujeto');
+        $query = DB::table('sujeto_pasivos')->where('id_sujeto','=',$idSujeto)->get();
+        if ($query) {
+            foreach ($query as $sujeto) {
+                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                                <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>                      
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Denegar la verificación del siguente Sujeto Pasivo?</h1>
+                                <div class="">
+                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$sujeto->razon_social.'</h1>
+                                    <h5 class="modal-title" id="" style="font-size:14px">'.$sujeto->rif.'</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="font-size:14px;">
+                            <h6 class="text-muted text-center" style="font-size:14px;">Datos del Sujeto pasivo</h6>
+                            <table class="table" style="font-size:14px">
+                                <tr>
+                                    <th>Tipo de Contribuyente</th>
+                                    <td>'.$sujeto->tipo_sujeto.'</td>
+                                </tr>
+                                <tr>
+                                    <th>R.I.F.</th>
+                                    <td>'.$sujeto->rif.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Razon Social</th>
+                                    <td>'.$sujeto->razon_social.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Dirección</th>
+                                    <td>'.$sujeto->direccion.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Teléfono móvil</th>
+                                    <td>'.$sujeto->tlf_movil.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Teléfono fijo</th>
+                                    <td>'.$sujeto->tlf_fijo.'</td>
+                                </tr>
+                            </table>
+
+                            <h6 class="text-muted text-center" style="font-size:14px;">Datos del Representante</h6>
+                            <table class="table"  style="font-size:14px">
+                                <tr>
+                                    <th>C.I. del representante</th>
+                                    <td>'.$sujeto->ci_repr.'</td>
+                                </tr>
+                                <tr>
+                                    <th>R.I.F. del representante</th>
+                                    <td>'.$sujeto->rif_repr.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre y Apellido</th>
+                                    <td>'.$sujeto->name_repr.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Teléfono movil</th>
+                                    <td>'.$sujeto->tlf_repr.'</td>
+                                </tr>
+                            </table>   
+
+                            <form id="form_denegar_sujeto" method="post" onsubmit="event.preventDefault(); denegarUser()">
+                                
+                                <div class="ms-2 me-2">
+                                    <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
+                                    <input type="hidden" name="id_sujeto" value="'.$idSujeto.'">
+                                </div>
+                                <div class="text-muted text-end" style="font-size:13px">
+                                    <span class="text-danger">*</span> Campos Obligatorios
+                                </div>
+                            
+                                <div class="mt-3 mb-2">
+                                    <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                        </span>Las <span class="fw-bold">Observaciones </span>
+                                        cumplen la función de notificar al <span class="fw-bold">Contribuyente</span>
+                                        del porque su usuario no ha sido verificado. Para que así, puedan rectificar y cumplir con el deber formal.
+                                    </p>
+                                </div>
+
+                                <div class="d-flex justify-content-center m-3">
+                                    <button type="submit" class="btn btn-danger btn-sm me-4">Denegar</button>
+                                    <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+ 
+                        </div>';
+                        
+                return response($html);
+                
+            }
+        }
+    }
+
+
+
+    public function denegar(Request $request)
+    {
+        $idSujeto = $request->post('id_sujeto');
+        $observacion = $request->post('observacion');
+
+        $updates = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => 'Rechazado', 'observaciones' => $observacion]);
+        if ($updates) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
+
 
     /**
      * Show the form for creating a new resource.

@@ -27,8 +27,7 @@ class SujetoController extends Controller
             foreach ($representante as $repr) {
                 $html = '<div class="modal-header  p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <!-- <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i> -->
-                                <i class="bx bx-briefcase-alt fs-1"></i>
+                                <i class="bx bx-briefcase-alt fs-1" style="color:#c14900"></i>
                                 <h1 class="modal-title fs-5" id="" style="color: #0072ff">Datos del Representante</h1>
                                 <h5 class="modal-title" id="" style="font-size:14px">Sujeto Pasivo</h5>
                             </div>

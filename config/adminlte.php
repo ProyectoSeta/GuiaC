@@ -367,7 +367,7 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text'       => 'Correlativos',
+            'text'       => 'Talonarios',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/correlativo',
         ],

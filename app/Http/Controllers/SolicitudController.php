@@ -127,61 +127,95 @@ class SolicitudController extends Controller
             }
         }
 
+        $total_guias_solicitadas = $tipo * $cant;
+        $limites = DB::table('limite_guias')->where('id_sujeto','=',$id_sp)->get();
+        // $mes_limite = '';
+        $total_guias = '';
+        foreach ($limites as $limite) {
+            $total_guias_mes = $limite->total_guias_mes;
+            $total_guias_solicitadas_mes = $limite->total_guias_solicitadas_mes;
+            $mes_limite = $limite->mes_actual;
+        }
+        $total_guias = $total_guias_solicitadas_mes +  $total_guias_solicitadas;
+
         $otroC = $request->post('status_otro_tipo');
 
-        if ($otroC == 'true') {     ///////DOS (2) TIPOS DE TALONARIOS
-            $tipo2 = $request->post('tipo2');
-            $cant2 = $request->post('cantidad2');
+        if ($total_guias <= $total_guias_mes) { //////el numero de guias a solicitar no sobrepasa el limite del mes
+            if ($otroC == 'true') {     ///////DOS (2) TIPOS DE TALONARIOS
+                $tipo2 = $request->post('tipo2');
+                $cant2 = $request->post('cantidad2');
 
-            if ($request->hasFile('ref_pago')) {
-                $photo         =   $request->file('ref_pago');
-                $nombreimagen  =   $photo->getClientOriginalName();
-                $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
-                $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
-                if(copy($photo->getRealPath(),$ruta)){
-                    
-                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
-                    
-                    if($query_solicitud){
-                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                      
-                        $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
-                        $query_detalle_2 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant2, 'id_solicitud' => $id_solicitud]);
+                if ($request->hasFile('ref_pago')) {
+                    $photo         =   $request->file('ref_pago');
+                    $nombreimagen  =   $photo->getClientOriginalName();
+                    $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
+                    $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
+                    if(copy($photo->getRealPath(),$ruta)){
                         
-                        if($query_detalle_1 && $query_detalle_2){
-                            return response()->json(['success' => true]);
+                        $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
+                        
+                        if($query_solicitud){
+                            $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                        
+                            $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
+                            $query_detalle_2 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant2, 'id_solicitud' => $id_solicitud]);
+
+                            //////////////////ACTUALIZACIÓN DEL LIMITE DE GUIAS
+                            if ($mes_limite == $mes) {
+                                $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
+                            }else {
+                                $total_guias =  $total_guias_solicitadas;
+                                $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
+                            }
+
+                            if($query_detalle_1 && $query_detalle_2){
+                                return response()->json(['success' => true]);
+                            }
                         }
                     }
+                }else{   
+                    return response()->json(['success' => false]);
                 }
-            }else{   
-                return response()->json(['success' => false]);
+
             }
-
-        }else{      ///////UN (1) TIPO DE TALONARIO
-            
-            if ($request->hasFile('ref_pago')) {
-                $photo         =   $request->file('ref_pago');
-                $nombreimagen  =   $photo->getClientOriginalName();
-                $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
-                $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
-                if(copy($photo->getRealPath(),$ruta)){
-                    
-                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
-
-                    if($query_solicitud){
-                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                        $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
+            else{      ///////UN (1) TIPO DE TALONARIO
+                
+                if ($request->hasFile('ref_pago')) {
+                    $photo         =   $request->file('ref_pago');
+                    $nombreimagen  =   $photo->getClientOriginalName();
+                    $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
+                    $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
+                    if(copy($photo->getRealPath(),$ruta)){
                         
-                        if($query_detalle_1){
-                            return response()->json(['success' => true]);
+                        $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
+
+                        if($query_solicitud){
+                            $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                            $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
+                            
+                            //////////////////ACTUALIZACIÓN DEL LIMITE DE GUIAS
+                            if ($mes_limite == $mes) {
+                                $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
+                            }else {
+                                $total_guias =  $total_guias_solicitadas;
+                                $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
+                            }
+
+                            if($query_detalle_1){
+                                return response()->json(['success' => true]);
+                            }
                         }
                     }
+                }else{   
+                    return response()->json(['success' => false]);
                 }
-            }else{   
-                return response()->json(['success' => false]);
-            }
 
-        }
+            }////cierra else
+            // return response('no ha excedido');
+
+        }else{  //////el numero de guias a solicitar no sobrepasa el limite del mes
+            return response('Ha excedido el número de Guías a solicitar por mes');
+        } 
 
     }
 

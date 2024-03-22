@@ -26,7 +26,7 @@ class EstadoController extends Controller
         $idSolicitud = $request->post('solicitud');
        
         $solicitudes = DB::table('solicituds')
-        ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+        ->join('sujeto_pasivos', 'solicituds.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
         ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
@@ -160,6 +160,41 @@ class EstadoController extends Controller
 
     }
 
+
+
+    public function info_denegada(Request $request){
+        $idSolicitud = $request->post('solicitud');
+        $query = DB::table('solicituds')->select('observaciones')->where('id_solicitud','=',$idSolicitud)->get();
+
+        if ($query) {
+            $html='';
+            foreach ($query as $c) {
+                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                                <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Información</h1>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <span class="fw-bold">Observaciones de la Denegación</span>
+                            <p class="mx-3 mt-1">'.$c->observaciones.'</p>
+
+                            <div class="mt-3 mb-2">
+                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                    </span>Las <span class="fw-bold">Observaciones </span>
+                                    realizadas cumplen con el objetivo de notificarle
+                                    del porque la Cantera no fue verificada. Para que así, pueda rectificar y cumplir con el deber formal.
+                                </p>
+                            </div>
+                        </div>';
+
+            }
+
+            return response($html);
+        }
+
+
+    }
 
     /**
      * Show the form for creating a new resource.
