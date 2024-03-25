@@ -512,23 +512,28 @@
                 e.preventDefault(e); 
                 var cantera = $(this).attr('id_cantera');
                 var nombre = $(this).attr('nombre');
-                confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA CANTERA: " + nombre + "?");
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("cantera.destroy") }}',
-                    data: {cantera:cantera},
-                    success: function(response) {
-                        if (response.success){
-                            alert("CANTERA ELIMINADA EXITOSAMENTE");
-                            window.location.href = "{{ route('cantera')}}";
-                        } else{
-                            alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA CANTERA");
-                        }              
-                    },
-                    error: function() {
-                    }
-                });
+        
+                if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA CANTERA: " + nombre + "?")) {
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("cantera.destroy") }}',
+                        data: {cantera:cantera},
+                        success: function(response) {
+                            if (response.success){
+                                alert("CANTERA ELIMINADA EXITOSAMENTE");
+                                window.location.href = "{{ route('cantera')}}";
+                            } else{
+                                alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA CANTERA");
+                            }              
+                        },
+                        error: function() {
+                        }
+                    });
+                }else{
+
+                }
+               
             });
 
             ///////MODAL: INFO CANTERA DENEGADA

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="body_sesion_resgister">
+<div id="body_sesion_resgister" class="position-relative">
     <div class="px-4 py-5 px-md-5 text-center text-lg-start" id="div_body_session">
             <div class="container">
             <div class="row gx-lg-5 align-self-center">
@@ -181,7 +181,7 @@
 
             
      </div> <!--cierra id.div_body_session -->
-     <div class="bottom-0 start-0 ms-3 ">
+     <div class="position-absolute bottom-0 start-0 ps-3 pb-3">
         <img src="{{asset('assets/gobierno.png')}}" alt="" width="150px">
         <img src="{{asset('assets/aragua.png')}}" alt="" width="75px">
         <img src="{{asset('assets/logo-seta.png')}}" alt="" class="mt-3 ms-2" width="140px">

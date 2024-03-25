@@ -222,32 +222,56 @@ class AprobacionController extends Controller
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
 
-                    for ($i=1; $i <=$cant; $i++) {                        
+                    for ($i=1; $i <= $cant; $i++) {                        
                         $c = $c + 1; 
                         
                         if ($c == 1) {
                            $desde = 1;
+                           $hasta = $tipo;
+
                         }else{
                             $id_max= DB::table('talonarios')->max('id_talonario');
                             $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
                             foreach ($query_hasta as $hasta) {
                                 $prev_hasta = $hasta->hasta;
                             }
-                            $desde = $prev_hasta + 1;
+                            $desde = $prev_hasta +1;
+                            $hasta = ($desde + $tipo)-1;
                         }
                         
-                        $hasta = $desde + $tipo;
+                        $contador_guia = $desde;
+//                         ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
+//                         for ($i=1; $i<=$tipo; $i++) {
+                            
+//                             $nro_control = '';
+//                             do {
+//                                 $caracteres = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//                                 $nro_control_relativo = substr(str_shuffle($caracteres), 0, 8); 
+//                                 $search_control = DB::table('numero_controls')->selectRaw("count(*) as total")->where('nro_control','=',$nro_control_relativo)->get();
+                                
+//                                 foreach ($search_control as $search) {
+//                                     if ($search->total != 0) {
+//                                         ///////hay un registro con ese numero de control
+//                                         $seguir = true;
+//                                     }else{
+//                                         //////no hay registros con ese numero de control
+//                                         $nro_control = $nro_control_relativo;
+//                                         $seguir = false;
+//                                     }
+//                                 }
+// echo ('a');
+//                             } while ($ == );
 
-                        $length = 6;
-                        $string_1 = substr(str_repeat(0, $length).$desde, - $length);
-                        $string_2 = substr(str_repeat(0, $length).$hasta, - $length);
-
-                        $desde_co = 'AB'.$string_1;
-                        $hasta_co = 'AB'.$string_2;
+//                             $insert_control = DB::table('numero_controls')->insert(['id_solicitud' => $idSolicitud, 'nro_guia'=>$contador_guia, 'nro_control' => $nro_control]);
+//                             if ($insert_control) {
+//                                 $contador_guia = $contador_guia + 1;
+//                             }
+                            
+//                         }
+                        ////////////////////////////////////////
 
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
-                                            'desde' => $desde, 'hasta' => $hasta, 'desde_co' => $desde_co,
-                                            'hasta_co' => $hasta_co, 'fecha_emision' => $fecha]);
+                                            'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
                         if ($insert) {
                             $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
                         }
@@ -259,25 +283,24 @@ class AprobacionController extends Controller
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
 
-                    for ($i=1; $i <=$cant; $i++) {  
+                    for ($i=1; $i <= $cant; $i++) {  
                         $id_max= DB::table('talonarios')->max('id_talonario');
                         $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
                         foreach ($query_hasta as $hasta) {
                             $prev_hasta = $hasta->hasta;
                         }
-                        $desde = $prev_hasta + 1;
-                        $hasta = $desde + $tipo;
+                        $desde = $prev_hasta +1;
+                        $hasta = ($desde + $tipo)-1;
                         
-                        $length = 6;
-                        $string_1 = substr(str_repeat(0, $length).$desde, - $length);
-                        $string_2 = substr(str_repeat(0, $length).$hasta, - $length);
+                        // $length = 6;
+                        // $string_1 = substr(str_repeat(0, $length).$desde, - $length);
+                        // $string_2 = substr(str_repeat(0, $length).$hasta, - $length);
 
-                        $desde_co = 'AB'.$string_1;
-                        $hasta_co = 'AB'.$string_2;
+                        // $desde_co = 'AB'.$string_1;
+                        // $hasta_co = 'AB'.$string_2;
 
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
-                                            'desde' => $desde, 'hasta' => $hasta, 'desde_co' => $desde_co,
-                                            'hasta_co' => $hasta_co, 'fecha_emision' => $fecha]);
+                                            'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
                         if ($insert) {
                             $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
                         }
@@ -441,10 +464,30 @@ class AprobacionController extends Controller
     {
         $idSolicitud = $request->post('id_solicitud');
         $observacion = $request->post('observacion');
-       
+
+        $user = auth()->id();
+        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $id_sp = $sp->id_sujeto;
+
+        ////////////ELIMINAR NUMERO DE GUIAS, EN GUIAS SOLICITADAS (LIMTE_GUIAS)/////
+        $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
+        $guias = 0;
+        
+        if($detalles){
+            foreach ($detalles as $solicitud) {
+            $guias = $guias + ($solicitud->tipo_talonario * $solicitud->cantidad);
+            }
+        }
+        $limites = DB::table('limite_guias')->select('total_guias_solicitadas_mes')->where('id_sujeto','=',$id_sp)->get();
+        foreach ($limites as $limite) {
+            $new_total_guias = $limite->total_guias_solicitadas_mes - $guias;
+        }
+        $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $new_total_guias]);
+        
+        ////////////////CAMBIAR ESTADO DE SOLICITUD A DENEGADA
         $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);
         
-        if ($updates) {
+        if ($updates && $update_limite) {
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

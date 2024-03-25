@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
             $table->string('nombre');
             $table->string('direccion');
-            $table->enum('status',['Verificando','Verificado','No registrado']);
+            $table->enum('status',['Verificando','Verificada','Denegada']);
             $table->string('observaciones')->nullable();
             $table->timestamps();
         });

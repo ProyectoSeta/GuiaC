@@ -41,7 +41,7 @@
                         <td>
                             @switch($solicitud->estado)
                             @case('Verificando')
-                                    <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando pago</span>
+                                    <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
                                 @break
                                 @case('Negada')
                                     <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
@@ -59,9 +59,16 @@
                             @endswitch                    
                         </td>
                         <td>
-                            <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_solicitud="{{$solicitud->id_solicitud}}">
-                                <i class="bx bx-trash-alt fs-6"></i>
-                            </span>
+                            @if ($solicitud->estado == 'Verificando')
+                                <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_solicitud="{{$solicitud->id_solicitud}}">
+                                    <i class="bx bx-trash-alt fs-6"></i>
+                                </span> 
+                            @else
+                                <span class="badge" style="background-color: #ed00008c;">
+                                    <i class="bx bx-trash-alt fs-6"></i>
+                                </span> 
+                            @endif
+                            
                         </td>
                     </tr>
                 @endforeach
@@ -369,10 +376,9 @@
                             alert('La solicitud a sido generada exitosamente!');
                             $('#form_generar_solicitud')[0].reset();
                             $('#modal_new_solicitud').modal('hide');
-                            window.location.href = "{{ route('solicitud')}}";
-                            
+                            window.location.href = "{{ route('solicitud')}}";   
                         }else{
-                            alert(response);
+                            alert(response.nota);
                        }
                     },
                     error: function() {
@@ -402,23 +408,29 @@
             $(document).on('click','.delete_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
-                confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA SOLICITUD CON EL CÓDIGO:   " + solicitud + "?");
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("solicitud.destroy") }}',
-                    data: {solicitud:solicitud},
-                    success: function(response) {
-                        if (response.success){
-                            alert("SOLICITUD ELIMINADA EXITOSAMENTE");
-                            window.location.href = "{{ route('solicitud')}}";
-                        } else{
-                            alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA SOLICITUD");
-                        }              
-                    },
-                    error: function() {
-                    }
-                });
+                
+                if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA SOLICITUD CON EL CÓDIGO:   " + solicitud + "?")) {
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("solicitud.destroy") }}',
+                        data: {solicitud:solicitud},
+                        success: function(response) {
+                           
+                            if (response.success){
+                                alert("SOLICITUD ELIMINADA EXITOSAMENTE");
+                                window.location.href = "{{ route('solicitud')}}";
+                            } else{
+                                alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA SOLICITUD");
+                            }              
+                        },
+                        error: function() {
+                        }
+                    });
+                }else{
+
+                }
+                
             });
 
              ///////MODAL: INFO SOLICITUD DENEGADA

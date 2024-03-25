@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('control_guias', function (Blueprint $table) {
             $table->increments('id_control');
-            $table->string('id_guia')->unique();
+            $table->string('nro_guia')->unique();
+            $table->string('nro_control')->unique();
             $table->enum('tipo_guia',['Entrada','Salida']);
             $table->integer('id_sujeto')->unsigned();
             $table->enum('mnm',['Mineral no metalico']);
