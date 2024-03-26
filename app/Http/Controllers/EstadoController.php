@@ -75,10 +75,16 @@ class EstadoController extends Controller
                 if ($estado == 'En proceso' || $estado == 'Retirar' || $estado == 'Retirado') {
                     $talonarios = DB::table('talonarios')->where('id_solicitud','=',$idSolicitud)->get();
                     foreach ($talonarios as $talonario) {
+                        $desde = $talonario->desde;
+                        $hasta = $talonario->hasta;
+                        $length = 6;
+                        $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                        $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
                         $tr_talonarios .= ' <tr>
                                                 <td>'.$talonario->tipo_talonario.'</td>
-                                                <td class="fst-italic">'.$talonario->desde_co.'</td>
-                                                <td class="fst-italic">'.$talonario->hasta_co.'</td>
+                                                <td class="fst-italic">'.$formato_desde.'</td>
+                                                <td class="fst-italic">'.$formato_hasta.'</td>
                                             </tr>';
                     }   
 

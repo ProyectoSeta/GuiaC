@@ -238,27 +238,27 @@
                     data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha},
                     success: function(response) {           
                         console.log(response);
-                        alert(response);
-                        // if (response.success) {
-                        //     $('#modal_aprobar_solicitud').modal('hide');
-                        //     $('#modal_ver_correlativo').modal('show');
+                        // alert(response);
+                        if (response.success) {
+                            $('#modal_aprobar_solicitud').modal('hide');
+                            $('#modal_ver_correlativo').modal('show');
 
-                        //     $.ajax({
-                        //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        //         type: 'POST',
-                        //         url: '{{route("aprobacion.info") }}',
-                        //         data: {solicitud:solicitud},
-                        //         success: function(response) {           
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("aprobacion.info") }}',
+                                data: {solicitud:solicitud},
+                                success: function(response) {           
                                     
-                        //             $('#content_info_correlativo').html(response);
-                        //         },
-                        //         error: function() {
-                        //         }
-                        //     });
+                                    $('#content_info_correlativo').html(response);
+                                },
+                                error: function() {
+                                }
+                            });
   
-                        // }else {
-                        //     alert('Ha ocurrido un error al aprobar la solicitud');
-                        // }
+                        }else {
+                            alert('Ha ocurrido un error al aprobar la solicitud');
+                        }
         
                     },
                     error: function() {

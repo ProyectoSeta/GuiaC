@@ -92,9 +92,8 @@ Route::post('/verificar_cantera/verificar', [App\Http\Controllers\VerificarCante
 Route::post('/verificar_cantera/info_denegar', [App\Http\Controllers\VerificarCanteraController::class, 'info_denegar'])->name('verificar_cantera.info_denegar');
 Route::post('/verificar_cantera/denegar', [App\Http\Controllers\VerificarCanteraController::class, 'denegar'])->name('verificar_cantera.denegar');
 
+////////////////VERIFICAR CANTERA
+Route::get('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'index'])->name('registro_guia');
+Route::post('/registro_guia/modal_registro', [App\Http\Controllers\RegistroGuiaController::class, 'modal_registro'])->name('registro_guia.modal_registro');
 
-/////////VISTAS: CLIC SIDEBAR
-Route::get('/registro_guia', function () { 
-    return view('registro_guia');
-})->name('registro_guia');
 

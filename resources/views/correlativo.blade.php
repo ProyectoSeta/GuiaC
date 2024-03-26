@@ -26,7 +26,15 @@
                         <td>{{$talonario->id_talonario}}</td>
                         <td>{{$talonario->id_solicitud}}</td>
                         <td>
-                            <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$talonario->desde_co}} - {{$talonario->hasta_co}}</a>
+                            @php
+                                $desde = $talonario->desde;
+                                $hasta = $talonario->hasta;
+                                $length = 6;
+                                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                            @endphp
+                            <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
                         </td>
                         <td>
                             <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif}}</a>

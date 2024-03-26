@@ -204,6 +204,22 @@ class AprobacionController extends Controller
 
     }
 
+    private function generarToken($longitud = 10)
+    {
+        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $token = '';
+        for ($i = 0; $i < $longitud; $i++) {
+            $token .= $caracteres[mt_rand(0, strlen($caracteres) - 1)];
+        }
+        return $token;
+    }
+
+    // Función para verificar si un token ya existe en la base de datos
+    private function tokenExiste($token)
+    {
+        return DB::table('numero_controls')->where('nro_control', $token)->exists();
+    }
+
     public function correlativo(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
@@ -221,8 +237,8 @@ class AprobacionController extends Controller
                 foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
-
-                    for ($i=1; $i <= $cant; $i++) {                        
+                    // return response($cant); 
+                    for ($i=0; $i < $cant; $i++) {                        
                         $c = $c + 1; 
                         
                         if ($c == 1) {
@@ -240,42 +256,28 @@ class AprobacionController extends Controller
                         }
                         
                         $contador_guia = $desde;
-//                         ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
-//                         for ($i=1; $i<=$tipo; $i++) {
+                        ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
+                        for ($t=0; $t < $tipo; $t++) {
+                            do {
+                                $nuevoToken = $this->generarToken();
+                            } while ($this->tokenExiste($nuevoToken));
                             
-//                             $nro_control = '';
-//                             do {
-//                                 $caracteres = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//                                 $nro_control_relativo = substr(str_shuffle($caracteres), 0, 8); 
-//                                 $search_control = DB::table('numero_controls')->selectRaw("count(*) as total")->where('nro_control','=',$nro_control_relativo)->get();
-                                
-//                                 foreach ($search_control as $search) {
-//                                     if ($search->total != 0) {
-//                                         ///////hay un registro con ese numero de control
-//                                         $seguir = true;
-//                                     }else{
-//                                         //////no hay registros con ese numero de control
-//                                         $nro_control = $nro_control_relativo;
-//                                         $seguir = false;
-//                                     }
-//                                 }
-// echo ('a');
-//                             } while ($ == );
-
-//                             $insert_control = DB::table('numero_controls')->insert(['id_solicitud' => $idSolicitud, 'nro_guia'=>$contador_guia, 'nro_control' => $nro_control]);
-//                             if ($insert_control) {
-//                                 $contador_guia = $contador_guia + 1;
-//                             }
+                            // Guarda el nuevo token en la base de datos
+                            $insert_control = DB::table('numero_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
                             
-//                         }
+                            if ($insert_control) {
+                                $contador_guia = $contador_guia + 1;
+                            }
+                        }
                         ////////////////////////////////////////
 
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
-                        if ($insert) {
-                            $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
-                        }
+                        
                     } ////cierra for    
+                    
+                    $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                
                 }/////cierra foreach
             }else{   //////////Hay registros en la tabla Talonarios
                 $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
@@ -291,21 +293,29 @@ class AprobacionController extends Controller
                         }
                         $desde = $prev_hasta +1;
                         $hasta = ($desde + $tipo)-1;
-                        
-                        // $length = 6;
-                        // $string_1 = substr(str_repeat(0, $length).$desde, - $length);
-                        // $string_2 = substr(str_repeat(0, $length).$hasta, - $length);
 
-                        // $desde_co = 'AB'.$string_1;
-                        // $hasta_co = 'AB'.$string_2;
-
+                        $contador_guia = $desde;
+                        ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
+                        for ($t=0; $t < $tipo; $t++) {
+                            do {
+                                $nuevoToken = $this->generarToken();
+                            } while ($this->tokenExiste($nuevoToken));
+                            
+                            // Guarda el nuevo token en la base de datos
+                            $insert_control = DB::table('numero_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
+                            
+                            if ($insert_control) {
+                                $contador_guia = $contador_guia + 1;
+                            }
+                        }
+                        ////////////////////////////////////////
+    
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
-                        if ($insert) {
-                            $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
-                        }
-    
                     } ////cierra for
+
+                    $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                
                 } ////cierra foreach
             }
            
@@ -327,15 +337,21 @@ class AprobacionController extends Controller
             $i=0;
             foreach ($talonarios as $talonario) {
                 $i = $i + 1;
+                $desde = $talonario->desde;
+                $hasta = $talonario->hasta;
+                $length = 6;
+                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
                 $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
                                 <table class="table mt-2 mb-3">
                                     <tr>
                                         <th>Tipo:</th>
                                         <td>'.$talonario->tipo_talonario.'</td>
                                         <th>Desde:</th>
-                                        <td>'.$talonario->desde_co.'</td>
+                                        <td>'.$formato_desde.'</td>
                                         <th>Hasta:</th>
-                                        <td>'.$talonario->hasta_co.'</td>
+                                        <td>'.$formato_hasta.'</td>
                                     </tr>
                                 </table>';
             }
