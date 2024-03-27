@@ -520,7 +520,10 @@
                         url: '{{route("cantera.destroy") }}',
                         data: {cantera:cantera},
                         success: function(response) {
-                            if (response.success){
+                            if (response.success == 'sin permiso'){
+                                alert("LA CANTERA NO PUEDE SER ELIMINADA, PORQUE HAY REGISTROS DE GUÍAS CON ESTA CANTERA");
+                            }
+                            else if (response.success){
                                 alert("CANTERA ELIMINADA EXITOSAMENTE");
                                 window.location.href = "{{ route('cantera')}}";
                             } else{

@@ -13,65 +13,53 @@
 @section('content')
     <p></p>
 
-    <div class="">
+    <div class="mb-3">
         <button type="button" class="btn btn-primary btn-sm" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"><i class='bx bx-plus'></i>Registrar guía</button>
     </div>
 
     <div class="table-responsive">
         <table id="example" class="table table-hover mt-3 text-center" style="font-size:14px;">
+        <thead>
+            <tr>
+                <th scope="col">Nro. Guía</th>
+                <th scope="col">Cantera</th>
+                <th scope="col">Tipo de Mineral</th>
+                <th scope="col">Cantidad Transportada</th>
+                <th scope="col">Destinatario</th>
+                <th scope="col">Destino</th>
+                <th scope="col">Nro. Factura</th>
+                <th scope="col">Tipo de Guia</th>
+                <th scope="col">¿Anulada?</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
             <tbody>
-                <tr>
-                    <th scope="col">Nro. Guía</th>
-                    <th scope="col">Cantera</th>
-                    <th scope="col">Tipo de Mineral</th>
-                    <th scope="col">Metros</th>
-                    <th scope="col">Toneladas</th>
-                    <th scope="col">Destinatario</th>
-                    <th scope="col">Rif Destinatario</th>
-                    <th scope="col">Destino</th>
-                    <th scope="col">Nro. Factura</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-                <tr>
-                    <td>A00000125</td>
-                    <td>Agua viva II</td>
-                    <td>Polvillo</td>
-                    <td class="fst-italic text-secondary">No Aplica</td>
-                    <td>2,3</td>
-                    <td>Ferrepontal, C.A.</td>
-                    <td>J933200-1</td>
-                    <td>Villa de cura Av. Sucre, Edif. Los samanes, local 3-55</td>
-                    <td>5002</td>
-                    <td>Salida</td>
-                    <td>
-                        <div class="d-flex">
-                            <span class="badge me-1" style="background-color: #ed0000;" role="button" data-bs-toggle="modal" data-bs-target="#modal_delete_guia">
-                                <i class='bx bx-trash-alt fs-6'></i>
-                            </span>
-                            <span class="badge" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia">
-                                <i class='bx bx-pencil fs-6'></i>
-                            </span>
-                        </div>
-                        
-                    </td>
-                </tr>
+                @foreach ($registros as $registro)
+                    <tr role="button">
+                        <td>{{$registro->nro_guia}}</td>
+                        <td>{{$registro->nombre}}</td>
+                        <td>{{$registro->mineral}}</td>
+                        <td>{{$registro->cantidad}} {{$registro->unidad_medida}}</td>
+                        <td>{{$registro->razon_destinatario}}</td>
+                        <td>{{$registro->destino}}</td>
+                        <td>{{$registro->nro_factura}}</td>
+                        <td class="fst-italic text-secondary">{{$registro->tipo_guia}}</td>
+                        <td>{{$registro->anulada}}</td>
+                        <td>
+                            <div class="d-flex">
+                                <span class="badge me-1 delete_guia" style="background-color: #ed0000;" role="button" nro_guia="{{$registro->nro_guia}}">
+                                    <i class='bx bx-trash-alt fs-6'></i>
+                                </span>
+                                <span class="badge" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia">
+                                    <i class='bx bx-pencil fs-6'></i>
+                                </span>
+                            </div> 
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                <a class="page-link">Anterior</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                <a class="page-link" href="#">Siguiente</a>
-                </li>
-            </ul>
-        </nav>
-       
+        
     </div>
 
 
@@ -91,284 +79,8 @@
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body px-4" style="font-size:14px;">
-                    <form>
-                        <div class="text-end fs-5 fw-bold text-muted py-2">
-                            <span class="text-danger">Nro° Guía </span><span>000001</span>
-                        </div>
-
-                        <div class="row px-3">
-                            <div class="col-sm-4">
-                                <!-- fecha de emision -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-5">
-                                        <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-7">
-                                        <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <!-- tipo de guia -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <select class="form-select form-select-sm" aria-label="Small select example" name="tipo_guia" required>
-                                            <option selected>...</option>
-                                            <option value="Entrada">Entrada</option>
-                                            <option value="Salida">Salida</option>
-                                        </select>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <!-- cantera -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <select class="form-select form-select-sm" aria-label="Small select example" name="cantera" required>
-                                            <option selected>...</option>
-                                            <option value="1">Agua Viva I</option>
-                                            <option value="2">El Paito</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
-
-                        <div class="row">
-                            <div class="col-sm-6 px-4">
-                                <!-- razon social -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="razon" class="col-form-label">Razon social: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
-                                    </div>
-                                </div>
-
-                                <!-- telefono del destinatario  -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 px-4">
-                                <!-- ci del destinatario -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="ci" class="col-form-label">C.I.: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: V00000000" required>
-                                    </div>
-                                </div>
-
-                                <!-- destino -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="destino" class="col-form-label">Destino: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="destino" class="form-control form-control-sm" name="destino" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
-
-                        <div class="row px-3">
-                            <div class="col-sm-5">
-                                <!-- mineral no metalico -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-5">
-                                        <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-7">
-                                        <select class="form-select form-select-sm" aria-label="Small select example" name="mineral" required>
-                                            <option selected>...</option>
-                                            <option value="1"></option>
-                                            <option value="2"></option>
-                                        </select>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="col-sm-7">
-                                <!-- cantidad -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-4">
-                                        <select class="form-select form-select-sm" aria-label="Small select example" name="tipo_medida" required>
-                                            <option selected>Tipo de medida</option>
-                                            <option value="tonelada">Toneladas</option>
-                                            <option value="metro_cubico">Metros Cúbicos</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-4">
-                                        <input type="text" id="cantidad" class="form-control form-control-sm" name="cantidad" placeholder="Cantidad" required>
-                                    </div> 
-                                </div>
-                            </div>
-                        </div>
+                <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
                         
-                        <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Transporte</p>
-
-                        <div class="row">
-                            <div class="col-sm-6 px-4">
-                                <!-- modelo del vehiculo -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="modelo" class="col-form-label">Modelo Vehículo: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="modelo" class="form-control form-control-sm" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350" required>
-                                    </div>
-                                </div>
-
-                                <!-- Nombre del conductor  -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="nombre_conductor" class="col-form-label">Nombre Conductor: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="nombre_conductor" class="form-control form-control-sm" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo" required>
-                                    </div>
-                                </div>
-
-                                <!-- telefono del conductor  -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="tlf_conductor" class="col-form-label">Telefono Conductor: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="tlf_conductor" class="form-control form-control-sm" name="tlf_conductor" placeholder="Ejemplo: 04140000000" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 px-4">
-                                <!-- placa -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="placa" class="col-form-label">Placa: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="placa" class="form-control form-control-sm" name="placa" placeholder="Ejemplo: AB123CD" required>
-                                    </div>
-                                </div>
-
-                                <!-- ci conductor -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="ci_conductor" class="col-form-label">C.I.: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="ci_conductor" class="form-control form-control-sm" name="ci_conductor" placeholder="Ejemplo: V0000000" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
-                        
-                        <div class="row">
-                            <div class="col-sm-6 px-4">
-                                <!-- hora de Salida -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="hora_salida" class="col-form-label">Hora de Salida: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="hora_salida" class="form-control form-control-sm" name="hora_salida" placeholder="Ejemplo: 5:30 AM" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 px-4">
-                                <!-- hora de llegada -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-4">
-                                        <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- otros datos -->
-                        <div class="row px-2">
-                            <div class="col-sm-3">
-                                <!-- nro factura -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-6">
-                                        <label for="factura" class="col-form-label">Nro° Factura: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="text" id="factura" class="form-control form-control-sm" name="nro_factura" required>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <!-- anulada -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-5">
-                                        <label for="" class="col-form-label">¿Anulada?: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-7">
-                                        <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="anulada" id="anulado_si" value="Si">
-                                            <label class="form-check-label" for="anulado_si">
-                                                Si
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="anulada" id="anulado_no" value="No" checked>
-                                            <label class="form-check-label" for="anulado_no">
-                                                No
-                                            </label>
-                                        </div>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- motivo de anulacion -->
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-3">
-                                        <label for="motivo_anulada" class="col-form-label">Motivo: <span style="color:red">*</span></label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-end fs-5 fw-bold text-muted py-2">
-                            <span class=" text-danger">Nro° Control </span><span>CNZE6ZVZ70</span>
-                        </div>
-
-                        <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
-                        <div class="d-flex justify-content-center mt-3 mb-3" >
-                            <button type="submit" class="btn btn-primary btn-sm me-3">Guardar</button>
-                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        </div>
-                    </form>
-                    
-
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -690,15 +402,112 @@
                     type: 'POST',
                     url: '{{route("registro_guia.modal_registro") }}',
                     success: function(response) {
-                        alert(response);
-                        console.log(response);               
-                        // $('#content_info_denegada').html(response);
+                        // alert(response);
+                        // console.log(response);               
+                        $('#content_registro_guia').html(response);
                     },
                     error: function() {
                     }
                 });
             });
+
+            /////MODAL: SELECCION DE CANTERA
+            $(document).on('change','.select_cantera', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).val();
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("registro_guia.cantera") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        // alert(response);
+                        console.log(response);               
+                        $('#select_minerales').html(response.minerales);
+                        $('#direccion_cantera').html(response.direccion);
+                       
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            //////SELECION DE ANULADA: SI 
+            $(document).on('click','#anulado_si', function(e) { 
+                e.preventDefault(e); 
+                $("#motivo_anulada").attr('disabled', false);
+                // $("#anulado_si").attr('checked', true);
+                // $("#anulado_no").attr('checked', false);
+                
+            });
+             //////SELECION DE ANULADA: NO
+            $(document).on('click','#anulado_no', function(e) { 
+                e.preventDefault(e); 
+                $("#motivo_anulada").attr('disabled', true);
+                
+            });
+
+            //////ELIMINAR CANTERA
+            $(document).on('click','.delete_guia', function(e) { 
+                e.preventDefault(e); 
+                var guia = $(this).attr('nro_guia');
+                // alert(guia);
+                if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA GUÍA NRO.: " + guia + "?")) {
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("registro_guia.destroy") }}',
+                        data: {guia:guia},
+                        success: function(response) {
+                            // alert(response);
+                            if (response.success){
+                                alert("GUÍA ELIMINADA EXITOSAMENTE");
+                                window.location.href = "{{ route('registro_guia')}}";
+                            } else{
+                                alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA GUÍA");
+                            }      
+                        },
+                        error: function() {
+                        }
+                    });
+                }else{
+                } 
+            });
+
+
         });
+
+
+        function registrarGuia(){
+            var formData = new FormData(document.getElementById("form_registrar_guia"));
+            console.log("alo");
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("registro_guia.store") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    if (response.success) {
+                        alert('REGISTRO DE GUÍA EXITOSO');
+                        $('#modal_registro_guia').modal('hide');
+                        $('#form_registrar_guia')[0].reset();
+                        window.location.href = "{{ route('registro_guia')}}";
+                    } else {
+                        alert('Ha ocurrido un error al registrar la guía.');
+                    }  
+
+                },
+                error: function(error){
+                    
+                }
+            });
+        }
+       
     </script>
     
 @stop

@@ -176,13 +176,33 @@ class CanteraController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request)
-    {
+    {   
+        $user = auth()->id();
+        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $id_sp = $sp->id_sujeto;
+
         $idCantera = $request->post('cantera');
-        $delete = DB::table('canteras')->where('id_cantera', '=', $idCantera)->delete();
-        if($delete){
-            return response()->json(['success' => true]);
+        $conteo = DB::table('control_guias')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->get();
+        if ($conteo) {
+            foreach ($conteo as $c){
+                if ($c->total == 0){
+                    //////el usuario no ha registrado ninguna guia aun.
+                    $delete = DB::table('canteras')->where('id_cantera', '=', $idCantera)->delete();
+
+                    if($delete){
+                        return response()->json(['success' => true]);
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
+                }else{
+                    ////////el usuario ya ha registrado guias
+                    return response()->json(['success' => 'sin permiso']);
+                }
+            }
         }else{
             return response()->json(['success' => false]);
         }
+
+        
     }
 }

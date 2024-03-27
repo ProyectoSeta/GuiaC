@@ -95,5 +95,9 @@ Route::post('/verificar_cantera/denegar', [App\Http\Controllers\VerificarCantera
 ////////////////VERIFICAR CANTERA
 Route::get('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'index'])->name('registro_guia');
 Route::post('/registro_guia/modal_registro', [App\Http\Controllers\RegistroGuiaController::class, 'modal_registro'])->name('registro_guia.modal_registro');
+Route::post('/registro_guia/cantera', [App\Http\Controllers\RegistroGuiaController::class, 'cantera'])->name('registro_guia.cantera');
+Route::post('/registro_guia/store', [App\Http\Controllers\RegistroGuiaController::class, 'store'])->name('registro_guia.store');
+Route::post('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'destroy'])->name('registro_guia.destroy');
+
 
 

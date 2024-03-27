@@ -41,19 +41,19 @@ class CorrelativoController extends Controller
 
                 for ($i=$desde; $i <= $hasta; $i++) { 
                     $length = 6;
-                    $string_1 = substr(str_repeat(0, $length).$i, - $length);
-                    $nro_guia = 'AB'.$string_1;
+                    $formato_nro_guia = substr(str_repeat(0, $length).$i, - $length);
+                    
 
                     $estado = '';
-                    $query = DB::table('control_guias')->where('id_guia','=', $nro_guia)->count();
+                    $query = DB::table('control_guias')->where('nro_guia','=', $i)->count();
                     if ($query == 0) {
                         $estado = 'Sin reportar';
                     }else{
                         $estado = 'Reportada';
                     }
 
-                    $tr .= '<tr role="button" class="info_guia" id_guia="'.$nro_guia.'">
-                                <td style="color: #0069eb">'.$nro_guia.'</td>
+                    $tr .= '<tr role="button" class="info_guia" nro_guia="'.$i.'">
+                                <td style="color: #0069eb">'.$formato_nro_guia.'</td>
                                 <td>'.$estado.'</td>
                             </tr>';
                 }/////cierra for

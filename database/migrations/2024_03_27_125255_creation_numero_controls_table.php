@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('cod');
             $table->integer('id_solicitud')->unsigned();
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
-            $table->integer('nro_guia');
-            $table->string('nro_control');
+            $table->integer('nro_guia')->unique();
+            $table->string('nro_control')->unique();
 
             $table->timestamps();
         });
