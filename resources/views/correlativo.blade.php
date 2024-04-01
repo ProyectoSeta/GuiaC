@@ -202,11 +202,13 @@
                     url: '{{route("correlativo.talonario") }}',
                     data: {talonario:talonario},
                     success: function(response) {              
-                        // alert(response);
-                        // console.log(response);
+                        alert(response);
+                        console.log(response);
                         $('#content_info_talonario').append(response);
-                        $("#example2").dataTable().fnDestroy();
+                        $('#example2').DataTable().destroy();
+                        // $("#example2").DataTable().fnDestroy();
                         $('#example2').DataTable({
+                                "destroy":true,
                                 "language": {
                                     "lengthMenu": " Mostrar  _MENU_  Registros",
                                     "zeroRecords": "No se encontraron registros",
@@ -219,7 +221,8 @@
                                         'previous':'Anterior'
                                     }
                                 }
-                            });
+                        });
+                       
                     },
                     error: function() {
                     }

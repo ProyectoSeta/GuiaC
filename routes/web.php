@@ -92,11 +92,13 @@ Route::post('/verificar_cantera/verificar', [App\Http\Controllers\VerificarCante
 Route::post('/verificar_cantera/info_denegar', [App\Http\Controllers\VerificarCanteraController::class, 'info_denegar'])->name('verificar_cantera.info_denegar');
 Route::post('/verificar_cantera/denegar', [App\Http\Controllers\VerificarCanteraController::class, 'denegar'])->name('verificar_cantera.denegar');
 
-////////////////VERIFICAR CANTERA
+////////////////LIBRO DE CONTRO: REGISTRO DE GUÍAS
 Route::get('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'index'])->name('registro_guia');
 Route::post('/registro_guia/modal_registro', [App\Http\Controllers\RegistroGuiaController::class, 'modal_registro'])->name('registro_guia.modal_registro');
 Route::post('/registro_guia/cantera', [App\Http\Controllers\RegistroGuiaController::class, 'cantera'])->name('registro_guia.cantera');
 Route::post('/registro_guia/store', [App\Http\Controllers\RegistroGuiaController::class, 'store'])->name('registro_guia.store');
+Route::post('/registro_guia/editar', [App\Http\Controllers\RegistroGuiaController::class, 'editar'])->name('registro_guia.editar');
+Route::post('/registro_guia/editar_guia', [App\Http\Controllers\RegistroGuiaController::class, 'editar_guia'])->name('registro_guia.editar_guia');
 Route::post('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'destroy'])->name('registro_guia.destroy');
 
 

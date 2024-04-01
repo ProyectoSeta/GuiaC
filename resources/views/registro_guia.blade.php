@@ -34,7 +34,7 @@
             </tr>
         </thead>
             <tbody>
-                @foreach ($registros as $registro)
+                @foreach ($registros as $index => $registro)
                     <tr role="button">
                         <td>{{$registro->nro_guia}}</td>
                         <td>{{$registro->nombre}}</td>
@@ -47,10 +47,22 @@
                         <td>{{$registro->anulada}}</td>
                         <td>
                             <div class="d-flex">
-                                <span class="badge me-1 delete_guia" style="background-color: #ed0000;" role="button" nro_guia="{{$registro->nro_guia}}">
-                                    <i class='bx bx-trash-alt fs-6'></i>
-                                </span>
-                                <span class="badge" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia">
+                                @php
+                                    if($index == count($registros)-1){
+                                @endphp
+                                    <span class="badge me-1 delete_guia" style="background-color: #ed0000;" role="button" evento="ultimoRegistro();" nro_guia="{{$registro->nro_guia}}">
+                                        <i class='bx bx-trash-alt fs-6'></i>
+                                    </span>
+                                @php
+                                    }else{
+                                @endphp
+                                    <span class="badge me-1" style="background-color: #777777ba;" disabled>
+                                        <i class='bx bx-trash-alt fs-6'></i>
+                                    </span>
+                                @php
+                                    }
+                                @endphp
+                                <span class="badge editar_guia" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia" nro_guia="{{$registro->nro_guia}}">
                                     <i class='bx bx-pencil fs-6'></i>
                                 </span>
                             </div> 
@@ -157,177 +169,22 @@
 
     <!-- ********* EDITAR GUIA ******** -->
     <div class="modal" id="modal_editar_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">
-                    <!-- <i class='bx bxs-file-plus'></i> -->
+                    <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel" style="color: #0072ff">
+                        <i class='bx bx-barcode fs-1 me-2'></i>
                         Editar Guía
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="font-size:14px;">
-                    
-                    <div class="row">
-                        <div class="col-6">
-                           <!-- Nro Guia -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Nro. Guía <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="" class="form-control form-control-sm"   value="A00000125">
-                                </div>
-                            </div>
+                <div class="modal-body" style="font-size:14px;" id="content_editar_guia">
+                   
+                
 
-                            <!-- cantera -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Cantera <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="" class="form-control form-control-sm"    value="Agua Viva II">
-                                </div>
-                            </div>
 
-                            <!-- razon dest -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Razon social del destinatario <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="" class="form-control form-control-sm"   value="Ferrepontal, C.A.">
-                                </div>
-                            </div>
 
-                             <!-- tipo mineral -->
-                             <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Tipo de mineral <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-select form-select-sm" aria-label="Small select example">
-                                        <option >...</option>
-                                        <option value="1">Piedra picada</option>
-                                        <option value="2">Arena lavada</option>
-                                        <option selected value="3">Gravilla</option>
-                                        <option value="3">Otro</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- cantidad -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Cantidad <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-4">
-                                    <select class="form-select form-select-sm" aria-label="Small select example">
-                                        <option selected value="1">Toneladas</option>
-                                        <option value="2">Metros cubicos</option>
-                                    </select>
-                                </div>
-                                <div class="col-4">
-                                    <input type="text" id="" class="form-control form-control-sm"    value="2,3">
-                                </div>
-                            </div>
-
-                            <!-- nro factura -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Nro. Factura <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="" class="form-control form-control-sm"    value="5002">
-                                </div>
-                            </div>
-                        </div>   <!--   cierra col-6 -->
-
-                        <div class="col-6">
-                            <!-- Fecha -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Fecha <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="date" id="" class="form-control form-control-sm" value="12-02-2024">
-                                </div>
-                            </div>
-
-                            <!-- destino -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Lugar de destino <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-8">
-                                    <input type="text" id="" class="form-control form-control-sm"     value="Villa de cura Av. Sucre, Edif. Los samanes, local 3-55">
-                                </div>
-                            </div>
-
-                            <!-- rif dest -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Rif del destinatario <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" id="" class="form-control form-control-sm"     value="J933200-1">
-                                </div>
-                            </div>
-
-                            <!-- otro mineral -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Especifique</label>
-                                </div>
-                                <div class="col-auto">
-                                    <input type="text" disabled id="" class="form-control form-control-sm">
-                                </div>
-                            </div>
-
-                            <!-- tipo mineral -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Tipo de guía <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-select form-select-sm" aria-label="Small select example">
-                                        <option value="1">Salida</option>
-                                        <option value="2">Entrada</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- anulado -->
-                            <div class="row g-3 align-items-center mb-2">
-                                <div class="col-4">
-                                    <label for="" class="col-form-label">Anulada <span style="color:red">*</span></label>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="anulado" id="anulado_si">
-                                        <label class="form-check-label" for="anulado_si">
-                                            Si
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="anulado" id="anulado_no" checked>
-                                        <label class="form-check-label" for="anulado_no">
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!--   cierra col-6 -->
-                    </div>
-                    
-                    <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
-
-                    <div class="d-flex justify-content-center mt-3 mb-3" >
-                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary btn-sm">Guardar</button>
-                    </div>
-
-                 </div>  <!-- cierra modal-body -->
+                </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -356,7 +213,7 @@
 @stop
 
 @section('js')
-<script>
+    <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
         const myModal = document.getElementById('myModal');
@@ -394,7 +251,8 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            ///////MODAL: INFO SOLICITUD DENEGADA
+
+            ///////MODAL - HTML: REGISTRAR GUIA 
             $(document).on('click','#registrar_new_guia', function(e) { 
                 e.preventDefault(e); 
                 $.ajax({
@@ -433,17 +291,16 @@
             });
 
             //////SELECION DE ANULADA: SI 
-            $(document).on('click','#anulado_si', function(e) { 
+            $(document).on('change','#anulado_si', function(e) { 
                 e.preventDefault(e); 
                 $("#motivo_anulada").attr('disabled', false);
-                // $("#anulado_si").attr('checked', true);
-                // $("#anulado_no").attr('checked', false);
                 
             });
-             //////SELECION DE ANULADA: NO
-            $(document).on('click','#anulado_no', function(e) { 
+             ////SELECION DE ANULADA: NO
+            $(document).on('change','#anulado_no', function(e) { 
                 e.preventDefault(e); 
                 $("#motivo_anulada").attr('disabled', true);
+                $("#motivo_anulada").val("");
                 
             });
 
@@ -474,6 +331,25 @@
                 } 
             });
 
+            ///////MODAL - HTML: EDITAR GUIA 
+            $(document).on('click','.editar_guia', function(e) { 
+                e.preventDefault(e); 
+                var guia = $(this).attr('nro_guia');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("registro_guia.editar") }}',
+                    data: {guia:guia},
+                    success: function(response) {
+                        // alert(response);
+                        // console.log(response);               
+                        $('#content_editar_guia').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
 
         });
 
@@ -499,14 +375,40 @@
                         window.location.href = "{{ route('registro_guia')}}";
                     } else {
                         alert('Ha ocurrido un error al registrar la guía.');
-                    }  
-
+                    } 
                 },
                 error: function(error){
-                    
                 }
             });
         }
+
+        function editarGuia(){
+            var formData = new FormData(document.getElementById("form_editar_guia"));
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("registro_guia.editar_guia") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    if (response.success) {
+                        alert('LA GUÍA SE HA EDITADO EXITOSAMENTE');
+                        $('#modal_editar_guia').modal('hide');
+                        window.location.href = "{{ route('registro_guia')}}";
+                    } else {
+                        alert('Ha ocurrido un error al editar la guía.');
+                    } 
+                },
+                error: function(error){
+                }
+            });
+        }
+
+        
        
     </script>
     
