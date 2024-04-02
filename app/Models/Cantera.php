@@ -16,9 +16,12 @@ class Cantera extends Model
     use HasRoles;
 
     protected $fillable = [
+        'id_sujeto',
         'nombre',
-        'direccion',
+        'municipio_parroquia',
+        'lugar_aprovechamiento',
         'status',
+        'observaciones',
     ];
 
     public function produccions(){

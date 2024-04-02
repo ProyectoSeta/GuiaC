@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('solicituds', function (Blueprint $table) {
-            $table->increments('id_solicitud');
+        Schema::create('limite_guias', function (Blueprint $table) {
+            $table->increments('cod');
             $table->integer('id_sujeto')->unsigned();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
-            $table->string('monto'); 
-            $table->string('referencia');
-            $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
-            $table->dateTime('fecha');
-            $table->string('observaciones')->nullable();
+            $table->integer('id_cantera')->unsigned();
+            $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade'); 
+            $table->integer('total_guias_periodo')->nullable();
+            $table->integer('total_guias_solicitadas_periodo')->nullable();
+            $table->date('fin_periodo');
+            
+
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('solicituds');
+        Schema::dropIfExists('limite_guias');
     }
 };

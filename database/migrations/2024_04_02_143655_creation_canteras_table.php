@@ -16,7 +16,8 @@ return new class extends Migration
             $table->integer('id_sujeto')->unsigned();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
             $table->string('nombre');
-            $table->string('direccion');
+            $table->string('municipio_parroquia');
+            $table->string('lugar_aprovechamiento');
             $table->enum('status',['Verificando','Verificada','Denegada']);
             $table->string('observaciones')->nullable();
             $table->timestamps();

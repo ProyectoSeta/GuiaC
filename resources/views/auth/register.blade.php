@@ -57,7 +57,18 @@
                                     <input type="text" id="razon_social" class="form-control form-control-sm" name="razon_social"/>
                                 </div>
 
-                                <!-- tipo_contribuyente input -->
+                                <!-- tipo_empresa input -->
+                                <div class="form-outline mb-2">
+                                    <label class="form-label" for="tipo_empresa">Tipo de Empresa</label><span class="text-danger"> *</span>
+                                    <select class="form-select form-select-sm" aria-label="Default select example" name="tipo_empresa">
+                                        <option selected>...</option>
+                                        <option value="Del Estado">Del Estado</option>
+                                        <option value="Privada">Privada</option>
+                                        <option value="Artesanal">Artesanal</option>                                        
+                                      </select>
+                                </div>
+
+                                <!-- tipo_contribuyente input
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="tipo_sujeto">Tipo de Contribuyente</label><span class="text-danger"> *</span>
                                     <select class="form-select form-select-sm" aria-label="Default select example" name="tipo_sujeto">
@@ -65,7 +76,7 @@
                                         <option value="explotador">Explotador</option>
                                         <option value="ferretero">Comprador (Ferretero)</option>                                      
                                       </select>
-                                </div>
+                                </div> -->
 
                                 <!-- direccion input -->
                                 <div class="form-outline mb-2">

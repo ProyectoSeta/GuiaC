@@ -20,25 +20,33 @@ return new class extends Migration
             $table->string('nro_guia')->unique();
             $table->string('nro_control')->unique();
             $table->date('fecha');
-            $table->enum('tipo_guia',['Entrada','Salida']);
+            $table->enum('tipo_guia',['Venta','Donación']); ////
+            // $table->enum('tipo_guia',['Entrada','Salida']);
             $table->integer('id_cantera')->unsigned();
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade'); 
             $table->string('razon_destinatario');
             $table->string('ci_destinatario',15);
             $table->string('tlf_destinatario',15);
+            $table->string('municipio_parroquia');
             $table->string('destino');
+            $table->string('nro_factura');
+            $table->date('fecha_facturacion');
             $table->integer('id_mineral')->unsigned();
             $table->foreign('id_mineral')->references('id_mineral')->on('minerals')->onDelete('cascade'); 
             $table->enum('unidad_medida',['Toneladas','Metros cúbicos']);
-            $table->float('cantidad');
+            $table->float('cantidad_facturada');
+            $table->float('saldo_anterior');
+            $table->float('cantidad_despachada');
+            $table->float('saldo_restante');
             $table->string('modelo_vehiculo');
             $table->string('placa');
             $table->string('nombre_conductor');
             $table->string('ci_conductor',15);
             $table->string('tlf_conductor',15);
+            $table->string('capacidad_vehiculo');
             $table->string('hora_salida');
             $table->string('hora_llegada');
-            $table->string('nro_factura');
+            
             $table->enum('anulada',['No','Si']);
             $table->string('motivo')->nullable();;
 

@@ -18,9 +18,11 @@ class CanteraController extends Controller
     public function index()
     {   
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+       
+        // $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
-        $canteras = DB::table('canteras')->where('id_sujeto', $id_sp)->get();
+        $canteras = DB::table('canteras')->where('id_sujeto','=', $id_sp)->get();
 
        return view('cantera', compact('canteras'));
 
@@ -39,16 +41,18 @@ class CanteraController extends Controller
      */
     public function store(Request $request){
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
         $nombre = $request->post('nombre');
+        $municipio = $request->post('municipio');
         $direccion = $request->post('direccion');
 
         $cantera = DB::table('canteras')->insert([
                                 'id_sujeto' =>  $id_sp,
                                 'nombre' => $nombre,
-                                'direccion' => $direccion,
+                                'municipio_parroquia' => $municipio,
+                                'lugar_aprovechamiento' => $direccion,
                                 'status' => 'Verificando']);
         if($cantera){
             $id_cantera = DB::table('canteras')->max('id_cantera');
@@ -178,7 +182,7 @@ class CanteraController extends Controller
     public function destroy(Request $request)
     {   
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
         $idCantera = $request->post('cantera');

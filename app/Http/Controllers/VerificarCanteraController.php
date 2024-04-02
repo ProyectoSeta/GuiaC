@@ -21,6 +21,7 @@ class VerificarCanteraController extends Controller
     public function info(Request $request)
     {
         $idCantera = $request->post('cantera');
+        
         $query = DB::table('canteras')->join('sujeto_pasivos', 'canteras.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
                 ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
                 ->where('canteras.id_cantera','=',$idCantera)->get();
@@ -30,7 +31,8 @@ class VerificarCanteraController extends Controller
 
             foreach ($query as $c) {
                 //////////////minerales
-                $minerales = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
+               
+                $minerales = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get(); 
                 foreach ($minerales as $id_min) {
                     $id = $id_min->id_mineral;
                     $query_min = DB::table('minerals')->select('mineral')->where('id_mineral','=',$id)->get();
@@ -53,22 +55,49 @@ class VerificarCanteraController extends Controller
                             </div>
                         </div>
                         <div class="modal-body" style="font-size:14px;">
-                            <span class="fw-bold">Contribuyente</span>
-                            <p class="text-center">'.$c->razon_social.' - '.$c->rif.'</p>
-                            
-                            <span class="fw-bold">Dirección</span>
-                            <p class="text-center">'.$c->direccion.'</p>
-
-                        
-                            <span class="fw-bold">Producción</span>
-                            <div class="d-flex flex-column text-center" id="info_produccion">
-                               '.$min.'
-                            </div>
-
-                            <div class="d-flex justify-content-center my-3">
-                                <button class="btn btn-success btn-sm me-4" id="cantera_verificada" id_cantera="'.$idCantera.'">Verificada</button>
-                                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                            </div>
+                            <form id="form_verificar_cantera" method="post" onsubmit="event.preventDefault(); verificarCantera()">
+                                <table class="table">
+                                    <tr>
+                                        <th>Conribuyente</th>
+                                        <td class="d-flex flex-column">
+                                            <span>'.$c->razon_social.'</span>
+                                            <span>'.$c->rif.'</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre de la Cantera</th>
+                                        <td>'.$c->nombre.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Lugar de Aprovechamiento</th>
+                                        <td>'.$c->lugar_aprovechamiento.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Producción</th>
+                                        <td class="d-flex flex-column">
+                                            '.$min.'
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Límite de Guías solicitadas por período</th>
+                                        <td>
+                                            <input type="number" class="form-control" id="limite_guia_cantera" name="limite_guia_cantera">
+                                            <input type="hidden" name="id_cantera" value="'.$idCantera.'">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                    </span> El <span class="fw-bold">Límite de guías a solicitar, </span>
+                                    se define como el límite impuesto de guías que el contribuyente pude solicitar en un 
+                                    <span class="fw-bold">período de tres (3) meses</span>, lo cual se aplica
+                                    <span class="fw-bold">exclusivamete a esta cantera</span>. El número de guias se estima según su producción.
+                                    
+                                </p>
+                                <div class="d-flex justify-content-center my-3">
+                                    <button type="submit" class="btn btn-success btn-sm me-4" id="cantera_verificada">Verificar y guardar</button>
+                                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
                         </div>';
                 return response($html);
             }
@@ -77,13 +106,24 @@ class VerificarCanteraController extends Controller
 
     public function verificar(Request $request)
     {
-        $idCantera = $request->post('cantera');
-        $updates = DB::table('canteras')->where('id_cantera', '=', $idCantera)->update(['status' => 'Verificada']);
-        if ($updates) {
-            return response()->json(['success' => true]);
-        }else{
-            return response()->json(['success' => false]);
+        $idCantera = $request->post('id_cantera');
+        $limite = $request->post('limite_guia_cantera');
+        $sujeto = DB::table('canteras')->select('id_sujeto')->where('id_cantera','=',$idCantera)->first();
+        if ($sujeto) {
+            $idSujeto = $sujeto->id_sujeto;
+
+            $insert = DB::table('limite_guias')->insert(['id_sujeto' => $idSujeto, 'id_cantera' => $idCantera, 'total_guias_periodo'=>$limite, 'fin_periodo' => '2024-07-12', 'total_guias_solicitadas_periodo' => '0']);
+            $updates = DB::table('canteras')->where('id_cantera', '=', $idCantera)->update(['status' => 'Verificada']);
+            if ($insert && $updates) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['success' => false]);
+            }
+
+
         }
+
+       
     }
 
 
@@ -123,42 +163,54 @@ class VerificarCanteraController extends Controller
                             </div>
                         </div>
                         <div class="modal-body" style="font-size:14px;">
-                            <span class="fw-bold">Contribuyente</span>
-                            <p class="text-center">'.$c->razon_social.' - '.$c->rif.'</p>
-                            
-                            <span class="fw-bold">Dirección</span>
-                            <p class="text-center">'.$c->direccion.'</p>
-
+                        <form id="denegar_cantera" method="post" onsubmit="event.preventDefault(); denegarCantera()">
+                            <table class="table">
+                                <tr>
+                                    <th>Conribuyente</th>
+                                    <td class="d-flex flex-column">
+                                        <span>'.$c->razon_social.'</span>
+                                        <span>'.$c->rif.'</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre de la Cantera</th>
+                                    <td>'.$c->nombre.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Lugar de Aprovechamiento</th>
+                                    <td>'.$c->lugar_aprovechamiento.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Producción</th>
+                                    <td class="d-flex flex-column">
+                                        '.$min.'
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span></th>
+                                    <td>
+                                        <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
+                                        <input type="hidden" name="id_cantera" value="'.$idCantera.'">
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="text-muted text-end" style="font-size:13px">
+                                <span class="text-danger">*</span> Campos Obligatorios
+                            </div>
                         
-                            <span class="fw-bold">Producción</span>
-                            <div class="d-flex flex-column text-center" id="info_produccion">
-                               '.$min.'
+                            <div class="mt-3 mb-2">
+                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                    </span>Las <span class="fw-bold">Observaciones </span>
+                                    cumplen la función de notificar al <span class="fw-bold">Contribuyente</span>
+                                    del porque la Cantera no ha sido verificada. Para que así, puedan rectificar y cumplir con el deber formal.
+                                </p>
                             </div>
 
-                            <form id="denegar_cantera" method="post" onsubmit="event.preventDefault(); denegarCantera()">
-                                
-                                <div class="ms-2 me-2">
-                                    <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
-                                    <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
-                                    <input type="hidden" name="id_cantera" value="'.$idCantera.'">
-                                </div>
-                                <div class="text-muted text-end" style="font-size:13px">
-                                    <span class="text-danger">*</span> Campos Obligatorios
-                                </div>
-                            
-                                <div class="mt-3 mb-2">
-                                    <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
-                                        </span>Las <span class="fw-bold">Observaciones </span>
-                                        cumplen la función de notificar al <span class="fw-bold">Contribuyente</span>
-                                        del porque la Cantera no ha sido verificada. Para que así, puedan rectificar y cumplir con el deber formal.
-                                    </p>
-                                </div>
-
-                                <div class="d-flex justify-content-center m-3">
-                                    <button type="submit" class="btn btn-danger btn-sm me-4">Denegar</button>
-                                    <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                                </div>
-                            </form>
+                            <div class="d-flex justify-content-center m-3">
+                                <button type="submit" class="btn btn-danger btn-sm me-4">Denegar</button>
+                                <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
 
                             
                         </div>';

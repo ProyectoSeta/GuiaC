@@ -42,8 +42,8 @@ class AprobacionController extends Controller
                             <h6 class="text-muted text-center" style="font-size:14px;">Datos del Sujeto pasivo</h6>
                             <table class="table" style="font-size:14px">
                                 <tr>
-                                    <th>Tipo de Contribuyente</th>
-                                    <td>'.$sujeto->tipo_sujeto.'</td>
+                                    <th>Tipo de Empresa</th>
+                                    <td>'.$sujeto->tipo_empresa.'</td>
                                 </tr>
                                 <tr>
                                     <th>R.I.F.</th>

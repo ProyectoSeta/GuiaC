@@ -38,7 +38,8 @@ class UserController extends Controller
             $sujeto = new SujetoPasivo(); // SE llama al modelo sujetopasivo
             $sujeto = SujetoPasivo::create([
                     'id_user'=>$identificador,
-                    'tipo_sujeto' => $request->post('tipo_sujeto'),
+                    'tipo_empresa' => $request->post('tipo_empresa'),
+                    // 'tipo_sujeto' => $request->post('tipo_sujeto'),
                     'rif' => $request->post('rif'),
                     'razon_social' => $request->post('razon_social'),
                     'direccion' => $request->post('direccion'),

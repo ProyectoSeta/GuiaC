@@ -24,6 +24,7 @@
                 <th>Nombre</th>
                 <th>Direccion</th>
                 <th>Producción</th>
+                <!-- <th>Guias a solicitar cada tres (3) meses</th> -->
                 <th>Estado</th>
                 <th>Opciones</th> 
             </thead>
@@ -33,10 +34,11 @@
                     <tr>
                         <td>{{ $cantera->id_cantera }}</td>
                         <td>{{ $cantera->nombre }}</td>
-                        <td>{{ $cantera->direccion }}</td>
+                        <td>{{ $cantera->lugar_aprovechamiento }}</td>
                         <td>
                             <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
                         </td>
+                        
                         <td>
                             @if ($cantera->status == 'Verificando')
                                 <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
@@ -88,10 +90,19 @@
                                 <input type="text" id="" class="form-control form-control-sm" name="nombre" >
                             </div>
                         </div>
+                        <!-- municipio y parroqui cantera -->
+                        <div class="row g-3 align-items-center mb-2">
+                            <div class="col-3">
+                                <label for="municipio" class="col-form-label">Municipio y Parroquia<span style="color:red">*</span></label>
+                            </div>
+                            <div class="col-8">
+                                <input type="text" id="municipio" class="form-control form-control-sm" name="municipio" >
+                            </div>
+                        </div>
                         <!-- direccion cantera -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-3">
-                                <label for="" class="col-form-label">Dirección<span style="color:red">*</span></label>
+                                <label for="" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
                             </div>
                             <div class="col-8">
                                 <input type="text" id="" class="form-control form-control-sm" name="direccion" >

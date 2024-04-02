@@ -28,7 +28,7 @@
                     <tr>
                         <td>{{ $cantera->id_cantera }}</td>
                         <td>{{ $cantera->nombre }}</td>
-                        <td>{{ $cantera->direccion }}</td>
+                        <td>{{ $cantera->lugar_aprovechamiento }}</td>
                         <td>
                             <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
                         </td>
@@ -89,9 +89,60 @@
 
     <!-- ********* VERIFICAR CANTERA ******** -->
     <div class="modal" id="modal_verificar_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content" id="content_verificar_cantera">
-                
+            <!-- <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">¿Verificar Cantera?</h1>
+                        <div class="">
+                            <h1 class="modal-title fs-5" id="" style="color: #0072ff"></h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:14px;">
+                    <table class="table">
+                        <tr>
+                            <th>Conribuyente</th>
+                            <td class="d-flex flex-column">
+                                <span>ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</span>
+                                <span>G-32873763</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Nombre de la Cantera</th>
+                            <td>UTP El Apamate</td>
+                        </tr>
+                        <tr>
+                            <th>Lugar de Aprovechamiento</th>
+                            <td>Sector la Quebrada Honda, Municipio San Sebastián Estado Aragua.</td>
+                        </tr>
+                        <tr>
+                            <th>Producción</th>
+                            <td class="d-flex flex-column">
+                                <span>Piedra Picada ¾</span>
+                                <span>Material Integral</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Límite de Guías solicitadas por período</th>
+                            <td>
+                                <input type="number" class="form-control" id="limite_guia_cantera" name="limite_guia_cantera">
+                            </td>
+                        </tr>
+                    </table>
+                    <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                        </span> El <span class="fw-bold">Límite de guías a solicitar, </span>
+                        se define como el límite impuesto de guías que el contribuyente pude solicitar en un 
+                        <span class="fw-bold">período de tres (3) meses</span>, lo cual se aplica
+                        <span class="fw-bold">exclusivamete a esta cantera</span>. El número de guias se estima según su producción.
+                        
+                    </p>
+                    <div class="d-flex justify-content-center my-3">
+                        <button class="btn btn-success btn-sm me-4" id="cantera_verificada" id_cantera="'.$idCantera.'">Verificar y guardar</button>
+                        <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </div> -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -101,6 +152,7 @@
         <div class="modal-dialog">
             <div class="modal-content" id="content_denegar_cantera">
                 
+
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -209,7 +261,8 @@
                     url: '{{route("verificar_cantera.info") }}',
                     data: {cantera:cantera},
                     success: function(response) {
-                        // alert(response);                 
+                        // alert(response);        
+                        // console.log(response);         
                         $('#content_verificar_cantera').html(response);
                     },
                     error: function() {
@@ -217,29 +270,30 @@
                 });
             });
 
-            ///////VERIFICAR CANTERA
-            $(document).on('click','#cantera_verificada', function(e) { 
-                e.preventDefault(e); 
-                var cantera = $(this).attr('id_cantera');
-                // alert(cantera);
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("verificar_cantera.verificar") }}',
-                    data: {cantera:cantera},
-                    success: function(response) {
-                        if (response.success) {
-                            alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
-                            window.location.href = "{{ route('verificar_cantera')}}";
-                        } else {
-                            alert('Ha ocurrido un error al Verificar la Cantera.');
-                        }             
+            // ///////VERIFICAR CANTERA
+            // $(document).on('click','#cantera_verificada', function(e) { 
+            //     e.preventDefault(e); 
+            //     var cantera = $(this).attr('id_cantera');
+                
+            //     // alert(cantera);
+            //     $.ajax({
+            //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            //         type: 'POST',
+            //         url: '{{route("verificar_cantera.verificar") }}',
+            //         data: {cantera:cantera},
+            //         success: function(response) {
+            //             if (response.success) {
+            //                 alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
+            //                 window.location.href = "{{ route('verificar_cantera')}}";
+            //             } else {
+            //                 alert('Ha ocurrido un error al Verificar la Cantera.');
+            //             }             
                        
-                    },
-                    error: function() {
-                    }
-                });
-            });
+            //         },
+            //         error: function() {
+            //         }
+            //     });
+            // });
 
             ///////MODAL: DENEGAR CANTERA
             $(document).on('click','.denegar_cantera', function(e) { 
@@ -264,6 +318,33 @@
            
 
         });
+
+        function verificarCantera(){
+            var formData = new FormData(document.getElementById("form_verificar_cantera"));
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url:'{{route("verificar_cantera.verificar") }}',
+                    type:'POST',
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    data: formData,
+                    success: function(response){
+                        // alert(response);
+                        if (response.success) {
+                            alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
+                            window.location.href = "{{ route('verificar_cantera')}}";
+                        } else {
+                            alert('Ha ocurrido un error al Verificar la Cantera.');
+                        }    
+
+                    },
+                    error: function(error){
+                        
+                    }
+                });
+        }
 
         function denegarCantera(){
             var formData = new FormData(document.getElementById("denegar_cantera"));

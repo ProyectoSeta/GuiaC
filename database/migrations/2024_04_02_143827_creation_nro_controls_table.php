@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('numero_controls', function (Blueprint $table) {
+        Schema::create('nro_controls', function (Blueprint $table) {
             $table->increments('cod');
             $table->integer('id_solicitud')->unsigned();
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
