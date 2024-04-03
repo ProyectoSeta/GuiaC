@@ -18,7 +18,8 @@ class AprobacionController extends Controller
     {   
         $solicitudes = DB::table('solicituds')
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+            ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
+            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro','canteras.nombre')
             ->where('solicituds.estado','=','Verificando')
             ->get();
 
@@ -42,16 +43,16 @@ class AprobacionController extends Controller
                             <h6 class="text-muted text-center" style="font-size:14px;">Datos del Sujeto pasivo</h6>
                             <table class="table" style="font-size:14px">
                                 <tr>
-                                    <th>Tipo de Empresa</th>
-                                    <td>'.$sujeto->tipo_empresa.'</td>
-                                </tr>
-                                <tr>
                                     <th>R.I.F.</th>
-                                    <td>'.$sujeto->rif.'</td>
+                                    <td>'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</td>
                                 </tr>
                                 <tr>
                                     <th>Razon Social</th>
                                     <td>'.$sujeto->razon_social.'</td>
+                                </tr>
+                                <tr>
+                                    <th>¿Empresa Artesanal?</th>
+                                    <td>'.$sujeto->artesanal.'</td>
                                 </tr>
                                 <tr>
                                     <th>Dirección</th>
@@ -96,10 +97,11 @@ class AprobacionController extends Controller
     public function aprobar(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        $idCantera = $request->post('cantera');
        
         $solicitudes = DB::table('solicituds')
         ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
        
@@ -123,7 +125,7 @@ class AprobacionController extends Controller
                 }
 
                 $total_guias = $contador;
-                $ucds = $total_guias * 5;
+                // $ucds = $total_guias * 5;
 
                 ////////////////fecha de la solicitud
                 $sol_date = DB::table('solicituds')
@@ -147,7 +149,7 @@ class AprobacionController extends Controller
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la siguiente solicitud?</h1>
                                 <div class="">
                                     <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$solicitud->razon_social.'</h1>
-                                    <h5 class="modal-title" id="" style="font-size:14px">'.$solicitud->rif.'</h5>
+                                    <h5 class="modal-title" id="" style="font-size:14px">'.$solicitud->rif_condicion.'-'.$solicitud->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>
@@ -171,27 +173,15 @@ class AprobacionController extends Controller
                                         <td>'.$total_guias.'</td>
                                     </tr>
                                     <tr>
-                                        <th>UCD a pagar</th>
-                                        <td>'.$ucds.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Precio del UCD (al día)</th>
-                                        <td>'.$val_ucd.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Monto total</th>
-                                        <td>'.$solicitud->monto.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Referencia</th>
-                                        <td><a target="_blank" href="'.asset($solicitud->referencia).'">Ver</a></td>
+                                        <th>Total UCD</th>
+                                        <td>'.$solicitud->ucd_pagar.'</td>
                                     </tr>
                                 </table>
                             </div>
                             
 
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
+                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_cantera="'.$idCantera.'" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
                                 <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                             </div>
 
@@ -223,6 +213,7 @@ class AprobacionController extends Controller
     public function correlativo(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        $idCantera = $request->post('cantera');
         $idSujeto = $request->post('sujeto');
         $fecha = $request->post('fecha');
 
@@ -271,7 +262,7 @@ class AprobacionController extends Controller
                         }
                         ////////////////////////////////////////
 
-                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
+                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
                         
                     } ////cierra for    
@@ -310,7 +301,7 @@ class AprobacionController extends Controller
                         }
                         ////////////////////////////////////////
     
-                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
+                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
                     } ////cierra for
 
@@ -329,7 +320,7 @@ class AprobacionController extends Controller
         $tables = '';
         $talonarios = DB::table('talonarios')
         ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
 
@@ -362,7 +353,7 @@ class AprobacionController extends Controller
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¡La solicitud a sido Aprobada!</h1>
                                 <div class="">
                                     <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$talonario->razon_social.'</h1>
-                                    <h5 class="modal-title" id="" style="font-size:14px">'.$talonario->rif.'</h5>
+                                    <h5 class="modal-title" id="" style="font-size:14px">'.$talonario->rif_condicion.'-'.$talonario->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>

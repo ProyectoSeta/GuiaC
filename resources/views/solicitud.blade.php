@@ -23,7 +23,7 @@
                     <th scope="col">Cod.</th>
                     <th scope="col">Fecha de emisión</th>
                     <th scope="col">Talonario(s)</th>
-                    <th scope="col">Monto total ()</th>
+                    <th scope="col">UCD a Pagar</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Opciones</th>
                 </tr>
@@ -37,7 +37,7 @@
                             <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
                         </td>
                         <td>
-                            <a target="_blank" class="ver_pago" id_solicitud="{{$solicitud->id_solicitud}}" href="{{ asset($solicitud->referencia) }}">{{$solicitud->monto}}</a>
+                            <span>{{$solicitud->ucd_pagar}}</span>
                         <td>
                             @switch($solicitud->estado)
                             @case('Verificando')
@@ -60,7 +60,7 @@
                         </td>
                         <td>
                             @if ($solicitud->estado == 'Verificando')
-                                <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_solicitud="{{$solicitud->id_solicitud}}">
+                                <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}">
                                     <i class="bx bx-trash-alt fs-6"></i>
                                 </span> 
                             @else
@@ -93,46 +93,9 @@
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="font-size:14px;">
+                <div class="modal-body mx-2" style="font-size:14px;" id="content_info_new">
                     
-                    <div class="text-center mb-2">
-                        <span class="fs-6 fw-bold" style="color: #0072ff">Datos de la Solicitud</span>
-                    </div>
-                    <form id="form_generar_solicitud" enctype="multipart/form-data">
-                        @csrf
-                        <div class="otro_talonario">
-                            <div class="row mt-2">
-                                <div class="col-6 ps-4">
-                                    <label for="">Tipo de Talonario</label>
-                                    <input type="number" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="25" readonly>
-                                </div>
-                                <div class="col-4">
-                                    <label for="cant_talonario">Cantidad</label>
-                                    <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" required>
-                                </div>
-                                <div class="col-2 d-flex align-items-center pt-3">
-                                    <a  href="javascript:void(0);" class="btn add_button">
-                                        <i class='bx bx-plus fs-4' style='color:#038ae4'></i>
-                                    </a>
-                                </div>
-                            </div> 
-                        </div> <!-- cierra .otro_talonario -->
-                        <input type="hidden" name="status_otro_tipo" id="status_otro_tipo">
-
-
-                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
-                            </span> El <span class="fw-bold">Tipo de talonario </span>
-                            es definido por el número de guías que contenga este. 
-                            Y la <span class="fw-bold">Cantidad</span>
-                            , es el número de talonarios de este tipo que quiera solicitar. <span class="fw-bold">Cada Guía tiene un valor de cinco (5) UCD.</span>
-                        </p>
-
-                        <div class="d-flex justify-content-center mt-3 mb-3" >
-                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success btn-sm" id="btn_generar_solicitud">Realizar solicitud</button>
-                        </div>
-                    </form>
-                 </div>  <!-- cierra modal-body -->
+                </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -259,90 +222,37 @@
 
     <script type="text/javascript">
         $(document).ready(function (){
-            ////////AGREGAR CAMPOS A OTRO(S) MINERAL
-            var maxField = 2; //Input fields increment limitation
-            var addButton = $('.add_button'); //Add button selector
-            var wrapper = $('.otro_talonario'); //Input field wrapper
-            var fieldHTML = '<div class="row mt-2">'+
-                                '<div class="col-6 ps-4">'+
-                                    // '<label for="">Tipo de Talonario</label>'+
-                                    '<input type="number" class="form-control form-control-sm mb-3 text-center" name="tipo2" id="tipo2" value="50" disabled>'+
-                                '</div>'+
-                                '<div class="col-4">'+
-                                    // '<label for="cant_talonario">Cantidad</label>'+
-                                    '<input class="form-control form-control-sm mb-3" type="number" name="cantidad2" id="cantidad2" required>'+
-                                '</div>'+
-                                '<div class="col-2 d-flex align-items-center pt-3">'+
-                                    '<a  href="javascript:void(0);" class="btn remove_button">'+
-                                        '<i class="bx bx-x fs-4" style="color:#038ae4"></i>'+
-                                    '</a>'+
-                                '</div>'+
-                            '</div>';
-            var x = 1; //Initial field counter is 1
-            $(addButton).click(function(){ //Once add button is clicked
-                if(x < maxField){ //Check maximum number of input fields
-                    x++; //Increment field counter
-                    $(wrapper).append(fieldHTML); // Add field html
-                    $('#status_otro_tipo').val('true');
-                }
-            });
-            $(wrapper).on('click', '.remove_button', function(e){ //Once remove button is clicked
-                e.preventDefault();
-                $(this).parent('div').parent('div').remove(); //Remove field html
-                $('#status_otro_tipo').val('false');
-                x--; //Decrement field counter
-            });
-
-
-
-
+           
             ///////MODAL: REALIZAR SOLICITUD
             $(document).on('click','#new_solicitud', function(e) { 
                 e.preventDefault(e); 
-                var id = $(this).attr('id_solicitud');
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("solicitud.talonarios") }}',
-                    data: {id:id},
+                    url: '{{route("solicitud.new_solicitud") }}',
                     success: function(response) {              
-                        $('#content_info_talonarios').html(response);
+                        $('#content_info_new').html(response);
                     },
                     error: function() {
                     }
                 });
             });
 
+            ////////////////////CALCULAR LOS UCD A PAGAR
+            $(document).on('click','#calcular', function(e) { 
+                e.preventDefault(e); 
+                var cant = $('#cantidad').val();
+                console.log(cant);
 
-
-            ////////GENERAR LA SOLICITUD
-            $('#form_generar_solicitud').submit(function(e) {
-                e.preventDefault(); 
-                var formData = new FormData(document.getElementById("form_generar_solicitud"));
-                // alert(formData);
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("solicitud.store") }}',
-                    data: formData,
-                    contentType:false,
-                    cache:false,
-                    processData:false,
-                    async: true,
-                    success: function(response) {
-                       if (response.success) {
-                            alert('La solicitud a sido generada exitosamente!');
-                            $('#form_generar_solicitud')[0].reset();
-                            $('#modal_new_solicitud').modal('hide');
-                            window.location.href = "{{ route('solicitud')}}";   
-                        }else{
-                            alert(response.nota);
-                       }
-                    },
-                    error: function() {
-                    }
-                });
+                if (cant == '') {
+                    $('#total_ucd').html('0 UCD');
+                }else{
+                    var total_guias = cant * 50;
+                    var total_ucd = total_guias * 5;
+                    $('#total_ucd').html(total_ucd +' UCD');
+                }
             });
+
 
             ///////MODAL: INFO TALONARIOS
              $(document).on('click','.info_talonario', function(e) { 
@@ -353,7 +263,8 @@
                     type: 'POST',
                     url: '{{route("solicitud.talonarios") }}',
                     data: {id:id},
-                    success: function(response) {              
+                    success: function(response) {    
+                        // console.log(response);          
                         $('#content_info_talonarios').html(response);
                     },
                     error: function() {
@@ -366,15 +277,16 @@
             $(document).on('click','.delete_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
+                var cantera = $(this).attr('id_cantera');
                 
                 if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA SOLICITUD CON EL CÓDIGO:   " + solicitud + "?")) {
                     $.ajax({
                         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         type: 'POST',
                         url: '{{route("solicitud.destroy") }}',
-                        data: {solicitud:solicitud},
+                        data: {solicitud:solicitud,cantera:cantera},
                         success: function(response) {
-                           
+                           console.log(response);
                             if (response.success){
                                 alert("SOLICITUD ELIMINADA EXITOSAMENTE");
                                 window.location.href = "{{ route('solicitud')}}";
@@ -416,6 +328,33 @@
 
         });  
 
+        function generarSolicitud(){
+                var formData = new FormData(document.getElementById("form_generar_solicitud"));
+                // alert(formData);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("solicitud.store") }}',
+                    data: formData,
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    success: function(response) {
+                        console.log(response);
+                       if (response.success) {
+                            alert('La solicitud a sido generada exitosamente!');
+                            $('#form_generar_solicitud')[0].reset();
+                            $('#modal_new_solicitud').modal('hide');
+                            window.location.href = "{{ route('solicitud')}}";   
+                        }else{
+                            alert(response.nota);
+                       }
+                    },
+                    error: function() {
+                    }
+                });
+        }
 
     </script>
 @stop

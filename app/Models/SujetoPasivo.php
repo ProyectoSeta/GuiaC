@@ -10,8 +10,9 @@ class SujetoPasivo extends Model
     use HasFactory;
     protected $primaryKey = 'id_sujeto';
     protected $fillable = ['id_user',
-                            'tipo_empresa',
-                            'rif',
+                            'rif_condicion',
+                            'rif_nro',
+                            'artesanal',
                             'razon_social',
                             'direccion',
                             'tlf_movil',

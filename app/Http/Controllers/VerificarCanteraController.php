@@ -12,7 +12,7 @@ class VerificarCanteraController extends Controller
     public function index()
     {
         $canteras = DB::table('canteras')->join('sujeto_pasivos', 'canteras.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
-                ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+                ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro')
                 ->where('status', 'Verificando')->get();
         return view('verificar_cantera', compact('canteras'));
     }
@@ -23,7 +23,7 @@ class VerificarCanteraController extends Controller
         $idCantera = $request->post('cantera');
         
         $query = DB::table('canteras')->join('sujeto_pasivos', 'canteras.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
-                ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+                ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro')
                 ->where('canteras.id_cantera','=',$idCantera)->get();
         if ($query) {
             $html = '';
@@ -61,7 +61,7 @@ class VerificarCanteraController extends Controller
                                         <th>Conribuyente</th>
                                         <td class="d-flex flex-column">
                                             <span>'.$c->razon_social.'</span>
-                                            <span>'.$c->rif.'</span>
+                                            <span>'.$c->rif_condicion.'-'.$c->rif_nro.'</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -132,7 +132,7 @@ class VerificarCanteraController extends Controller
     {
         $idCantera = $request->post('cantera');
         $query = DB::table('canteras')->join('sujeto_pasivos', 'canteras.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
-                ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+                ->select('canteras.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro')
                 ->where('canteras.id_cantera','=',$idCantera)->get();
         if ($query) {
             $html = '';
@@ -169,7 +169,7 @@ class VerificarCanteraController extends Controller
                                     <th>Conribuyente</th>
                                     <td class="d-flex flex-column">
                                         <span>'.$c->razon_social.'</span>
-                                        <span>'.$c->rif.'</span>
+                                        <span>'.$c->rif_condicion.'-'.$c->rif_nro.'</span>
                                     </td>
                                 </tr>
                                 <tr>

@@ -43,7 +43,7 @@
                             @if ($cantera->status == 'Verificando')
                                 <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
                             @elseif ($cantera->status == 'Verificada')
-                                <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
+                                <span role="button" class="badge text-bg-success p-2 d-flex justify-content-center align-items-center cantera_verificada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_limite" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
                             @elseif ($cantera->status == 'Denegada')
                                 <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center cantera_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-x-circle fs-6 me-2'></i>Denegada</span> 
                             @endif
@@ -386,6 +386,15 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
+    <!-- *********INFO CANTERA VERIFICADA: LIMITE DE GUÍAS ******** -->
+    <div class="modal" id="modal_info_limite" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_info_limite">
+                
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
 
     
 
@@ -563,6 +572,26 @@
                     success: function(response) {
                         // alert(response);                 
                         $('#content_info_denegada').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            
+            ///////MODAL: INFO CANTERA VERIFICADA: LIMITE DE GUÍAS
+            $(document).on('click','.cantera_verificada', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("cantera.info_limite") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        // alert(response);                 
+                        $('#content_info_limite').html(response);
                     },
                     error: function() {
                     }

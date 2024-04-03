@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('sujeto_pasivos', function (Blueprint $table) {
             $table->increments('id_sujeto');
             $table->integer('id_user')->unsigned();
-            $table->enum('tipo_empresa',['Del Estado','Privada','Artesanal']);
-            // $table->enum('tipo_sujeto',['explotador','comprador']);
-            $table->string('rif',15)->unique(); // ejemplo: J30845671
+            $table->enum('rif_condicion',['G','J']);
+            $table->string('rif_nro',12)->unique();
+            $table->enum('artesanal',['No','Si']);
             $table->string('razon_social');
             $table->string('direccion');
             $table->string('tlf_movil',18);

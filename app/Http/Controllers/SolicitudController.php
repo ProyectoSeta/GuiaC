@@ -30,156 +30,128 @@ class SolicitudController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function new_solicitud()
     {
-        //
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
+
+        $opction_canteras = '';
+        $canteras = DB::table('canteras')->select('id_cantera','nombre')->where('id_sujeto','=',$id_sp)
+                                                                        ->where('status','=','Verificada')->get();
+        if ($canteras) {
+            foreach ($canteras as $cantera) {
+                $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
+            }
+            $html = '<div class="text-center mb-2">
+                        <span class="fs-6 fw-bold" style="color: #0072ff">Datos de la Solicitud</span>
+                    </div>
+                    <form id="form_generar_solicitud" method="post" onsubmit="event.preventDefault(); generarSolicitud();">
+                        
+                        <div class="row mb-2">
+                            <div class="col-5">
+                                <label class="form-label" for="rif">Cantera a la que va dirigido el Talonario</label><span class="text-danger">*</span>
+                            </div>
+                            <div class="col-7">
+                                <select class="form-select form-select-sm" id="cantera" aria-label="Default select example" name="cantera" required>
+                                    '.$opction_canteras.'
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <label for="tipo">Tipo de Talonario</label>
+                                <input type="text" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="50 guías" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label for="cant_talonario">Cantidad</label>
+                                <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" required>
+                            </div>
+                        </div> 
+
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-secondary btn-sm" id="calcular">Calular</button>
+                        </div>
+
+                        <div class="d-flex justify-content-end align-items-center me-2 fs-6 mb-2">
+                            <span class="fw-bold me-4">Total: </span>
+                            <span id="total_ucd" class="fs-5">0 UCD</span>
+                        </div>
+
+                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota: </span>
+                            <span class="fw-bold">1. </span>Cada Guía tiene un valor de <span class="fw-bold">cinco (5) UCD</span> (Unidad de Cuenta Dinámica).<br>
+                            <span class="fw-bold">2. </span>Solo podrá eligir las canteras que hayan sido verificadas previamente.
+                        </p>
+
+                        <div class="d-flex justify-content-center mt-3 mb-3" >
+                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success btn-sm" id="btn_generar_solicitud">Realizar solicitud</button>
+                        </div>
+                    </form>';
+
+            return response($html);
+
+        }else{
+            return response('Error al traer las canteras verificadas.');
+        }
+
+
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {   
-    //     $user = auth()->id();
-    //     $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
-    //     $id_sp = $sp->id_sujeto;
+   
+    public function store(Request $request)
+    {   
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
 
+        $idCantera = $request->post('cantera');
+        $cant = $request->post('cantidad');
+        $tipo = 50;
 
-    //     ////////VALIDACION DE CANTERAS
-    //     $query_count_canteras = DB::table('canteras')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->get(); 
-    //     if ($query_count_canteras) {
-    //         foreach ($query_count_canteras as $key => $c) {
-    //             $count = $c->total;
-    //         }
-    //         ///////VERIFICACION DE CANTERAS REGISTRADAS
-    //         if ($count != 0) {
-    //             //////existen canteras registras para este sujeto
-    //             $query_canteras = DB::table('canteras')->select('status')->where('id_sujeto','=',$id_sp)->get();
-    //             $contador = 0;
-    //             foreach ($query_canteras as $cantera) {
-    //                 ////////VERIFICACION SI HAY CANTERAS VERIFICADAS
-    //                 if ($cantera->status == 'Verificada') {
-    //                     $contador = $contador + 1;
-    //                 }else{
-    //                     $contador = $contador;
-    //                 }
-    //             }
-    //             if ($contador != 0) {
-    //                 /////hay cantera(s) verificadas
+        $limites = DB::table('limite_guias')->where('id_cantera','=',$idCantera)->get();
+        // return response($limites);
+        if ($limites) {
+            foreach ($limites as $limite) {
+                
+                $solicitado = $cant * $tipo;
+                $total_guias_prev = $limite->total_guias_solicitadas_periodo + $solicitado;
+                if ($total_guias_prev <= $limite->total_guias_periodo) {
+                    $ucd_pagar = $solicitado * 5;
+
+                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 'Verificando']);
+                    if ($query_solicitud){
+                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
+                        if ($query_detalle) {
+
+                            $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
+                            if ($update_limite) {
+                                return response()->json(['success' => true]);
+                            }
+                        }
+                   
+                    }else{
+                        return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
+                    }
                     
-    //                 $tipo = $request->post('tipo');
-    //                 $cant = $request->post('cantidad');
-    //                 // $monto = $request->post('monto_talonario');
-
-    //                 $year = date("Y");
-    //                 $mes = date("F");
-                  
-
-    //                 $total_guias_solicitadas = $tipo * $cant;
-    //                 $limites = DB::table('limite_guias')->where('id_sujeto','=',$id_sp)->get();
-    //                 $total_guias = '';
-    //                 foreach ($limites as $limite) {
-    //                     $total_guias_periodo = $limite->total_guias_periodo;
-    //                     $total_guias_solicitadas_periodo = $limite->total_guias_solicitadas_periodo;
-    //                     $mes_limite = $limite->fin_periodo;
-    //                 }
-    //                 $total_guias = $total_guias_solicitadas_periodo +  $total_guias_solicitadas;
-
-    //                 $otroC = $request->post('status_otro_tipo');
-
-    //                 /////////////////////VERIFICACION DEL LIMITE DE GUIAS POR MES
-    //                 if ($total_guias <= $total_guias_periodo) { //////el numero de guias a solicitar no sobrepasa el limite del mes
-    //                     if ($otroC == 'true') {     ///////DOS (2) TIPOS DE TALONARIOS
-    //                         $tipo2 = $request->post('tipo2');
-    //                         $cant2 = $request->post('cantidad2');
-                                    
-    //                         $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
-                            
-    //                         if($query_solicitud){
-    //                             $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                            
-    //                             $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
-    //                             $query_detalle_2 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant2, 'id_solicitud' => $id_solicitud]);
-
-    //                             //////////////////ACTUALIZACIÓN DEL LIMITE DE GUIAS
-    //                             if ($mes_limite == $mes) {
-    //                                 $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
-    //                             }else {
-    //                                 $total_guias =  $total_guias_solicitadas;
-    //                                 $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
-    //                             }
-
-    //                             if($query_detalle_1 && $query_detalle_2){
-    //                                 return response()->json(['success' => true]);
-    //                             }
-    //                         }
-                          
-    //                     }
-    //                     else{      ///////UN (1) TIPO DE TALONARIO
-                            
-    //                         if ($request->hasFile('ref_pago')) {
-    //                             $photo         =   $request->file('ref_pago');
-    //                             $nombreimagen  =   $photo->getClientOriginalName();
-    //                             $ruta          =   public_path('assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen);
-    //                             $ruta_n        = 'assets/dd/'.$year.'/'.$mes.'/'.$nombreimagen;
-    //                             if(copy($photo->getRealPath(),$ruta)){
-                                    
-    //                                 $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'monto'=>$monto, 'referencia' => $ruta_n, 'estado' => 'Verificando']);
-
-    //                                 if($query_solicitud){
-    //                                     $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-    //                                     $query_detalle_1 = DB::table('detalle_solicituds')->insert(['tipo_talonario' => $tipo, 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]);
-                                        
-    //                                     //////////////////ACTUALIZACIÓN DEL LIMITE DE GUIAS
-    //                                     if ($mes_limite == $mes) {
-    //                                         $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
-    //                                     }else {
-    //                                         $total_guias =  $total_guias_solicitadas;
-    //                                         $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $total_guias]);
-    //                                     }
-
-    //                                     if($query_detalle_1){
-    //                                         return response()->json(['success' => true]);
-    //                                     }
-    //                                 }
-    //                             }
-    //                         }else{   
-    //                             return response()->json(['success' => false]);
-    //                         }
-
-    //                     }////cierra else
-    //                     // return response('no ha excedido');
-
-    //                 }else{  //////el numero de guias a solicitar no sobrepasa el limite del mes
-    //                     return response()->json(['success' => false, 'nota' => 'HA EXCEDIDO EL NÚMERO DE GUÍAS A SOLICITAR POR MES']);
-    //                 } 
-
-    //             }else{
-    //                 //////////no hay canteras verificadas todavia
-    //                 return response()->json(['success' => false, 'nota' => 'DISCULPE, DEBE TENER AL MENOS UNA (1) CANTERA VERIFICADA PARA QUE PUEDA REALIZAR LA SOLICITUD']);   
-    //             }
-    //         }else{
-    //             ///////no hay canteras registradas para esta sujeto
-    //             return response()->json(['success' => false, 'nota' => 'NO TIENE CANTERAS REGISTRADAS. POR FAVOR, REGISTRE LA CANTERA PARA REALIZAR LA SOLICITUD']);
-    //         }
-    //     }else{
-    //         /////no se hizo la consulta count de las canteras
-    //         return response()->json(['success' => false]);
-    //     }
-
-
-    // }
+                }else{
+                    return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
+                }
+            }
+        }
+    }
 
     public function talonarios(Request $request){
-
         $idSolicitud = $request->post('id');
 
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto','razon_social', 'rif')->find($user);
+        $sp = DB::table('sujeto_pasivos')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
         $razon = $sp->razon_social;
-        $rif = $sp->rif;
-
+        
+    
         $tr = '';
 
         $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
@@ -194,7 +166,7 @@ class SolicitudController extends Controller
         $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-beetwen">
                     <div class="ps-3">
                         <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">'.$razon.'</h1>
-                        <span class="text-muted">'.$rif.'</span>
+                        <span class="text-muted">'.$sp->rif_condicion.'-'.$sp->rif_nro.'</span>
                     </div>
                     <button type="button" class="btn-close pe-5" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -252,9 +224,11 @@ class SolicitudController extends Controller
     public function destroy(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        $idCantera = $request->post('cantera');
+        // return response($idCantera);
 
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
 
@@ -267,23 +241,16 @@ class SolicitudController extends Controller
                $guias = $guias + ($solicitud->tipo_talonario * $solicitud->cantidad);
             }
         }
-        $limites = DB::table('limite_guias')->select('total_guias_solicitadas_mes')->where('id_sujeto','=',$id_sp)->get();
+        $limites = DB::table('limite_guias')->select('total_guias_solicitadas_periodo')->where('id_cantera','=',$idCantera)->get();
         foreach ($limites as $limite) {
-            $new_total_guias = $limite->total_guias_solicitadas_mes - $guias;
+            $new_total_guias = $limite->total_guias_solicitadas_periodo - $guias;
         }
-        $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $new_total_guias]);
-
-         ///////////////ELIMNAR REFERENCIA//////////////////////
-         $query = DB::table('solicituds')->select('referencia')->where('id_solicitud', '=', $idSolicitud)->get();
-         foreach ($query as $r) {
-             $ruta = $r->referencia;
-         }
-         $delete_ref = unlink('../public/'.$ruta);
+        $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $new_total_guias]);
 
         ///////////////ELIMINAR SOLICITUD//////////////////////////
         $delete = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->delete();
         
-        if($delete && $delete_ref && $update_limite){
+        if($delete && $update_limite){
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

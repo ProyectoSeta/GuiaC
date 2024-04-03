@@ -38,6 +38,7 @@ Route::get('/cantera', [App\Http\Controllers\CanteraController::class, 'index'])
 Route::post('/cantera/store', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
 Route::post('/cantera/minerales', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
 Route::post('/cantera/info_denegada', [App\Http\Controllers\CanteraController::class, 'info_denegada'])->name('cantera.info_denegada');
+Route::post('/cantera/info_limite', [App\Http\Controllers\CanteraController::class, 'info_limite'])->name('cantera.info_limite');
 Route::post('/cantera', [App\Http\Controllers\CanteraController::class, 'destroy'])->name('cantera.destroy');
 
 ///////SUJETO PASIVO
@@ -46,6 +47,9 @@ Route::post('/sujeto/representante', [App\Http\Controllers\SujetoController::cla
 
 ////////SOLICITUD
 Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
+Route::post('/solicitud/new_solicitud', [App\Http\Controllers\SolicitudController::class, 'new_solicitud'])->name('solicitud.new_solicitud');
+
+
 Route::post('/solicitud/calcular', [App\Http\Controllers\SolicitudController::class, 'calcular'])->name('solicitud.calcular');
 Route::post('/solicitud/store', [App\Http\Controllers\SolicitudController::class, 'store'])->name('solicitud.store');
 Route::post('/solicitud/talonarios', [App\Http\Controllers\SolicitudController::class, 'talonarios'])->name('solicitud.talonarios');

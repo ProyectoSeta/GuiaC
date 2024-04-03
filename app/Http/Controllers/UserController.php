@@ -28,19 +28,30 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request){
+        // print_r($request->post('rif_nro'));
         $usuario = User::create([
             'name'=>$request->post('name'),
             'email'=>$request->post('email'),
             'password'=>bcrypt($request->post('password'))
         ]);
         if($usuario->save()){ // insercion en la tabla User creando el usuario
+            $artesanal = '';
+            if ($request->post('artesanal') == '') {
+               $artesanal = 'No';
+            }
+            else if($request->post('artesanal') == 'No'){
+                $artesanal = 'No';
+            }
+            else if($request->post('artesanal') == 'Si'){
+                $artesanal = 'Si';
+            }
             $identificador = $usuario->id; // Aca se Obtiene el ID del usuario creado
             $sujeto = new SujetoPasivo(); // SE llama al modelo sujetopasivo
             $sujeto = SujetoPasivo::create([
                     'id_user'=>$identificador,
-                    'tipo_empresa' => $request->post('tipo_empresa'),
-                    // 'tipo_sujeto' => $request->post('tipo_sujeto'),
-                    'rif' => $request->post('rif'),
+                    'rif_condicion' => $request->post('rif_condicion'),
+                    'rif_nro' => $request->post('rif_nro'),
+                    'artesanal' => $artesanal,
                     'razon_social' => $request->post('razon_social'),
                     'direccion' => $request->post('direccion'),
                     'tlf_movil' => $request->post('tlf_movil'),

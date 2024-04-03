@@ -7,14 +7,15 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'MNM') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-
+    <script src="{{ asset('jss/bundle.js') }}" defer></script>
+    <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -84,5 +85,13 @@
             @yield('content')
         </main>
     </div>
+
+    @yield('js')
+           
+
+
+
 </body>
 </html>
+
+

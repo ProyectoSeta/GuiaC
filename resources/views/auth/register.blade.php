@@ -46,9 +46,18 @@
                                     <span>Datos del Contribuyente</span>
                                 </div>
                                 <!-- R.I.F input -->
-                                <div class="form-outline mb-2">
-                                    <label class="form-label" for="rif">R.I.F.</label><span class="text-danger"> *</span>
-                                    <input type="text" id="rif" class="form-control form-control-sm" name="rif"  autofocus/>
+                                <label class="form-label" for="rif">R.I.F.</label><span class="text-danger"> *</span>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <select class="form-select form-select-sm" id="rif_condicion" aria-label="Default select example" name="rif_condicion">
+                                            <option value="G" id="rif_gubernamental">G</option>
+                                            <option value="J" id="rif_juridico">J</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">-</div>
+                                    <div class="col-8">
+                                        <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro"  autofocus/>
+                                    </div>
                                 </div>
 
                                 <!-- razon social input -->
@@ -57,26 +66,16 @@
                                     <input type="text" id="razon_social" class="form-control form-control-sm" name="razon_social"/>
                                 </div>
 
-                                <!-- tipo_empresa input -->
-                                <div class="form-outline mb-2">
-                                    <label class="form-label" for="tipo_empresa">Tipo de Empresa</label><span class="text-danger"> *</span>
-                                    <select class="form-select form-select-sm" aria-label="Default select example" name="tipo_empresa">
-                                        <option selected>...</option>
-                                        <option value="Del Estado">Del Estado</option>
-                                        <option value="Privada">Privada</option>
-                                        <option value="Artesanal">Artesanal</option>                                        
-                                      </select>
+                                <!-- artesanal? input -->
+                                <label class="form-label" for="razon_social">Empresa artesanal</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="artesanal" id="artesanal_no" value="No" checked disabled>
+                                    <label class="form-check-label" for="artesanal_no">No</label>
                                 </div>
-
-                                <!-- tipo_contribuyente input
-                                <div class="form-outline mb-2">
-                                    <label class="form-label" for="tipo_sujeto">Tipo de Contribuyente</label><span class="text-danger"> *</span>
-                                    <select class="form-select form-select-sm" aria-label="Default select example" name="tipo_sujeto">
-                                        <option selected>...</option>
-                                        <option value="explotador">Explotador</option>
-                                        <option value="ferretero">Comprador (Ferretero)</option>                                      
-                                      </select>
-                                </div> -->
+                                <div class="form-check form-check-inline mb-2">
+                                    <input class="form-check-input" type="radio" name="artesanal" id="artesanal_si" value="Si" disabled>
+                                    <label class="form-check-label" for="artesanal_si">Si</label>
+                                </div>
 
                                 <!-- direccion input -->
                                 <div class="form-outline mb-2">
@@ -201,3 +200,30 @@
 
 
 @endsection
+
+
+
+@section('js')
+<script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log('hol5ss');
+        ///////HABILITAR EL CAMPO DE ARTESANAL
+        $(document).on('change','#rif_condicion', function(e) { 
+            e.preventDefault(e); 
+            var value = $("#rif_condicion").val();
+
+           if (value == 'J') {
+                $("#artesanal_no").attr('disabled', false);
+                $("#artesanal_si").attr('disabled', false); 
+           }else{
+                $("#artesanal_no").attr('disabled', true);
+                $("#artesanal_si").attr('disabled', true); 
+           }
+        });           
+
+    });
+</script>
+
+
+@stop

@@ -16,10 +16,11 @@
         <table id="example" class="table text-center" style="font-size:14px">
             <thead>
                 <th>Cod.</th>
+                <th>Cantera</th>
                 <th>Razón Social</th>
-                <th>Rif</th>
+                <th>R.I.F.</th>
                 <th>Solicitud</th>
-                <th>Monto</th>
+                <th>UCD</th>
                 <th>Emisión</th>
                 <th>Correlativo</th> 
                 <th>Opciones</th>
@@ -29,24 +30,29 @@
                @foreach ($solicitudes as $solicitud)
                     <tr>
                         <td>{{$solicitud->id_solicitud}}</td>
+                        <td class="fw-bold">{{$solicitud->nombre}}</td>
                         <td>
-                            <span class="fw-bold">{{$solicitud->razon_social}}</span>
+                            {{$solicitud->razon_social}}
                         </td>
                         <td>
-                            <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif}}</a>
+                            <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
                         </td>
                         <td>
                             <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
                         </td>
                         <td>
-                            <a target="_blank" class="ver_pago" id_solicitud="{{$solicitud->id_solicitud}}" href="{{ asset($solicitud->referencia) }}">{{$solicitud->monto}}</a>
+                            <span>{{$solicitud->ucd_pagar}}</span>
                         </td>
-                        <td>{{$solicitud->fecha}}</td>
+                        @php
+                            $separar = (explode(" ",$solicitud->fecha));
+                            $fecha = $separar[0];
+                        @endphp
+                        <td>{{$fecha}}</td>
                         <td>
                             <span class="fst-italic text-secondary">Sin asignar</span>
                         </td>
                         <td>
-                            <button class="btn btn-success btn-sm aprobar_solicitud" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
+                            <button class="btn btn-success btn-sm aprobar_solicitud" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
                             <button class="btn btn-danger btn-sm denegar_solicitud" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
                         </td>
                     </tr>
@@ -208,12 +214,13 @@
             $(document).on('click','.aprobar_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
+                var cantera = $(this).attr('id_cantera');
                 // alert(solicitud);
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("aprobacion.aprobar") }}',
-                    data: {solicitud:solicitud},
+                    data: {solicitud:solicitud,cantera:cantera},
                     success: function(response) {           
                         // alert(response);
                         // console.log(response);
@@ -230,12 +237,13 @@
                 var solicitud = $(this).attr('id_solicitud');
                 var sujeto = $(this).attr('id_sujeto');
                 var fecha = $(this).attr('fecha');
+                var cantera = $(this).attr('id_cantera');
 
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("aprobacion.correlativo") }}',
-                    data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha},
+                    data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha, cantera:cantera},
                     success: function(response) {           
                         console.log(response);
                         // alert(response);

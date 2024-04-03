@@ -149,12 +149,46 @@ class CanteraController extends Controller
                         </div>';
 
             }
+            return response($html);
+        }
+    }
+
+
+    public function info_limite(Request $request){
+        $idCantera = $request->post('cantera');
+        $query = DB::table('limite_guias')->select('total_guias_periodo')->where('id_cantera','=',$idCantera)->first();
+
+        if ($query) {
+            $html='';
+
+                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                            <i class="bx bx-show-alt fs-1" style="color:#0072ff"  ></i>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Información</h1>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <span class="fw-bold text-center">Límite de Guías que puede solicitar cada tres (3) meses</span>
+                            <p class="mx-3 mt-1 text-center">'.$query->total_guias_periodo.' Guías</p>
+
+                            <div class="mt-3 mb-2">
+                                
+                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Observaciones:
+                                    </span> Cada cantera cuenta con un limite de guias a solicitar unico, el cual se renovará cada tres (3) meses. 
+                                    Una vez, superado el Límite establecido no podrá realizar una nueva solicitud hasta haber transcurrido 
+                                    el período de tiempo de tres (3) meses.
+                                    
+                                </p>
+                            </div>
+                        </div>';
 
             return response($html);
         }
 
-
     }
+
+
+
 
     public function show(Request $request){
         

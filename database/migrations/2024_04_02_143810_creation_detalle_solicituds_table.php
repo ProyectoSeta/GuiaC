@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detalle_solicituds', function (Blueprint $table) {
             $table->increments('id_detalle');
-            $table->enum('tipo_talonario',['25','50']);
+            $table->enum('tipo_talonario',['50']);
             $table->integer('cantidad');
             $table->integer('id_solicitud')->unsigned();
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
