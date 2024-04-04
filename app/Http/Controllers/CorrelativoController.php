@@ -15,7 +15,8 @@ class CorrelativoController extends Controller
     {
         $talonarios = DB::table('talonarios')
         ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+        ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
+        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
         ->get();
 
     return view('correlativo', compact('talonarios'));

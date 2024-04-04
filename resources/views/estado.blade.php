@@ -79,6 +79,7 @@
         <table id="example" class="table text-center" style="font-size:14px">
             <thead>
                 <th>Cod.</th>
+                <th>Cantera</th>
                 <th>Razón Social</th>
                 <th>Rif</th>
                 <th>Solicitud</th>
@@ -90,10 +91,11 @@
                     <tr>
                         <td>{{$solicitud->id_solicitud}}</td>
                         <td>
-                            <span class="fw-bold">{{$solicitud->razon_social}}</span>
+                            <span class="fw-bold">{{$solicitud->nombre}}</span>
                         </td>
+                        <td>{{$solicitud->razon_social}}</td>
                         <td>
-                            <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif}}</a>
+                            <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
                         </td>
                         <td>
                             <p class="text-primary fw-bold ver_solicitud" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_ver_solicitud">Ver</p>

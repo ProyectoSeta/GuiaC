@@ -17,7 +17,7 @@
                 <th>Cod.</th>
                 <th>Razón Social</th>
                 <th>R.I.F.</th>
-                <th>Tipo</th>
+                <th>¿Artesanal?</th>
                 <th>Representante</th>
                 <th>Opciones</th>
             </thead>
@@ -27,9 +27,21 @@
                     <td>{{$sujeto->id_sujeto}}</td>
                     <td>{{$sujeto->razon_social}}</td>
                     <td>
-                        <a class="info_sujeto" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sujeto->rif}}</a>
+                        <a class="info_sujeto" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sujeto->rif_condicion}}-{{$sujeto->rif_nro}}</a>
                     </td>
-                    <td>{{$sujeto->tipo_sujeto}}</td>
+                    <td>
+                    @php
+                        if($sujeto->rif_condicion == 'G'){
+                    @endphp    
+                        <span class="fst-italic text-secondary">No Aplica</span>
+                    @php
+                        }else{
+                    @endphp
+                        <span>{{$sujeto->artesanal}}</span>
+                    @php
+                        }
+                    @endphp
+                    </td>
                     <td>{{$sujeto->name_repr}}</td>
                     <td>
                         <button type="submit" class="btn btn-success btn-sm aprobar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_sujeto">Aprobar</button>

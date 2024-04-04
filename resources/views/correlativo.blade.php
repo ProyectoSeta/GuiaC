@@ -15,15 +15,19 @@
         <table id="example" class="table text-center" style="font-size:14px">
             <thead>
                 <th>Cod. Talonario</th>
+                <th>Cantera</th>
                 <th>Nro. Solicitud</th>
                 <th>Correlativo</th>
-                <th>Rif</th>
-                <th>Razón Social</th>
+                <th>R.I.F.</th>
+                <th>Empresa</th>
             </thead>
             <tbody> 
             @foreach ($talonarios as $talonario)
                     <tr>
                         <td>{{$talonario->id_talonario}}</td>
+                        <td>
+                            <span class="fw-bold">{{$talonario->nombre}}</span>
+                        </td>
                         <td>{{$talonario->id_solicitud}}</td>
                         <td>
                             @php
@@ -37,11 +41,9 @@
                             <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
                         </td>
                         <td>
-                            <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif}}</a>
+                            <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
                         </td>
-                        <td>
-                            <span class="fw-bold">{{$talonario->razon_social}}</span>
-                        </td>
+                        <td>{{$talonario->razon_social}}</td>
                         
                     </tr>
                @endforeach

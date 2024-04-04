@@ -92,7 +92,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
-                        
+                    
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -270,7 +270,7 @@
             });
 
             /////MODAL: SELECCION DE CANTERA
-            $(document).on('change','.select_cantera', function(e) { 
+            $(document).on('change','#select_cantera', function(e) { 
                 e.preventDefault(e); 
                 var cantera = $(this).val();
                 $.ajax({
@@ -281,8 +281,8 @@
                     success: function(response) {
                         // alert(response);
                         console.log(response);               
-                        $('#select_minerales').html(response.minerales);
-                        $('#direccion_cantera').html(response.direccion);
+                        // $('#select_minerales').html(response.minerales);
+                        // $('#direccion_cantera').html(response.direccion);
                        
                     },
                     error: function() {

@@ -18,7 +18,9 @@ class SolicitudController extends Controller
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
-        $solicitudes = DB::table('solicituds')->where('id_sujeto', $id_sp)->get();
+        $solicitudes = DB::table('solicituds')->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
+                                            ->select('solicituds.*','canteras.nombre')
+                                            ->where('solicituds.id_sujeto', $id_sp)->get();
 
         // var_dump($solicitudes);
         return view('solicitud',compact('solicitudes'));
@@ -150,9 +152,15 @@ class SolicitudController extends Controller
         $sp = DB::table('sujeto_pasivos')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
         $razon = $sp->razon_social;
-        
-    
+
         $tr = '';
+
+        $cantera = DB::table('solicituds')->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
+                                        ->select('solicituds.id_cantera','canteras.nombre')
+                                        ->where('solicituds.id_solicitud','=',$idSolicitud)->first();
+        if ($cantera) {
+            $nombre_cantera = $cantera->nombre;
+        }
 
         $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
         if($detalles){
@@ -165,7 +173,8 @@ class SolicitudController extends Controller
         }
         $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-beetwen">
                     <div class="ps-3">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">'.$razon.'</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">'.$nombre_cantera.'</h1>
+                        <span class="text-muted">'.$razon.'</span><br>
                         <span class="text-muted">'.$sp->rif_condicion.'-'.$sp->rif_nro.'</span>
                     </div>
                     <button type="button" class="btn-close pe-5" data-bs-dismiss="modal" aria-label="Close"></button>

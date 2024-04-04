@@ -245,19 +245,17 @@
                     url: '{{route("aprobacion.correlativo") }}',
                     data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha, cantera:cantera},
                     success: function(response) {           
-                        console.log(response);
+                        // console.log(response);
                         // alert(response);
                         if (response.success) {
                             $('#modal_aprobar_solicitud').modal('hide');
                             $('#modal_ver_correlativo').modal('show');
-
                             $.ajax({
                                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                                 type: 'POST',
                                 url: '{{route("aprobacion.info") }}',
                                 data: {solicitud:solicitud},
                                 success: function(response) {           
-                                    
                                     $('#content_info_correlativo').html(response);
                                 },
                                 error: function() {
@@ -313,7 +311,7 @@
                     async: true,
                     data: formData,
                     success: function(response){
-                        // alert(response);
+                        // console.log(response);
                         if (response.success) {
                             alert('LA SOLICITUD HA SIDO DENEGADA CORRECTAMENTE');
                             window.location.href = "{{ route('aprobacion')}}";

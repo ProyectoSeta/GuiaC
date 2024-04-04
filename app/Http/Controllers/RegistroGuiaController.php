@@ -14,7 +14,7 @@ class RegistroGuiaController extends Controller
     public function index()
     {   
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto','razon_social', 'rif')->find($user);
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
         $registros = DB::table('control_guias')
@@ -32,1031 +32,392 @@ class RegistroGuiaController extends Controller
 
     public function modal_registro(){
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto','razon_social', 'rif')->find($user);
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
         $html = '';
         $opction_canteras = '';
- 
-        ///////////// buscar si el usuario a registrado guias anteriormente
-        $conteo = DB::table('control_guias')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->get();
-        if ($conteo) {
-            foreach ($conteo as $c) {
-                if ($c->total == 0) {
-                    ///////EL USUARIO TODAVI NO HA REGISTRADO NINGUNA GUÍA
-                    $talonario = DB::table('talonarios')->where('id_sujeto','=',$id_sp)->first();
-                    if ($talonario) {
-                        $idTalonario = $talonario->id_talonario;
-                        $nro_guia_next = $talonario->desde;
-                        $length = 6;
-                        $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia_next, - $length);
 
-                        ////////buscar el numero de control correspondiente a este nro guia
-                        $control = DB::table('numero_controls')->select('nro_control')->where('nro_guia','=',$nro_guia_next)->first();
-                        if ($control) {
-                            $nro_control = $control->nro_control;
-
-                            ////////////////buscar las canteras asociadas a este contribuyente
-                            $canteras = DB::table('canteras')->select('id_cantera','nombre')
-                                                                ->where('id_sujeto','=',$id_sp)
-                                                                ->where('status','=','Verificada')->get();
-                            if ($canteras) {
-                                foreach ($canteras as $cantera) {
-                                    $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
-                                }
-
-                                $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
-                                            <div class="text-end fs-5 fw-bold text-muted py-2">
-                                                <span class="text-danger">Nro° Guía </span><span>'.$formato_nro_guia.'</span>
-                                            </div>
-                                            
-                                            <input type="hidden" name="id_talonario" value="'.$idTalonario.'" required>
-                                            <input type="hidden" name="nro_guia" value="'.$nro_guia_next.'" required>
-                                            <input type="hidden" name="nro_control" value="'.$nro_control.'" required>
-
-                                            <div class="row px-3">
-                                                <div class="col-sm-4">
-                                                    <!-- fecha de emision -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-5">
-                                                            <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-7">
-                                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required>
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <!-- tipo de guia -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <select class="form-select form-select-sm" aria-label="Small select example" name="tipo_guia" required>
-                                                                <option value="Salida">Salida</option>
-                                                                <option value="Entrada">Entrada</option>
-                                                            </select>
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <!-- cantera -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <select class="form-select form-select-sm select_cantera" name="cantera" required>
-                                                                <option>...</option>
-                                                                '.$opction_canteras.'
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- direccion de la cantera -->
-                                            <div class="px-3">
-                                                <div class="row g-3 align-items-center mb-2">
-                                                    <div class="col-3">
-                                                        <label for="" class="col-form-label">Dirección:</label>
-                                                    </div>
-                                                    <div class="col-9">
-                                                        <p class="text-muted fst-italic text-start" id="direccion_cantera"></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                    
-                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
-                    
-                                            <div class="row">
-                                                <div class="col-sm-6 px-4">
-                                                    <!-- razon social -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="razon" class="col-form-label">Razon social: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- telefono del destinatario  -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 px-4">
-                                                    <!-- ci del destinatario -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- destino -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="destino" class="col-form-label">Destino: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="destino" class="form-control form-control-sm" name="destino" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                    
-                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
-                    
-                                            <div class="row px-3">
-                                                <div class="col-sm-5">
-                                                    <!-- mineral no metalico -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-5">
-                                                            <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-7">
-                                                            <select class="form-select form-select-sm" aria-label="Small select example" name="mineral" id="select_minerales" required>
-                                                                <option selected>...</option>
-                                                                
-                                                            </select>
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <!-- cantidad -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-4">
-                                                            <select class="form-select form-select-sm" aria-label="Small select example" name="unidad_medida" required>
-                                                                <option value="Toneladas">Toneladas</option>
-                                                                <option value="Metros cúbicos">Metros Cúbicos</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-4">
-                                                            <input type="text" id="cantidad" class="form-control form-control-sm" name="cantidad" placeholder="Cantidad" required>
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Transporte</p>
-                    
-                                            <div class="row">
-                                                <div class="col-sm-6 px-4">
-                                                    <!-- modelo del vehiculo -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="modelo" class="col-form-label">Modelo Vehículo: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="modelo" class="form-control form-control-sm" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350" required>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- Nombre del conductor  -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="nombre_conductor" class="col-form-label">Nombre Conductor: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="nombre_conductor" class="form-control form-control-sm" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo" required>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- telefono del conductor  -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="tlf_conductor" class="col-form-label">Telefono Conductor: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="tlf_conductor" class="form-control form-control-sm" name="tlf_conductor" placeholder="Ejemplo: 04140000000" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 px-4">
-                                                    <!-- placa -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="placa" class="col-form-label">Placa: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="placa" class="form-control form-control-sm" name="placa" placeholder="Ejemplo: AB123CD" required>
-                                                        </div>
-                                                    </div>
-                    
-                                                    <!-- ci conductor -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="ci_conductor" class="col-form-label">C.I.: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="ci_conductor" class="form-control form-control-sm" name="ci_conductor" placeholder="Ejemplo: V0000000" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                    
-                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
-                                            
-                                            <div class="row">
-                                                <div class="col-sm-6 px-4">
-                                                    <!-- hora de Salida -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="hora_salida" class="col-form-label">Hora de Salida: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="hora_salida" class="form-control form-control-sm" name="hora_salida" placeholder="Ejemplo: 5:30 AM" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 px-4">
-                                                    <!-- hora de llegada -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-4">
-                                                            <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-8">
-                                                            <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- otros datos -->
-                                            <div class="row px-2">
-                                                <div class="col-sm-3">
-                                                    <!-- nro factura -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-6">
-                                                            <label for="factura" class="col-form-label">Nro° Factura: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input type="text" id="factura" class="form-control form-control-sm" name="nro_factura" required>
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <!-- anulada -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-5">
-                                                            <label for="" class="col-form-label">¿Anulada?: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-7">
-                                                            <div class="form-check form-check-inline ">
-                                                                <input class="form-check-input" type="radio" name="anulada" id="anulado_si" value="Si">
-                                                                <label class="form-check-label" for="anulado_si">
-                                                                    Si
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="anulada" id="anulado_no" value="No" >
-                                                                <label class="form-check-label" for="anulado_no">
-                                                                    No
-                                                                </label>
-                                                            </div>
-                                                        </div> 
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <!-- motivo de anulacion -->
-                                                    <div class="row g-3 align-items-center mb-2">
-                                                        <div class="col-3">
-                                                            <label for="motivo_anulada" class="col-form-label">Motivo: <span style="color:red">*</span></label>
-                                                        </div>
-                                                        <div class="col-9">
-                                                            <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                    
-                                            <div class="text-end fs-5 fw-bold text-muted py-2">
-                                                <span class=" text-danger">Nro° Control </span><span>'.$nro_control.'</span>
-                                            </div>
-                    
-                                            <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
-                                            <div class="d-flex justify-content-center mt-3 mb-3" >
-                                                <button type="submit" class="btn btn-primary btn-sm me-3">Guardar</button>
-                                                <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                                            </div>
-                                </form>';
-                                
-                                return response($html);       
-                                
-                            }else{
-                                return response('Error al traer correlativo.');
-                            }
-                            
-                        }else{
-                            return response('Error al traer correlativo.');
-                        }
-                    }else{
-                        return response('Error al traer correlativo.');
-                    }
-
-                }else{
-                    //////EL USUARIO YA HA HECHO REGISTRO DE GUIAS PREVIAMENTE
-
-                    /////consulta la ultima guia que registro el usuario
-                    $consulta = DB::table('control_guias')->where('id_sujeto','=',$id_sp)->latest('correlativo')->first();
-                    if ($consulta) {
-                        $ultimo_nro_guia = $consulta->nro_guia;
-                        $ultimo_id_talonario = $consulta->id_talonario;
-                        
-                        ////////////comprobar si el ultimo numero de guia registrado es la ultima guia del talonario
-                        $comprobar = DB::table('talonarios')->where('id_talonario','=',$ultimo_id_talonario)->first();
-                        if ($comprobar) {
-                            if ($ultimo_nro_guia < $comprobar->hasta) {
-                                //////////////TODAVIA QUEDAN GUIAS EN EL TALONARIO
-                                $nro_guia_next = $ultimo_nro_guia + 1 ;
-                                $length = 6;
-                                $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia_next, - $length);
-                                //////////buscar numero de control
-                                $control = DB::table('numero_controls')->select('nro_control')->where('nro_guia','=',$nro_guia_next)->first();
-                                if ($control){
-                                    $nro_control = $control->nro_control;
-                                    ////////////////buscar las canteras asociadas a este contribuyente
-                                    $canteras = DB::table('canteras')->select('id_cantera','nombre')
-                                                                        ->where('id_sujeto','=',$id_sp)
+        $canteras = DB::table('canteras')->select('id_cantera','nombre')->where('id_sujeto','=',$id_sp)
                                                                         ->where('status','=','Verificada')->get();
-                                    if ($canteras){
-                                        foreach ($canteras as $cantera) {
-                                            $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
-                                        }
-
-                                        $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
-                                                    <div class="text-end fs-5 fw-bold text-muted py-2">
-                                                        <span class="text-danger">Nro° Guía </span><span>'.$formato_nro_guia.'</span>
-                                                    </div>
-                                                    
-                                                    <input type="hidden" name="id_talonario" value="'.$ultimo_id_talonario.'" required>
-                                                    <input type="hidden" name="nro_guia" value="'.$nro_guia_next.'" required>
-                                                    <input type="hidden" name="nro_control" value="'.$nro_control.'" required>
-
-                                                    <div class="row px-3">
-                                                        <div class="col-sm-4">
-                                                            <!-- fecha de emision -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-5">
-                                                                    <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-7">
-                                                                    <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required>
-                                                                </div> 
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <!-- tipo de guia -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <select class="form-select form-select-sm" aria-label="Small select example" name="tipo_guia" required>
-                                                                        <option value="Salida">Salida</option>
-                                                                        <option value="Entrada">Entrada</option>
-                                                                    </select>
-                                                                </div> 
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <!-- cantera -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <select class="form-select form-select-sm select_cantera" name="cantera" required>
-                                                                        <option>...</option>
-                                                                        '.$opction_canteras.'
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- direccion de la cantera -->
-                                                    <div class="px-3">
-                                                        <div class="row g-3 align-items-center mb-2">
-                                                            <div class="col-3">
-                                                                <label for="" class="col-form-label">Dirección:</label>
-                                                            </div>
-                                                            <div class="col-9">
-                                                                <p class="text-muted fst-italic text-start"  id="direccion_cantera"></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                            
-                                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
-                            
-                                                    <div class="row">
-                                                        <div class="col-sm-6 px-4">
-                                                            <!-- razon social -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="razon" class="col-form-label">Razon social: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
-                                                                </div>
-                                                            </div>
-                            
-                                                            <!-- telefono del destinatario  -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6 px-4">
-                                                            <!-- ci del destinatario -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required>
-                                                                </div>
-                                                            </div>
-                            
-                                                            <!-- destino -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="destino" class="col-form-label">Destino: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="destino" class="form-control form-control-sm" name="destino" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                            
-                                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
-                            
-                                                    <div class="row px-3">
-                                                        <div class="col-sm-5">
-                                                            <!-- mineral no metalico -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-5">
-                                                                    <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-7">
-                                                                    <select class="form-select form-select-sm" aria-label="Small select example" name="mineral" id="select_minerales" required>
-                                                                        <option selected>...</option>
-                                                                        
-                                                                    </select>
-                                                                </div> 
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-7">
-                                                            <!-- cantidad -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-4">
-                                                                    <select class="form-select form-select-sm" aria-label="Small select example" name="unidad_medida" required>
-                                                                        <option value="Toneladas">Toneladas</option>
-                                                                        <option value="Metros cúbicos">Metros Cúbicos</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-4">
-                                                                    <input type="text" id="cantidad" class="form-control form-control-sm" name="cantidad" placeholder="Cantidad" required>
-                                                                </div> 
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Transporte</p>
-                            
-                                                    <div class="row">
-                                                        <div class="col-sm-6 px-4">
-                                                            <!-- modelo del vehiculo -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="modelo" class="col-form-label">Modelo Vehículo: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="modelo" class="form-control form-control-sm" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350" required>
-                                                                </div>
-                                                            </div>
-                            
-                                                            <!-- Nombre del conductor  -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="nombre_conductor" class="col-form-label">Nombre Conductor: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="nombre_conductor" class="form-control form-control-sm" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo" required>
-                                                                </div>
-                                                            </div>
-                            
-                                                            <!-- telefono del conductor  -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="tlf_conductor" class="col-form-label">Telefono Conductor: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="tlf_conductor" class="form-control form-control-sm" name="tlf_conductor" placeholder="Ejemplo: 04140000000" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6 px-4">
-                                                            <!-- placa -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="placa" class="col-form-label">Placa: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="placa" class="form-control form-control-sm" name="placa" placeholder="Ejemplo: AB123CD" required>
-                                                                </div>
-                                                            </div>
-                            
-                                                            <!-- ci conductor -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="ci_conductor" class="col-form-label">C.I.: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="ci_conductor" class="form-control form-control-sm" name="ci_conductor" placeholder="Ejemplo: V0000000" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                            
-                                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
-                                                    
-                                                    <div class="row">
-                                                        <div class="col-sm-6 px-4">
-                                                            <!-- hora de Salida -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="hora_salida" class="col-form-label">Hora de Salida: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="hora_salida" class="form-control form-control-sm" name="hora_salida" placeholder="Ejemplo: 5:30 AM" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6 px-4">
-                                                            <!-- hora de llegada -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-4">
-                                                                    <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- otros datos -->
-                                                    <div class="row px-2">
-                                                        <div class="col-sm-3">
-                                                            <!-- nro factura -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-6">
-                                                                    <label for="factura" class="col-form-label">Nro° Factura: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <input type="text" id="factura" class="form-control form-control-sm" name="nro_factura" required>
-                                                                </div> 
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-3">
-                                                            <!-- anulada -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-5">
-                                                                    <label for="" class="col-form-label">¿Anulada?: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-7">
-                                                                    <div class="form-check form-check-inline ">
-                                                                        <input class="form-check-input" type="radio" name="anulada" id="anulado_si" value="Si">
-                                                                        <label class="form-check-label" for="anulado_si">
-                                                                            Si
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" type="radio" name="anulada" id="anulado_no" value="No" >
-                                                                        <label class="form-check-label" for="anulado_no">
-                                                                            No
-                                                                        </label>
-                                                                    </div>
-                                                                </div> 
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <!-- motivo de anulacion -->
-                                                            <div class="row g-3 align-items-center mb-2">
-                                                                <div class="col-3">
-                                                                    <label for="motivo_anulada" class="col-form-label">Motivo: <span style="color:red">*</span></label>
-                                                                </div>
-                                                                <div class="col-9">
-                                                                    <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                            
-                                                    <div class="text-end fs-5 fw-bold text-muted py-2">
-                                                        <span class=" text-danger">Nro° Control </span><span>'.$nro_control.'</span>
-                                                    </div>
-                            
-                                                    <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
-                                                    <div class="d-flex justify-content-center mt-3 mb-3" >
-                                                        <button type="submit" class="btn btn-primary btn-sm me-3">Guardar</button>
-                                                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                                                    </div>
-                                        </form>';
-                                        
-                                        return response($html);
-
-                                    }else{
-                                        return response('Error al traer correlativo.');
-                                    }
-                                }else{
-                                    return response('Error al traer correlativo.');
-                                }
-                            }else{
-                                ////////////ULTIMA GUIA DEL TALONARIO
-
-                                ////////////buscar el siguiente talonario correspondiente al sujeto pasivo
-                                $buscar = DB::table('talonarios')->where([
-                                                                    ['id_talonario','>',$ultimo_id_talonario],
-                                                                    ['id_sujeto','=',$id_sp]
-                                                                    ])->orderBy('id_talonario','asc')->first();
-                                if ($buscar) {
-                                    if ($buscar != '') {
-                                        ////con resultado: hay un siguiente talonario
-                                        $nro_guia_next = $buscar->desde;
-                                        $idTalonario = $buscar->id_talonario;
-                                        $length = 6;
-                                        $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia_next, - $length);
-                                        //////////buscar numero de control
-                                        $control = DB::table('numero_controls')->select('nro_control')->where('nro_guia','=',$nro_guia_next)->first();
-                                        if ($control){
-                                            $nro_control = $control->nro_control;
-                                            ////////////////buscar las canteras asociadas a este contribuyente
-                                            $canteras = DB::table('canteras')->select('id_cantera','nombre')
-                                                                                ->where('id_sujeto','=',$id_sp)
-                                                                                ->where('status','=','Verificada')->get();
-                                            if ($canteras){
-                                                foreach ($canteras as $cantera) {
-                                                    $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
-                                                }
-
-                                                $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
-                                                            <div class="text-end fs-5 fw-bold text-muted py-2">
-                                                                <span class="text-danger">Nro° Guía </span><span>'.$formato_nro_guia.'</span>
-                                                            </div>
-                                                            
-                                                            <input type="hidden" name="id_talonario" value="'.$idTalonario.'" required>
-                                                            <input type="hidden" name="nro_guia" value="'.$nro_guia_next.'" required>
-                                                            <input type="hidden" name="nro_control" value="'.$nro_control.'" required>
-
-                                                            <div class="row px-3">
-                                                                <div class="col-sm-4">
-                                                                    <!-- fecha de emision -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-5">
-                                                                            <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-7">
-                                                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-4">
-                                                                    <!-- tipo de guia -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <select class="form-select form-select-sm" aria-label="Small select example" name="tipo_guia" required>
-                                                                                <option value="Salida">Salida</option>
-                                                                                <option value="Entrada">Entrada</option>
-                                                                            </select>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-4">
-                                                                    <!-- cantera -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <select class="form-select form-select-sm select_cantera" name="cantera" required>
-                                                                                <option>...</option>
-                                                                                '.$opction_canteras.'
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- direccion de la cantera -->
-                                                            <div class="px-3">
-                                                                <div class="row g-3 align-items-center mb-2">
-                                                                    <div class="col-3">
-                                                                        <label for="" class="col-form-label">Dirección:</label>
-                                                                    </div>
-                                                                    <div class="col-9">
-                                                                        <p class="text-muted fst-italic text-start"  id="direccion_cantera"></p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                    
-                                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
-                                    
-                                                            <div class="row">
-                                                                <div class="col-sm-6 px-4">
-                                                                    <!-- razon social -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="razon" class="col-form-label">Razon social: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
-                                                                        </div>
-                                                                    </div>
-                                    
-                                                                    <!-- telefono del destinatario  -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-6 px-4">
-                                                                    <!-- ci del destinatario -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required>
-                                                                        </div>
-                                                                    </div>
-                                    
-                                                                    <!-- destino -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="destino" class="col-form-label">Destino: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="destino" class="form-control form-control-sm" name="destino" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                    
-                                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
-                                    
-                                                            <div class="row px-3">
-                                                                <div class="col-sm-5">
-                                                                    <!-- mineral no metalico -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-5">
-                                                                            <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-7">
-                                                                            <select class="form-select form-select-sm" aria-label="Small select example" name="mineral" id="select_minerales" required>
-                                                                                <option selected>...</option>
-                                                                                
-                                                                            </select>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-7">
-                                                                    <!-- cantidad -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-4">
-                                                                            <select class="form-select form-select-sm" aria-label="Small select example" name="unidad_medida" required>
-                                                                                <option value="Toneladas">Toneladas</option>
-                                                                                <option value="Metros cúbicos">Metros Cúbicos</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="col-4">
-                                                                            <input type="text" id="cantidad" class="form-control form-control-sm" name="cantidad" placeholder="Cantidad" required>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Transporte</p>
-                                    
-                                                            <div class="row">
-                                                                <div class="col-sm-6 px-4">
-                                                                    <!-- modelo del vehiculo -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="modelo" class="col-form-label">Modelo Vehículo: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="modelo" class="form-control form-control-sm" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350" required>
-                                                                        </div>
-                                                                    </div>
-                                    
-                                                                    <!-- Nombre del conductor  -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="nombre_conductor" class="col-form-label">Nombre Conductor: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="nombre_conductor" class="form-control form-control-sm" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo" required>
-                                                                        </div>
-                                                                    </div>
-                                    
-                                                                    <!-- telefono del conductor  -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="tlf_conductor" class="col-form-label">Telefono Conductor: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="tlf_conductor" class="form-control form-control-sm" name="tlf_conductor" placeholder="Ejemplo: 04140000000" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-6 px-4">
-                                                                    <!-- placa -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="placa" class="col-form-label">Placa: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="placa" class="form-control form-control-sm" name="placa" placeholder="Ejemplo: AB123CD" required>
-                                                                        </div>
-                                                                    </div>
-                                    
-                                                                    <!-- ci conductor -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="ci_conductor" class="col-form-label">C.I.: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="ci_conductor" class="form-control form-control-sm" name="ci_conductor" placeholder="Ejemplo: V0000000" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                    
-                                                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
-                                                            
-                                                            <div class="row">
-                                                                <div class="col-sm-6 px-4">
-                                                                    <!-- hora de Salida -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="hora_salida" class="col-form-label">Hora de Salida: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="hora_salida" class="form-control form-control-sm" name="hora_salida" placeholder="Ejemplo: 5:30 AM" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-6 px-4">
-                                                                    <!-- hora de llegada -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-4">
-                                                                            <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-8">
-                                                                            <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- otros datos -->
-                                                            <div class="row px-2">
-                                                                <div class="col-sm-3">
-                                                                    <!-- nro factura -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-6">
-                                                                            <label for="factura" class="col-form-label">Nro° Factura: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <input type="text" id="factura" class="form-control form-control-sm" name="nro_factura" required>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <!-- anulada -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-5">
-                                                                            <label for="" class="col-form-label">¿Anulada?: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-7">
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="anulada" id="anulado_si" value="Si">
-                                                                                <label class="form-check-label" for="anulado_si">
-                                                                                    Si
-                                                                                </label>
-                                                                            </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input class="form-check-input" type="radio" name="anulada" id="anulado_no" value="No">
-                                                                                <label class="form-check-label" for="anulado_no">
-                                                                                    No
-                                                                                </label>
-                                                                            </div>
-                                                                        </div> 
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                                                    <!-- motivo de anulacion -->
-                                                                    <div class="row g-3 align-items-center mb-2">
-                                                                        <div class="col-3">
-                                                                            <label for="motivo_anulada" class="col-form-label">Motivo: <span style="color:red">*</span></label>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                    
-                                                            <div class="text-end fs-5 fw-bold text-muted py-2">
-                                                                <span class=" text-danger">Nro° Control </span><span>'.$nro_control.'</span>
-                                                            </div>
-                                    
-                                                            <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
-                                                            <div class="d-flex justify-content-center mt-3 mb-3" >
-                                                                <button type="submit" class="btn btn-primary btn-sm me-3">Guardar</button>
-                                                                <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                                                            </div>
-                                                </form>';
-                                                
-                                                return response($html);
-                                            }else{
-                                                return response('Error al traer correlativo.');
-                                            }
-                                        }else{
-                                            return response('Error al traer correlativo.');
-                                        }
- 
-                                    }else{
-                                        ////sin resultado: el usuario no ha solicitado mas talonarios
-                                        $html = '<div class="text-center text-muted my-4 pb-4">
-                                                    <i class="bx bx-error-circle bx-tada fs-1" ></i>
-                                                    <h4>Discupe, debe solicitar una nueva guia.</h4>
-                                                </div>';
-                                        return response($html);
-
-                                    }
-                                }else{
-                                    ////sin resultado: el usuario no ha solicitado mas talonarios
-                                    $html = '<div class="text-center text-muted my-4 pb-4">
-                                    <i class="bx bx-error-circle bx-tada fs-1" ></i>
-                                    <h4>Discupe, debe solicitar una nueva guia.</h4>
-                                    </div>';
-                                    return response($html);
-
-                                }
-                            }
-                        }else{
-                            return response('Error al traer correlativo.');
-                        }
-                    }else{
-                        return response('Error al traer correlativo.');
-                    }
-
-
-
-
-
-
-
-                    return response('Hay');
-
+            if ($canteras) {
+                foreach ($canteras as $cantera) {
+                    $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
                 }
+
+                $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
+                            <div class="row d-flex justify-content-between  px-3">
+                                <div class="col-sm-5">
+                                    <!-- cantera -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-3">
+                                            <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="form-select form-select-sm" id="select_cantera" name="cantera" required>
+                                                <option>...</option>
+                                                '.$opction_canteras.'
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
+                                    <span class="text-danger">Nro° Guía </span><span></span>
+                                </div>
+                            </div>
+
+                            
+                            
+                            <input type="hidden" name="id_talonario" value="" required>
+                            <input type="hidden" name="nro_guia" value="" required>
+                            <input type="hidden" name="nro_control" value="" required>
+
+                            <div class="row px-3 d-flex justify-content-between">
+                                <div class="col-sm-4">
+                                    <!-- fecha de emision -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-5">
+                                            <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-7">
+                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required disabled>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <!-- tipo de guia -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="tipo_guia" id="venta" value="Venta" disabled>
+                                                <label class="form-check-label" for="venta">Venta</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="tipo_guia" id="donacion" value="Donación" disabled>
+                                                <label class="form-check-label" for="donacion">Donación</label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            <!-- direccion de la cantera
+                            <div class="row">
+                                <div class="row g-3 align-items-center mb-2">
+                                    <div class="col-3">
+                                        <label for="" class="col-form-label">Dirección:</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <p class="text-muted fst-italic text-start" id="direccion_cantera"></p>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
+
+                            <div class="row">
+                                <div class="col-sm-6 px-4">
+                                    <!-- razon social -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="razon" class="col-form-label">Razon social: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required disabled>
+                                        </div>
+                                    </div>
+
+                                    <!-- telefono del destinatario  -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required disabled>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 px-4">
+                                    <!-- ci del destinatario -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required disabled>
+                                        </div>
+                                    </div>
+
+                                    <!-- destino -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="destino" class="col-form-label">Municipio/Parroqui: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="destino" class="form-control form-control-sm" name="destino" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row px-3">
+                                <div class="col-sm-12">
+                                <div class="row align-items-center mb-2">
+                                        <div class="col-2">
+                                            <label for="destino" class="col-form-label">Lugar de destino: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-10">
+                                            <input type="text" id="destino" class="form-control form-control-sm" name="destino" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
+
+                            <div class="row px-3 d-flex align-items-center">
+                                <div class="col-sm-4">
+                                    <!-- mineral no metalico -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-5">
+                                            <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-7">
+                                            <select class="form-select form-select-sm" aria-label="Small select example" name="mineral" id="select_minerales" required disabled>
+                                                <option selected>...</option>
+                                                
+                                            </select>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <!-- cantidad -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-4">
+                                            <select class="form-select form-select-sm" aria-label="Small select example" name="unidad_medida" required disabled>
+                                                <option value="Toneladas">Toneladas</option>
+                                                <option value="Metros cúbicos">Metros Cúbicos</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="text" id="cantidad" class="form-control form-control-sm" name="cantidad" placeholder="Cantidad" required disabled>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <!-- fecha facturacion -->
+                                <div class="col-sm-3">
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="fecha_facturacion" class="col-form-label">Fecha de facturación: </label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="date" id="fecha_facturacion" class="form-control form-control-sm" name="fecha_facturacion" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row px-3 d-flex align-items-center">
+                                <!-- saldo anterior -->
+                                <div class="col-sm-4">
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="saldo_anterior" class="col-form-label">Saldo anterior: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="number" id="saldo_anterior" class="form-control form-control-sm" name="saldo_anterior" placeholder="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cantidad Despachada -->
+                                <div class="col-sm-4">
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="cantidad_despachada" class="col-form-label">Cantidad Despachada: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="number" id="cantidad_despachada" class="form-control form-control-sm" name="cantidad_despachada" placeholder="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Saldo Restante -->
+                                <div class="col-sm-4">
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="saldo_restante" class="col-form-label">Saldo Restante: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="number" id="saldo_restante" class="form-control form-control-sm" name="saldo_restante" placeholder="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Transporte</p>
+
+                            <div class="row d-flex align-items-center">
+                                <div class="col-sm-6 px-4">
+                                    <!-- modelo del vehiculo -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="modelo" class="col-form-label">Modelo Vehículo: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="modelo" class="form-control form-control-sm" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350" required disabled>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nombre del conductor  -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="nombre_conductor" class="col-form-label">Nombre Conductor: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="nombre_conductor" class="form-control form-control-sm" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo" required disabled>
+                                        </div>
+                                    </div>
+
+                                    <!-- telefono del conductor  -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="tlf_conductor" class="col-form-label">Telefono Conductor: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="tlf_conductor" class="form-control form-control-sm" name="tlf_conductor" placeholder="Ejemplo: 04140000000" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 px-4">
+                                    <!-- placa -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="placa" class="col-form-label">Placa: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="placa" class="form-control form-control-sm" name="placa" placeholder="Ejemplo: AB123CD" required disabled>
+                                        </div>
+                                    </div>
+
+                                    <!-- ci conductor -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="ci_conductor" class="col-form-label">C.I.: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="ci_conductor" class="form-control form-control-sm" name="ci_conductor" placeholder="Ejemplo: V0000000" required disabled>
+                                        </div>
+                                    </div>
+
+                                    <!-- capacidad del vehiculo -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="capacidad_vehiculo" class="col-form-label">Capacidad del Vehículo: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="capacidad_vehiculo" class="form-control form-control-sm" name="capacidad_vehiculo" placeholder="" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
+                            
+                            <div class="row">
+                                <div class="col-sm-6 px-4">
+                                    <!-- hora de Salida -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="hora_salida" class="col-form-label">Hora de Salida: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="hora_salida" class="form-control form-control-sm" name="hora_salida" placeholder="Ejemplo: 5:30 AM" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 px-4">
+                                    <!-- hora de llegada -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- otros datos -->
+                            <div class="row px-2">
+                                <div class="col-sm-3">
+                                    <!-- nro factura -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-6">
+                                            <label for="factura" class="col-form-label">Nro° Factura: </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" id="factura" class="form-control form-control-sm" name="nro_factura" required disabled>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <!-- anulada -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-5">
+                                            <label for="" class="col-form-label">¿Anulada?: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="form-check form-check-inline ">
+                                                <input class="form-check-input" type="radio" name="anulada" id="anulado_si" value="Si" disabled>
+                                                <label class="form-check-label" for="anulado_si">
+                                                    Si
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="anulada" id="anulado_no" value="No"  disabled>
+                                                <label class="form-check-label" for="anulado_no">
+                                                    No
+                                                </label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- motivo de anulacion -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-3">
+                                            <label for="motivo_anulada" class="col-form-label">Motivo: </label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end fs-5 fw-bold text-muted py-2">
+                                <span class=" text-danger">Nro° Control </span><span></span>
+                            </div>
+
+                            <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
+                            <div class="d-flex justify-content-center mt-3 mb-3" >
+                                <button type="submit" class="btn btn-primary btn-sm me-3">Guardar</button>
+                                <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>';
+
+                        return response($html);
             }
-        }else {
-            return response('Error al registrar la Guía.');
-        }
 
-
-
-  
-
+        
     }
 
 
@@ -1065,7 +426,101 @@ class RegistroGuiaController extends Controller
     public function cantera(Request $request){
         $idCantera = $request->post('cantera');
         $minerales = '';
-        // $minerales .= '<option>...</option>';
+        $nro_guia = '';
+        $nro_control = '';
+        $formato_nro_guia = '';
+        $idTalonario = '';
+
+        
+        ///////////// buscar si el usuario a registrado guias anteriormente
+        $conteo = DB::table('control_guias')->selectRaw("count(*) as total")->where('id_cantera','=',$idCantera)->get();
+        if ($conteo) {
+            foreach ($conteo as $c){
+                if ($c->total == 0){
+                    ///////EL USUARIO TODAVI NO HA REGISTRADO NINGUNA GUÍA DE ESTA CANTERA
+                    $talonario = DB::table('talonarios')->where('id_cantera','=',$idCantera)->first();
+                    return response($talonario);
+                    
+                    if ($talonario) {
+                        $idTalonario = $talonario->id_talonario;
+                        $nro_guia = $talonario->desde;
+                        $length = 6;
+                        $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
+
+                        ////////buscar el numero de control correspondiente a este nro guia
+                        $control = DB::table('numero_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
+                        if ($control){
+                            $nro_control = $control->nro_control;
+                        }
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
+                }else{
+                    ///////EL USUARIO HA REGISTRADO GUÍAS DE ESTA CANTERA
+                    /////consulta la ultima guia que registro el usuario
+                    $consulta = DB::table('control_guias')->where('id_cantera','=',$idCantera)->latest('correlativo')->first();
+                    if ($consulta) {
+                        $ultimo_nro_guia = $consulta->nro_guia;
+                        $ultimo_id_talonario = $consulta->id_talonario;
+                        
+                        ////////////comprobar si el ultimo numero de guia registrado es la ultima guia del talonario
+                        $comprobar = DB::table('talonarios')->where('id_talonario','=',$ultimo_id_talonario)->first();
+                        if ($comprobar) {
+                            if ($ultimo_nro_guia < $comprobar->hasta){
+                                //////////////TODAVIA QUEDAN GUIAS EN EL TALONARIO
+                                $nro_guia = $ultimo_nro_guia + 1 ;
+                                $length = 6;
+                                $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
+
+                                ////////buscar el numero de control correspondiente a este nro guia
+                                $control = DB::table('numero_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
+                                if ($control){
+                                    $nro_control = $control->nro_control;
+                                    $idTalonario = $ultimo_id_talonario;
+                                }
+                            }else{
+                                //////////////YA NO QUEDAN GUIAS EN EL TALONARIO
+                                ////////////buscar el siguiente talonario correspondiente al sujeto pasivo
+                                $buscar = DB::table('talonarios')->where([
+                                                                        ['id_talonario','>',$ultimo_id_talonario],
+                                                                        ['id_cantera','=',$idCantera]
+                                                                    ])->orderBy('id_talonario','asc')->first();
+                                if ($buscar) {
+                                    if ($buscar != ''){
+                                        ///////HAY UN SIGUIENTE TALONARIO
+                                        $nro_guia = $buscar->desde;
+                                        $idTalonario = $buscar->id_talonario;
+                                        $length = 6;
+                                        $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
+
+                                        ////////buscar el numero de control correspondiente a este nro guia
+                                        $control = DB::table('numero_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
+                                        if ($control){
+                                            $nro_control = $control->nro_control;
+                                        }
+                                    }else{
+                                        ////// EL USUARIO NO HA SOLICITADO MAS TLONARIOS
+                                        $html = '<div class="text-center text-muted my-4 pb-4">
+                                                    <i class="bx bx-error-circle bx-tada fs-1" ></i>
+                                                    <h4>Discupe, debe solicitar una nueva guia.</h4>
+                                                </div>';
+                                        return response($html);
+                                    }
+                                }else{
+                                    return response()->json(['success' => false]);
+                                }
+                            }
+
+                        }
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
+                }
+            }
+        }else{
+            return response()->json(['success' => false]);
+        }
+
 
         $minerales = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
         foreach ($minerales as $id_min) {
@@ -1078,14 +533,13 @@ class RegistroGuiaController extends Controller
             } 
         }
 
-        $cantera = DB::table('canteras')->select('direccion')->where('id_cantera','=',$idCantera)->first();
-        if ($cantera) {
-            $direccion = $cantera->direccion;
-        }
+        // $cantera = DB::table('canteras')->select('direccion')->where('id_cantera','=',$idCantera)->first();
+        // if ($cantera) {
+        //     $direccion = $cantera->direccion;
+        // }
 
 
-        return response()->json(['minerales' => $minerales, 'direccion' => $direccion]);
-        // return response($minerales);
+        return response()->json(['success' => true, 'minerales' => $minerales, 'minerales' => $minerales, 'nro_guia' => $nro_guia, 'formato_nro_guia' => $formato_nro_guia, 'nro_control' => $nro_control]);
     }
 
     /**

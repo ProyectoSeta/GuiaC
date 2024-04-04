@@ -207,7 +207,7 @@ class AprobacionController extends Controller
     // Función para verificar si un token ya existe en la base de datos
     private function tokenExiste($token)
     {
-        return DB::table('numero_controls')->where('nro_control', $token)->exists();
+        return DB::table('nro_controls')->where('nro_control', $token)->exists();
     }
 
     public function correlativo(Request $request)
@@ -216,15 +216,16 @@ class AprobacionController extends Controller
         $idCantera = $request->post('cantera');
         $idSujeto = $request->post('sujeto');
         $fecha = $request->post('fecha');
+      
 
-        $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get(); 
+        $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get();   
         if ($query_count) {
             foreach ($query_count as $c) {
                 $count = $c->total;
             }
             if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
-                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
-                $c = 0;
+                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
+                $c = 0; return response($detalles);
                 foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
@@ -234,7 +235,7 @@ class AprobacionController extends Controller
                         
                         if ($c == 1) {
                            $desde = 1;
-                           $hasta = $tipo;
+                           $hasta = $tipo; 
 
                         }else{
                             $id_max= DB::table('talonarios')->max('id_talonario');
@@ -248,13 +249,14 @@ class AprobacionController extends Controller
                         
                         $contador_guia = $desde;
                         ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
+                        // $nuevoToken = '';
                         for ($t=0; $t < $tipo; $t++) {
                             do {
                                 $nuevoToken = $this->generarToken();
                             } while ($this->tokenExiste($nuevoToken));
-                            
+
                             // Guarda el nuevo token en la base de datos
-                            $insert_control = DB::table('numero_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
+                            $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
                             
                             if ($insert_control) {
                                 $contador_guia = $contador_guia + 1;
@@ -266,10 +268,12 @@ class AprobacionController extends Controller
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
                         
                     } ////cierra for    
-                    
-                    $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
-                
+                 
                 }/////cierra foreach
+
+                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                return response()->json(['success' => true]);
+                
             }else{   //////////Hay registros en la tabla Talonarios
                 $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
                 foreach ($detalles as $detalle){
@@ -293,7 +297,7 @@ class AprobacionController extends Controller
                             } while ($this->tokenExiste($nuevoToken));
                             
                             // Guarda el nuevo token en la base de datos
-                            $insert_control = DB::table('numero_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
+                            $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
                             
                             if ($insert_control) {
                                 $contador_guia = $contador_guia + 1;
@@ -303,14 +307,15 @@ class AprobacionController extends Controller
     
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
-                    } ////cierra for
-
-                    $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
-                
+                    } ////cierra for                
                 } ////cierra foreach
+
+                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                return response()->json(['success' => true]);
             }
            
-            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
         }
     }
 
@@ -373,15 +378,17 @@ class AprobacionController extends Controller
     public function denegarInfo(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
-        $solicitudes = DB::table('solicituds')
-        ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('solicituds.fecha','solicituds.id_sujeto', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
-        ->where('id_solicitud','=',$idSolicitud)
+        $solicitudes = DB::table('solicituds')->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+        ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
+        ->select('solicituds.fecha','solicituds.id_sujeto','solicituds.id_cantera', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+        ->where('solicituds.id_solicitud','=',$idSolicitud)
         ->get();
         foreach ($solicitudes as $s) {
             $razon = $s->razon_social;
-            $rif = $s->rif;
+            $rif = $s->rif_condicion.'-'.$s->rif_nro;
             $fecha = $s->fecha;
+            $cantera = $s->nombre;
+            $id_cantera = $s->id_cantera;
         }
 
         $tr = '';
@@ -402,7 +409,6 @@ class AprobacionController extends Controller
                     </div>
                 </div>
                 <div class="modal-body px-4" style="font-size:14px">
-                    
                     <div class="d-flex justify-content-between mb-2">
                         <table class="table table-borderless table-sm me-3">
                             <tr>
@@ -415,6 +421,10 @@ class AprobacionController extends Controller
                             </tr>
                         </table>
                         <table class="table table-borderless table-sm">
+                            <tr>
+                                <th>Cantera:</th>
+                                <td class="text-primary fw-bold">'.$cantera.'</td>
+                            </tr>
                             <tr>
                                 <th>Razon social.:</th>
                                 <td>'.$razon.'</td>
@@ -444,6 +454,7 @@ class AprobacionController extends Controller
                             <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
                             <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
                             <input type="hidden" name="id_solicitud" value="'.$idSolicitud.'">
+                            <input type="hidden" name="id_cantera" value="'.$id_cantera.'">
                         </div>
                         <div class="text-muted text-end" style="font-size:13px">
                             <span class="text-danger">*</span> Campos Obligatorios
@@ -470,10 +481,11 @@ class AprobacionController extends Controller
     public function denegar(Request $request)
     {
         $idSolicitud = $request->post('id_solicitud');
+        $idCantera = $request->post('id_cantera'); 
         $observacion = $request->post('observacion');
 
         $user = auth()->id();
-        $sp = SujetoPasivo::select('id_sujeto')->find($user);
+        $sp = DB::table('sujeto_pasivos')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
         ////////////ELIMINAR NUMERO DE GUIAS, EN GUIAS SOLICITADAS (LIMTE_GUIAS)/////
@@ -485,11 +497,11 @@ class AprobacionController extends Controller
             $guias = $guias + ($solicitud->tipo_talonario * $solicitud->cantidad);
             }
         }
-        $limites = DB::table('limite_guias')->select('total_guias_solicitadas_mes')->where('id_sujeto','=',$id_sp)->get();
+        $limites = DB::table('limite_guias')->select('total_guias_solicitadas_periodo')->where('id_cantera','=',$idCantera)->get();
         foreach ($limites as $limite) {
-            $new_total_guias = $limite->total_guias_solicitadas_mes - $guias;
+            $new_total_guias = $limite->total_guias_solicitadas_periodo - $guias;
         }
-        $update_limite = DB::table('limite_guias')->where('id_sujeto', '=', $id_sp)->update(['total_guias_solicitadas_mes' => $new_total_guias]);
+        $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $new_total_guias]);
         
         ////////////////CAMBIAR ESTADO DE SOLICITUD A DENEGADA
         $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);

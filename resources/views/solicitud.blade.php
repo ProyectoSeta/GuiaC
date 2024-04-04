@@ -21,8 +21,9 @@
             <thead class="bg-primary">
                 <tr>
                     <th scope="col">Cod.</th>
+                    <th scope="col">Cantera</th>
                     <th scope="col">Fecha de emisión</th>
-                    <th scope="col">Talonario(s)</th>
+                    <th scope="col">Solicitud</th>
                     <th scope="col">UCD a Pagar</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Opciones</th>
@@ -32,6 +33,7 @@
                 @foreach( $solicitudes as $solicitud)               
                     <tr>
                         <td>{{$solicitud->id_solicitud}}</td>
+                        <td class="fw-bold">{{$solicitud->nombre}}</td>
                         <td>{{$solicitud->fecha}}</td>
                         <td>
                             <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>

@@ -15,7 +15,8 @@ class EstadoController extends Controller
     {
         $solicitudes = DB::table('solicituds')
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+            ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
+            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
             ->get();
 
         return view('estado', compact('solicitudes'));
@@ -27,7 +28,7 @@ class EstadoController extends Controller
        
         $solicitudes = DB::table('solicituds')
         ->join('sujeto_pasivos', 'solicituds.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
-        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif')
+        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
        
@@ -61,13 +62,13 @@ class EstadoController extends Controller
                     $date_sol = $d->fecha;
                 }
 
-                //////////////valor del ucd el dia de la solicitud
-                $query_ucd = DB::table('ucds')
-                        ->select('valor')
-                        ->where('fecha','=', $date_sol)->get();
-                foreach ($query_ucd as $u){
-                    $val_ucd = $u->valor;
-                }
+                // //////////////valor del ucd el dia de la solicitud
+                // $query_ucd = DB::table('ucds')
+                //         ->select('valor')
+                //         ->where('fecha','=', $date_sol)->get();
+                // foreach ($query_ucd as $u){
+                //     $val_ucd = $u->valor;
+                // }
 
                 $estado = $solicitud->estado;
                 $html_talonarios = '';
@@ -134,27 +135,14 @@ class EstadoController extends Controller
                                     </tr>
                                     <tr>
                                         <th>UCD a pagar</th>
-                                        <td>'.$ucds.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Precio del UCD (al día)</th>
-                                        <td>'.$val_ucd.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Monto total</th>
-                                        <td>'.$solicitud->monto.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Referencia</th>
-                                        <td><a target="_blank" href="'.asset($solicitud->referencia).'">Ver</a></td>
+                                        <td>'.$solicitud->ucd_pagar.'</td>
                                     </tr>
                                 </table>
                             </div>
                             
 
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-success btn-sm me-4 aprobar_correlativo" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
-                                <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Salir</button>
                             </div>
 
                         </div>';
