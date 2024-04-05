@@ -12,54 +12,56 @@
 
 @section('content')
     
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary  btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_cantera"><i class='bx bx-plus'></i>Registrar Cantera</button>
+        </div>
 
-<div class="mb-3">
-        <button type="button" class="btn btn-primary  btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_cantera"><i class='bx bx-plus'></i>Registrar Cantera</button>
-    </div>
-
-    <div class="table-responsive">
-        <table id="example" class="table text-center" style="font-size:14px">
-            <thead>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Direccion</th>
-                <th>Producción</th>
-                <!-- <th>Guias a solicitar cada tres (3) meses</th> -->
-                <th>Estado</th>
-                <th>Opciones</th> 
-            </thead>
-            <tbody id="list_canteras"> 
-               
-                @foreach ( $canteras as $cantera )            
-                    <tr>
-                        <td>{{ $cantera->id_cantera }}</td>
-                        <td>{{ $cantera->nombre }}</td>
-                        <td>{{ $cantera->lugar_aprovechamiento }}</td>
-                        <td>
-                            <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
-                        </td>
-                        
-                        <td>
-                            @if ($cantera->status == 'Verificando')
-                                <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
-                            @elseif ($cantera->status == 'Verificada')
-                                <span role="button" class="badge text-bg-success p-2 d-flex justify-content-center align-items-center cantera_verificada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_limite" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
-                            @elseif ($cantera->status == 'Denegada')
-                                <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center cantera_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-x-circle fs-6 me-2'></i>Denegada</span> 
-                            @endif
-                        </td>
-                        <td>
-                            <span class="badge me-1 delete_cantera" style="background-color: #ed0000;" role="button" id_cantera='{{ $cantera->id_cantera }}' nombre="{{ $cantera->nombre }}">
-                                <i class='bx bx-trash-alt fs-6'></i>
-                            </span>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody> 
+        <div class="table-responsive">
+            <table id="example" class="table text-center" style="font-size:14px">
+                <thead>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Producción</th>
+                    <!-- <th>Guias a solicitar cada tres (3) meses</th> -->
+                    <th>Estado</th>
+                    <th>Opciones</th> 
+                </thead>
+                <tbody id="list_canteras"> 
+                
+                    @foreach ( $canteras as $cantera )            
+                        <tr>
+                            <td>{{ $cantera->id_cantera }}</td>
+                            <td>{{ $cantera->nombre }}</td>
+                            <td>{{ $cantera->lugar_aprovechamiento }}</td>
+                            <td>
+                                <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
+                            </td>
+                            
+                            <td>
+                                @if ($cantera->status == 'Verificando')
+                                    <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
+                                @elseif ($cantera->status == 'Verificada')
+                                    <span role="button" class="badge text-bg-success p-2 d-flex justify-content-center align-items-center cantera_verificada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_limite" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
+                                @elseif ($cantera->status == 'Denegada')
+                                    <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center cantera_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-x-circle fs-6 me-2'></i>Denegada</span> 
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge me-1 delete_cantera" style="background-color: #ed0000;" role="button" id_cantera='{{ $cantera->id_cantera }}' nombre="{{ $cantera->nombre }}">
+                                    <i class='bx bx-trash-alt fs-6'></i>
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody> 
+                
+            </table>
             
-        </table>
-        
+        </div>
     </div>
+    
     
 
       

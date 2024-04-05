@@ -28,7 +28,7 @@
                 <th scope="col">Destinatario</th>
                 <th scope="col">Destino</th>
                 <th scope="col">Nro. Factura</th>
-                <th scope="col">Tipo de Guia</th>
+                <th scope="col">Tipo Guia</th>
                 <th scope="col">¿Anulada?</th>
                 <th scope="col">Acciones</th>
             </tr>
@@ -37,12 +37,23 @@
                 @foreach ($registros as $index => $registro)
                     <tr role="button">
                         <td>{{$registro->nro_guia}}</td>
-                        <td>{{$registro->nombre}}</td>
+                        <td class="fw-bold">{{$registro->nombre}}</td>
                         <td>{{$registro->mineral}}</td>
-                        <td>{{$registro->cantidad}} {{$registro->unidad_medida}}</td>
+                        <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
                         <td>{{$registro->razon_destinatario}}</td>
                         <td>{{$registro->destino}}</td>
-                        <td>{{$registro->nro_factura}}</td>
+                        @php
+                            if($registro->nro_factura == ''){
+                        @endphp       
+                            <td class="fst-italic text-secondary">No Aplica</td>
+                        @php
+                            }else{
+                        @endphp       
+                            <td>{{$registro->nro_factura}}</td>
+                        @php
+                            }
+                        @endphp
+                        
                         <td class="fst-italic text-secondary">{{$registro->tipo_guia}}</td>
                         <td>{{$registro->anulada}}</td>
                         <td>
@@ -279,10 +290,85 @@
                     url: '{{route("registro_guia.cantera") }}',
                     data: {cantera:cantera},
                     success: function(response) {
-                        // alert(response);
-                        console.log(response);               
-                        // $('#select_minerales').html(response.minerales);
-                        // $('#direccion_cantera').html(response.direccion);
+                        console.log(response);    
+                        if (response.success){
+                            $('#nro_guia_view').html(response.formato_nro_guia);
+                            $('#nro_control_view').html(response.nro_control);
+                            $('#select_minerales').html(response.minerales);
+
+                            $('#id_talonario').val(response.talonario);
+                            $('#nro_guia').val(response.nro_guia);
+                            $('#nro_control').val(response.nro_control);
+
+                            $("#fecha").attr('disabled', false);
+                            $("#venta").attr('disabled', false);
+                            $("#donacion").attr('disabled', false);
+                            $("#razon").attr('disabled', false);
+                            $("#tlf_dest").attr('disabled', false);
+                            $("#ci").attr('disabled', false);
+                            $("#municipio").attr('disabled', false);
+                            $("#destino").attr('disabled', false);
+                            $("#select_minerales").attr('disabled', false);
+                            $("#unidad_medida").attr('disabled', false);
+                            $("#cantidad").attr('disabled', false);
+                            $("#fecha_facturacion").attr('disabled', false);
+                            $("#saldo_anterior").attr('disabled', false);
+                            $("#cantidad_despachada").attr('disabled', false);
+                            $("#saldo_restante").attr('disabled', false);
+                            $("#modelo").attr('disabled', false);
+                            $("#nombre_conductor").attr('disabled', false);
+                            $("#tlf_conductor").attr('disabled', false);
+                            $("#placa").attr('disabled', false);
+                            $("#ci_conductor").attr('disabled', false);
+                            $("#capacidad_vehiculo").attr('disabled', false);
+                            $("#hora_salida").attr('disabled', false);
+                            $("#hora_llegada").attr('disabled', false);
+                            $("#factura").attr('disabled', false);
+                            $("#anulado_si").attr('disabled', false);
+                            $("#anulado_no").attr('disabled', false);
+                            $("#motivo_anulada").attr('disabled', false);
+                            $("#btn_guardar_guia").attr('disabled', false);
+
+
+                        } else{
+                            // alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA GUÍA");
+                            $('#nro_guia_view').html('');
+                            $('#nro_control_view').html('');
+                            $('#select_minerales').html('');
+
+                            $('#id_talonario').val('');
+                            $('#nro_guia').val('');
+                            $('#nro_control').val('');
+
+                            $("#fecha").attr('disabled', true);
+                            $("#venta").attr('disabled', true);
+                            $("#donacion").attr('disabled', true);
+                            $("#razon").attr('disabled', true);
+                            $("#tlf_dest").attr('disabled', true);
+                            $("#ci").attr('disabled', true);
+                            $("#municipio").attr('disabled', true);
+                            $("#destino").attr('disabled', true);
+                            $("#select_minerales").attr('disabled', true);
+                            $("#unidad_medida").attr('disabled', true);
+                            $("#cantidad").attr('disabled', true);
+                            $("#fecha_facturacion").attr('disabled', true);
+                            $("#saldo_anterior").attr('disabled', true);
+                            $("#cantidad_despachada").attr('disabled', true);
+                            $("#saldo_restante").attr('disabled', true);
+                            $("#modelo").attr('disabled', true);
+                            $("#nombre_conductor").attr('disabled', true);
+                            $("#tlf_conductor").attr('disabled', true);
+                            $("#placa").attr('disabled', true);
+                            $("#ci_conductor").attr('disabled', true);
+                            $("#capacidad_vehiculo").attr('disabled', true);
+                            $("#hora_salida").attr('disabled', true);
+                            $("#hora_llegada").attr('disabled', true);
+                            $("#factura").attr('disabled', true);
+                            $("#anulado_si").attr('disabled', true);
+                            $("#anulado_no").attr('disabled', true);
+                            $("#motivo_anulada").attr('disabled', true);
+                            $("#btn_guardar_guia").attr('disabled', true);
+                        }   
                        
                     },
                     error: function() {

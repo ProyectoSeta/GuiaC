@@ -107,3 +107,5 @@ Route::post('/registro_guia', [App\Http\Controllers\RegistroGuiaController::clas
 
 
 
+//////////////////CONFIGURACION DE USUARIO:CONTRIBUYENTES
+Route::get('/settings_contribuyente', [App\Http\Controllers\SettingsContribuyenteController::class, 'index'])->name('settings_contribuyente');

@@ -378,6 +378,12 @@ return [
             'url'  => '/',
             // 'icon' => 'fas fa-fw fa-user',
         ],
+        ['header' => 'Configuración'],
+        [
+            'text' => 'Configuración',
+            'url'  => '/settings_contribuyente',
+            // 'icon' => 'fas fa-fw fa-user',
+        ],
 
         // ['header' => 'Libro de Control'],
         // [
