@@ -3,7 +3,6 @@
 @section('title', 'Registro de Guías')
 
 @section('content_header')
-    <h1>Libro de Control</h1>
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
@@ -11,79 +10,86 @@
 @stop
 
 @section('content')
-    <p></p>
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Libro de Control</h2>
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary rounded-pill px-3 btn-sm" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"><i class='bx bx-plus'></i>Registrar guía</button>
+            </div>
+        </div>
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:14px;">
+            <thead class=" border-light-subtle">
+                <tr>
+                    <th scope="col">Nro. Guía</th>
+                    <th scope="col">Cantera</th>
+                    <th scope="col">Tipo de Mineral</th>
+                    <th scope="col">Cantidad Transportada</th>
+                    <th scope="col">Destinatario</th>
+                    <th scope="col">Destino</th>
+                    <th scope="col">Nro. Factura</th>
+                    <th scope="col">Tipo Guia</th>
+                    <th scope="col">¿Anulada?</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+                <tbody>
+                    @foreach ($registros as $index => $registro)
+                        <tr role="button">
+                            <td>{{$registro->nro_guia}}</td>
+                            <td class="fw-bold">{{$registro->nombre}}</td>
+                            <td>{{$registro->mineral}}</td>
+                            <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
+                            <td>{{$registro->razon_destinatario}}</td>
+                            <td>{{$registro->destino}}</td>
+                            @php
+                                if($registro->nro_factura == ''){
+                            @endphp       
+                                <td class="fst-italic text-secondary">No Aplica</td>
+                            @php
+                                }else{
+                            @endphp       
+                                <td>{{$registro->nro_factura}}</td>
+                            @php
+                                }
+                            @endphp
+                            
+                            <td class="fst-italic text-secondary">{{$registro->tipo_guia}}</td>
+                            <td>{{$registro->anulada}}</td>
+                            <td>
+                                <div class="d-flex">
+                                    @php
+                                        if($index == count($registros)-1){
+                                    @endphp
+                                        <span class="badge me-1 delete_guia" style="background-color: #ed0000;" role="button" evento="ultimoRegistro();" nro_guia="{{$registro->nro_guia}}">
+                                            <i class='bx bx-trash-alt fs-6'></i>
+                                        </span>
+                                    @php
+                                        }else{
+                                    @endphp
+                                        <span class="badge me-1" style="background-color: #777777ba;" disabled>
+                                            <i class='bx bx-trash-alt fs-6'></i>
+                                        </span>
+                                    @php
+                                        }
+                                    @endphp
+                                    <span class="badge editar_guia" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia" nro_guia="{{$registro->nro_guia}}">
+                                        <i class='bx bx-pencil fs-6'></i>
+                                    </span>
+                                </div> 
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            
+        </div>
 
-    <div class="mb-3">
-        <button type="button" class="btn btn-primary btn-sm" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"><i class='bx bx-plus'></i>Registrar guía</button>
     </div>
 
-    <div class="table-responsive">
-        <table id="example" class="table table-hover mt-3 text-center" style="font-size:14px;">
-        <thead>
-            <tr>
-                <th scope="col">Nro. Guía</th>
-                <th scope="col">Cantera</th>
-                <th scope="col">Tipo de Mineral</th>
-                <th scope="col">Cantidad Transportada</th>
-                <th scope="col">Destinatario</th>
-                <th scope="col">Destino</th>
-                <th scope="col">Nro. Factura</th>
-                <th scope="col">Tipo Guia</th>
-                <th scope="col">¿Anulada?</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-            <tbody>
-                @foreach ($registros as $index => $registro)
-                    <tr role="button">
-                        <td>{{$registro->nro_guia}}</td>
-                        <td class="fw-bold">{{$registro->nombre}}</td>
-                        <td>{{$registro->mineral}}</td>
-                        <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
-                        <td>{{$registro->razon_destinatario}}</td>
-                        <td>{{$registro->destino}}</td>
-                        @php
-                            if($registro->nro_factura == ''){
-                        @endphp       
-                            <td class="fst-italic text-secondary">No Aplica</td>
-                        @php
-                            }else{
-                        @endphp       
-                            <td>{{$registro->nro_factura}}</td>
-                        @php
-                            }
-                        @endphp
-                        
-                        <td class="fst-italic text-secondary">{{$registro->tipo_guia}}</td>
-                        <td>{{$registro->anulada}}</td>
-                        <td>
-                            <div class="d-flex">
-                                @php
-                                    if($index == count($registros)-1){
-                                @endphp
-                                    <span class="badge me-1 delete_guia" style="background-color: #ed0000;" role="button" evento="ultimoRegistro();" nro_guia="{{$registro->nro_guia}}">
-                                        <i class='bx bx-trash-alt fs-6'></i>
-                                    </span>
-                                @php
-                                    }else{
-                                @endphp
-                                    <span class="badge me-1" style="background-color: #777777ba;" disabled>
-                                        <i class='bx bx-trash-alt fs-6'></i>
-                                    </span>
-                                @php
-                                    }
-                                @endphp
-                                <span class="badge editar_guia" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia" nro_guia="{{$registro->nro_guia}}">
-                                    <i class='bx bx-pencil fs-6'></i>
-                                </span>
-                            </div> 
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        
-    </div>
+    
+
+    
 
 
       

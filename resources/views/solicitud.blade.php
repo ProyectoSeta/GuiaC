@@ -3,80 +3,88 @@
 @section('title', 'Solicitud de Guías')
 
 @section('content_header')
-    <h1>Solicitud de Guías</h1>
+    
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
 @stop
 
 @section('content')
-    <p></p>
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Solicitud de Guías</h2>
+            <div class="me-3">
+                <button type="button" class="btn btn-primary rounded-pill px-3 fw-bold btn-sm" id="new_solicitud" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud"><i class='bx bx-plus fw-bold'></i>Nueva solicitud</button>
+            </div>
+        </div>
+        
+        
+        <div class="table-responsive" style="font-size:14px">        
+            <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:14px">
+                <thead class="bg-primary border-light-subtle">
+                    <tr>
+                        <th scope="col">Cod.</th>
+                        <th scope="col">Cantera</th>
+                        <th scope="col">Fecha de emisión</th>
+                        <th scope="col">Solicitud</th>
+                        <th scope="col">UCD a Pagar</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach( $solicitudes as $solicitud)               
+                        <tr>
+                            <td>{{$solicitud->id_solicitud}}</td>
+                            <td class="fw-bold">{{$solicitud->nombre}}</td>
+                            <td>{{$solicitud->fecha}}</td>
+                            <td>
+                                <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
+                            </td>
+                            <td>
+                                <span>{{$solicitud->ucd_pagar}}</span>
+                            <td>
+                                @switch($solicitud->estado)
+                                @case('Verificando')
+                                        <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
+                                    @break
+                                    @case('Negada')
+                                        <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
+                                    @break
+                                    @case('En proceso')
+                                        <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                    @break
+                                    @case('Retirar') 
+                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar</span>
+                                    @break
+                                    @case('Retirado')
+                                        <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
+                                    @break
+                    
+                                @endswitch                    
+                            </td>
+                            <td>
+                                @if ($solicitud->estado == 'Verificando')
+                                    <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}">
+                                        <i class="bx bx-trash-alt fs-6"></i>
+                                    </span> 
+                                @else
+                                    <span class="badge" style="background-color: #ed00008c;">
+                                        <i class="bx bx-trash-alt fs-6"></i>
+                                    </span> 
+                                @endif
+                                
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-    <div class="mb-3">
-        <button type="button" class="btn btn-primary  btn-sm" id="new_solicitud" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud"><i class='bx bx-plus'></i>Nueva solicitud</button>
     </div>
     
-    <div class="table-responsive">        
-        <table id="example" class="table display  text-center" style="width:100%; font-size:14px">
-            <thead class="bg-primary">
-                <tr>
-                    <th scope="col">Cod.</th>
-                    <th scope="col">Cantera</th>
-                    <th scope="col">Fecha de emisión</th>
-                    <th scope="col">Solicitud</th>
-                    <th scope="col">UCD a Pagar</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach( $solicitudes as $solicitud)               
-                    <tr>
-                        <td>{{$solicitud->id_solicitud}}</td>
-                        <td class="fw-bold">{{$solicitud->nombre}}</td>
-                        <td>{{$solicitud->fecha}}</td>
-                        <td>
-                            <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
-                        </td>
-                        <td>
-                            <span>{{$solicitud->ucd_pagar}}</span>
-                        <td>
-                            @switch($solicitud->estado)
-                            @case('Verificando')
-                                    <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
-                                @break
-                                @case('Negada')
-                                    <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
-                                @break
-                                @case('En proceso')
-                                    <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
-                                @break
-                                @case('Retirar') 
-                                    <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar</span>
-                                @break
-                                @case('Retirado')
-                                    <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
-                                @break
-                  
-                            @endswitch                    
-                        </td>
-                        <td>
-                            @if ($solicitud->estado == 'Verificando')
-                                <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}">
-                                    <i class="bx bx-trash-alt fs-6"></i>
-                                </span> 
-                            @else
-                                <span class="badge" style="background-color: #ed00008c;">
-                                    <i class="bx bx-trash-alt fs-6"></i>
-                                </span> 
-                            @endif
-                            
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    
+   
 
 
       

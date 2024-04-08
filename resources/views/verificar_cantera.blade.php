@@ -3,7 +3,6 @@
 @section('title', 'Verificación: Canteras')
 
 @section('content_header')
-    <h1 class="mb-3">Verificación de Canteras</h1>
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
@@ -11,41 +10,47 @@
 @stop
 
 @section('content')
-    
-<div class="table-responsive">
-        <table id="example" class="table text-center" style="font-size:14px">
-            <thead>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Direccion</th>
-                <th>Producción</th>
-                <th>Contribuyente</th>
-                <th>Opciones</th> 
-            </thead>
-            <tbody id="list_canteras"> 
-               
-                @foreach ( $canteras as $cantera )            
-                    <tr>
-                        <td>{{ $cantera->id_cantera }}</td>
-                        <td>{{ $cantera->nombre }}</td>
-                        <td>{{ $cantera->lugar_aprovechamiento }}</td>
-                        <td>
-                            <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
-                        </td>
-                        <td>
-                        <a class="info_sujeto" role="button" id_sujeto='{{ $cantera->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$cantera->rif_condicion}}-{{$cantera->rif_nro}}</a>
-                        </td>
-                        <td>
-                            <button class="btn btn-success btn-sm aprobar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_verificar_cantera">Verificar</button>
-                            <button class="btn btn-danger btn-sm denegar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_cantera">Denegar</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody> 
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Verificación de Canteras</h2>
+        </div>
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+                <thead class="border-light-subtle">
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Producción</th>
+                    <th>Contribuyente</th>
+                    <th>Opciones</th> 
+                </thead>
+                <tbody id="list_canteras"> 
+                
+                    @foreach ( $canteras as $cantera )            
+                        <tr>
+                            <td>{{ $cantera->id_cantera }}</td>
+                            <td>{{ $cantera->nombre }}</td>
+                            <td>{{ $cantera->lugar_aprovechamiento }}</td>
+                            <td>
+                                <p class="text-primary fw-bold info_cantera" role="button" id_cantera='{{ $cantera->id_cantera }}' data-bs-toggle="modal" data-bs-target="#modal_info_cantera">Ver más</p>
+                            </td>
+                            <td>
+                            <a class="info_sujeto" role="button" id_sujeto='{{ $cantera->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$cantera->rif_condicion}}-{{$cantera->rif_nro}}</a>
+                            </td>
+                            <td>
+                                <button class="btn btn-success btn-sm aprobar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_verificar_cantera">Verificar</button>
+                                <button class="btn btn-danger btn-sm denegar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_cantera">Denegar</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody> 
+                
+            </table>
             
-        </table>
-        
+        </div>
+
     </div>
+    
     
 
       
@@ -91,58 +96,7 @@
     <div class="modal" id="modal_verificar_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_verificar_cantera">
-            <!-- <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">¿Verificar Cantera?</h1>
-                        <div class="">
-                            <h1 class="modal-title fs-5" id="" style="color: #0072ff"></h1>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body" style="font-size:14px;">
-                    <table class="table">
-                        <tr>
-                            <th>Conribuyente</th>
-                            <td class="d-flex flex-column">
-                                <span>ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</span>
-                                <span>G-32873763</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Nombre de la Cantera</th>
-                            <td>UTP El Apamate</td>
-                        </tr>
-                        <tr>
-                            <th>Lugar de Aprovechamiento</th>
-                            <td>Sector la Quebrada Honda, Municipio San Sebastián Estado Aragua.</td>
-                        </tr>
-                        <tr>
-                            <th>Producción</th>
-                            <td class="d-flex flex-column">
-                                <span>Piedra Picada ¾</span>
-                                <span>Material Integral</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Límite de Guías solicitadas por período</th>
-                            <td>
-                                <input type="number" class="form-control" id="limite_guia_cantera" name="limite_guia_cantera">
-                            </td>
-                        </tr>
-                    </table>
-                    <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
-                        </span> El <span class="fw-bold">Límite de guías a solicitar, </span>
-                        se define como el límite impuesto de guías que el contribuyente pude solicitar en un 
-                        <span class="fw-bold">período de tres (3) meses</span>, lo cual se aplica
-                        <span class="fw-bold">exclusivamete a esta cantera</span>. El número de guias se estima según su producción.
-                        
-                    </p>
-                    <div class="d-flex justify-content-center my-3">
-                        <button class="btn btn-success btn-sm me-4" id="cantera_verificada" id_cantera="'.$idCantera.'">Verificar y guardar</button>
-                        <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                    </div>
-                </div> -->
+            
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>

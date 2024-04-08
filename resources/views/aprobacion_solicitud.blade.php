@@ -3,7 +3,7 @@
 @section('title', 'Aprobacion - Solicitudes')
 
 @section('content_header')
-    <h1 class="mb-3">Aprobación de Solicitudes</h1>
+ 
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
@@ -11,59 +11,65 @@
 @stop
 
 @section('content')
-    
-    <div class="table-responsive">
-        <table id="example" class="table text-center" style="font-size:14px">
-            <thead>
-                <th>Cod.</th>
-                <th>Cantera</th>
-                <th>Razón Social</th>
-                <th>R.I.F.</th>
-                <th>Solicitud</th>
-                <th>UCD</th>
-                <th>Emisión</th>
-                <th>Correlativo</th> 
-                <th>Opciones</th>
-            </thead>
-            <tbody> 
-              
-               @foreach ($solicitudes as $solicitud)
-                    <tr>
-                        <td>{{$solicitud->id_solicitud}}</td>
-                        <td class="fw-bold">{{$solicitud->nombre}}</td>
-                        <td>
-                            {{$solicitud->razon_social}}
-                        </td>
-                        <td>
-                            <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
-                        </td>
-                        <td>
-                            <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
-                        </td>
-                        <td>
-                            <span>{{$solicitud->ucd_pagar}}</span>
-                        </td>
-                        @php
-                            $separar = (explode(" ",$solicitud->fecha));
-                            $fecha = $separar[0];
-                        @endphp
-                        <td>{{$fecha}}</td>
-                        <td>
-                            <span class="fst-italic text-secondary">Sin asignar</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-success btn-sm aprobar_solicitud" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
-                            <button class="btn btn-danger btn-sm denegar_solicitud" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
-                        </td>
-                    </tr>
-               @endforeach
-                        
-                 
-            </tbody> 
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Aprobación de Solicitudes</h2>
+        </div>
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table border-light-subtle text-center" style="font-size:14px">
+                <thead class="border-light-subtle">
+                    <th>Cod.</th>
+                    <th>Cantera</th>
+                    <th>Razón Social</th>
+                    <th>R.I.F.</th>
+                    <th>Solicitud</th>
+                    <th>UCD</th>
+                    <th>Emisión</th>
+                    <th>Correlativo</th> 
+                    <th>Opciones</th>
+                </thead>
+                <tbody> 
+                
+                @foreach ($solicitudes as $solicitud)
+                        <tr>
+                            <td>{{$solicitud->id_solicitud}}</td>
+                            <td class="fw-bold">{{$solicitud->nombre}}</td>
+                            <td>
+                                {{$solicitud->razon_social}}
+                            </td>
+                            <td>
+                                <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
+                            </td>
+                            <td>
+                                <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
+                            </td>
+                            <td>
+                                <span>{{$solicitud->ucd_pagar}}</span>
+                            </td>
+                            @php
+                                $separar = (explode(" ",$solicitud->fecha));
+                                $fecha = $separar[0];
+                            @endphp
+                            <td>{{$fecha}}</td>
+                            <td>
+                                <span class="fst-italic text-secondary">Sin asignar</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-success btn-sm aprobar_solicitud" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
+                                <button class="btn btn-danger btn-sm denegar_solicitud" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
+                            </td>
+                        </tr>
+                @endforeach
+                            
+                    
+                </tbody> 
+                
+            </table>
             
-        </table>
-        
+        </div>
+
     </div>
+    
     
 
       
@@ -158,9 +164,9 @@
                 {
                     "language": {
                         "lengthMenu": " Mostrar  _MENU_  Registros por página",
-                        "zeroRecords": "No se encontraron registros",
+                        "zeroRecords": "No hay Solicitudes por Aprobar",
                         "info": "Mostrando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "No se encuentran Registros",
+                        "infoEmpty": "No hay Solicitudes por Aprobar",
                         "infoFiltered": "(filtered from _MAX_ total records)",
                         'search':"Buscar",
                         'paginate':{

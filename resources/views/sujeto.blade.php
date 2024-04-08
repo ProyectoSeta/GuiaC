@@ -3,65 +3,69 @@
 @section('title', 'Sujetos Pasivos')
 
 @section('content_header')
-    <h1>Sujetos Pasivos</h1>
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
 @stop
 
 @section('content')
-    <p></p>
-    <div class="table-responsive">
-        <table id="example" class="table display" style="width:100%; font-size:14px">
-            <thead class="bg-primary">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Rif</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Razon social</th>
-                        <th scope="col">Dirección</th>
-                        <th scope="col">Telefonos</th>
-                        <th scope="col">Representante</th>
-                        <th scope="col">Estado</th>
-                        <!-- <th scope="col">Opciones</th> -->
-                    </tr>
-            </thead>
-            <tbody>
-                @foreach( $sujeto as $sujeto)               
-                    <tr>
-                        <td>{{$sujeto->id_sujeto}}</td>
-                        <td>{{$sujeto->rif}}</td>
-                        <td>{{$sujeto->tipo_sujeto}}</td>
-                        <td>{{$sujeto->razon_social}}</td>
-                        <td>{{$sujeto->direccion}}</td>
-                        <td>{{$sujeto->tlf_movil."-".$sujeto->tlf_fijo }}</td>
-                        <td>
-                            <a class="info_representante" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_representante">{{$sujeto->name_repr}}</a>
-                        </td>
-                        <td>
-                        @switch($sujeto->estado)
-                                    @case('Verificando')
-                                        <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando</span>
-                                    @break
-                                    @case('Verificado')
-                                        <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Verificado</span>
-                                    @break
-                                    @case('Rechazado')
-                                        <span class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-x-circle fs-6 me-2'></i>Rechazado</span>
-                                    @break
-                                @endswitch
-                        </td>
-                        <!-- <td>
-                            <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" >
-                                <i class="bx bx-trash-alt fs-6"></i>
-                            </span>
-                        </td> -->
-                    </tr>
-                @endforeach
-            </tbody>
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Sujetos Pasivos</h2>
+        </div>
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table display border-light-subtle" style="width:100%; font-size:14px">
+                <thead class="bg-primary border-light-subtle">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Rif</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Razon social</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Telefonos</th>
+                            <th scope="col">Representante</th>
+                            <th scope="col">Estado</th>
+                            <!-- <th scope="col">Opciones</th> -->
+                        </tr>
+                </thead>
+                <tbody>
+                    @foreach( $sujeto as $sujeto)               
+                        <tr>
+                            <td>{{$sujeto->id_sujeto}}</td>
+                            <td>{{$sujeto->rif}}</td>
+                            <td>{{$sujeto->tipo_sujeto}}</td>
+                            <td>{{$sujeto->razon_social}}</td>
+                            <td>{{$sujeto->direccion}}</td>
+                            <td>{{$sujeto->tlf_movil."-".$sujeto->tlf_fijo }}</td>
+                            <td>
+                                <a class="info_representante" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_representante">{{$sujeto->name_repr}}</a>
+                            </td>
+                            <td>
+                            @switch($sujeto->estado)
+                                        @case('Verificando')
+                                            <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando</span>
+                                        @break
+                                        @case('Verificado')
+                                            <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Verificado</span>
+                                        @break
+                                        @case('Rechazado')
+                                            <span class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-x-circle fs-6 me-2'></i>Rechazado</span>
+                                        @break
+                                    @endswitch
+                            </td>
+                            <!-- <td>
+                                <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" >
+                                    <i class="bx bx-trash-alt fs-6"></i>
+                                </span>
+                            </td> -->
+                        </tr>
+                    @endforeach
+                </tbody>
 
-        </table>
+            </table>
+        </div>
     </div>
+   
     
 
 

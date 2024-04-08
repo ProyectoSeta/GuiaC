@@ -3,7 +3,7 @@
 @section('title', 'Canteras')
 
 @section('content_header')
-    <h1>Registro de Cantera(s)</h1>
+    
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
@@ -13,12 +13,15 @@
 @section('content')
     
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary  btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_cantera"><i class='bx bx-plus'></i>Registrar Cantera</button>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Registro de Cantera(s)</h2>
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary rounded-pill px-3 btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_cantera"><i class='bx bx-plus'></i>Registrar Cantera</button>
+            </div>
         </div>
 
-        <div class="table-responsive">
-            <table id="example" class="table text-center" style="font-size:14px">
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
                 <thead>
                     <th>#</th>
                     <th>Nombre</th>
@@ -28,7 +31,7 @@
                     <th>Estado</th>
                     <th>Opciones</th> 
                 </thead>
-                <tbody id="list_canteras"> 
+                <tbody id="list_canteras" class="border-light-subtle"> 
                 
                     @foreach ( $canteras as $cantera )            
                         <tr>

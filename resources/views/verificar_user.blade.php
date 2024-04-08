@@ -3,7 +3,6 @@
 @section('title', 'Nuevos usuarios')
 
 @section('content_header')
-    <h1 class="mb-3">Nuevos usuarios - Verificación</h1>
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
@@ -11,53 +10,59 @@
 @stop
 
 @section('content')
-    <div class="table-responsive">
-        <table id="example" class="table text-center" style="font-size:14px">
-            <thead>
-                <th>Cod.</th>
-                <th>Razón Social</th>
-                <th>R.I.F.</th>
-                <th>¿Artesanal?</th>
-                <th>Representante</th>
-                <th>Opciones</th>
-            </thead>
-            <tbody> 
-            @foreach( $sujetos as $sujeto)               
-                <tr>
-                    <td>{{$sujeto->id_sujeto}}</td>
-                    <td>{{$sujeto->razon_social}}</td>
-                    <td>
-                        <a class="info_sujeto" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sujeto->rif_condicion}}-{{$sujeto->rif_nro}}</a>
-                    </td>
-                    <td>
-                    @php
-                        if($sujeto->rif_condicion == 'G'){
-                    @endphp    
-                        <span class="fst-italic text-secondary">No Aplica</span>
-                    @php
-                        }else{
-                    @endphp
-                        <span>{{$sujeto->artesanal}}</span>
-                    @php
-                        }
-                    @endphp
-                    </td>
-                    <td>{{$sujeto->name_repr}}</td>
-                    <td>
-                        <button type="submit" class="btn btn-success btn-sm aprobar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_sujeto">Aprobar</button>
-                        <button class="btn btn-danger btn-sm denegar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_sujeto">Denegar</button>
-                    </td>
-                </tr>
-            @endforeach
+    <div class="container rounded-4 p-3" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Nuevos usuarios - Verificación</h2>
+        </div>
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+                <thead class="border-light-subtle">
+                    <th>Cod.</th>
+                    <th>Razón Social</th>
+                    <th>R.I.F.</th>
+                    <th>¿Artesanal?</th>
+                    <th>Representante</th>
+                    <th>Opciones</th>
+                </thead>
+                <tbody> 
+                @foreach( $sujetos as $sujeto)               
+                    <tr>
+                        <td>{{$sujeto->id_sujeto}}</td>
+                        <td>{{$sujeto->razon_social}}</td>
+                        <td>
+                            <a class="info_sujeto" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sujeto->rif_condicion}}-{{$sujeto->rif_nro}}</a>
+                        </td>
+                        <td>
+                        @php
+                            if($sujeto->rif_condicion == 'G'){
+                        @endphp    
+                            <span class="fst-italic text-secondary">No Aplica</span>
+                        @php
+                            }else{
+                        @endphp
+                            <span>{{$sujeto->artesanal}}</span>
+                        @php
+                            }
+                        @endphp
+                        </td>
+                        <td>{{$sujeto->name_repr}}</td>
+                        <td>
+                            <button type="submit" class="btn btn-success btn-sm aprobar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_sujeto">Aprobar</button>
+                            <button class="btn btn-danger btn-sm denegar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_sujeto">Denegar</button>
+                        </td>
+                    </tr>
+                @endforeach
+                
+                
+                            
+                    
+                </tbody> 
+                
+            </table>
             
-               
-                        
-                 
-            </tbody> 
-            
-        </table>
-        
+        </div>
     </div>
+    
     
 
       
