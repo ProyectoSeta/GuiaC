@@ -20,13 +20,14 @@ return new class extends Migration
             $table->integer('id_cantera')->unsigned();
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
             $table->string('nro_guia')->unique();
-            $table->string('nro_control')->unique();
+            // $table->string('nro_control')->unique();
             $table->date('fecha');
             $table->enum('tipo_guia',['Venta','Donación']); ////
             $table->string('razon_destinatario');
             $table->string('ci_destinatario',15);
             $table->string('tlf_destinatario',15);
-            $table->string('municipio_parroquia_destino');
+            $table->string('municipio_destino');
+            $table->string('parroquia_destino');
             $table->string('destino');
             $table->string('nro_factura')->nullable();
             $table->date('fecha_facturacion')->nullable();
@@ -44,7 +45,7 @@ return new class extends Migration
             $table->string('tlf_conductor',15);
             $table->string('capacidad_vehiculo');
             $table->string('hora_salida');
-            $table->string('hora_llegada');
+            // $table->string('hora_llegada');
             
             $table->enum('anulada',['No','Si']);
             $table->string('motivo')->nullable();

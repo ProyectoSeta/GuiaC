@@ -88,28 +88,56 @@
                     @csrf
                         <!-- nombre cantera -->
                         <div class="row g-3 align-items-center mb-2">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <label for="" class="col-form-label">Nombre<span style="color:red">*</span></label>
                             </div>
-                            <div class="col-8">
+                            <div class="col-10">
                                 <input type="text" id="" class="form-control form-control-sm" name="nombre" >
                             </div>
                         </div>
                         <!-- municipio y parroqui cantera -->
                         <div class="row g-3 align-items-center mb-2">
-                            <div class="col-3">
-                                <label for="municipio" class="col-form-label">Municipio y Parroquia<span style="color:red">*</span></label>
+                            <div class="col-sm-2">
+                                <label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>
                             </div>
-                            <div class="col-8">
-                                <input type="text" id="municipio" class="form-control form-control-sm" name="municipio" >
+                            <div class="col-sm-4">
+                                <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio">
+                                    <option value="Bolívar">Bolívar</option>
+                                    <option value="Camatagua">Camatagua</option>
+                                    <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                    <option value="Girardot">Girardot</option>
+                                    <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                    <option value="José Félix Ribas">José Félix Ribas</option>
+                                    <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                    <option value="Libertador">Libertador</option>
+                                    <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                    <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                    <option value="San Casimiro">San Casimiro</option>
+                                    <option value="San Sebastián">San Sebastián</option>
+                                    <option value="Santiago Mariño">Santiago Mariño</option>
+                                    <option value="Santos Michelena">Santos Michelena</option>
+                                    <option value="Sucre">Sucre</option>
+                                    <option value="Tovar">Tovar</option>
+                                    <option value="Urdaneta">Urdaneta</option>
+                                    <option value="Zamora">Zamora </option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia">
+                                    <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                </select>
                             </div>
                         </div>
                         <!-- direccion cantera -->
                         <div class="row g-3 align-items-center mb-2">
-                            <div class="col-3">
+                            <div class="col-sm-3">
                                 <label for="" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
                             </div>
-                            <div class="col-8">
+                            <div class="col-sm-9">
                                 <input type="text" id="" class="form-control form-control-sm" name="direccion" >
                             </div>
                         </div>
@@ -488,121 +516,219 @@
                 x--; //Decrement field counter
             });
 
+        
         ///////REGISTRAR CANTERA
-            $('#agregar_cantera').submit(function(e) {
-                e.preventDefault(e);    
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("cantera.store") }}',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                       if (response.success) {
-                            alert('La cantera ha sido registrada exitosamente');
-                            $('#agregar_cantera')[0].reset();
-                            $('#modal_new_cantera').modal('hide');
-                            window.location.href = "{{ route('cantera')}}";
-                            
-                        } else {
-                            alert('Ha ocurrido un error al registar la cantera');
-                       }
-                    },
-                    error: function() {
+        $('#agregar_cantera').submit(function(e) {
+            e.preventDefault(e);    
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("cantera.store") }}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        alert('La cantera ha sido registrada exitosamente');
+                        $('#agregar_cantera')[0].reset();
+                        $('#modal_new_cantera').modal('hide');
+                        window.location.href = "{{ route('cantera')}}";
+                        
+                    } else {
+                        alert('Ha ocurrido un error al registar la cantera');
                     }
-                });
+                },
+                error: function() {
+                }
             });
+        });
 
 
         ///////MODAL: INFO CANTERA
-            $(document).on('click','.info_cantera', function(e) { 
-                e.preventDefault(e); 
-                var cantera = $(this).attr('id_cantera');
-                // alert(cantera);
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("cantera.minerales") }}',
-                    data: {cantera:cantera},
-                    success: function(response) {
-                        // alert(response);                 
-                        $('#info_produccion').html(response);
-                    },
-                    error: function() {
-                    }
-                });
+        $(document).on('click','.info_cantera', function(e) { 
+            e.preventDefault(e); 
+            var cantera = $(this).attr('id_cantera');
+            // alert(cantera);
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("cantera.minerales") }}',
+                data: {cantera:cantera},
+                success: function(response) {
+                    // alert(response);                 
+                    $('#info_produccion').html(response);
+                },
+                error: function() {
+                }
             });
+        });
 
         //////ELIMINAR CANTERA
-            $(document).on('click','.delete_cantera', function(e) { 
-                e.preventDefault(e); 
-                var cantera = $(this).attr('id_cantera');
-                var nombre = $(this).attr('nombre');
-        
-                if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA CANTERA: " + nombre + "?")) {
-                    $.ajax({
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        type: 'POST',
-                        url: '{{route("cantera.destroy") }}',
-                        data: {cantera:cantera},
-                        success: function(response) {
-                            if (response.success == 'sin permiso'){
-                                alert("LA CANTERA NO PUEDE SER ELIMINADA, PORQUE HAY REGISTROS DE GUÍAS CON ESTA CANTERA");
-                            }
-                            else if (response.success){
-                                alert("CANTERA ELIMINADA EXITOSAMENTE");
-                                window.location.href = "{{ route('cantera')}}";
-                            } else{
-                                alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA CANTERA");
-                            }              
-                        },
-                        error: function() {
+        $(document).on('click','.delete_cantera', function(e) { 
+            e.preventDefault(e); 
+            var cantera = $(this).attr('id_cantera');
+            var nombre = $(this).attr('nombre');
+    
+            if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA CANTERA: " + nombre + "?")) {
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("cantera.destroy") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {
+                        if (response.success == 'sin permiso'){
+                            alert("LA CANTERA NO PUEDE SER ELIMINADA, PORQUE HAY REGISTROS DE GUÍAS CON ESTA CANTERA");
                         }
-                    });
-                }else{
+                        else if (response.success){
+                            alert("CANTERA ELIMINADA EXITOSAMENTE");
+                            window.location.href = "{{ route('cantera')}}";
+                        } else{
+                            alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA CANTERA");
+                        }              
+                    },
+                    error: function() {
+                    }
+                });
+            }else{
 
+            }
+            
+        });
+
+        ///////MODAL: INFO CANTERA DENEGADA
+        $(document).on('click','.cantera_denegada', function(e) { 
+            e.preventDefault(e); 
+            var cantera = $(this).attr('id_cantera');
+            // alert(cantera);
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("cantera.info_denegada") }}',
+                data: {cantera:cantera},
+                success: function(response) {
+                    // alert(response);                 
+                    $('#content_info_denegada').html(response);
+                },
+                error: function() {
                 }
-               
             });
+        });
 
-            ///////MODAL: INFO CANTERA DENEGADA
-            $(document).on('click','.cantera_denegada', function(e) { 
-                e.preventDefault(e); 
-                var cantera = $(this).attr('id_cantera');
-                // alert(cantera);
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("cantera.info_denegada") }}',
-                    data: {cantera:cantera},
-                    success: function(response) {
-                        // alert(response);                 
-                        $('#content_info_denegada').html(response);
-                    },
-                    error: function() {
-                    }
-                });
+        
+        ///////MODAL: INFO CANTERA VERIFICADA: LIMITE DE GUÍAS
+        $(document).on('click','.cantera_verificada', function(e) { 
+            e.preventDefault(e); 
+            var cantera = $(this).attr('id_cantera');
+            // alert(cantera);
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("cantera.info_limite") }}',
+                data: {cantera:cantera},
+                success: function(response) {
+                    // alert(response);                 
+                    $('#content_info_limite').html(response);
+                },
+                error: function() {
+                }
             });
+        });
 
-            
-            ///////MODAL: INFO CANTERA VERIFICADA: LIMITE DE GUÍAS
-            $(document).on('click','.cantera_verificada', function(e) { 
-                e.preventDefault(e); 
-                var cantera = $(this).attr('id_cantera');
-                // alert(cantera);
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("cantera.info_limite") }}',
-                    data: {cantera:cantera},
-                    success: function(response) {
-                        // alert(response);                 
-                        $('#content_info_limite').html(response);
-                    },
-                    error: function() {
-                    }
-                });
-            });
-            
+        /////////////PARROQUIAS
+        $(document).on('change','#municipio', function(e) {
+            var municipio = $(this).val();
+
+            switch (municipio) {
+                case 'Bolívar':
+                    $('#parroquia').html('<option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>');
+                    break;
+                case 'Camatagua':
+                    $('#parroquia').html('<option value="Camatagua">Camatagua</option>'+
+                                        '<option value="Carmen de Cura">Carmen de Cura</option>');
+                    break;
+                case 'Francisco Linares Alcántara':
+                    $('#parroquia').html('<option value="Santa Rita">Santa Rita</option>'+
+                                        '<option value="Francisco de Miranda">Francisco de Miranda</option>'+
+                                        '<option value="Moseñor Feliciano González">Moseñor Feliciano González</option>');
+                    break;
+                case 'Girardot':
+                    $('#parroquia').html('<option value="Pedro José Ovalles">Pedro José Ovalles</option>'+
+                                        '<option value="Joaquín Crespo">Joaquín Crespo</option>'+
+                                        '<option value="José Casanova Godoy">José Casanova Godoy</option>'+
+                                        '<option value="Madre María de San José">Madre María de San José</option>'+
+                                        '<option value="Andrés Eloy Blanco">Andrés Eloy Blanco</option>'+
+                                        '<option value="Los Tacarigua">Los Tacarigua</option>'+
+                                        '<option value="Las Delicias">Las Delicias</option>'+
+                                        '<option value="Choroní">Choroní</option>');
+
+                break;
+                case 'José Ángel Lamas':
+                    $('#parroquia').html('<option value="Santa Cruz">Santa Cruz</option>');
+                    break;
+                case 'José Félix Ribas':
+                    $('#parroquia').html('<option value="José Félix Ribas">José Félix Ribas</option>'+
+                                        '<option value="Castor Nieves Ríos">Castor Nieves Ríos</option>'+
+                                        '<option value="Las Guacamayas">Las Guacamayas</option>'+
+                                        '<option value="Pao de Zárate">Pao de Zárate</option>'+
+                                        '<option value="Zuata">Zuata</option>');
+                break;
+                case 'José Rafael Revenga':
+                    $('#parroquia').html('<option value="José Rafael Revenga">José Rafael Revenga</option>');
+                    break;
+                case 'Libertador':
+                    $('#parroquia').html('<option value="Palo Negro">Palo Negro</option>'+
+                                        '<option value="San Martín de Porres">San Martín de Porres</option>');
+                    break;
+                case 'Mario Briceño Iragorry':
+                    $('#parroquia').html('<option value="El Limón">El Limón</option>'+
+                                        '<option value="Caña de Azúcar">Caña de Azúcar</option>');
+                break;
+                case 'Ocumare de la Costa de Oro':
+                    $('#parroquia').html('<option value="Ocumare de la Costa">Ocumare de la Costa</option>');
+                    break;
+                case 'San Casimiro':
+                    $('#parroquia').html('<option value="San Casimiro">San Casimiro</option>'+
+                                        '<option value="Güiripa">Güiripa</option>'+
+                                        '<option value="Ollas de Caramacate">Ollas de Caramacate</option>'+
+                                        '<option value="Valle Morín">Valle Morín</option>');
+                    break;
+                case 'San Sebastián':
+                    $('#parroquia').html('<option value="San Sebastián">San Sebastián</option>');
+                    break;
+                case 'Santiago Mariño':
+                    $('#parroquia').html('<option value="Turmero">Turmero</option>'+
+                                        '<option value="Arévalo Aponte">Arévalo Aponte</option>'+
+                                        '<option value="Chuao">Chuao</option>'+
+                                        '<option value="Samán de Güere">Samán de Güere</option>'+
+                                        '<option value="Alfredo Pacheco Miranda">Alfredo Pacheco Miranda</option>');
+                    break;
+                case 'Santos Michelena':
+                    $('#parroquia').html('<option value="Santos Michelena">Santos Michelena</option>'+
+                                        '<option value="Tiara">Tiara</option>');
+                    break;
+                case 'Sucre':
+                    $('#parroquia').html('<option value="Cagua">Cagua</option>'+
+                                        '<option value="Bella Vista">Bella Vista</option>');
+                break;
+                case 'Tovar':
+                    $('#parroquia').html('<option value="Tovar">Tovar</option>');
+                    break;
+                case 'Urdaneta':
+                    $('#parroquia').html('<option value="Urdaneta">Urdaneta</option>'+
+                                        '<option value="Las Peñitas">Las Peñitas</option>'+
+                                        '<option value="San Francisco de Cara">San Francisco de Cara</option>'+
+                                        '<option value="Taguay">Taguay</option>');
+                    break;
+                case 'Zamora':
+                    $('#parroquia').html('<option value="Zamora">Zamora</option>'+
+                                        '<option value="Magdaleno">Magdaleno</option>'+
+                                        '<option value="San Francisco de Asís">San Francisco de Asís</option>'+
+                                        '<option value="Valles de Tucutunemo">Valles de Tucutunemo</option>'+
+                                        '<option value="Augusto Mijares">Augusto Mijares</option>');
+                    break;
+                default:
+                    break;
+            }
+
+        });   
 
     });
     </script>

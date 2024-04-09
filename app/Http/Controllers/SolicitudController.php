@@ -62,7 +62,7 @@ class SolicitudController extends Controller
                         </div>
                         <div class="row mt-2">
                             <div class="col-6">
-                                <label for="tipo">Tipo de Talonario</label>
+                                <label for="tipo">Contenido del Talonario</label>
                                 <input type="text" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="50 guías" readonly>
                             </div>
                             <div class="col-6">
@@ -80,7 +80,7 @@ class SolicitudController extends Controller
                             <span id="total_ucd" class="fs-5">0 UCD</span>
                         </div>
 
-                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota: </span>
+                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Notas: </span><br>
                             <span class="fw-bold">1. </span>Cada Guía tiene un valor de <span class="fw-bold">cinco (5) UCD</span> (Unidad de Cuenta Dinámica).<br>
                             <span class="fw-bold">2. </span>Solo podrá eligir las canteras que hayan sido verificadas previamente.
                         </p>
@@ -166,8 +166,8 @@ class SolicitudController extends Controller
         if($detalles){
             foreach ($detalles as $solicitud) {
                 $tr .= '<tr>
-                            <td>'.$solicitud->tipo_talonario.'</td>
-                            <td>'.$solicitud->cantidad.'</td>
+                            <td>'.$solicitud->tipo_talonario.' Guías</td>
+                            <td>'.$solicitud->cantidad.' und.</td>
                         </tr>';
             }
         }
@@ -184,8 +184,8 @@ class SolicitudController extends Controller
                     <table class="table text-center">
                         <thead>
                             <tr>
-                                <th scope="col">Tipo de talonario</th>
-                                <th scope="col">Cantidad</th>
+                                <th scope="col">Contenido del Talonario</th>
+                                <th scope="col">Cant. de Talonarios</th>
                             </tr>
                         </thead>
                         <tbody>

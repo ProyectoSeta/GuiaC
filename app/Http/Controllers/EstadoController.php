@@ -42,8 +42,8 @@ class EstadoController extends Controller
                     $contador = 0;
                     foreach ($detalles as $i) {
                         $tr .= '<tr>
-                                    <td>'.$i->tipo_talonario.'</td>
-                                    <td>'.$i->cantidad.'</td>
+                                    <td>'.$i->tipo_talonario.' Guías</td>
+                                    <td>'.$i->cantidad.' und.</td>
                                 </tr>';
 
                         $contador = $contador + ($i->tipo_talonario * $i->cantidad);
@@ -75,7 +75,9 @@ class EstadoController extends Controller
                 $tr_talonarios = '';
                 if ($estado == 'En proceso' || $estado == 'Retirar' || $estado == 'Retirado') {
                     $talonarios = DB::table('talonarios')->where('id_solicitud','=',$idSolicitud)->get();
+                    $i=0;
                     foreach ($talonarios as $talonario) {
+                        $i=$i+1;
                         $desde = $talonario->desde;
                         $hasta = $talonario->hasta;
                         $length = 6;
@@ -83,7 +85,7 @@ class EstadoController extends Controller
                         $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
                         $tr_talonarios .= ' <tr>
-                                                <td>'.$talonario->tipo_talonario.'</td>
+                                                <td>'.$i.'</td>
                                                 <td class="fst-italic">'.$formato_desde.'</td>
                                                 <td class="fst-italic">'.$formato_hasta.'</td>
                                             </tr>';
@@ -93,7 +95,7 @@ class EstadoController extends Controller
                                             <h6 class="text-center mb-3" style="color: #0064cd;">Talonarios Emitidos</h6>
                                             <table class="table text-center">
                                                 <tr>
-                                                    <th>Tipo</th>
+                                                    <th>#</th>
                                                     <th>Desde</th>
                                                     <th>Hasta</th>
                                                 </tr>
@@ -117,7 +119,7 @@ class EstadoController extends Controller
                                 <table class="table text-center">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Tipo de talonario</th>
+                                            <th scope="col">Contenido del Talonario</th>
                                             <th scope="col">Cantidad</th>
                                         </tr>
                                     </thead>

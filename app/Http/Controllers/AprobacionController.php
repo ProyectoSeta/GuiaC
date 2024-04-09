@@ -115,8 +115,8 @@ class AprobacionController extends Controller
                     $contador = 0;
                     foreach ($detalles as $i) {
                         $tr .= '<tr>
-                                    <td>'.$i->tipo_talonario.'</td>
-                                    <td>'.$i->cantidad.'</td>
+                                    <td>'.$i->tipo_talonario.' Guías</td>
+                                    <td>'.$i->cantidad.' und.</td>
                                 </tr>';
 
                         $contador = $contador + ($i->tipo_talonario * $i->cantidad);
@@ -158,7 +158,7 @@ class AprobacionController extends Controller
                             <table class="table text-center">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Tipo de talonario</th>
+                                        <th scope="col">Contenido del Talonario</th>
                                         <th scope="col">Cantidad</th>
                                     </tr>
                                 </thead>
@@ -194,21 +194,21 @@ class AprobacionController extends Controller
 
     }
 
-    private function generarToken($longitud = 10)
-    {
-        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $token = '';
-        for ($i = 0; $i < $longitud; $i++) {
-            $token .= $caracteres[mt_rand(0, strlen($caracteres) - 1)];
-        }
-        return $token;
-    }
+    // private function generarToken($longitud = 10)
+    // {
+    //     $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    //     $token = '';
+    //     for ($i = 0; $i < $longitud; $i++) {
+    //         $token .= $caracteres[mt_rand(0, strlen($caracteres) - 1)];
+    //     }
+    //     return $token;
+    // }
 
-    // Función para verificar si un token ya existe en la base de datos
-    private function tokenExiste($token)
-    {
-        return DB::table('nro_controls')->where('nro_control', $token)->exists();
-    }
+    // // Función para verificar si un token ya existe en la base de datos
+    // private function tokenExiste($token)
+    // {
+    //     return DB::table('nro_controls')->where('nro_control', $token)->exists();
+    // }
 
     public function correlativo(Request $request)
     {
@@ -225,7 +225,7 @@ class AprobacionController extends Controller
             }
             if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
                 $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
-                $c = 0; return response($detalles);
+                $c = 0; 
                 foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
@@ -250,18 +250,18 @@ class AprobacionController extends Controller
                         $contador_guia = $desde;
                         ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
                         // $nuevoToken = '';
-                        for ($t=0; $t < $tipo; $t++) {
-                            do {
-                                $nuevoToken = $this->generarToken();
-                            } while ($this->tokenExiste($nuevoToken));
+                        // for ($t=0; $t < $tipo; $t++) {
+                        //     do {
+                        //         $nuevoToken = $this->generarToken();
+                        //     } while ($this->tokenExiste($nuevoToken));
 
-                            // Guarda el nuevo token en la base de datos
-                            $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
+                        //     // Guarda el nuevo token en la base de datos
+                        //     $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
                             
-                            if ($insert_control) {
-                                $contador_guia = $contador_guia + 1;
-                            }
-                        }
+                        //     if ($insert_control) {
+                        //         $contador_guia = $contador_guia + 1;
+                        //     }
+                        // }
                         ////////////////////////////////////////
 
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
@@ -291,18 +291,18 @@ class AprobacionController extends Controller
 
                         $contador_guia = $desde;
                         ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
-                        for ($t=0; $t < $tipo; $t++) {
-                            do {
-                                $nuevoToken = $this->generarToken();
-                            } while ($this->tokenExiste($nuevoToken));
+                        // for ($t=0; $t < $tipo; $t++) {
+                        //     do {
+                        //         $nuevoToken = $this->generarToken();
+                        //     } while ($this->tokenExiste($nuevoToken));
                             
-                            // Guarda el nuevo token en la base de datos
-                            $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
+                        //     // Guarda el nuevo token en la base de datos
+                        //     $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
                             
-                            if ($insert_control) {
-                                $contador_guia = $contador_guia + 1;
-                            }
-                        }
+                        //     if ($insert_control) {
+                        //         $contador_guia = $contador_guia + 1;
+                        //     }
+                        // }
                         ////////////////////////////////////////
     
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
@@ -342,8 +342,8 @@ class AprobacionController extends Controller
                 $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
                                 <table class="table mt-2 mb-3">
                                     <tr>
-                                        <th>Tipo:</th>
-                                        <td>'.$talonario->tipo_talonario.'</td>
+                                        <th>Contenido:</th>
+                                        <td>'.$talonario->tipo_talonario.' Guías</td>
                                         <th>Desde:</th>
                                         <td>'.$formato_desde.'</td>
                                         <th>Hasta:</th>

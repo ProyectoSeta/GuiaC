@@ -46,12 +46,14 @@ class CanteraController extends Controller
 
         $nombre = $request->post('nombre');
         $municipio = $request->post('municipio');
+        $parroquia = $request->post('parroquia');
         $direccion = $request->post('direccion');
 
         $cantera = DB::table('canteras')->insert([
                                 'id_sujeto' =>  $id_sp,
                                 'nombre' => $nombre,
-                                'municipio_parroquia' => $municipio,
+                                'municipio_cantera' => $municipio,
+                                'parroquia_cantera' => $parroquia,
                                 'lugar_aprovechamiento' => $direccion,
                                 'status' => 'Verificando']);
         if($cantera){

@@ -38,8 +38,8 @@
                             <a class="info_sujeto" role="button" id_sujeto='{{ $cantera->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$cantera->rif_condicion}}-{{$cantera->rif_nro}}</a>
                             </td>
                             <td>
-                                <button class="btn btn-success btn-sm aprobar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_verificar_cantera">Verificar</button>
-                                <button class="btn btn-danger btn-sm denegar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_cantera">Denegar</button>
+                                <button class="btn btn-success btn-sm rounded-4 px-3 aprobar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_verificar_cantera">Verificar</button>
+                                <button class="btn btn-danger btn-sm rounded-4 px-3 denegar_cantera" id_cantera="{{$cantera->id_cantera}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_cantera">Denegar</button>
                             </td>
                         </tr>
                     @endforeach

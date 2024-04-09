@@ -110,7 +110,7 @@ class CorrelativoController extends Controller
         $guia = DB::table('control_guias')->join('canteras', 'control_guias.id_cantera', '=', 'canteras.id_cantera')
                                             ->join('sujeto_pasivos', 'control_guias.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
                                             ->join('minerals', 'control_guias.id_mineral', '=', 'minerals.id_mineral')
-                                            ->select('control_guias.*', 'canteras.nombre', 'canteras.municipio_parroquia', 'canteras.lugar_aprovechamiento', 'minerals.mineral', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro')
+                                            ->select('control_guias.*', 'canteras.nombre', 'canteras.municipio_cantera', 'canteras.parroquia_cantera', 'canteras.lugar_aprovechamiento', 'minerals.mineral', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro')
                                             ->where('control_guias.nro_guia','=', $nroGuia)->get();
         
         if ($guia) {
@@ -162,7 +162,7 @@ class CorrelativoController extends Controller
                                         <th>Nombre de la Cantera:</th>
                                         <td>'.$g->nombre.'</td>
                                         <th>Municipio y Parroquia:</th>
-                                        <td>'.$g->municipio_parroquia.'</td>
+                                        <td>Municipio '.$g->municipio_cantera.', Parroquia '.$g->parroquia_cantera.'</td>
                                     </tr>
                                     <tr>
                                         <th>Lugar de Aprovechamiento:</th>
@@ -182,7 +182,7 @@ class CorrelativoController extends Controller
                                         <th>Teléfono del Destinatario:</th>
                                         <td>'.$g->tlf_destinatario.'</td>
                                         <th>Municipio y Parroquia:</th>
-                                        <td>'.$g->municipio_parroquia_destino.'</td>
+                                        <td>Municipio '.$g->municipio_destino.', Parroquia '.$g->parroquia_destino.'</td>
                                     </tr>
                                     <tr>
                                         <th>Dirección de Destino:</th>
@@ -238,8 +238,6 @@ class CorrelativoController extends Controller
                                 <!-- DATOS: anulada?-->
                                 <table class="table d-flex justify-content-end">
                                     <tr>
-                                        <th>Hora de Llegada:<th>
-                                        <td>'.$g->hora_llegada.'</td>
                                         <th>¿ANULADA?:</th>
                                         <td>'.$g->anulada.'</td>
                                         <th>Motivo:</th>
@@ -247,11 +245,7 @@ class CorrelativoController extends Controller
                                     </tr>
                                 </table>
                             </div>
-                            <div class="row d-flex justify-content-end">
-                                <div class="col-4 text-end fs-5 fw-bold text-muted">
-                                    <span class=" text-danger">Nro° Control </span><span id="nro_control_view">'.$g->nro_control.'</span>
-                                </div>
-                            </div>
+                           
 
                             <div class="d-flex justify-content-center mt-3 mb-3" >
                                 <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Salir</button>

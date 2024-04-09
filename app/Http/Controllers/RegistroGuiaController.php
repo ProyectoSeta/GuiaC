@@ -72,7 +72,6 @@ class RegistroGuiaController extends Controller
                             
                             <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
                             <input type="hidden" id="nro_guia" name="nro_guia" value="" required>
-                            <input type="hidden" id="nro_control" name="nro_control" value="" required>
 
                             <div class="row px-3 d-flex justify-content-between">
                                 <div class="col-sm-4">
@@ -104,25 +103,12 @@ class RegistroGuiaController extends Controller
                                         </div> 
                                     </div>
                                 </div>
-                                
                             </div>
-
-                            <!-- direccion de la cantera
-                            <div class="row">
-                                <div class="row g-3 align-items-center mb-2">
-                                    <div class="col-3">
-                                        <label for="" class="col-form-label">Dirección:</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <p class="text-muted fst-italic text-start" id="direccion_cantera"></p>
-                                    </div>
-                                </div>
-                            </div> -->
 
                             <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
 
                             <div class="row">
-                                <div class="col-sm-6 px-4">
+                                <div class="col-sm-4 px-4">
                                     <!-- razon social -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-4">
@@ -132,8 +118,20 @@ class RegistroGuiaController extends Controller
                                             <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required disabled>
                                         </div>
                                     </div>
-
-                                    <!-- telefono del destinatario  -->
+                                </div>
+                                <div class="col-sm-4 px-4">
+                                    <!-- ci del destinatario -->
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-3">
+                                            <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 px-4">
+                                    <!-- telefono destinatario -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-4">
                                             <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
@@ -142,37 +140,58 @@ class RegistroGuiaController extends Controller
                                             <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required disabled>
                                         </div>
                                     </div>
-
                                 </div>
-                                <div class="col-sm-6 px-4">
-                                    <!-- ci del destinatario -->
-                                    <div class="row g-3 align-items-center mb-2">
-                                        <div class="col-4">
-                                            <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
-                                        </div>
-                                        <div class="col-8">
-                                            <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required disabled>
-                                        </div>
-                                    </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-sm-4 px-4">
                                     <!-- destino -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-4">
-                                            <label for="municipio" class="col-form-label">Municipio/Parroqui: <span style="color:red">*</span></label>
+                                            <label for="municipio" class="col-form-label">Municipio: <span style="color:red">*</span></label>
                                         </div>
                                         <div class="col-8">
-                                            <input type="text" id="municipio" class="form-control form-control-sm" name="municipio" required disabled>
+                                            <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio_destino" required disabled>
+                                                <option value="Bolívar">Bolívar</option>
+                                                <option value="Camatagua">Camatagua</option>
+                                                <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                                <option value="Girardot">Girardot</option>
+                                                <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                                <option value="José Félix Ribas">José Félix Ribas</option>
+                                                <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                                <option value="Libertador">Libertador</option>
+                                                <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                                <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                                <option value="San Casimiro">San Casimiro</option>
+                                                <option value="San Sebastián">San Sebastián</option>
+                                                <option value="Santiago Mariño">Santiago Mariño</option>
+                                                <option value="Santos Michelena">Santos Michelena</option>
+                                                <option value="Sucre">Sucre</option>
+                                                <option value="Tovar">Tovar</option>
+                                                <option value="Urdaneta">Urdaneta</option>
+                                                <option value="Zamora">Zamora </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row px-3">
-                                <div class="col-sm-12">
-                                <div class="row align-items-center mb-2">
-                                        <div class="col-2">
+                                <div class="col-sm-4 px-4">
+                                    <div class="row g-3 align-items-center mb-2">
+                                        <div class="col-4">
+                                            <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
+                                        </div>
+                                        <div class="col-8">
+                                            <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia_destino" disabled>
+                                                <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 px-4">
+                                    <div class="row align-items-center mb-2">
+                                        <div class="col-4">
                                             <label for="destino" class="col-form-label">Lugar de destino: <span style="color:red">*</span></label>
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-8">
                                             <input type="text" id="destino" class="form-control form-control-sm" name="destino" required disabled>
                                         </div>
                                     </div>
@@ -333,7 +352,7 @@ class RegistroGuiaController extends Controller
                             <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
                             
                             <div class="row">
-                                <div class="col-sm-6 px-4">
+                                <div class="col-sm-4 px-4">
                                     <!-- hora de Salida -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-4">
@@ -344,21 +363,7 @@ class RegistroGuiaController extends Controller
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 px-4">
-                                    <!-- hora de llegada -->
-                                    <div class="row g-3 align-items-center mb-2">
-                                        <div class="col-4">
-                                            <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
-                                        </div>
-                                        <div class="col-8">
-                                            <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required disabled>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- otros datos -->
-                            <div class="row px-2">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4 px-4">
                                     <!-- nro factura -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-6">
@@ -369,7 +374,7 @@ class RegistroGuiaController extends Controller
                                         </div> 
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4 px-4">
                                     <!-- anulada -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-5">
@@ -391,22 +396,23 @@ class RegistroGuiaController extends Controller
                                         </div> 
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                            </div>
+                            <!-- otros datos -->
+                            <div class="row px-2">
+                                <div class="col-sm-12">
                                     <!-- motivo de anulacion -->
                                     <div class="row g-3 align-items-center mb-2">
-                                        <div class="col-3">
-                                            <label for="motivo_anulada" class="col-form-label">Motivo: </label>
+                                        <div class="col-sm-2">
+                                            <label for="motivo_anulada" class="col-form-label">Motivo de la Anulación: </label>
                                         </div>
-                                        <div class="col-9">
+                                        <div class="col-sm-10">
                                             <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="text-end fs-5 fw-bold text-muted py-2">
-                                <span class=" text-danger">Nro° Control </span><span id="nro_control_view"></span>
-                            </div>
+                          
 
                             <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
                             <div class="d-flex justify-content-center mt-3 mb-3" >
@@ -447,11 +453,11 @@ class RegistroGuiaController extends Controller
                         $length = 6;
                         $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
 
-                        ////////buscar el numero de control correspondiente a este nro guia
-                        $control = DB::table('nro_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
-                        if ($control){  
-                            $nro_control = $control->nro_control;
-                        }
+                        // ////////buscar el numero de control correspondiente a este nro guia
+                        // $control = DB::table('nro_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
+                        // if ($control){  
+                        //     $nro_control = $control->nro_control;
+                        // }
                     }else{
                         return response()->json(['success' => false]);
                     }
@@ -471,13 +477,14 @@ class RegistroGuiaController extends Controller
                                 $nro_guia = $ultimo_nro_guia + 1 ;
                                 $length = 6;
                                 $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
-
+                                
+                                $idTalonario = $ultimo_id_talonario;
                                 ////////buscar el numero de control correspondiente a este nro guia
-                                $control = DB::table('nro_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
-                                if ($control){
-                                    $nro_control = $control->nro_control;
-                                    $idTalonario = $ultimo_id_talonario;
-                                }
+                                // $control = DB::table('nro_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
+                                // if ($control){
+                                //     $nro_control = $control->nro_control;
+                                    
+                                // }
                             }else{
                                 //////////////YA NO QUEDAN GUIAS EN EL TALONARIO
                                 ////////////buscar el siguiente talonario correspondiente al sujeto pasivo
@@ -494,10 +501,10 @@ class RegistroGuiaController extends Controller
                                         $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
 
                                         ////////buscar el numero de control correspondiente a este nro guia
-                                        $control = DB::table('nro_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
-                                        if ($control){
-                                            $nro_control = $control->nro_control;
-                                        }
+                                        // $control = DB::table('nro_controls')->select('nro_control')->where('nro_guia','=',$nro_guia)->first();
+                                        // if ($control){
+                                        //     $nro_control = $control->nro_control;
+                                        // }
                                     }else{
                                         ////// EL USUARIO NO HA SOLICITADO MAS TLONARIOS
                                         $html = '<div class="text-center text-muted my-4 pb-4">
@@ -533,7 +540,7 @@ class RegistroGuiaController extends Controller
             } 
         }
 
-        return response()->json(['success' => true, 'minerales' => $minerales, 'talonario' => $idTalonario, 'nro_guia' => $nro_guia, 'formato_nro_guia' => $formato_nro_guia, 'nro_control' => $nro_control]);
+        return response()->json(['success' => true, 'minerales' => $minerales, 'talonario' => $idTalonario, 'nro_guia' => $nro_guia, 'formato_nro_guia' => $formato_nro_guia]);
     }
 
 
@@ -551,7 +558,7 @@ class RegistroGuiaController extends Controller
         $id_talonario = $request->post('id_talonario');
         $id_sujeto = $id_sp;
         $nro_guia = $request->post('nro_guia');
-        $nro_control = $request->post('nro_control');
+        // $nro_control = $request->post('nro_control');
         $id_cantera = $request->post('cantera');
 
         $fecha = $request->post('fecha_emision');
@@ -559,7 +566,8 @@ class RegistroGuiaController extends Controller
         $razon_dest = $request->post('razon_dest');
         $ci_dest = $request->post('ci_dest');
         $tlf_dest = $request->post('tlf_dest');
-        $municipio = $request->post('municipio');
+        $municipio = $request->post('municipio_destino');
+        $parroquia = $request->post('parroquia_destino');
         $destino = $request->post('destino');
 
         $id_mineral = $request->post('mineral');
@@ -578,7 +586,7 @@ class RegistroGuiaController extends Controller
         $capacidad_vehiculo = $request->post('capacidad_vehiculo');
 
         $hora_salida = $request->post('hora_salida');
-        $hora_llegada = $request->post('hora_llegada');
+        // $hora_llegada = $request->post('hora_llegada');
         $nro_factura = $request->post('nro_factura');
         $anulada = $request->post('anulada');
         $motivo = $request->post('motivo');
@@ -587,13 +595,14 @@ class RegistroGuiaController extends Controller
                                                     'id_sujeto'=>$id_sujeto,
                                                     'id_cantera' => $id_cantera,
                                                     'nro_guia' => $nro_guia, 
-                                                    'nro_control' => $nro_control,
+                                                    // 'nro_control' => $nro_control,
                                                     'fecha' => $fecha,
                                                     'tipo_guia' => $tipo_guia,
                                                     'razon_destinatario' => $razon_dest,
                                                     'ci_destinatario' => $ci_dest,
                                                     'tlf_destinatario' => $tlf_dest,
-                                                    'municipio_parroquia_destino' => $municipio,
+                                                    'municipio_destino' => $municipio,
+                                                    'parroquia_destino' => $parroquia,
                                                     'destino' => $destino,
                                                     'nro_factura' => $nro_factura,
                                                     'fecha_facturacion' => $fecha_facturacion,
@@ -610,7 +619,7 @@ class RegistroGuiaController extends Controller
                                                     'tlf_conductor' => $tlf_conductor,
                                                     'capacidad_vehiculo' => $capacidad_vehiculo,
                                                     'hora_salida' => $hora_salida,
-                                                    'hora_llegada' => $hora_llegada,
+                                                    // 'hora_llegada' => $hora_llegada,
                                                     'anulada' => $anulada,
                                                     'motivo' => $motivo
                                                     ]);
@@ -717,7 +726,7 @@ class RegistroGuiaController extends Controller
                 }
 
 
-                // /////////////////info tipo de guia
+                //////////////////info tipo de guia
                 $html_tipo = '';
                 if ($guia->tipo_guia == 'Venta') {
                     $html_tipo = '<div class="form-check form-check-inline">
@@ -739,6 +748,7 @@ class RegistroGuiaController extends Controller
                                 </div>';
                 }
 
+                
 
                 $html = '<form id="form_editar_guia" method="post" onsubmit="event.preventDefault(); editarGuia()">
                 <div class="row d-flex justify-content-between  px-3">
@@ -792,7 +802,7 @@ class RegistroGuiaController extends Controller
                 <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
 
                 <div class="row">
-                    <div class="col-sm-6 px-4">
+                    <div class="col-sm-4 px-4">
                         <!-- razon social -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-4">
@@ -802,8 +812,20 @@ class RegistroGuiaController extends Controller
                                 <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required value="'.$guia->razon_destinatario.'">
                             </div>
                         </div>
-
-                        <!-- telefono del destinatario  -->
+                    </div>
+                    <div class="col-sm-4 px-4">
+                        <!-- ci del destinatario -->
+                        <div class="row g-3 align-items-center mb-2">
+                            <div class="col-3">
+                                <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required value="'.$guia->ci_destinatario.'">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 px-4">
+                        <!-- telefono destinatario -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-4">
                                 <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
@@ -812,37 +834,59 @@ class RegistroGuiaController extends Controller
                                 <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000" required value="'.$guia->tlf_destinatario.'">
                             </div>
                         </div>
-
                     </div>
-                    <div class="col-sm-6 px-4">
-                        <!-- ci del destinatario -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-4">
-                                <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000" required value="'.$guia->ci_destinatario.'">
-                            </div>
-                        </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-sm-4 px-4">
                         <!-- destino -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-4">
-                                <label for="municipio" class="col-form-label">Municipio/Parroqui: <span style="color:red">*</span></label>
+                                <label for="municipio" class="col-form-label">Municipio: <span style="color:red">*</span></label>
                             </div>
                             <div class="col-8">
-                                <input type="text" id="municipio" class="form-control form-control-sm" name="municipio" required value="'.$guia->municipio_parroquia_destino.'">
+                                <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio_destino" required>
+                                    <option value="'.$guia->municipio_destino.'">'.$guia->municipio_destino.'</option>
+                                    <option value="Bolívar">Bolívar</option>
+                                    <option value="Camatagua">Camatagua</option>
+                                    <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                    <option value="Girardot">Girardot</option>
+                                    <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                    <option value="José Félix Ribas">José Félix Ribas</option>
+                                    <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                    <option value="Libertador">Libertador</option>
+                                    <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                    <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                    <option value="San Casimiro">San Casimiro</option>
+                                    <option value="San Sebastián">San Sebastián</option>
+                                    <option value="Santiago Mariño">Santiago Mariño</option>
+                                    <option value="Santos Michelena">Santos Michelena</option>
+                                    <option value="Sucre">Sucre</option>
+                                    <option value="Tovar">Tovar</option>
+                                    <option value="Urdaneta">Urdaneta</option>
+                                    <option value="Zamora">Zamora </option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row px-3">
-                    <div class="col-sm-12">
-                    <div class="row align-items-center mb-2">
-                            <div class="col-2">
+                    <div class="col-sm-4 px-4">
+                        <div class="row g-3 align-items-center mb-2">
+                            <div class="col-4">
+                                <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
+                            </div>
+                            <div class="col-8">
+                                <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia_destino" required>
+                                    <option value="'.$guia->parroquia_destino.'">'.$guia->parroquia_destino.'</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 px-4">
+                        <div class="row align-items-center mb-2">
+                            <div class="col-4">
                                 <label for="destino" class="col-form-label">Lugar de destino: <span style="color:red">*</span></label>
                             </div>
-                            <div class="col-10">
+                            <div class="col-8">
                                 <input type="text" id="destino" class="form-control form-control-sm" name="destino" required value="'.$guia->destino.'">
                             </div>
                         </div>
@@ -999,9 +1043,9 @@ class RegistroGuiaController extends Controller
                 </div>
 
                 <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
-                
+
                 <div class="row">
-                    <div class="col-sm-6 px-4">
+                    <div class="col-sm-4 px-4">
                         <!-- hora de Salida -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-4">
@@ -1012,21 +1056,7 @@ class RegistroGuiaController extends Controller
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 px-4">
-                        <!-- hora de llegada -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-4">
-                                <label for="hora_llegada" class="col-form-label">Hora de Llegada: <span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-8">
-                                <input type="text" id="hora_llegada" class="form-control form-control-sm" name="hora_llegada" placeholder="Ejemplo: 6:45 AM" required value="'.$guia->hora_llegada.'">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- otros datos -->
-                <div class="row px-2">
-                    <div class="col-sm-3">
+                    <div class="col-sm-4 px-4">
                         <!-- nro factura -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-6">
@@ -1037,7 +1067,7 @@ class RegistroGuiaController extends Controller
                             </div> 
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4 px-4">
                         <!-- anulada -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-5">
@@ -1046,22 +1076,23 @@ class RegistroGuiaController extends Controller
                             '.$html_anulada.'
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                </div>
+                <!-- otros datos -->
+                <div class="row px-2">
+                    <div class="col-sm-12">
                         <!-- motivo de anulacion -->
                         <div class="row g-3 align-items-center mb-2">
-                            <div class="col-3">
-                                <label for="motivo_anulada" class="col-form-label">Motivo: </label>
+                            <div class="col-sm-2">
+                                <label for="motivo_anulada" class="col-form-label">Motivo de la Anulación: </label>
                             </div>
-                            <div class="col-9">
+                            <div class="col-sm-10">
                                 <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" value="'.$guia->motivo.'">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-end fs-5 fw-bold text-muted py-2">
-                    <span class=" text-danger">Nro° Control </span><span id="nro_control_view">'.$guia->nro_control.'</span>
-                </div>
+
 
                 <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
                 <div class="d-flex justify-content-center mt-3 mb-3" >
@@ -1085,13 +1116,15 @@ class RegistroGuiaController extends Controller
         $user = auth()->id();
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
+
         $nro_guia = $request->post('nro_guia');
         $fecha = $request->post('fecha_emision');
         $tipo_guia = $request->post('tipo_guia');
         $razon_dest = $request->post('razon_dest');
         $ci_dest = $request->post('ci_dest');
         $tlf_dest = $request->post('tlf_dest');
-        $municipio = $request->post('municipio');
+        $municipio = $request->post('municipio_destino');
+        $parroquia = $request->post('parroquia_destino');
         $destino = $request->post('destino');
 
         $id_mineral = $request->post('mineral');
@@ -1110,7 +1143,6 @@ class RegistroGuiaController extends Controller
         $capacidad_vehiculo = $request->post('capacidad_vehiculo');
 
         $hora_salida = $request->post('hora_salida');
-        $hora_llegada = $request->post('hora_llegada');
         $nro_factura = $request->post('nro_factura');
         $anulada = $request->post('anulada');
         $motivo = $request->post('motivo');
@@ -1118,30 +1150,30 @@ class RegistroGuiaController extends Controller
 
         $update = DB::table('control_guias')->where('nro_guia','=',$nro_guia)
                                             ->update(['fecha' => $fecha,
-                                                    'tipo_guia' => $tipo_guia,
-                                                    'razon_destinatario' => $razon_dest,
-                                                    'ci_destinatario' => $ci_dest,
-                                                    'tlf_destinatario' => $tlf_dest,
-                                                    'municipio_parroquia_destino' => $municipio,
-                                                    'destino' => $destino,
-                                                    'nro_factura' => $nro_factura,
-                                                    'fecha_facturacion' => $fecha_facturacion,
-                                                    'id_mineral' => $id_mineral,
-                                                    'unidad_medida' => $unidad_medida,
-                                                    'cantidad_facturada' => $cantidad,
-                                                    'saldo_anterior' => $saldo_anterior,
-                                                    'cantidad_despachada' => $cantidad_despachada,
-                                                    'saldo_restante' => $saldo_restante,
-                                                    'modelo_vehiculo' => $modelo_vehiculo,
-                                                    'placa' => $placa,
-                                                    'nombre_conductor' => $nombre_conductor,
-                                                    'ci_conductor' => $ci_conductor,
-                                                    'tlf_conductor' => $tlf_conductor,
-                                                    'capacidad_vehiculo' => $capacidad_vehiculo,
-                                                    'hora_salida' => $hora_salida,
-                                                    'hora_llegada' => $hora_llegada,
-                                                    'anulada' => $anulada,
-                                                    'motivo' => $motivo
+                                                        'tipo_guia' => $tipo_guia,
+                                                        'razon_destinatario' => $razon_dest,
+                                                        'ci_destinatario' => $ci_dest,
+                                                        'tlf_destinatario' => $tlf_dest,
+                                                        'municipio_destino' => $municipio,
+                                                        'parroquia_destino' => $parroquia,
+                                                        'destino' => $destino,
+                                                        'nro_factura' => $nro_factura,
+                                                        'fecha_facturacion' => $fecha_facturacion,
+                                                        'id_mineral' => $id_mineral,
+                                                        'unidad_medida' => $unidad_medida,
+                                                        'cantidad_facturada' => $cantidad,
+                                                        'saldo_anterior' => $saldo_anterior,
+                                                        'cantidad_despachada' => $cantidad_despachada,
+                                                        'saldo_restante' => $saldo_restante,
+                                                        'modelo_vehiculo' => $modelo_vehiculo,
+                                                        'placa' => $placa,
+                                                        'nombre_conductor' => $nombre_conductor,
+                                                        'ci_conductor' => $ci_conductor,
+                                                        'tlf_conductor' => $tlf_conductor,
+                                                        'capacidad_vehiculo' => $capacidad_vehiculo,
+                                                        'hora_salida' => $hora_salida,
+                                                        'anulada' => $anulada,
+                                                        'motivo' => $motivo
                                                     ]);
 
         if ($update) {

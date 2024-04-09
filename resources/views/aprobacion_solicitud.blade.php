@@ -55,8 +55,8 @@
                                 <span class="fst-italic text-secondary">Sin asignar</span>
                             </td>
                             <td>
-                                <button class="btn btn-success btn-sm aprobar_solicitud" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
-                                <button class="btn btn-danger btn-sm denegar_solicitud" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
+                                <button class="btn btn-success btn-sm aprobar_solicitud rounded-4" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
+                                <button class="btn btn-danger btn-sm denegar_solicitud rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
                             </td>
                         </tr>
                 @endforeach
@@ -251,7 +251,7 @@
                     url: '{{route("aprobacion.correlativo") }}',
                     data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha, cantera:cantera},
                     success: function(response) {           
-                        // console.log(response);
+                        console.log(response);
                         // alert(response);
                         if (response.success) {
                             $('#modal_aprobar_solicitud').modal('hide');

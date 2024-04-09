@@ -109,10 +109,12 @@ class VerificarCanteraController extends Controller
         $idCantera = $request->post('id_cantera');
         $limite = $request->post('limite_guia_cantera');
         $sujeto = DB::table('canteras')->select('id_sujeto')->where('id_cantera','=',$idCantera)->first();
-        if ($sujeto) {
-            $idSujeto = $sujeto->id_sujeto;
-
-            $insert = DB::table('limite_guias')->insert(['id_sujeto' => $idSujeto, 'id_cantera' => $idCantera, 'total_guias_periodo'=>$limite, 'fin_periodo' => '2024-07-12', 'total_guias_solicitadas_periodo' => '0']);
+        if ($sujeto) { 
+            $idSujeto = $sujeto->id_sujeto; 
+            $hoy = date('Y-m-d');
+            $fin = date("Y-m-d", strtotime($hoy . "+ 3 months"));
+            
+            $insert = DB::table('limite_guias')->insert(['id_sujeto' => $idSujeto, 'id_cantera' => $idCantera, 'total_guias_periodo'=>$limite, 'inicio_periodo' => $hoy, 'fin_periodo' => $fin, 'total_guias_solicitadas_periodo' => '0']);
             $updates = DB::table('canteras')->where('id_cantera', '=', $idCantera)->update(['status' => 'Verificada']);
             if ($insert && $updates) {
                 return response()->json(['success' => true]);

@@ -47,8 +47,8 @@
                         </td>
                         <td>{{$sujeto->name_repr}}</td>
                         <td>
-                            <button type="submit" class="btn btn-success btn-sm aprobar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_sujeto">Aprobar</button>
-                            <button class="btn btn-danger btn-sm denegar_sujeto" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_sujeto">Denegar</button>
+                            <button type="submit" class="btn btn-success btn-sm aprobar_sujeto rounded-4 px-3" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_sujeto">Aprobar</button>
+                            <button class="btn btn-danger btn-sm denegar_sujeto rounded-4 px-3" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_sujeto">Denegar</button>
                         </td>
                     </tr>
                 @endforeach

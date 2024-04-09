@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade'); 
             $table->integer('total_guias_periodo')->nullable();
             $table->integer('total_guias_solicitadas_periodo')->nullable();
+            $table->date('inicio_periodo');
             $table->date('fin_periodo');
             
 

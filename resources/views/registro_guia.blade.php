@@ -207,6 +207,31 @@
     </div>
 
 
+    <!-- ********* VER EL REGISTRO DE LA GUÍA ******** -->
+    <div class="modal" id="modal_content_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                
+                    <div class="row mx-3 mt-3 mb-1 d-flex align-items-center">
+                        <div class="col-3 d-flex justify-content-center">
+                            <img src="{{asset('assets/aragua.png')}}" alt="" width="100px">
+                        </div>
+                        <div class="col-6 d-flex flex-column text-center pt-4">
+                            <span class="fs-6 fw-bold">GUÍA DE CIRCULACIÓN DE MINERALES NO METÁLICOS</span>
+                            <span>GOBIERNO BOLIVARIANO DEL ESTADO ARAGUA SERVICIO TRIBUTARIO DE ARAGUA (SETA)</span>
+                        </div>
+                        <div class="col-3 d-flex justify-content-center">
+                            <img src="{{asset('assets/logo-seta-2.png')}}" alt="" class="mt-3 ms-2" width="110px">
+                        </div>
+                    </div>
+                <div class="modal-body mx-4" style="font-size:14px" id="content_info_guia">
+                    
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+
 <!--************************************************-->
 
 
@@ -299,12 +324,11 @@
                         console.log(response);    
                         if (response.success){
                             $('#nro_guia_view').html(response.formato_nro_guia);
-                            $('#nro_control_view').html(response.nro_control);
                             $('#select_minerales').html(response.minerales);
 
                             $('#id_talonario').val(response.talonario);
                             $('#nro_guia').val(response.nro_guia);
-                            $('#nro_control').val(response.nro_control);
+                            
 
                             $("#fecha").attr('disabled', false);
                             $("#venta").attr('disabled', false);
@@ -313,6 +337,7 @@
                             $("#tlf_dest").attr('disabled', false);
                             $("#ci").attr('disabled', false);
                             $("#municipio").attr('disabled', false);
+                            $("#parroquia").attr('disabled', false);
                             $("#destino").attr('disabled', false);
                             $("#select_minerales").attr('disabled', false);
                             $("#unidad_medida").attr('disabled', false);
@@ -328,7 +353,6 @@
                             $("#ci_conductor").attr('disabled', false);
                             $("#capacidad_vehiculo").attr('disabled', false);
                             $("#hora_salida").attr('disabled', false);
-                            $("#hora_llegada").attr('disabled', false);
                             $("#factura").attr('disabled', false);
                             $("#anulado_si").attr('disabled', false);
                             $("#anulado_no").attr('disabled', false);
@@ -339,12 +363,12 @@
                         } else{
                             // alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA GUÍA");
                             $('#nro_guia_view').html('');
-                            $('#nro_control_view').html('');
+                           
                             $('#select_minerales').html('');
 
                             $('#id_talonario').val('');
                             $('#nro_guia').val('');
-                            $('#nro_control').val('');
+                            
 
                             $("#fecha").attr('disabled', true);
                             $("#venta").attr('disabled', true);
@@ -353,6 +377,7 @@
                             $("#tlf_dest").attr('disabled', true);
                             $("#ci").attr('disabled', true);
                             $("#municipio").attr('disabled', true);
+                            $("#parroquia").attr('disabled', true);
                             $("#destino").attr('disabled', true);
                             $("#select_minerales").attr('disabled', true);
                             $("#unidad_medida").attr('disabled', true);
@@ -368,7 +393,6 @@
                             $("#ci_conductor").attr('disabled', true);
                             $("#capacidad_vehiculo").attr('disabled', true);
                             $("#hora_salida").attr('disabled', true);
-                            $("#hora_llegada").attr('disabled', true);
                             $("#factura").attr('disabled', true);
                             $("#anulado_si").attr('disabled', true);
                             $("#anulado_no").attr('disabled', true);
@@ -442,6 +466,122 @@
                 });
             });
 
+            $(document).on('change','#municipio', function(e) {
+                var municipio = $(this).val();
+
+                switch (municipio) {
+                    case 'Bolívar':
+                        $('#parroquia').html('<option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>');
+                        break;
+                    case 'Camatagua':
+                        $('#parroquia').html('<option value="Camatagua">Camatagua</option>'+
+                                            '<option value="Carmen de Cura">Carmen de Cura</option>');
+                        break;
+                    case 'Francisco Linares Alcántara':
+                        $('#parroquia').html('<option value="Santa Rita">Santa Rita</option>'+
+                                            '<option value="Francisco de Miranda">Francisco de Miranda</option>'+
+                                            '<option value="Moseñor Feliciano González">Moseñor Feliciano González</option>');
+                        break;
+                    case 'Girardot':
+                        $('#parroquia').html('<option value="Pedro José Ovalles">Pedro José Ovalles</option>'+
+                                            '<option value="Joaquín Crespo">Joaquín Crespo</option>'+
+                                            '<option value="José Casanova Godoy">José Casanova Godoy</option>'+
+                                            '<option value="Madre María de San José">Madre María de San José</option>'+
+                                            '<option value="Andrés Eloy Blanco">Andrés Eloy Blanco</option>'+
+                                            '<option value="Los Tacarigua">Los Tacarigua</option>'+
+                                            '<option value="Las Delicias">Las Delicias</option>'+
+                                            '<option value="Choroní">Choroní</option>');
+
+                    break;
+                    case 'José Ángel Lamas':
+                        $('#parroquia').html('<option value="Santa Cruz">Santa Cruz</option>');
+                        break;
+                    case 'José Félix Ribas':
+                        $('#parroquia').html('<option value="José Félix Ribas">José Félix Ribas</option>'+
+                                            '<option value="Castor Nieves Ríos">Castor Nieves Ríos</option>'+
+                                            '<option value="Las Guacamayas">Las Guacamayas</option>'+
+                                            '<option value="Pao de Zárate">Pao de Zárate</option>'+
+                                            '<option value="Zuata">Zuata</option>');
+                    break;
+                    case 'José Rafael Revenga':
+                        $('#parroquia').html('<option value="José Rafael Revenga">José Rafael Revenga</option>');
+                        break;
+                    case 'Libertador':
+                        $('#parroquia').html('<option value="Palo Negro">Palo Negro</option>'+
+                                            '<option value="San Martín de Porres">San Martín de Porres</option>');
+                        break;
+                    case 'Mario Briceño Iragorry':
+                        $('#parroquia').html('<option value="El Limón">El Limón</option>'+
+                                            '<option value="Caña de Azúcar">Caña de Azúcar</option>');
+                    break;
+                    case 'Ocumare de la Costa de Oro':
+                        $('#parroquia').html('<option value="Ocumare de la Costa">Ocumare de la Costa</option>');
+                        break;
+                    case 'San Casimiro':
+                        $('#parroquia').html('<option value="San Casimiro">San Casimiro</option>'+
+                                            '<option value="Güiripa">Güiripa</option>'+
+                                            '<option value="Ollas de Caramacate">Ollas de Caramacate</option>'+
+                                            '<option value="Valle Morín">Valle Morín</option>');
+                        break;
+                    case 'San Sebastián':
+                        $('#parroquia').html('<option value="San Sebastián">San Sebastián</option>');
+                        break;
+                    case 'Santiago Mariño':
+                        $('#parroquia').html('<option value="Turmero">Turmero</option>'+
+                                            '<option value="Arévalo Aponte">Arévalo Aponte</option>'+
+                                            '<option value="Chuao">Chuao</option>'+
+                                            '<option value="Samán de Güere">Samán de Güere</option>'+
+                                            '<option value="Alfredo Pacheco Miranda">Alfredo Pacheco Miranda</option>');
+                        break;
+                    case 'Santos Michelena':
+                        $('#parroquia').html('<option value="Santos Michelena">Santos Michelena</option>'+
+                                            '<option value="Tiara">Tiara</option>');
+                        break;
+                    case 'Sucre':
+                        $('#parroquia').html('<option value="Cagua">Cagua</option>'+
+                                            '<option value="Bella Vista">Bella Vista</option>');
+                    break;
+                    case 'Tovar':
+                        $('#parroquia').html('<option value="Tovar">Tovar</option>');
+                        break;
+                    case 'Urdaneta':
+                        $('#parroquia').html('<option value="Urdaneta">Urdaneta</option>'+
+                                            '<option value="Las Peñitas">Las Peñitas</option>'+
+                                            '<option value="San Francisco de Cara">San Francisco de Cara</option>'+
+                                            '<option value="Taguay">Taguay</option>');
+                        break;
+                    case 'Zamora':
+                        $('#parroquia').html('<option value="Zamora">Zamora</option>'+
+                                            '<option value="Magdaleno">Magdaleno</option>'+
+                                            '<option value="San Francisco de Asís">San Francisco de Asís</option>'+
+                                            '<option value="Valles de Tucutunemo">Valles de Tucutunemo</option>'+
+                                            '<option value="Augusto Mijares">Augusto Mijares</option>');
+                        break;
+                    default:
+                        break;
+                }
+
+            }); 
+
+            ////////////////////MODAL: INFO GUIA
+            $(document).on('click','.info_guia', function(e) { 
+                e.preventDefault(e); 
+                var guia = $(this).attr('nro_guia');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.guia") }}',
+                    data: {guia:guia},
+                    success: function(response) {           
+                        $('#modal_content_guia').modal('show');
+
+                        $('#content_info_guia').html(response);
+
+                    },
+                    error: function() {
+                    }
+                });
+            });
 
         });
 
