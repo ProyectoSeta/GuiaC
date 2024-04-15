@@ -20,10 +20,11 @@
                     <th>Cod.</th>
                     <th>Cantera</th>
                     <th>Razón Social</th>
-                    <th>Rif</th>
+                    <th>R.I.F.</th>
                     <th>Solicitud</th>
-                    <th>Estado</th>
+                    <th>Estado Actual</th>
                     <th>Emisión</th>
+                    <th>Opción</th>
                 </thead>
                 <tbody> 
                 @foreach ($solicitudes as $solicitud)
@@ -60,6 +61,9 @@
                                 @endswitch                    
                             </td>
                             <td>{{$solicitud->fecha}}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado">Actualizar</button>
+                            </td>
                             
                         </tr>
                 @endforeach
@@ -104,6 +108,88 @@
         <div class="modal-dialog">
             <div class="modal-content" id="content_info_denegada">
                 
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* MODAL ACTUALIZAR ESTADO ******** -->
+    <div class="modal" id="modal_actualizar_estado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <!-- <i class="bx bx-refresh fs-1" style="color:#0c82ff"  ></i>  --><i class='bx bx-refresh bx-spin  fs-1' style='color:#0d8a01' ></i>       
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Actualización de Estado</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:13px" id="content_actualizar_estado">
+                    <div class="d-flex justify-content-end">
+                        <table class="table table-borderless table-sm">
+                            <tr>
+                                <th>Cantera:</th>
+                                <td>UTP El Carmen</td>
+                            </tr>
+                            <tr>
+                                <th>Contribuyente:</th>
+                                <td>ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</td>
+                            </tr>
+                        </table>  
+                    </div>
+
+                    <h6 class="text-center mb-3" style="color: #0064cd;">Datos de la Solicitud</h6>
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Contenido del Talonario</th>
+                                <th scope="col">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>50 Guías</td>
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h6 class="text-center mb-3" style="color: #0064cd;">Historial de Estados</h6>
+                    <div class="d-flex justify-content-end">
+                        <table class="table text-center mx-5 px-5">
+                            <tr>
+                                <th>Emisión</th>
+                                <td class="text-success">2024-3-28</td>
+                            </tr>
+                            <tr>
+                                <th>Recepción</th>
+                                <td>-------</td>
+                            </tr>
+                            <tr>
+                                <th>Entrega</th>
+                                <td>-------</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <form id="form_actualizar_estado" method="post" onsubmit="event.preventDefault(); actualizarEstado()">
+                        <div class="row px-5 my-3">
+                            <div class="col-sm-4">
+                                <label for="" class="fw-bold fs-6">Estado Actual</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <select class="form-select form-select-sm" aria-label="Small select example">
+                                    <option value="En Proceso">En Proceso</option>
+                                    <option value="Por Retirar">Por Retirar</option>
+                                    <option value="Retirado">Retirado</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success btn-sm" data-bs-dismiss="modal">Actualizar</button>
+                        </div>
+                    </form>
+                    
+                    
+
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -223,7 +309,54 @@
                 });
             });
 
+             ///////MODAL: ACTUALIZAR ESTADO
+             $(document).on('click','.actualizar_estado', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.actualizar") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {
+                        console.log(response);               
+                        $('#content_actualizar_estado').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
         });
+
+
+        function actualizarEstado(){
+            var formData = new FormData(document.getElementById("form_actualizar_estado"));
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url:'{{route("verificar_cantera.verificar") }}',
+                    type:'POST',
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    data: formData,
+                    success: function(response){
+                        // alert(response);
+                        if (response.success) {
+                            alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
+                            window.location.href = "{{ route('verificar_cantera')}}";
+                        } else {
+                            alert('Ha ocurrido un error al Verificar la Cantera.');
+                        }    
+
+                    },
+                    error: function(error){
+                        
+                    }
+                });
+        }
     </script>
   
 @stop

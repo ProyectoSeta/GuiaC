@@ -22,6 +22,7 @@
                     <th>Cantera</th>
                     <th>Nro. Solicitud</th>
                     <th>Correlativo</th>
+                    <th>QR</th>
                     <th>R.I.F.</th>
                     <th>Empresa</th>
                 </thead>
@@ -43,6 +44,9 @@
 
                                 @endphp
                                 <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
+                            </td>
+                            <td>
+                                <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
                             </td>
                             <td>
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
@@ -89,6 +93,25 @@
                     
 
 
+
+
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* VER QR ******** -->
+    <div class="modal" id="modal_ver_qr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" >
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class="bx bx-barcode-reader fs-1" style="color:#0c82ff"  ></i>           
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Código QR</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:14px" id="content_ver_qr">
+                    
 
 
                 </div>
@@ -179,7 +202,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-             ///////MODAL: INFO SUJETO PASIVO
+            ///////MODAL: INFO SUJETO PASIVO
             $(document).on('click','.info_sujeto', function(e) { 
                 e.preventDefault(e); 
                 var sujeto = $(this).attr('id_sujeto');
@@ -234,6 +257,25 @@
 
                         $('#content_info_guia').html(response);
 
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ///////MODAL: INFO TALONARIO
+            $(document).on('click','.qr', function(e) { 
+                e.preventDefault(e); 
+                var ruta = $(this).attr('ruta');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.qr") }}',
+                    data: {ruta:ruta},
+                    success: function(response) {              
+                        console.log(response);
+                        $('#content_ver_qr').html(response);
+                       
                     },
                     error: function() {
                     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\SujetoPasivo;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DB;
 
 
@@ -266,6 +267,15 @@ class AprobacionController extends Controller
 
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
+                        if ($insert) {
+                            $id_talonario= DB::table('talonarios')->max('id_talonario');
+                            $url = route('aprobacion.qr', ['id' => $id_talonario]);
+                            QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                            $update_qr = DB::table('talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                
+                        }else{
+                            return response('Error al generar el QR');
+                        }
                         
                     } ////cierra for    
                  
@@ -307,6 +317,15 @@ class AprobacionController extends Controller
     
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
+                        if ($insert) {
+                            $id_talonario= DB::table('talonarios')->max('id_talonario');
+                            $url = route('aprobacion.qr', ['id' => $id_talonario]);
+                            QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                            $update_qr = DB::table('talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+              
+                        }else{
+                            return response('Error al generar el QR');
+                        }
                     } ////cierra for                
                 } ////cierra foreach
 
@@ -339,17 +358,33 @@ class AprobacionController extends Controller
                 $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
                 $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
+                $qr = $talonario->qr;
+                 
+
                 $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
-                                <table class="table mt-2 mb-3">
-                                    <tr>
-                                        <th>Contenido:</th>
-                                        <td>'.$talonario->tipo_talonario.' Guías</td>
-                                        <th>Desde:</th>
-                                        <td>'.$formato_desde.'</td>
-                                        <th>Hasta:</th>
-                                        <td>'.$formato_hasta.'</td>
-                                    </tr>
-                                </table>';
+                            <div class="row d-flex align-items-center">
+                                <div class="col-sm-7">
+                                    <table class="table mt-2 mb-3">
+                                        <tr>
+                                            <th>Contenido:</th>
+                                            <td>'.$talonario->tipo_talonario.' Guías</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Desde:</th>
+                                            <td>'.$formato_desde.'</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Hasta:</th>
+                                            <td>'.$formato_hasta.'</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="title m-b-md text-center">
+                                        <img src="'.asset($qr).'" alt="">
+                                    </div>
+                                </div>
+                            </div>';
             }
 
             $html = ' <div class="modal-header p-2 pt-3 d-flex justify-content-center">
@@ -516,9 +551,17 @@ class AprobacionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function qr(Request $request)
     {
-        //
+        $idTalonario = $request->get('id');
+        $talonario = DB::table('talonarios')
+                        ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                        ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
+                        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'canteras.lugar_aprovechamiento')
+                        ->where('talonarios.id_talonario','=', $idTalonario)
+                        ->first();
+
+       return view('qr', compact('talonario'));
     }
 
     /**

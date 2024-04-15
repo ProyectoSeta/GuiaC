@@ -65,6 +65,8 @@ Route::post('/aprobacion_solicitud/correlativo', [App\Http\Controllers\Aprobacio
 Route::post('/aprobacion_solicitud/info', [App\Http\Controllers\AprobacionController::class, 'info'])->name('aprobacion.info');
 Route::post('/aprobacion_solicitud/denegarInfo', [App\Http\Controllers\AprobacionController::class, 'denegarInfo'])->name('aprobacion.denegarInfo');
 Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionController::class, 'denegar'])->name('aprobacion.denegar');
+Route::get('/aprobacion_solicitud/qr', [App\Http\Controllers\AprobacionController::class, 'qr'])->name('aprobacion.qr');
+// Route::get('/aprobacion_solicitud/qr', [App\Http\Controllers\AprobacionController::class, 'qr'])->name('qr');
 
 
 
@@ -73,12 +75,14 @@ Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionCon
 Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->name('estado');
 Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
 Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
+Route::post('/estado/actualizar', [App\Http\Controllers\EstadoController::class, 'actualizar'])->name('estado.actualizar');
 
 
 //////////////CORRELATIVO
 Route::get('/correlativo', [App\Http\Controllers\CorrelativoController::class, 'index'])->name('correlativo');
 Route::post('/correlativo/talonario', [App\Http\Controllers\CorrelativoController::class, 'talonario'])->name('correlativo.talonario');
 Route::post('/correlativo/guia', [App\Http\Controllers\CorrelativoController::class, 'guia'])->name('correlativo.guia');
+Route::post('/correlativo/qr', [App\Http\Controllers\CorrelativoController::class, 'qr'])->name('correlativo.qr');
 
 
 ////////////////VERIFICAR NUEVO USUARIO

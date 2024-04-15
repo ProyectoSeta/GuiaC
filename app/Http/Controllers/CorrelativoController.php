@@ -19,7 +19,7 @@ class CorrelativoController extends Controller
         ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
         ->get();
 
-    return view('correlativo', compact('talonarios'));
+        return view('correlativo', compact('talonarios'));
     }
 
     /**
@@ -269,9 +269,18 @@ class CorrelativoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function qr(Request $request)
     {
-        //
+        $ruta = $request->post('ruta');
+
+        $html = '<div class="text-center my-4">
+                    <img src="'.asset($ruta).'" alt="">
+                </div>
+                <div class="d-flex justify-content-center my-2">
+                    <a href="'.asset($ruta).'" download class="btn btn-primary btn-sm">Descargar QR</a>
+                </div>';
+        return response($html);
+      
     }
 
     /**
