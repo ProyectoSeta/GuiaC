@@ -66,9 +66,9 @@ Route::post('/aprobacion_solicitud/info', [App\Http\Controllers\AprobacionContro
 Route::post('/aprobacion_solicitud/denegarInfo', [App\Http\Controllers\AprobacionController::class, 'denegarInfo'])->name('aprobacion.denegarInfo');
 Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionController::class, 'denegar'])->name('aprobacion.denegar');
 Route::get('/aprobacion_solicitud/qr', [App\Http\Controllers\AprobacionController::class, 'qr'])->name('aprobacion.qr');
-// Route::get('/aprobacion_solicitud/qr', [App\Http\Controllers\AprobacionController::class, 'qr'])->name('qr');
 
-
+//////////CONTROL DE CANTERAS
+Route::get('/control_canteras', [App\Http\Controllers\ControlCanterasController::class, 'index'])->name('control_canteras');
 
 
 ///////////ESTADO DE SOLICITUDES
@@ -76,6 +76,7 @@ Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->
 Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
 Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
 Route::post('/estado/actualizar', [App\Http\Controllers\EstadoController::class, 'actualizar'])->name('estado.actualizar');
+Route::post('/estado/update', [App\Http\Controllers\EstadoController::class, 'update'])->name('estado.update');
 
 
 //////////////CORRELATIVO

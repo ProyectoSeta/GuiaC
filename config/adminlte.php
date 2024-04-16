@@ -320,21 +320,21 @@ return [
         [
             'text'        => 'Registro de Cantera(s)',
             'route'         => 'cantera',
-            // 'icon'        => 'fas fa-fw fa-user',   
+             'icon'        => 'fas fa-layer-group',   
             'label'       => 4,
             'label_color' => 'success',
         ],
-        ['header' => 'Solicitud'],
+        ['header' => 'Solicitud de Guías'],
         [
-            'text' => 'Solicitud de guías',
+            'text' => ' Nueva Solicitud',
             'route'  => 'solicitud',
-            // 'icon' => 'fas fa-file-circle-plus', 
+            // 'icon' => 'add-outline', 
         ],
         ['header' => 'Libro de Control'],
         [
             'text' => 'Registro de guías',
             'url'  => '/registro_guia',
-            // 'icon' => 'fas fa-fw fa-user',
+            // 'icon' => 'fas fa-file-circle-plus',
         ],
         ['header' => 'Control de Solicitudes'],
         [
@@ -343,7 +343,7 @@ return [
             'url'        => '/aprobacion_solicitud',
         ],
         [
-            'text'       => 'Estado de solicitudes',
+            'text'       => 'Actualización/Estado',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => 'estado',
         ],
@@ -354,7 +354,7 @@ return [
             // 'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'Canteras',
+            'text' => 'Canteras registradas',
             'url'  => '/verificar_cantera',
             // 'icon' => 'fas fa-fw fa-user',
         ],
@@ -371,6 +371,11 @@ return [
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/correlativo',
         ],
+        [
+            'text'       => 'Control de Canteras',
+            // 'icon_color' => 'fas fa-fw fa-user',
+            'url'        => '/control_canteras',
+        ],
         
         ['header' => 'Usuarios'],
         [
@@ -382,7 +387,7 @@ return [
         [
             'text' => 'Configuración',
             'url'  => '/settings_contribuyente',
-            // 'icon' => 'fas fa-fw fa-user',
+            // 'icon' => '',
         ],
 
         // ['header' => 'Libro de Control'],

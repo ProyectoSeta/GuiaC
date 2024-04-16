@@ -12,7 +12,7 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Estado de Solicitudes</h2>
+            <h2 class="mb-3">Actualización - Estado de Solicitudes</h2>
         </div>
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
@@ -52,7 +52,7 @@
                                         <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
                                     @case('Retirar') 
-                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar</span>
+                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
                                     @break
                                     @case('Retirado')
                                         <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
@@ -123,69 +123,7 @@
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:13px" id="content_actualizar_estado">
-                    <div class="d-flex justify-content-end">
-                        <table class="table table-borderless table-sm">
-                            <tr>
-                                <th>Cantera:</th>
-                                <td>UTP El Carmen</td>
-                            </tr>
-                            <tr>
-                                <th>Contribuyente:</th>
-                                <td>ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</td>
-                            </tr>
-                        </table>  
-                    </div>
-
-                    <h6 class="text-center mb-3" style="color: #0064cd;">Datos de la Solicitud</h6>
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Contenido del Talonario</th>
-                                <th scope="col">Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>50 Guías</td>
-                                <td>2</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h6 class="text-center mb-3" style="color: #0064cd;">Historial de Estados</h6>
-                    <div class="d-flex justify-content-end">
-                        <table class="table text-center mx-5 px-5">
-                            <tr>
-                                <th>Emisión</th>
-                                <td class="text-success">2024-3-28</td>
-                            </tr>
-                            <tr>
-                                <th>Recepción</th>
-                                <td>-------</td>
-                            </tr>
-                            <tr>
-                                <th>Entrega</th>
-                                <td>-------</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <form id="form_actualizar_estado" method="post" onsubmit="event.preventDefault(); actualizarEstado()">
-                        <div class="row px-5 my-3">
-                            <div class="col-sm-4">
-                                <label for="" class="fw-bold fs-6">Estado Actual</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <select class="form-select form-select-sm" aria-label="Small select example">
-                                    <option value="En Proceso">En Proceso</option>
-                                    <option value="Por Retirar">Por Retirar</option>
-                                    <option value="Retirado">Retirado</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-success btn-sm" data-bs-dismiss="modal">Actualizar</button>
-                        </div>
-                    </form>
+                    
                     
                     
 
@@ -335,7 +273,7 @@
             var formData = new FormData(document.getElementById("form_actualizar_estado"));
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    url:'{{route("verificar_cantera.verificar") }}',
+                    url:'{{route("estado.update") }}',
                     type:'POST',
                     contentType:false,
                     cache:false,
@@ -343,12 +281,12 @@
                     async: true,
                     data: formData,
                     success: function(response){
-                        // alert(response);
+                        alert(response);
                         if (response.success) {
-                            alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
-                            window.location.href = "{{ route('verificar_cantera')}}";
+                            alert('EL ESTADO DE LA SOLICITUD HA SIDO ACTUALIZADO CORRECTAMENTE');
+                            window.location.href = "{{ route('estado')}}";
                         } else {
-                            alert('Ha ocurrido un error al Verificar la Cantera.');
+                            alert('Ha ocurrido un error al Actualizar el estado de la Solicitud.');
                         }    
 
                     },

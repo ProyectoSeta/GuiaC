@@ -116,31 +116,80 @@ class SolicitudController extends Controller
         // return response($limites);
         if ($limites) {
             foreach ($limites as $limite) {
-                
-                $solicitado = $cant * $tipo;
-                $total_guias_prev = $limite->total_guias_solicitadas_periodo + $solicitado;
-                if ($total_guias_prev <= $limite->total_guias_periodo) {
-                    $ucd_pagar = $solicitado * 5;
+                $fecha_actual = date('Y-m-d');
+                if ($fecha_actual > $limite->fin_periodo) {
+                    ////ALCANZO LA FECHA LIMITE, TOCA NUEVO PERIODO
+                    $inicio = $fecha_actual;
+                    $fin = date("Y-m-d", strtotime($inicio . "+ 3 months"));
 
-                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 'Verificando']);
-                    if ($query_solicitud){
-                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
-                        if ($query_detalle) {
+                    $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => 0, 'inicio_periodo' => $inicio, 'fin_periodo' => $fin]);
+                    if ($update_limite) {
+                        $limites_actualizado = DB::table('limite_guias')->where('id_cantera','=',$idCantera)->get();
+                        if ($limites_actualizado) {
+                            foreach ($limites_actualizado as $l) {
+                                $solicitado = $cant * $tipo;
+                                $total_guias_prev = $l->total_guias_solicitadas_periodo + $solicitado;
+                                if ($total_guias_prev <= $l->total_guias_periodo) {
+                                    $ucd_pagar = $solicitado * 5;
 
-                            $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
-                            if ($update_limite) {
-                                return response()->json(['success' => true]);
+                                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 'Verificando']);
+                                    if ($query_solicitud){
+                                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
+                                        if ($query_detalle) {
+
+                                            $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
+                                            if ($update_limite) {
+                                                return response()->json(['success' => true]);
+                                            }
+                                        }
+                                
+                                    }else{
+                                        return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
+                                    }
+                                    
+                                }else{
+                                    return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
+                                }
                             }
+                        }else{
+                            return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
                         }
-                   
+                        
                     }else{
                         return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
                     }
                     
                 }else{
-                    return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
+                    ////NO HA ALCANZADO EL FIN DEL PERIODO
+                    $solicitado = $cant * $tipo;
+                    $total_guias_prev = $limite->total_guias_solicitadas_periodo + $solicitado;
+                    if ($total_guias_prev <= $limite->total_guias_periodo) {
+                        $ucd_pagar = $solicitado * 5;
+
+                        $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 'Verificando']);
+                        if ($query_solicitud){
+                            $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+                            $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
+                            if ($query_detalle) {
+
+                                $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
+                                if ($update_limite) {
+                                    return response()->json(['success' => true]);
+                                }
+                            }
+                    
+                        }else{
+                            return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
+                        }
+                        
+                    }else{
+                        return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
+                    }
+
                 }
+
+
             }
         }
     }

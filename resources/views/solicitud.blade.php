@@ -55,7 +55,7 @@
                                         <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
                                     @case('Retirar') 
-                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar</span>
+                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
                                     @break
                                     @case('Retirado')
                                         <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
@@ -351,7 +351,7 @@
                     processData:false,
                     async: true,
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                        if (response.success) {
                             alert('La solicitud a sido generada exitosamente!');
                             $('#form_generar_solicitud')[0].reset();

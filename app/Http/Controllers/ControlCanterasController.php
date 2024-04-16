@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use App\Models\SujetoPasivo;
 use DB;
 use Illuminate\Http\Request;
 
-class SettingsContribuyenteController extends Controller
+class ControlCanterasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = auth()->id();
-        $sp = DB::table('sujeto_pasivos')->where('id_user','=',$user)->first();
-        $id_sp = $sp->id_sujeto;
-        $canteras = DB::table('canteras')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->first();
+        $limites = DB::table('limite_guias')
+                ->join('sujeto_pasivos', 'limite_guias.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
+                ->join('canteras', 'limite_guias.id_cantera','=', 'canteras.id_cantera')
+                ->select('limite_guias.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                ->get();
 
-        return view('settings_contribuyente', compact('sp', 'canteras'));
+        return view('control_canteras', compact('limites'));
     }
 
     /**

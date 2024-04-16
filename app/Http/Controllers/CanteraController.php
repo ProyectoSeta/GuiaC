@@ -170,13 +170,25 @@ class CanteraController extends Controller
                             </div>
                         </div>
                         <div class="modal-body">
-                            <span class="fw-bold text-center">Límite de Guías que puede solicitar cada tres (3) meses</span>
-                            <p class="mx-3 mt-1 text-center">'.$query->total_guias_periodo.' Guías</p>
+                            <p class="fw-bold text-center mb-0 pb-0">Límite de Guías que puede solicitar cada tres (3) meses</p>
+                            <p class="mx-3 text-center">'.$query->total_guias_periodo.' Guías</p>
+
+                            <span class="fw-bold">Período Actual</span>
+                            <div class="row mt-2 text-center">
+                                <div class="col-sm-6">
+                                    <span class="fw-bold">Inicio: </span>
+                                    <span>2024-02-24</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="fw-bold">Fin del período: </span>
+                                    <span class="text-success">2024-05-24</span>
+                                </div>
+                            </div>
 
                             <div class="mt-3 mb-2">
                                 
                                 <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Observaciones:
-                                    </span> Cada cantera cuenta con un limite de guias a solicitar unico, el cual se renovará cada tres (3) meses. 
+                                    </span> Cada cantera cuenta con un límite de guías a solicitar unico, el cual se renovará cada tres (3) meses. 
                                     Una vez, superado el Límite establecido no podrá realizar una nueva solicitud hasta haber transcurrido 
                                     el período de tiempo de tres (3) meses.
                                     

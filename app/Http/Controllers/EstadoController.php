@@ -17,6 +17,9 @@ class EstadoController extends Controller
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
             ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
             ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+            // ->where('solicituds.estado','En proceso')
+            // ->where('solicituds.estado','Retirar')
+            // ->where('solicituds.estado','Retirado')
             ->get();
 
         return view('estado', compact('solicitudes'));
@@ -198,16 +201,185 @@ class EstadoController extends Controller
     public function actualizar(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        $solicitudes = DB::table('solicituds')
+        ->join('sujeto_pasivos', 'solicituds.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
+        ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
+        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+        ->where('id_solicitud','=',$idSolicitud)
+        ->get();
+       
+        $tr = '';
+        $tr_historial = '';
 
-        
+        $cantera = '';
+        $contribuyente = '';
+        $select = '';
+
+        if ($solicitudes) {
+            foreach ($solicitudes as $solicitud) {
+                $cantera = $solicitud->nombre;
+                $contribuyente = $solicitud->razon_social;
+
+                switch ($solicitud->estado) {
+                    case 'En proceso':
+                        $select = ' <option value="En proceso">En proceso</option>
+                                    <option value="Retirar">Por Retirar</option>
+                                    <option value="Retirado">Retirado</option>';
+                        break;
+                    case 'Retirar':
+                        $select = ' <option value="Retirar">Por Retirar</option>
+                                    <option value="Retirado">Retirado</option>
+                                    <option value="En proceso">En proceso</option>';
+                        break;
+                    case 'Retirado':
+                        $select = ' <option value="Retirado">Retirado</option>
+                                    <option value="En proceso">En proceso</option>
+                                    <option value="Retirar">Por Retirar</option>';
+                        break;
+
+                }
+
+                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+                if($detalles){ 
+                    $contador = 0;
+                    foreach ($detalles as $i) {
+                        $tr .= '<tr>
+                                    <td>'.$i->tipo_talonario.' Guías</td>
+                                    <td>'.$i->cantidad.' und.</td>
+                                </tr>';
+
+                        $contador = $contador + ($i->tipo_talonario * $i->cantidad);
+
+                    }
+                }else{
+                    return response('ERROR AL ACTUALIZAR ESTADO');
+                }
+            }
+
+            $talonarios = DB::table('talonarios')->select('fecha_emision','fecha_recibido','fecha_retiro')->where('id_solicitud','=',$idSolicitud)->get(); 
+            if ($talonarios) {
+
+                foreach ($talonarios as $talonario) {
+                    $fecha_recibido = '';
+                    if ($talonario->fecha_recibido != '') {
+                        $fecha_recibido = $talonario->fecha_recibido;
+                    }else{
+                        $fecha_recibido = '----------';
+                    }
+
+                    $fecha_retiro = '';
+                    if ($talonario->fecha_retiro != '') {
+                        $fecha_retiro = $talonario->fecha_retiro;
+                    }else{
+                        $fecha_retiro = '----------';
+                    }
+
+                    $tr_historial = '<tr>
+                                        <th>Emisión</th>
+                                        <td class="text-success">'.$talonario->fecha_emision.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Recepción</th>
+                                        <td class="text-success">'.$fecha_recibido.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Entrega</th>
+                                        <td class="text-success">'.$fecha_retiro.'</td>
+                                    </tr>';
+                }
+            }else{
+                return response('ERROR AL ACTUALIZAR ESTADO');
+            }
+            // return response($select);
+            $html = '<div class="d-flex justify-content-end">
+                        <table class="table table-borderless table-sm">
+                            <tr>
+                                <th>Cantera:</th>
+                                <td>'.$cantera.'</td>
+                            </tr>
+                            <tr>
+                                <th>Contribuyente:</th>
+                                <td>'.$contribuyente.'</td>
+                            </tr>
+                        </table>  
+                    </div>
+
+                    <h6 class="text-center mb-3" style="color: #0064cd;">Datos de la Solicitud</h6>
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Contenido del Talonario</th>
+                                <th scope="col">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            '.$tr.'
+                        </tbody>
+                    </table>
+                    <h6 class="text-center mb-3" style="color: #0064cd;">Historial de Estados</h6>
+                    <div class="d-flex justify-content-end">
+                        <table class="table text-center mx-5 px-5">
+                            '.$tr_historial.'
+                        </table>
+                    </div>
+                    <form id="form_actualizar_estado" method="post" onsubmit="event.preventDefault(); actualizarEstado()">
+                        <div class="row px-5 my-3">
+                            <div class="col-sm-4">
+                                <label for="estado" class="fw-bold fs-6">Estado Actual</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <select class="form-select form-select-sm" id="estado" aria-label="Small select" name="estado_actual" required >
+                                    '.$select.'
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id_solicitud" value="'.$idSolicitud.'">
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success btn-sm" data-bs-dismiss="modal">Actualizar</button>
+                        </div>
+                    </form>';
+            return response($html);
+
+        }else{
+            return response('ERROR AL ACTUALIZAR ESTADO');
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function update(Request $request)
     {
-        //
+        $idSolicitud = $request->post('id_solicitud');
+        $estado = $request->post('estado_actual');
+        $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => $estado]);
+        $fecha = date('Y-m-d');
+
+        if ($update_solicitud) {
+            switch ($estado) {
+                case 'En proceso':
+                    $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_recibido' => NULL, 'fecha_retiro' => NULL]);
+                    break;
+                case 'Retirar':
+                    $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_recibido' => $fecha]);
+                    break;
+                case 'Retirado':
+                    $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_retiro' => $fecha]);
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+            if ($update_talonario) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['success' => false]);
+            }
+           
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 
     /**
@@ -229,10 +401,7 @@ class EstadoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+   
 
     /**
      * Remove the specified resource from storage.
