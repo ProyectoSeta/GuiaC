@@ -56,8 +56,10 @@ class UserController extends Controller
                     'direccion' => $request->post('direccion'),
                     'tlf_movil' => $request->post('tlf_movil'),
                     'tlf_fijo' => $request->post('tlf_fijo'),
-                    'ci_repr' => $request->post('ci_repr'),
-                    'rif_repr' => $request->post('rif_repr'),
+                    'ci_condicion_repr' => $request->post('ci_condicion_repr'),
+                    'ci_nro_repr' => $request->post('ci_nro_repr'),
+                    'rif_condicion_repr' => $request->post('rif_condicion_repr'),
+                    'rif_nro_repr' => $request->post('rif_nro_repr'),
                     'name_repr' => $request->post('name_repr'),
                     'tlf_repr' => $request->post('tlf_repr')
             ]);

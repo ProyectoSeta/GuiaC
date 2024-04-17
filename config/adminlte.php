@@ -197,7 +197,7 @@ return [
     'classes_body' => '',
     'classes_brand' => 'bg-primary',
     'classes_brand_text' => '',
-    'classes_content_wrapper' => 'bg-light',
+    'classes_content_wrapper' => 'bg-light-subtle',
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-light-primary elevation-4 ',
@@ -390,17 +390,6 @@ return [
             // 'icon' => '',
         ],
 
-        // ['header' => 'Libro de Control'],
-        // [
-        //     'text' => 'Registro_de_guías',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
-        // [
-        //     'text' => 'change_password',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-lock',
-        // ],
         // [
         //     'text'    => 'multilevel',
         //     'icon'    => 'fas fa-fw fa-share',

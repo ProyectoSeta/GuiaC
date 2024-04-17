@@ -17,8 +17,10 @@ class SujetoPasivo extends Model
                             'direccion',
                             'tlf_movil',
                             'tlf_fijo',
-                            'ci_repr',
-                            'rif_repr',
+                            'ci_condicion_repr',
+                            'ci_nro_repr',
+                            'rif_condicion_repr',
+                            'rif_nro_repr',
                             'name_repr',
                             'tlf_repr'];
     // Se tiene que colocar los nombre de los campos de forma protegida para poder hacer la insercion de forma efectiva.

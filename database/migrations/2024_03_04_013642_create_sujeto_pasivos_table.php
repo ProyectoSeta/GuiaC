@@ -21,10 +21,12 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('tlf_movil',18);
             $table->string('tlf_fijo',18)->nullable();;
-            $table->string('ci_repr',15); // ejemplo: E30524510 o v26854712
-            $table->string('rif_repr',15);
+            $table->enum('ci_condicion_repr',['V','E']); 
+            $table->string('ci_nro_repr',10);// ejemplo: E30524510 o v26854712
+            $table->enum('rif_condicion_repr',['V','E']); 
+            $table->string('rif_nro_repr',10);
             $table->string('name_repr');
-            $table->string('tlf_repr',18);
+            $table->string('tlf_repr',15);
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->enum('estado',['Verificando','Verificado','Rechazado']);
             $table->string('observaciones')->nullable();

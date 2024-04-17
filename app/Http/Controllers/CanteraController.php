@@ -41,7 +41,7 @@ class CanteraController extends Controller
      */
     public function store(Request $request){
         $user = auth()->id();
-        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto', 'estado')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
         $nombre = $request->post('nombre');
@@ -49,51 +49,70 @@ class CanteraController extends Controller
         $parroquia = $request->post('parroquia');
         $direccion = $request->post('direccion');
 
-        $cantera = DB::table('canteras')->insert([
-                                'id_sujeto' =>  $id_sp,
-                                'nombre' => $nombre,
-                                'municipio_cantera' => $municipio,
-                                'parroquia_cantera' => $parroquia,
-                                'lugar_aprovechamiento' => $direccion,
-                                'status' => 'Verificando']);
-        if($cantera){
-            $id_cantera = DB::table('canteras')->max('id_cantera');
-           
-            $minerales = $request->post('mineral');
-            foreach($minerales as $mineral){
-                if($mineral != null){
-                    $id_min = '';
-                    $query_min = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
+       switch ($sp->estado) {
+            case 'Verificado':
+                $cantera = DB::table('canteras')->insert([
+                                        'id_sujeto' =>  $id_sp,
+                                        'nombre' => $nombre,
+                                        'municipio_cantera' => $municipio,
+                                        'parroquia_cantera' => $parroquia,
+                                        'lugar_aprovechamiento' => $direccion,
+                                        'status' => 'Verificando']);
+                if($cantera){
+                    $id_cantera = DB::table('canteras')->max('id_cantera');
+                
+                    $minerales = $request->post('mineral');
+                    foreach($minerales as $mineral){
+                        if($mineral != null){
+                            $id_min = '';
+                            $query_min = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
 
-                    if(count($query_min) > 0 ){
-                        foreach ($query_min as $min) {
-            
-                            $id_min = $min->id_mineral;
-
-                        }
-                    }else{
-                        ///el mineral NO existe en la tabla minerals
-                        $new_min = DB::table('minerals')->insert(['mineral' => $mineral]);
-                        if ($new_min) {
-                            $query_new = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
-                            foreach ($query_new as $new) {
-            
-                                $id_min = $new->id_mineral;
-    
-                            }
-                        }
-
-                    }
-                    // var_dump($id_min);
-                    $produccions = DB::table('produccions')->insert(['id_cantera' => $id_cantera,'id_mineral' => $id_min]);
+                            if(count($query_min) > 0 ){
+                                foreach ($query_min as $min) {
                     
-                } /////cierra if ($mineral != null)
-            }//////cierra foreach
-            return response()->json(['success' => true]);
-        } ///cierra if($cantera)
-        else{
-            return response()->json(['success' => false]);
-         }       
+                                    $id_min = $min->id_mineral;
+
+                                }
+                            }else{
+                                ///el mineral NO existe en la tabla minerals
+                                $new_min = DB::table('minerals')->insert(['mineral' => $mineral]);
+                                if ($new_min) {
+                                    $query_new = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
+                                    foreach ($query_new as $new) {
+                    
+                                        $id_min = $new->id_mineral;
+            
+                                    }
+                                }
+
+                            }
+                            // var_dump($id_min);
+                            $produccions = DB::table('produccions')->insert(['id_cantera' => $id_cantera,'id_mineral' => $id_min]);
+                            
+                        } /////cierra if ($mineral != null)
+                    }//////cierra foreach
+                    return response()->json(['success' => true]);
+                } ///cierra if($cantera)
+                else{
+                    return response()->json(['success' => false, 'nota' => 'Disculpe, ha ocurrido un error al registrar la Cantera.']);
+                } 
+
+                break;
+            case 'Verificando':
+                return response()->json(['success' => false, 'nota' => 'Disculpe, para poder registar la(s) Cantera(s) necesita estar verificado previamente.']);
+                break;
+            case 'Rechazado':
+                return response()->json(['success' => false, 'nota' => 'Disculpe, su usuario ha sido rechazado.']);
+                break;
+            
+            default:
+                # code...
+                break;
+       }
+
+        
+         
+         
     }
 
     /**

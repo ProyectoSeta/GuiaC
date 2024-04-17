@@ -56,7 +56,8 @@
                                     </div>
                                     <div class="col-1">-</div>
                                     <div class="col-8">
-                                        <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro"  autofocus/>
+                                        <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro" placeholder="Ejemplo: 30563223" autofocus/>
+                                        <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
                                     </div>
                                 </div>
 
@@ -86,13 +87,15 @@
                                 <!-- tlf movil input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="tlf_movil">Teléfono Movil</label><span class="text-danger"> *</span>
-                                    <input type="text" id="tlf_movil" class="form-control form-control-sm" name="tlf_movil"/>
+                                    <input type="number" id="tlf_movil" class="form-control form-control-sm" name="tlf_movil" placeholder="Ejemplo: 04125231102"/>
+                                    <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
                                 </div>
 
                                 <!-- tlf fijo input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="tlf_fijo">Teléfono Fijo</label>
-                                    <input type="text" id="tlf_fijo" class="form-control form-control-sm" name="tlf_fijo"/>
+                                    <input type="number" id="tlf_fijo" class="form-control form-control-sm" name="tlf_fijo" placeholder="Ejemplo: 02432632201"/>
+                                    <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 02432632201</p>
                                 </div>
 
                                 {{-- DATOS : REPRESENTANTE --}}
@@ -101,15 +104,35 @@
                                 </div>
 
                                 <!-- rif:repr input -->
-                                <div class="form-outline mb-2">
-                                    <label class="form-label" for="rif_repr">R.I.F. del Representante</label><span class="text-danger"> *</span>
-                                    <input type="text" id="rif_repr" class="form-control form-control-sm" name="rif_repr"/>
+                                <label class="form-label" for="rif_repr">R.I.F. del Representante</label><span class="text-danger"> *</span>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <select class="form-select form-select-sm" id="rif_condicion_repr" aria-label="Default select example" name="rif_condicion_repr">
+                                            <option value="V">V</option>
+                                            <option value="E">E</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">-</div>
+                                    <div class="col-8">
+                                        <input type="number" id="rif_nro_repr" class="form-control form-control-sm" name="rif_nro_repr" placeholder="Ejemplo: 084561221"/>
+                                        <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 084561221</p>
+                                    </div>
                                 </div>
 
-                                 <!-- ci:repr input -->
-                                 <div class="form-outline mb-2">
-                                    <label class="form-label" for="ci_repr">Cedula del Representante</label><span class="text-danger"> *</span>
-                                    <input type="text" id="ci_repr" class="form-control form-control-sm" name="ci_repr"/>
+                                <!-- ci:repr input -->
+                                <label class="form-label" for="ci_repr">Cédula del Representante</label><span class="text-danger"> *</span>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <select class="form-select form-select-sm" id="ci_condicion_repr" aria-label="Default select example" name="ci_condicion_repr">
+                                            <option value="V">V</option>
+                                            <option value="E">E</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">-</div>
+                                    <div class="col-8">
+                                        <input type="number" id="ci_nro_repr" class="form-control form-control-sm" name="ci_nro_repr" placeholder="Ejemplo: 8456122"/>
+                                        <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 8456122</p>
+                                    </div>
                                 </div>
 
                                  <!-- nombre:repr input -->
@@ -121,7 +144,8 @@
                                  <!-- tlf:repr input -->
                                  <div class="form-outline mb-2">
                                     <label class="form-label" for="tlf_repr">Teléfono del Representante</label><span class="text-danger"> *</span>
-                                    <input type="text" id="tlf_repr" class="form-control form-control-sm" name="tlf_repr"/>
+                                    <input type="number" id="tlf_repr" class="form-control form-control-sm" name="tlf_repr" placeholder="Ejemplo: 04125231102"/>
+                                    <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
                                 </div>
 
                                 {{-- DATOS : USUARIO --}}
@@ -143,7 +167,7 @@
                                 <!-- correo input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="email">Correo electrónico</label><span class="text-danger"> *</span>
-                                    <input type="email" id="email" class="form-control form-control-sm @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                    <input type="email" id="email" class="form-control form-control-sm @error('email') is-invalid @enderror" placeholder="example@gmail.com" name="email" value="{{ old('email') }}" required autocomplete="email">
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -167,7 +191,7 @@
                                 <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirmar contraseña') }}</label>
                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                                 </div>
-
+                                <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
 
                                
 
