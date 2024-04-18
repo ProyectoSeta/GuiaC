@@ -111,8 +111,13 @@ Route::post('/registro_guia/editar_guia', [App\Http\Controllers\RegistroGuiaCont
 Route::post('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'destroy'])->name('registro_guia.destroy');
 
 
-
 //////////////////CONFIGURACION DE USUARIO:CONTRIBUYENTES
 Route::get('/settings_contribuyente', [App\Http\Controllers\SettingsContribuyenteController::class, 'index'])->name('settings_contribuyente');
 Route::post('/settings_contribuyente/contribuyepost', [App\Http\Controllers\SettingsContribuyenteController::class, 'contribuyente'])->name('settings_contribuyente.contribuyente');
 Route::post('/settings_contribuyente/representante', [App\Http\Controllers\SettingsContribuyenteController::class, 'representante'])->name('settings_contribuyente.representante');
+
+
+////////////////DECLARAR GUIAS (VISTA: CONTRIBUYENTE)
+Route::get('/declarar', [App\Http\Controllers\DeclararController::class, 'index'])->name('declarar');
+Route::post('/declarar/info_declarar', [App\Http\Controllers\DeclararController::class, 'info_declarar'])->name('declarar.info_declarar');
+Route::post('/declarar/declarar', [App\Http\Controllers\DeclararController::class, 'declarar'])->name('declarar.declarar');

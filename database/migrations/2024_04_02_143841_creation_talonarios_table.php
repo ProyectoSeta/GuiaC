@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('tipo_talonario',['50']);
             $table->integer('desde');
             $table->integer('hasta');
-            $table->string('qr');
+            $table->string('qr')->nullable();
             $table->date('fecha_emision');
             $table->date('fecha_recibido')->nullable();
             $table->date('fecha_retiro')->nullable();

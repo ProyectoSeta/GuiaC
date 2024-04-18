@@ -21,7 +21,7 @@ class SujetoController extends Controller
     {
         $idSujeto = $request->post('sujeto');
        
-        $representante = DB::table('sujeto_pasivos')->select('ci_repr','rif_repr','name_repr','tlf_repr')->where('id_sujeto','=',$idSujeto)->get();
+        $representante = DB::table('sujeto_pasivos')->select('ci_condicion_repr','ci_nro_repr','rif_condicion_repr','rif_nro_repr','name_repr','tlf_repr')->where('id_sujeto','=',$idSujeto)->get();
          if ($representante) {
             $html='';
             foreach ($representante as $repr) {
@@ -36,19 +36,19 @@ class SujetoController extends Controller
                             <div>
                                 <table class="table table-borderless text-center">
                                     <tr>
-                                        <th>Nombre</th>
+                                        <th>Nombre y Apellido</th>
                                         <td>'.$repr->name_repr.'</td>
                                     </tr>
                                     <tr>
                                         <th>R.I.F.</th>
-                                        <td>'.$repr->rif_repr.'</td>
+                                        <td>'.$repr->rif_condicion_repr.'-'.$repr->rif_nro_repr.'</td>
                                     </tr>
                                     <tr>
                                         <th>C.I.</th>
-                                        <td>'.$repr->ci_repr.'</td>
+                                        <td>'.$repr->ci_condicion_repr.'-'.$repr->ci_nro_repr.'</td>
                                     </tr>
                                     <tr>
-                                        <th>Telefono</th>
+                                        <th>Teléfono</th>
                                         <td>'.$repr->tlf_repr.'</td>
                                     </tr>
                                 </table>

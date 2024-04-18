@@ -428,6 +428,34 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
+    <!-- ********* INFO USER DENEGADO ******** -->
+    <div class="modal" id="modal_info_access_denegado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">Acceso Denegado</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:15px;">
+                    <div class="d-flex flex-column text-center" id="info_produccion">
+                        <span class="fw-bold">Observaciones de la Denegación</span>
+                        <p class="mx-3 mt-1" id="observacion_access"></p>
+
+                        <div class="mt-3 mb-2">
+                            <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                </span>Las <span class="fw-bold">Observaciones </span>
+                                realizadas cumplen con el objetivo de notificarle
+                                del porque el Usuario no fue verificado. Para que así, pueda rectificar y cumplir con el deber formal.
+                            </p>
+                        </div>
+                    </div>
+                </div>  <!-- cierra modal-body -->
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
 
     
 
@@ -532,8 +560,14 @@
                         $('#modal_new_cantera').modal('hide');
                         window.location.href = "{{ route('cantera')}}";
                         
-                    } else {
-                        alert('Ha ocurrido un error al registar la cantera');
+                    }else{
+                        if (response.nota == 'Rachazado') {
+                            $('#modal_new_cantera').modal('hide');
+                            $('#modal_info_access_denegado').modal('show');
+                            $('#observacion_access').html(response.obv);
+                        }else{
+                            alert(response.nota);
+                        }
                     }
                 },
                 error: function() {
@@ -734,8 +768,5 @@
     </script>
 
 
-    <script>
-        
-    </script>
   
 @stop

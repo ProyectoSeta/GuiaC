@@ -336,6 +336,12 @@ return [
             'url'  => '/registro_guia',
             // 'icon' => 'fas fa-file-circle-plus',
         ],
+        ['header' => 'Declaración'],
+        [
+            'text' => 'Declarar Guías',
+            'url'  => '/declarar',
+            // 'icon' => 'fas fa-file-circle-plus',
+        ],
         ['header' => 'Control de Solicitudes'],
         [
             'text'       => 'Aprobación de solicitudes',
@@ -356,6 +362,11 @@ return [
         [
             'text' => 'Canteras registradas',
             'url'  => '/verificar_cantera',
+            // 'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'Declaraciones',
+            'url'  => '/declaraciones',
             // 'icon' => 'fas fa-fw fa-user',
         ],
         ['header' => 'Historial'],

@@ -102,7 +102,12 @@ class CanteraController extends Controller
                 return response()->json(['success' => false, 'nota' => 'Disculpe, para poder registar la(s) Cantera(s) necesita estar verificado previamente.']);
                 break;
             case 'Rechazado':
-                return response()->json(['success' => false, 'nota' => 'Disculpe, su usuario ha sido rechazado.']);
+                $motivo = DB::table('sujeto_pasivos')->select('observaciones')->where('id_sujeto','=',$id_sp)->first();
+                if ($motivo) {
+                    $obv = $motivo->observaciones;
+                    return response()->json(['success' => false, 'nota' => 'Rachazado', 'obv' => $obv]);
+                }
+                
                 break;
             
             default:

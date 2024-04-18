@@ -73,11 +73,11 @@ class AprobacionController extends Controller
                             <table class="table"  style="font-size:14px">
                                 <tr>
                                     <th>C.I. del representante</th>
-                                    <td>'.$sujeto->ci_repr.'</td>
+                                    <td>'.$sujeto->ci_condicion_repr.'-'.$sujeto->ci_nro_repr.'</td>
                                 </tr>
                                 <tr>
                                     <th>R.I.F. del representante</th>
-                                    <td>'.$sujeto->rif_repr.'</td>
+                                    <td>'.$sujeto->rif_condicion_repr.'-'.$sujeto->rif_nro_repr.'</td>
                                 </tr>
                                 <tr>
                                     <th>Nombre y Apellido</th>
@@ -220,9 +220,9 @@ class AprobacionController extends Controller
       
 
         $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get();   
-        if ($query_count) {
+        if ($query_count) { 
             foreach ($query_count as $c) {
-                $count = $c->total;
+                $count = $c->total; 
             }
             if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
                 $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
@@ -247,24 +247,7 @@ class AprobacionController extends Controller
                             $desde = $prev_hasta +1;
                             $hasta = ($desde + $tipo)-1;
                         }
-                        
-                        $contador_guia = $desde;
-                        ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
-                        // $nuevoToken = '';
-                        // for ($t=0; $t < $tipo; $t++) {
-                        //     do {
-                        //         $nuevoToken = $this->generarToken();
-                        //     } while ($this->tokenExiste($nuevoToken));
-
-                        //     // Guarda el nuevo token en la base de datos
-                        //     $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
-                            
-                        //     if ($insert_control) {
-                        //         $contador_guia = $contador_guia + 1;
-                        //     }
-                        // }
-                        ////////////////////////////////////////
-
+                    
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
                                             'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
                         if ($insert) {
@@ -272,7 +255,7 @@ class AprobacionController extends Controller
                             $url = route('aprobacion.qr', ['id' => $id_talonario]);
                             QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
-                
+    
                         }else{
                             return response('Error al generar el QR');
                         }

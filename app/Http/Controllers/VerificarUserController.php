@@ -71,11 +71,11 @@ class VerificarUserController extends Controller
                             <table class="table"  style="font-size:14px">
                                 <tr>
                                     <th>C.I. del representante</th>
-                                    <td>'.$sujeto->ci_repr.'</td>
+                                    <td>'.$sujeto->ci_condicion_repr.'-'.$sujeto->ci_nro_repr.'</td>
                                 </tr>
                                 <tr>
                                     <th>R.I.F. del representante</th>
-                                    <td>'.$sujeto->rif_repr.'</td>
+                                    <td>'.$sujeto->rif_condicion_repr.'-'.$sujeto->rif_nro_repr.'</td>
                                 </tr>
                                 <tr>
                                     <th>Nombre y Apellido</th>
@@ -172,11 +172,11 @@ class VerificarUserController extends Controller
                             <table class="table"  style="font-size:14px">
                                 <tr>
                                     <th>C.I. del representante</th>
-                                    <td>'.$sujeto->ci_repr.'</td>
+                                    <td>'.$sujeto->ci_condicion_repr.'-'.$sujeto->ci_nro_repr.'</td>
                                 </tr>
                                 <tr>
                                     <th>R.I.F. del representante</th>
-                                    <td>'.$sujeto->rif_repr.'</td>
+                                    <td>'.$sujeto->rif_condicion_repr.'-'.$sujeto->rif_nro_repr.'</td>
                                 </tr>
                                 <tr>
                                     <th>Nombre y Apellido</th>
