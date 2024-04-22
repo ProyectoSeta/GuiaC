@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('id_sujeto')->unsigned();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade'); 
             $table->integer('year_declarado');
-            $table->string('mes_declarado');
+            $table->integer('mes_declarado');
             $table->integer('nro_guias_emitidas');
             $table->integer('total_ucd');
             $table->float('monto_total');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->enum('nota',['Pago a tiempo','Pago a destiempo']);
             $table->date('fecha_emision');
             $table->enum('estado',['Verificando','Verificada','Negada']);
-
+            $table->string('observacion');
 
             $table->timestamps();
         });

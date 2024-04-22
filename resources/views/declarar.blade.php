@@ -60,60 +60,8 @@
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:15px;" id="content_modal_declarar">
-                    <p class="text-secondary-emphasis me-3 ms-3" style="font-size:13px"><span class="fw-bold">IMPORTANTE:
-                        </span>Estimado contribuyente, <span class="fw-bold">para poder realizar la Declaración</span> deberá reportar previamente en el 
-                        <span class="fw-bold">Libro de Control, TODAS las guías generadas</span>, del mes anterior. Debido a, 
-                        que si no reporta todas las guías emitidas, incluyendo las que hayan sido anuladas, estaría evadiendo 
-                        el deber formal. Lo cual según el art. ------------ de la ley ----------- implicaría la fiscalización 
-                        y/o multa de la empresa.    
-                    </p>
-
-                    <div class="d-flex justify-content-center mx-5 px-5 mb-3">
-                        <table class="table" style="font-size:14px;">
-                            <tr>
-                                <th>Declaración Correspondiente al Mes</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th>Guías Utilizadas</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th>Total UCD</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th>Total a Pagar</th>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <form id="form_declarar_guias" method="post" onsubmit="event.preventDefault(); declararGuias()">
-                        <div class="d-flex justify-content-center align-items-center mb-4">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                <label for="referencia" class="form-label">Referencia del Pago</label>
-                                </div>
-                                <div class="col-sm-8">
-                                    <input class="form-control form-control-sm" id="referencia" type="file">
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">NOTA:
-                            </span>Cada Guía tiene un valor de <span class="fw-bold"> cinco (5) UCD</span> (Unidad de Cuenta Dinámica). 
-                            El valor de un (1) UCD equivale al tipo de cambio de la moneda de mayor valor publicado por el 
-                            Banco Central de Venezuela.    
-                        </p>
-
-                        <div class="d-flex justify-content-center mt-3 mb-3">
-                            <button type="submit" class="btn btn-success btn-sm me-3">Declarar</button>
-                            <button type="button" class="btn btn-secondary btn-sm " data-bs-dismiss="modal">Cancelar</button>
-                        </div>
-                    </form>
-
-                    
+                
+                   
 
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
@@ -180,47 +128,68 @@
     $(document).ready(function () {
        ///////MODAL: INFO DECLARAR
        $(document).on('click','.btn_declarar', function(e) { 
-                e.preventDefault(e); 
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("declarar.info_declarar") }}',
-                    success: function(response) {          
-                        $('#content_modal_declarar').html(response);
-                    },
-                    error: function() {
-                    }
-                });
+            e.preventDefault(e); 
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("declarar.info_declarar") }}',
+                success: function(response) {    
+                    // console.log(response);  
+                    if (response.success) {
+                        $('#content_modal_declarar').html(response.html);
+
+                        if (response.actividad == 'no') {
+                            $("#actividad").removeClass('d-none');
+                            $("#referencia").attr('disabled', true);
+                            $(".btn_form_declarar").attr('disabled', false);
+                        }else{
+                            $("#actividad").addClass('d-none');
+                        }
+                    } else {
+                        alert(response.nota);
+                    }  
+                    
+                },
+                error: function() {
+                }
             });
+        });
+
+        ////////HABILITAR EL BUTTON PARA GENERAR LA SOLICITUD
+        $(document).on('change','#referencia', function(e) {
+            e.preventDefault(); 
+            $('.btn_form_declarar').attr('disabled', false);
+        });
 
     });
 
-    // function declararGuias(){
-    //     var formData = new FormData(document.getElementById("form_declarar_guias"));
-    //         $.ajax({
-    //             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-    //             url:'{{route("declarar.declarar") }}',
-    //             type:'POST',
-    //             contentType:false,
-    //             cache:false,
-    //             processData:false,
-    //             async: true,
-    //             data: formData,
-    //             success: function(response){
-    //                 // alert(response);
-    //                 if (response.success) {
-    //                     alert('LA CANTERA HA SIDO VERIFICADA CORRECTAMENTE');
-    //                     window.location.href = "{{ route('declarar')}}";
-    //                 } else {
-    //                     alert('Ha ocurrido un error al Verificar la Cantera.');
-    //                 }    
+    function declararGuias(){
+        var formData = new FormData(document.getElementById("form_declarar_guias"));
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("declarar.store") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    alert(response);
+                    console.log(response);
+                    if (response.success) {
+                        alert('DECLARACIÓN REALIZADA CORRECTAMENTE');
+                        window.location.href = "{{ route('declarar')}}";
+                    } else {
+                        alert('Ha ocurrido un error al declarar las guías.');
+                    }    
 
-    //             },
-    //             error: function(error){
+                },
+                error: function(error){
                     
-    //             }
-    //         });
-    // }
+                }
+            });
+    }
 </script>
 
 

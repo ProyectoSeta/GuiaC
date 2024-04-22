@@ -120,4 +120,4 @@ Route::post('/settings_contribuyente/representante', [App\Http\Controllers\Setti
 ////////////////DECLARAR GUIAS (VISTA: CONTRIBUYENTE)
 Route::get('/declarar', [App\Http\Controllers\DeclararController::class, 'index'])->name('declarar');
 Route::post('/declarar/info_declarar', [App\Http\Controllers\DeclararController::class, 'info_declarar'])->name('declarar.info_declarar');
-Route::post('/declarar/declarar', [App\Http\Controllers\DeclararController::class, 'declarar'])->name('declarar.declarar');
+Route::post('/declarar/store', [App\Http\Controllers\DeclararController::class, 'store'])->name('declarar.store');

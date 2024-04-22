@@ -281,7 +281,7 @@
                     async: true,
                     data: formData,
                     success: function(response){
-                        alert(response);
+                        //alert(response);
                         if (response.success) {
                             alert('EL ESTADO DE LA SOLICITUD HA SIDO ACTUALIZADO CORRECTAMENTE');
                             window.location.href = "{{ route('estado')}}";
