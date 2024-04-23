@@ -134,20 +134,20 @@
                 type: 'POST',
                 url: '{{route("declarar.info_declarar") }}',
                 success: function(response) {    
-                    // console.log(response);  
-                    if (response.success) {
-                        $('#content_modal_declarar').html(response.html);
+                    console.log(response);  
+                    // if (response.success) {
+                    //     $('#content_modal_declarar').html(response.html);
 
-                        if (response.actividad == 'no') {
-                            $("#actividad").removeClass('d-none');
-                            $("#referencia").attr('disabled', true);
-                            $(".btn_form_declarar").attr('disabled', false);
-                        }else{
-                            $("#actividad").addClass('d-none');
-                        }
-                    } else {
-                        alert(response.nota);
-                    }  
+                    //     if (response.actividad == 'no') {
+                    //         $("#actividad").removeClass('d-none');
+                    //         $("#referencia").attr('disabled', true);
+                    //         $(".btn_form_declarar").attr('disabled', false);
+                    //     }else{
+                    //         $("#actividad").addClass('d-none');
+                    //     }
+                    // } else {
+                    //     alert(response.nota);
+                    // }  
                     
                 },
                 error: function() {
