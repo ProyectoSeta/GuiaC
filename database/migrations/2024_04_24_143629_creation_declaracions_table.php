@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('declaracions', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id_declaracion');
             $table->integer('id_sujeto')->unsigned();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade'); 
             $table->integer('year_declarado');

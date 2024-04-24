@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => 'Guías MNM',
+    'logo' => 'MNM',
     // 'logo2' => 'J-00000000-1',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => 'vendor/adminlte/dist/img/cube.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
+    'logo_img_xl_class' => 'brand-image-lg',
     'logo_img_alt' => 'Admin Logo',
 
     /*
@@ -87,7 +87,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/cube.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -110,11 +110,11 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/cube.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
-            'width' => 60,
-            'height' => 60,
+            'width' => 100,
+            'height' => 100,
         ],
     ],
 
@@ -195,14 +195,14 @@ return [
     */
 
     'classes_body' => '',
-    'classes_brand' => 'bg-primary',
+    'classes_brand' => 'bg-navy',
     'classes_brand_text' => '',
-    'classes_content_wrapper' => 'bg-light-subtle',
+    'classes_content_wrapper' => 'bg-transparent',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-light-primary elevation-4 ',
+    'classes_sidebar' => 'sidebar-light-navy elevation-2',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light ',
+    'classes_topnav' => 'navbar-navy navbar-dark',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -320,21 +320,21 @@ return [
         [
             'text'        => 'Registro de Cantera(s)',
             'route'         => 'cantera',
-             'icon'        => 'fas fa-layer-group',   
-            'label'       => 4,
-            'label_color' => 'success',
+            'icon'        => 'fas fa-plus pe-2',   
+            // 'label'       => 4,
+            // 'label_color' => 'success',
         ],
         ['header' => 'Solicitud de Guías'],
         [
             'text' => ' Nueva Solicitud',
             'route'  => 'solicitud',
-            // 'icon' => 'add-outline', 
+            'icon' => 'fas fa-plus pe-2', 
         ],
         ['header' => 'Libro de Control'],
         [
             'text' => 'Registro de guías',
             'url'  => '/registro_guia',
-            // 'icon' => 'fas fa-file-circle-plus',
+            // 'icon' => 'fas fa-file-circle-plusfas fa-layer-group',
         ],
         ['header' => 'Declaración'],
         [

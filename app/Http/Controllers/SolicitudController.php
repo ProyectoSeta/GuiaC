@@ -86,8 +86,8 @@ class SolicitudController extends Controller
                         </p>
 
                         <div class="d-flex justify-content-center mt-3 mb-3" >
-                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success btn-sm" id="btn_generar_solicitud">Realizar solicitud</button>
+                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal" id="btn_cancelar" disabled>Cancelar</button>
+                            <button type="submit" class="btn btn-success btn-sm" id="btn_generar_solicitud" disabled>Realizar solicitud</button>
                         </div>
                     </form>';
 

@@ -55,26 +55,40 @@
 @stop
 
 @section('js')
-    <!-- <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
-    <script>
-        const myCarouselElement = document.querySelector('#infoCarousel');
-        const carousel = new bootstrap.Carousel(myCarouselElement, {
-            interval: 4000,
-            touch: false
-        });
-
-        // const carousel = bootstrap.Carousel.getInstance(myCarouselElement); // Retrieve a Carousel instance
-
-        myCarouselElement.addEventListener('slid.bs.carousel', event => {
-            carousel.to('2'); // Will slide to the slide 2 as soon as the transition to slide 1 is finished
-        })
-
-        carousel.to('1'); // Will start sliding to the slide 1 and returns to the caller
-        carousel.to('2'); // !! Will be ignored, as the transition to the slide 1 is not finished !!
-    </script> -->
-    
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
-    <!-- <script src="{{ asset('jss/datatable.min.js') }}" defer ></script>
-    <script src="{{ asset('jss/datatable.bootstrap.js') }}" ></script> -->
     <script src="{{ asset('jss/toastr.js') }}" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" ></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('holiss');
+            /////////////cierre de libros
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("home.libro") }}',
+                success: function(response) {    
+                    console.log(response);  
+                    // if (response.success) {
+                    //     $('#content_modal_declarar').html(response.html);
+
+                    //     if (response.actividad == 'no') {
+                    //         $("#actividad").removeClass('d-none');
+                    //         $("#referencia").attr('disabled', true);
+                    //         $(".btn_form_declarar").attr('disabled', false);
+                    //     }else{
+                    //         $("#actividad").addClass('d-none');
+                    //     }
+                    // } else {
+                    //     alert(response.nota);
+                    // }  
+                    
+                },
+                error: function() {
+                }
+            });
+
+        });
+    </script>
+  
 @stop

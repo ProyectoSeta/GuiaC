@@ -260,7 +260,20 @@
                     var total_guias = cant * 50;
                     var total_ucd = total_guias * 5;
                     $('#total_ucd').html(total_ucd +' UCD');
+
+                    $("#btn_cancelar").attr('disabled', false);
+                    $("#btn_generar_solicitud").attr('disabled', false);
                 }
+            });
+
+            ////////////////////
+            $(document).on('keyup','#cantidad', function(e) {  
+                var cant = $(this).val();
+                if (cant == 0) {
+                    $("#btn_cancelar").attr('disabled', true);
+                    $("#btn_generar_solicitud").attr('disabled', true);
+                }
+                console.log(cant);
             });
 
 

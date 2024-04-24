@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade'); 
             $table->integer('id_cantera')->unsigned();
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
+            $table->integer('id_libro')->unsigned();
+            $table->foreign('id_libro')->references('id_libro')->on('libros')->onDelete('cascade');
             $table->string('nro_guia')->unique();
             // $table->string('nro_control')->unique();
             $table->date('fecha');

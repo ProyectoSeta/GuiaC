@@ -21,6 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/home/libro', [App\Http\Controllers\HomeController::class, 'libro'])->name('home.libro');
 // Route::get('/solicitud', [App\Http\Controllers\SolicitudController::class, 'index'])->name('solicitud');
 
 /*Usuario sujeto pasivo*/
