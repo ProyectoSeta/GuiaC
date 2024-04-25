@@ -16,7 +16,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Declarar Guías</h2>
             <div class="mb-3">
-                <button type="button" class="btn btn-primary rounded-pill px-3 fw-bold btn-sm btn_declarar" data-bs-toggle="modal" data-bs-target="#modal_declarar_guias">Declarar</button>
+                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm btn_declarar fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_declarar_guias">
+                    <i class='bx bx-pen fw-bold fs-5 pe-2'></i>
+                    <span>Declarar</span>
+                </button>
             </div>
         </div>
 

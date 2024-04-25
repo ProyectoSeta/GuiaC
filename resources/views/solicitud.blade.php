@@ -14,7 +14,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Solicitud de Guías</h2>
             <div class="me-3">
-                <button type="button" class="btn btn-primary rounded-pill px-3 fw-bold btn-sm" id="new_solicitud" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud"><i class='bx bx-plus fw-bold'></i>Nueva solicitud</button>
+                <button type="button" class="btn bg-navy rounded-pill px-3 fw-bold btn-sm d-flex align-items-center" id="new_solicitud" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud">
+                    <i class='bx bx-plus fw-bold fs-6 pe-2' ></i>
+                    <span>Nueva solicitud</span>
+                </button>
             </div>
         </div>
         

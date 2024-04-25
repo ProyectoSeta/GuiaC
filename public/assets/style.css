@@ -2,7 +2,14 @@
     font-family: "Poppins", sans-serif;
     font-weight: 400;
 } */
-
+#content-home{
+    background-image: url('bg-home-2.png');
+    background-size: 60%;
+    background-repeat: repeat;
+    background-size: 60%;
+    background-position: center center;
+    background-attachment: fixed;
+}
 #body_sesion{
     height: 100vh;
     /* position: relative;

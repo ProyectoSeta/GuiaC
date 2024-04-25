@@ -5,41 +5,57 @@
 
 @section('content')
 
-    <div class="row pt-4" style="font-size: 15px;">
-        <div class="col-lg-4 text-center">
-            <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
-            <h4 class="fw-normal">Registrar Cantera(s)</h4>
-            <p>Amigo contribuyente, para relizar la solicitud de Guías de Circulación, primeramente deberá registrar las canteras adjudicadas a su empresa.</p>
-            <p><a class="btn btn-secondary btn-sm" href="{{ route('cantera') }}">Registrar Cantera(s) »</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4 text-center">
-            <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
-            <h4 class="fw-normal">Realizar Solicitud</h4>
-            <p>Una vez verificadas las Canteras registradas, podrá realizar la solicitud de Guías de Circulación para cada Cantera.</p>
-            <p><a class="btn btn-secondary  btn-sm" href="{{ route('solicitud') }}">Realizar Solicitud »</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4 text-center">
-            <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
-            <h4 class="fw-normal">Retirar Talonario</h4>
-            <p>Aprobada la Solicitud, se le notificará que el Talonario ya está listo para retirar (El estado de su Solicitud cambiará a "Retirar"). Este proceso llevara un tiempo estimado de 2 a 3 días hábiles.</p>
-            <p><a class="btn btn-secondary  btn-sm" href="{{ route('solicitud') }}">Ver Estado »</a></p>
-        </div><!-- /.col-lg-4 -->
-    </div><!-- /.row -->
+    <div class="content" id="content-home">
+        <div class="row pt-4" style="font-size: 15px;">
+            <div class="col-lg-4 text-center">
+                <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
+                <h4 class="fw-normal">Registrar Cantera(s)</h4>
+                <p>Amigo contribuyente, para relizar la solicitud de Guías de Circulación, primeramente deberá registrar las canteras adjudicadas a su empresa.</p>
+                <p><a class="btn btn-secondary btn-sm" href="{{ route('cantera') }}">Registrar Cantera(s) »</a></p>
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-4 text-center">
+                <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
+                <h4 class="fw-normal">Realizar Solicitud</h4>
+                <p>Una vez verificadas las Canteras registradas, podrá realizar la solicitud de Guías de Circulación para cada Cantera.</p>
+                <p><a class="btn btn-secondary  btn-sm" href="{{ route('solicitud') }}">Realizar Solicitud »</a></p>
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-4 text-center">
+                <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
+                <h4 class="fw-normal">Retirar Talonario</h4>
+                <p>Aprobada la Solicitud, se le notificará que el Talonario ya está listo para retirar (El estado de su Solicitud cambiará a "Retirar"). Este proceso llevara un tiempo estimado de 2 a 3 días hábiles.</p>
+                <p><a class="btn btn-secondary  btn-sm" href="{{ route('solicitud') }}">Ver Estado »</a></p>
+            </div><!-- /.col-lg-4 -->
+        </div><!-- /.row -->
 
-    <div class="row mx-5 px-5" style="font-size: 15px;">
-        <div class="col-lg-6 text-center">
-            <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
-            <h4 class="fw-normal">Registrar Guías</h4>
-            <p>Amigo contribuyente, debe subir todas las guías que han sido utilizadas en la(s) Cantera(s), así estas hayan sido anuladas. Para que, pueda cumplir con el deber formal.</p>
-            <p><a class="btn btn-secondary  btn-sm" href="{{ route('registro_guia') }}">Registrar Guía »</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-6 text-center">
-            <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
-            <h4 class="fw-normal">Declarar Guías de Circulación</h4>
-            <p>Según el calendario fiscal vigente a la fecha, deberá declarar las guías que haya utilizado en el período de tiempo establecido.</p>
-            <p><a class="btn btn-secondary  btn-sm" href="#">Ver Estado »</a></p>
-        </div><!-- /.col-lg-4 -->
+        <div class="row mx-5 px-5" style="font-size: 15px;">
+            <div class="col-lg-6 text-center">
+                <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
+                <h4 class="fw-normal">Registrar Guías</h4>
+                <p>Amigo contribuyente, debe subir todas las guías que han sido utilizadas en la(s) Cantera(s), así estas hayan sido anuladas. Para que, pueda cumplir con el deber formal.</p>
+                <p><a class="btn btn-secondary  btn-sm" href="{{ route('registro_guia') }}">Registrar Guía »</a></p>
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-6 text-center">
+                <svg class=" rounded-circle text-bg-primary bg-gradient" width="60" height="60"></svg>
+                <h4 class="fw-normal">Declarar Guías de Circulación</h4>
+                <p>Según el calendario fiscal vigente a la fecha, deberá declarar las guías que haya utilizado en el período de tiempo establecido.</p>
+                <p><a class="btn btn-secondary  btn-sm" href="#">Ver Estado »</a></p>
+            </div><!-- /.col-lg-4 -->
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
+
+    
 
 
 

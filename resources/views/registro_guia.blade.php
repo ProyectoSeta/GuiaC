@@ -14,7 +14,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Libro de Control</h2>
             <div class="mb-3">
-                <button type="button" class="btn btn-primary rounded-pill px-3 btn-sm" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"><i class='bx bx-plus'></i>Registrar guía</button>
+                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"> 
+                    <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
+                    <span>Registrar guía</span>
+                </button>
             </div>
         </div>
         <div class="table-responsive" style="font-size:14px">

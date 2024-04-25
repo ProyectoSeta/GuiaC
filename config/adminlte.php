@@ -63,10 +63,10 @@ return [
     |
     */
 
-    'logo' => 'MNM',
+    'logo' => 'Principal',
     // 'logo2' => 'J-00000000-1',
     'logo_img' => 'vendor/adminlte/dist/img/cube.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo_img_class' => 'brand-image img-circle elevation-3 fs-6',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-lg',
     'logo_img_alt' => 'Admin Logo',
@@ -132,7 +132,7 @@ return [
 
     'usermenu_enabled' => true,
     'usermenu_header' => false,
-    'usermenu_header_class' => 'bg-primary',
+    'usermenu_header_class' => 'fw-bold',
     'usermenu_image' => false,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
@@ -169,7 +169,7 @@ return [
     */
 
     'classes_auth_card' => 'card-outline card-success',
-    'classes_auth_header' => '',
+    'classes_auth_header' => 'fw-bold',
     'classes_auth_body' => 'bg-dark',
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
@@ -195,14 +195,14 @@ return [
     */
 
     'classes_body' => '',
-    'classes_brand' => 'bg-navy',
+    'classes_brand' => 'bg-gradient-navy', //// logo e inicio 
     'classes_brand_text' => '',
-    'classes_content_wrapper' => 'bg-transparent',
+    'classes_content_wrapper' => 'bg-transparent', /////content
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-light-navy elevation-2',
+    'classes_sidebar' => 'sidebar-dark-white bg-gradient-navy elevation-2 ',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-navy navbar-dark',
+    'classes_topnav' => 'navbar-navy bg-gradient-navy navbar-dark', /////clases para el nav top
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 

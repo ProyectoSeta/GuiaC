@@ -16,7 +16,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Registro de Cantera(s)</h2>
             <div class="mb-3">
-                <button type="button" class="btn btn-primary rounded-pill px-3 btn-sm" data-bs-toggle="modal" data-bs-target="#modal_new_cantera"><i class='bx bx-plus'></i>Registrar Cantera</button>
+                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_new_cantera">
+                    <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
+                    <span>Registrar Cantera</span>
+                </button>
             </div>
         </div>
 

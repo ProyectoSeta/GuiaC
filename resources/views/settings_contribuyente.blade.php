@@ -72,7 +72,7 @@
             <div class="tab-content" id="nav-tabContent">
                 <!-- //////////////////////////CONTENIDO: DATOS USUARIO ///////////////////////// -->
                 <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list" style="font-size:14px;">
-                    <p class="text-center fw-bold fs-4" >Datos del <span style="color:#0d6efd">Usuario</span></p>
+                    <p class="text-center fw-bold fs-4" >Datos del <span class="text-navy">Usuario</span></p>
                     <form action="">
                         <div class="campos_edit_user">
                             <div class="mb-3">
@@ -98,7 +98,7 @@
                         <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
                         
                         <div class="d-flex justify-content-center">
-                            <button type="button" class="btn btn-primary btn-sm">Editar datos</button>
+                            <button type="button" class="btn bg-gradient-navy text-white btn-sm">Editar datos</button>
                         </div>
 
                         <!-- <div class="d-flex justify-content-center">
