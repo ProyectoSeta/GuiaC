@@ -13,6 +13,7 @@
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Libro de Control</h2>
+            <h4 class="text-muted">Libro de <span class="text-success">{{$fecha}}</span></h4>
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"> 
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
@@ -31,7 +32,6 @@
                     <th scope="col">Destinatario</th>
                     <th scope="col">Destino</th>
                     <th scope="col">Nro. Factura</th>
-                    <th scope="col">Tipo Guia</th>
                     <th scope="col">¿Anulada?</th>
                     <th scope="col">Acciones</th>
                 </tr>
@@ -57,7 +57,6 @@
                                 }
                             @endphp
                             
-                            <td class="fst-italic text-secondary">{{$registro->tipo_guia}}</td>
                             <td>{{$registro->anulada}}</td>
                             <td>
                                 <div class="d-flex">

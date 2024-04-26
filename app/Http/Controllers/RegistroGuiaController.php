@@ -23,7 +23,25 @@ class RegistroGuiaController extends Controller
                                 ->select('control_guias.*', 'canteras.nombre', 'minerals.mineral')
                                 ->where('control_guias.id_sujeto', $id_sp)->get();
 
-        return view('registro_guia', compact('registros'));
+
+        $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+        $hoy = date('d');
+        $mes = date('n');
+        $year = date('Y');
+        $fecha = '';
+
+        if ($hoy >= 10) {
+            $fecha = $meses[$mes].' '.$year;
+        }else{
+            $mes_anterior = $mes-1;
+            if ($mes_anterior == 0) {
+                $mes_anterior = 12;
+                $year = $year - 1;
+            }
+            $fecha = $meses[$mes_anterior].' '.$year;
+        }
+
+        return view('registro_guia', compact('registros','fecha'));
     }
 
     /**
@@ -45,10 +63,55 @@ class RegistroGuiaController extends Controller
                     $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
                 }
 
+                $hoy = date('d');
+                $mes = date('n');
+                $year = date('Y');
+                $mes_anterior = '0'.$mes - 1;
+                if ($mes_anterior == 00) {
+                    $mes_anterior = 12;
+                    $year = $year - 1;
+                }
+                $min = '';
+                $max = '';
+                $mes_declarado = '';
+                $year_declarado = '';
+                
+
+                if ($hoy >= 10) {  
+                    ////declaracion del mes actual
+                    $min = date("Y-m-01");
+                    $max = date("Y-m-t");
+
+                    $mes_declarado = $mes;
+                    $year_declarado = $year;
+                }else{
+                    ////todavia no toca cerrar libro del mes anterior
+                    $min = date("Y").'-'.$mes_anterior.'-01';
+                    $max = date($year.'-'.$mes_anterior.'-t');
+
+                    $mes_declarado = $mes_anterior;
+                    $year_declarado = $year;
+                }
+
                 $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
                 <p class="px-3 fw-semibold fs-6 text-body-secondary">IMPORTANTE: Debe seleccionar la Cantera de la cual proviene la Guía y el Talonario, para así poder ingresar los demás datos.</p>
                             <div class="row d-flex justify-content-between  px-3">
                                 <div class="col-sm-5">
+                                </div>
+
+                                <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
+                                    <span class="text-danger">Nro° Guía </span><span id="nro_guia_view"></span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="mes_declarado" name="mes_declarado" value="'.$mes_declarado.'" required>
+                            <input type="hidden" id="year_declarado" name="year_declarado" value="'.$year_declarado.'" required>
+
+                            <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
+                            <input type="hidden" id="nro_guia" name="nro_guia" value="" required>
+
+                            <div class="row pt-3 px-3 d-flex justify-content-between">
+                                <div class="col-sm-4">
                                     <!-- cantera -->
                                     <div class="row g-3 align-items-center mb-2">
                                         <div class="col-3">
@@ -62,18 +125,6 @@ class RegistroGuiaController extends Controller
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
-                                    <span class="text-danger">Nro° Guía </span><span id="nro_guia_view"></span>
-                                </div>
-                            </div>
-
-                            
-                            
-                            <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
-                            <input type="hidden" id="nro_guia" name="nro_guia" value="" required>
-
-                            <div class="row px-3 d-flex justify-content-between">
                                 <div class="col-sm-4">
                                     <!-- fecha de emision -->
                                     <div class="row g-3 align-items-center mb-2">
@@ -81,25 +132,7 @@ class RegistroGuiaController extends Controller
                                             <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
                                         </div>
                                         <div class="col-7">
-                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required disabled>
-                                        </div> 
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <!-- tipo de guia -->
-                                    <div class="row g-3 align-items-center mb-2">
-                                        <div class="col-4">
-                                            <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="tipo_guia" id="venta" value="Venta" disabled>
-                                                <label class="form-check-label" for="venta">Venta</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="tipo_guia" id="donacion" value="Donación" disabled>
-                                                <label class="form-check-label" for="donacion">Donación</label>
-                                            </div>
+                                            <input type="date" id="fecha" class="form-control form-control-sm" min="'.$min.'" max="'.$max.'" name="fecha_emision" required disabled>
                                         </div> 
                                     </div>
                                 </div>
@@ -412,6 +445,7 @@ class RegistroGuiaController extends Controller
                                 </div>
                             </div>
 
+                        
                           
 
                             <p class="text-muted"><span style="color:red">*</span> Campos requeridos.</p>
@@ -558,11 +592,9 @@ class RegistroGuiaController extends Controller
         $id_talonario = $request->post('id_talonario');
         $id_sujeto = $id_sp;
         $nro_guia = $request->post('nro_guia');
-        // $nro_control = $request->post('nro_control');
         $id_cantera = $request->post('cantera');
 
         $fecha = $request->post('fecha_emision');
-        $tipo_guia = $request->post('tipo_guia');
         $razon_dest = $request->post('razon_dest');
         $ci_dest = $request->post('ci_dest');
         $tlf_dest = $request->post('tlf_dest');
@@ -586,18 +618,47 @@ class RegistroGuiaController extends Controller
         $capacidad_vehiculo = $request->post('capacidad_vehiculo');
 
         $hora_salida = $request->post('hora_salida');
-        // $hora_llegada = $request->post('hora_llegada');
         $nro_factura = $request->post('nro_factura');
         $anulada = $request->post('anulada');
         $motivo = $request->post('motivo');
 
+        $mes_declarado = $request->post('mes_declarado');
+        $year_declarado = $request->post('year_declarado');
+        $id_libro = '';
+        /////consulta de libro
+        $c = DB::table('libros')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)
+                                                                ->where('mes','=',$mes_declarado)
+                                                                ->where('year','=',$year_declarado)->first();
+        if ($c) {
+            if ($c->total == 0) {
+                ////no hay libro para este mes
+                $new_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 'mes' => $mes_declarado, 'year' => $year_declarado]);
+                if ($new_libro) {
+                    $id_libro = DB::table('libros')->max('id_libro');
+                }
+            }else{
+                ////hay un libro de este mes
+                $consulta = DB::table('libros')->select('id_libro')->where('id_sujeto','=',$id_sp)
+                                                            ->where('mes','=',$mes_declarado)
+                                                            ->where('year','=',$year_declarado)->first();
+                if ($consulta) {
+                    $id_libro = $consulta->id_libro;
+                }
+            }
+        }else{
+            return response()->json(['success' => false]);
+        }
+
+        
+
+
         $insert = DB::table('control_guias')->insert(['id_talonario' => $id_talonario, 
                                                     'id_sujeto'=>$id_sujeto,
                                                     'id_cantera' => $id_cantera,
+                                                    'id_libro' => $id_libro, /////
                                                     'nro_guia' => $nro_guia, 
-                                                    // 'nro_control' => $nro_control,
+                                                    'id_declaracion' => null, /////
                                                     'fecha' => $fecha,
-                                                    'tipo_guia' => $tipo_guia,
                                                     'razon_destinatario' => $razon_dest,
                                                     'ci_destinatario' => $ci_dest,
                                                     'tlf_destinatario' => $tlf_dest,
@@ -726,33 +787,22 @@ class RegistroGuiaController extends Controller
                 }
 
 
-                //////////////////info tipo de guia
-                $html_tipo = '';
-                if ($guia->tipo_guia == 'Venta') {
-                    $html_tipo = '<div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_guia" id="venta" value="Venta" checked>
-                                    <label class="form-check-label" for="venta">Venta</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_guia" id="donacion" value="Donación">
-                                    <label class="form-check-label" for="donacion">Donación</label>
-                                </div>';
-                }else{
-                    $html_tipo = '<div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_guia" id="venta" value="Venta">
-                                    <label class="form-check-label" for="venta">Venta</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="tipo_guia" id="donacion" value="Donación" checked>
-                                    <label class="form-check-label" for="donacion">Donación</label>
-                                </div>';
-                }
-
                 
 
                 $html = '<form id="form_editar_guia" method="post" onsubmit="event.preventDefault(); editarGuia()">
                 <div class="row d-flex justify-content-between  px-3">
                     <div class="col-sm-5">
+                    </div>
+
+                    <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
+                        <span class="text-danger">Nro° Guía </span><span id="nro_guia_view">'.$formato_nro_guia.'</span>
+                    </div>
+                </div>
+
+                <input type="hidden" name="nro_guia" value="'.$guia->nro_guia.'" required>
+
+                <div class="row px-3 d-flex justify-content-between">
+                    <div class="col-sm-4">
                         <!-- cantera -->
                         <div class="row g-3 align-items-center mb-2">
                             <div class="col-3">
@@ -765,15 +815,6 @@ class RegistroGuiaController extends Controller
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
-                        <span class="text-danger">Nro° Guía </span><span id="nro_guia_view">'.$formato_nro_guia.'</span>
-                    </div>
-                </div>
-
-                <input type="hidden" name="nro_guia" value="'.$guia->nro_guia.'" required>
-
-                <div class="row px-3 d-flex justify-content-between">
                     <div class="col-sm-4">
                         <!-- fecha de emision -->
                         <div class="row g-3 align-items-center mb-2">
@@ -782,17 +823,6 @@ class RegistroGuiaController extends Controller
                             </div>
                             <div class="col-7">
                                 <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" value="'.$guia->fecha.'">
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <!-- tipo de guia -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-4">
-                                <label for="" class="col-form-label">Tipo Guía: <span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-8">
-                                '.$html_tipo.'
                             </div> 
                         </div>
                     </div>
@@ -1119,7 +1149,6 @@ class RegistroGuiaController extends Controller
 
         $nro_guia = $request->post('nro_guia');
         $fecha = $request->post('fecha_emision');
-        $tipo_guia = $request->post('tipo_guia');
         $razon_dest = $request->post('razon_dest');
         $ci_dest = $request->post('ci_dest');
         $tlf_dest = $request->post('tlf_dest');
@@ -1150,7 +1179,6 @@ class RegistroGuiaController extends Controller
 
         $update = DB::table('control_guias')->where('nro_guia','=',$nro_guia)
                                             ->update(['fecha' => $fecha,
-                                                        'tipo_guia' => $tipo_guia,
                                                         'razon_destinatario' => $razon_dest,
                                                         'ci_destinatario' => $ci_dest,
                                                         'tlf_destinatario' => $tlf_dest,

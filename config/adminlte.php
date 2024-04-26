@@ -334,7 +334,12 @@ return [
         [
             'text' => 'Registro de guías',
             'url'  => '/registro_guia',
-            // 'icon' => 'fas fa-file-circle-plusfas fa-layer-group',
+            // 'icon' => 'fas fa-layer-group',
+        ],
+        [
+            'text' => 'Libros',
+            'url'  => '/libros',
+            // 'icon' => 'fas fa-fw fa-user',
         ],
         ['header' => 'Declaración'],
         [

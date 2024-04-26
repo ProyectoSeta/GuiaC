@@ -22,9 +22,12 @@ return new class extends Migration
             $table->integer('id_libro')->unsigned();
             $table->foreign('id_libro')->references('id_libro')->on('libros')->onDelete('cascade');
             $table->string('nro_guia')->unique();
-            // $table->string('nro_control')->unique();
+
+            $table->integer('id_declaracion')->nullable()->unsigned();
+            $table->foreign('id_declaracion')->references('id_declaracion')->on('declaracions')->onDelete('cascade');
+
             $table->date('fecha');
-            $table->enum('tipo_guia',['Venta','Donación']); ////
+            
             $table->string('razon_destinatario');
             $table->string('ci_destinatario',15);
             $table->string('tlf_destinatario',15);
@@ -47,8 +50,7 @@ return new class extends Migration
             $table->string('tlf_conductor',15);
             $table->string('capacidad_vehiculo');
             $table->string('hora_salida');
-            // $table->string('hora_llegada');
-            
+           
             $table->enum('anulada',['No','Si']);
             $table->string('motivo')->nullable();
 

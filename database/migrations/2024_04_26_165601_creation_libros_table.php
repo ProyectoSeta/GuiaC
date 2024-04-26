@@ -15,11 +15,9 @@ return new class extends Migration
             $table->increments('id_libro');
             $table->integer('id_sujeto')->unsigned();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
-            $table->integer('id_declaracion')->unsigned()->nullable();
             $table->integer('mes');
             $table->integer('year');
-            $table->enum('estatus',['Abierto','Cerrado']);
-            $table->foreign('id_declaracion')->references('id_declaracion')->on('declaracions')->onDelete('cascade');
+            // $table->enum('estatus',['Abierto','Cerrado']);
 
             $table->timestamps();
         });

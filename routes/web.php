@@ -122,3 +122,7 @@ Route::post('/settings_contribuyente/representante', [App\Http\Controllers\Setti
 Route::get('/declarar', [App\Http\Controllers\DeclararController::class, 'index'])->name('declarar');
 Route::post('/declarar/info_declarar', [App\Http\Controllers\DeclararController::class, 'info_declarar'])->name('declarar.info_declarar');
 Route::post('/declarar/store', [App\Http\Controllers\DeclararController::class, 'store'])->name('declarar.store');
+
+///////////LIBROS
+Route::get('/libros', [App\Http\Controllers\LibrosController::class, 'index'])->name('libros');
+// Route::post('/libros/solicitud', [App\Http\Controllers\LibrosController::class, 'solicitud'])->name('libros.solicitud');
