@@ -125,4 +125,10 @@ Route::post('/declarar/store', [App\Http\Controllers\DeclararController::class, 
 
 ///////////LIBROS
 Route::get('/libros', [App\Http\Controllers\LibrosController::class, 'index'])->name('libros');
-// Route::post('/libros/solicitud', [App\Http\Controllers\LibrosController::class, 'solicitud'])->name('libros.solicitud');
+
+///////////DETALLE DE LIBRO
+Route::get('/detalle_libro/{mes?}/{year?}/', [App\Http\Controllers\DetalleLibroController::class, 'index'])->name('detalle_libro.index');
+Route::post('/detalle_libro/modal_registro', [App\Http\Controllers\DetalleLibroController::class, 'modal_registro'])->name('detalle_libro.modal_registro');
+Route::post('/detalle_libro/store', [App\Http\Controllers\DetalleLibroController::class, 'store'])->name('detalle_libro.store');
+Route::post('/detalle_libro/editar', [App\Http\Controllers\DetalleLibroController::class, 'editar'])->name('detalle_libro.editar');
+Route::post('/detalle_libro/editar_guia', [App\Http\Controllers\DetalleLibroController::class, 'editar_guia'])->name('detalle_libro.editar_guia');

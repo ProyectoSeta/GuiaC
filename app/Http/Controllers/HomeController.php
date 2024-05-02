@@ -31,31 +31,27 @@ class HomeController extends Controller
     
     public function libro()
     {
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
+
         $dia = date("d");
         $mes = date("m");
         $year = date("Y");
 
-        $nuevafecha = $mes - 1;
-        if ($nuevafecha < 10) {
-            $nuevafecha = '0'.$nuevafecha;
-        }
-        
-        $c1 = DB::table('cierre_libros')->select('dia_cierre')->first();
-        if ($c1) {
-            $cierre = $c1->dia_cierre;
-            if ($dia > $cierre) {
-                $update = DB::table('libros')->where('id_sujeto', '=', $idSujeto)->update(['estado' => 'Rechazado', 'observaciones' => $observacion]);
+        // $consulta = DB::table('libros')->select('mes','year')->orderBy('id_libro', 'desc')->where('id_sujeto','=',$id_sp)->first();
+        // if ($consulta) {
+        //     $ultimo_mes_declarado = $consulta->mes;
+        //     $ultimo_year_declarado = $consulta->year;
 
-            }
+            
+
+        //     return response($ultimo_mes_declarado.'/'.$ultimo_year_declarado);
+        // }
+       
 
 
-
-
-        }else{
-            return response()->json(['success' => false]);
-        }
-
-        return response($mes.'-'.$nuevafecha);
+    
 
     
     }

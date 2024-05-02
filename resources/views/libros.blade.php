@@ -25,17 +25,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Marzo</td>
-                        <td>2024</td>
-                        <td>
-                            <span class="text-secondary fst-italic">Sin declarar</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" id_solicitud="2" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado">Aperturar</button>
-                        </td>
-                    </tr>
+                    @foreach ($libros as $libro)
+                        @php
+                            $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+                            $mes_bd = $libro->mes;
+                            $mes_libro = $meses[$mes_bd];
+
+
+                        @endphp
+                        <tr class="ver_libro">
+                            <td>{{$libro->id_libro}}</td>
+                            <td>{{$mes_libro}}</td>
+                            <td>{{$libro->year}}</td>
+                            <td>
+                                <span class="text-secondary fst-italic">{{$libro->nombre}}</span>
+                            </td>
+                            <td>
+                                <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4" mes="{{$libro->mes}}" year="{{$libro->year}}" >Ver libro</a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
 
             </table>
@@ -48,14 +57,22 @@
       
 
     
-    
-  <!--****************** MODALES **************************-->
-    <!-- ********* INFO REPRESENTANTE ******** -->
-    <div class="modal" id="modal_info_representante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content" id="content_modal_repr">
-    
-                 </div>  <!-- cierra modal-body -->
+<!--****************** MODALES **************************-->
+    <!-- ********* APERTURA DE LIBRO: NUEVA GUIA ******** -->
+    <div class="modal" id="modal_registro_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel" style="color: #0072ff">
+                        <i class='bx bx-barcode fs-1 me-2'></i>
+                        Registro de Guía
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
+
+                    
+                </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -120,7 +137,7 @@
     </script> 
     <script type="text/javascript">
         $(document).ready(function () {
-            ///////MODAL: INFO REPRESENTANTE
+        
            
 
         });

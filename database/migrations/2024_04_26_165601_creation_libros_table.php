@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
             $table->integer('mes');
             $table->integer('year');
-            // $table->enum('estatus',['Abierto','Cerrado']);
+            $table->integer('estado')->unsigned();
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
 
             $table->timestamps();
         });

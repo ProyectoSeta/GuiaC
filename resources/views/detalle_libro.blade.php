@@ -12,12 +12,12 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Libro de Control</h2>
-            <h4 class="text-muted">Libro de <span class="text-success">{{$fecha}}</span></h4>
+            <h2 class="mb-3">Libro <span class="text-navy">{{$mes_nombre}} {{$year}}</span></h2>
+            
             <div class="mb-3">
-                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"> 
+                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_guia_extemp" data-bs-toggle="modal" data-bs-target="#modal_registro_guia" mes="{{$mes}}" year="{{$year}}"> 
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
-                    <span>Registrar guía</span>
+                    <span>Aperturar</span>
                 </button>
             </div>
         </div>
@@ -31,13 +31,14 @@
                     <th scope="col">Cantidad Transportada</th>
                     <th scope="col">Destinatario</th>
                     <th scope="col">Destino</th>
+                    <th scope="col">Fecha</th>
                     <th scope="col">Nro. Factura</th>
                     <th scope="col">¿Anulada?</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
                 <tbody>
-                    @foreach ($registros as $index => $registro)
+                @foreach ($registros as $index => $registro)
                         <tr role="button">
                             <td>{{$registro->nro_guia}}</td>
                             <td class="fw-bold">{{$registro->nombre}}</td>
@@ -45,6 +46,7 @@
                             <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
                             <td>{{$registro->razon_destinatario}}</td>
                             <td>{{$registro->destino}}</td>
+                            <td>{{$registro->fecha}}</td>
                             @php
                                 if($registro->nro_factura == ''){
                             @endphp       
@@ -75,7 +77,7 @@
                                     @php
                                         }
                                     @endphp
-                                    <span class="badge editar_guia" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia" nro_guia="{{$registro->nro_guia}}">
+                                    <span class="badge editar_guia" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_editar_guia" nro_guia="{{$registro->nro_guia}}" mes="{{$mes}}" year="{{$year}}"> 
                                         <i class='bx bx-pencil fs-6'></i>
                                     </span>
                                 </div> 
@@ -99,14 +101,14 @@
     
     
 <!--****************** MODALES **************************-->
-    <!-- ********* NUEVA GUIA ******** -->
-    <div class="modal" id="modal_registro_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <!-- ********* REGISTRO DE NUEVA GUIA EXTEMPORANEA ******** -->
+   <div class="modal" id="modal_registro_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel" style="color: #0072ff">
+                    <h1 class="modal-title fs-5 d-flex align-items-center text-navy" id="exampleModalLabel">
                         <i class='bx bx-barcode fs-1 me-2'></i>
-                        Registro de Guía
+                        Registro de Guía Extemporanea
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -117,122 +119,25 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    <!-- ********* ELIMINAR GUIA ******** -->
-    <div class="modal" id="modal_delete_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Eliminar Guía</h1>
-                    </div>
-                    
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body" style="font-size:14px;">
-                    
-                    <p class="text-center">¿Desea eliminar la guía registrada con los siguientes datos?</p>
 
-                    <table class="table">
-                        <tr>
-                            <th>Nro. Guía</th>
-                            <td>A00000125</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha</th>
-                            <td class="text-muted">12/02/2024</td>
-                        </tr>
-                        <tr>
-                            <th>Cantera</th>
-                            <td>Agua Viva II</td>
-                        </tr>
-
-                        <tr>
-                            <th>Razon social del destinatario</th>
-                            <td>Ferrepontal, C.A.</td>
-                        </tr>                    
-                        <tr>
-                            <th>Tipo de mineral</th>
-                            <td>Gravilla</td>
-                        </tr>  
-                        <tr>
-                            <th>Cantidad</th>
-                            <td>2,5 Toneladas</td>
-                        </tr>
-                        <tr>
-                            <th>Tipo de guía</th>
-                            <td>Salida</td>
-                        </tr>
-                        <tr>
-                            <th>Nro. Factura</th>
-                            <td>125</td>
-                        </tr>
-                        <tr>
-                            <th>Anulada</th>
-                            <td>No</td>
-                        </tr>
-                    </table>
-
-                    
-
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger btn-sm">Eliminar</button>
-                    </div> 
-
-
-                 </div>  <!-- cierra modal-body -->
-            </div>  <!-- cierra modal-content -->
-        </div>  <!-- cierra modal-dialog -->
-    </div>
-
-    <!-- ********* EDITAR GUIA ******** -->
-    <div class="modal" id="modal_editar_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <!-- ********* EDITAR GUIA ******** -->
+      <div class="modal" id="modal_editar_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel" style="color: #0072ff">
+                    <h1 class="modal-title fs-5 d-flex align-items-center text-navy" id="exampleModalLabel">
                         <i class='bx bx-barcode fs-1 me-2'></i>
-                        Editar Guía
+                        Editar Guía Extemporanea
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="font-size:14px;" id="content_editar_guia">
                    
-                
-
-
 
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
-
-
-    <!-- ********* VER EL REGISTRO DE LA GUÍA ******** -->
-    <div class="modal" id="modal_content_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                
-                    <div class="row mx-3 mt-3 mb-1 d-flex align-items-center">
-                        <div class="col-3 d-flex justify-content-center">
-                            <img src="{{asset('assets/aragua.png')}}" alt="" width="100px">
-                        </div>
-                        <div class="col-6 d-flex flex-column text-center pt-4">
-                            <span class="fs-6 fw-bold">GUÍA DE CIRCULACIÓN DE MINERALES NO METÁLICOS</span>
-                            <span>GOBIERNO BOLIVARIANO DEL ESTADO ARAGUA SERVICIO TRIBUTARIO DE ARAGUA (SETA)</span>
-                        </div>
-                        <div class="col-3 d-flex justify-content-center">
-                            <img src="{{asset('assets/logo-seta-2.png')}}" alt="" class="mt-3 ms-2" width="110px">
-                        </div>
-                    </div>
-                <div class="modal-body mx-4" style="font-size:14px" id="content_info_guia">
-                    
-                </div>
-            </div>  <!-- cierra modal-content -->
-        </div>  <!-- cierra modal-dialog -->
-    </div>
-
 
 <!--************************************************-->
 
@@ -295,14 +200,16 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-
             ///////MODAL - HTML: REGISTRAR GUIA 
-            $(document).on('click','#registrar_new_guia', function(e) { 
+            $(document).on('click','#new_guia_extemp', function(e) { 
                 e.preventDefault(e); 
+                var mes = $(this).attr('mes');
+                var year = $(this).attr('year');
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("registro_guia.modal_registro") }}',
+                    url: '{{route("detalle_libro.modal_registro") }}',
+                    data: {mes:mes,year:year},
                     success: function(response) {
                         // alert(response);
                         // console.log(response);               
@@ -408,66 +315,6 @@
                 });
             });
 
-            //////SELECION DE ANULADA: SI 
-            $(document).on('change','#anulado_si', function(e) { 
-                e.preventDefault(e); 
-                $("#motivo_anulada").attr('disabled', false);
-                
-            });
-             ////SELECION DE ANULADA: NO
-            $(document).on('change','#anulado_no', function(e) { 
-                e.preventDefault(e); 
-                $("#motivo_anulada").attr('disabled', true);
-                $("#motivo_anulada").val("");
-                
-            });
-
-            //////ELIMINAR 
-            $(document).on('click','.delete_guia', function(e) { 
-                e.preventDefault(e); 
-                var guia = $(this).attr('nro_guia');
-                // alert(guia);
-                if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA GUÍA NRO.: " + guia + "?")) {
-                    $.ajax({
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        type: 'POST',
-                        url: '{{route("registro_guia.destroy") }}',
-                        data: {guia:guia},
-                        success: function(response) {
-                            // alert(response);
-                            if (response.success){
-                                alert("GUÍA ELIMINADA EXITOSAMENTE");
-                                window.location.href = "{{ route('registro_guia')}}";
-                            } else{
-                                alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA GUÍA");
-                            }      
-                        },
-                        error: function() {
-                        }
-                    });
-                }else{
-                } 
-            });
-
-            ///////MODAL - HTML: EDITAR GUIA 
-            $(document).on('click','.editar_guia', function(e) { 
-                e.preventDefault(e); 
-                var guia = $(this).attr('nro_guia');
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("registro_guia.editar") }}',
-                    data: {guia:guia},
-                    success: function(response) {
-                        // alert(response);
-                        // console.log(response);               
-                        $('#content_editar_guia').html(response);
-                    },
-                    error: function() {
-                    }
-                });
-            });
-
             /////////SELECT MUNICIPIO Y PARROQUIA
             $(document).on('change','#municipio', function(e) {
                 var municipio = $(this).val();
@@ -566,35 +413,83 @@
 
             }); 
 
-            ////////////////////MODAL: INFO GUIA
-            $(document).on('click','.info_guia', function(e) { 
+            //////SELECION DE ANULADA: SI 
+            $(document).on('change','#anulado_si', function(e) { 
+                e.preventDefault(e); 
+                $("#motivo_anulada").attr('disabled', false);
+                
+            });
+            ////SELECION DE ANULADA: NO
+            $(document).on('change','#anulado_no', function(e) { 
+                e.preventDefault(e); 
+                $("#motivo_anulada").attr('disabled', true);
+                $("#motivo_anulada").val("");
+                
+            });
+
+
+             ///////MODAL - HTML: EDITAR GUIA 
+             $(document).on('click','.editar_guia', function(e) { 
                 e.preventDefault(e); 
                 var guia = $(this).attr('nro_guia');
+                var mes = $(this).attr('mes');
+                var year = $(this).attr('year');
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
-                    url: '{{route("correlativo.guia") }}',
-                    data: {guia:guia},
-                    success: function(response) {           
-                        $('#modal_content_guia').modal('show');
-
-                        $('#content_info_guia').html(response);
-
+                    url: '{{route("detalle_libro.editar") }}',
+                    data: {guia:guia,mes:mes,year:year},
+                    success: function(response) {
+                        // alert(response);
+                        // console.log(response);               
+                        $('#content_editar_guia').html(response);
                     },
                     error: function() {
                     }
                 });
             });
 
-        });
+             //////ELIMINAR 
+             $(document).on('click','.delete_guia', function(e) { 
+                e.preventDefault(e); 
+                var guia = $(this).attr('nro_guia');
+                // alert(guia);
+                if (confirm("¿ESTA SEGURO QUE DESEA ELIMINAR LA GUÍA NRO.: " + guia + "?")) {
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("registro_guia.destroy") }}',
+                        data: {guia:guia},
+                        success: function(response) {
+                            // alert(response);
+                            if (response.success){
+                                alert("GUÍA ELIMINADA EXITOSAMENTE");
+                                window.location.reload();
+                            } else{
+                                alert("SE HA PRODUCIDO UN ERROR AL ELIMINAR LA GUÍA");
+                            }      
+                        },
+                        error: function() {
+                        }
+                    });
+                }else{
+                } 
+            });
+            
 
+           
+
+        });
 
         function registrarGuia(){
             var formData = new FormData(document.getElementById("form_registrar_guia"));
             console.log("alo");
+            var mes = $('#new_guia_extemp').attr('mes');
+            var year = $('#new_guia_extemp').attr('year');
+            
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("registro_guia.store") }}',
+                url:'{{route("detalle_libro.store") }}',
                 type:'POST',
                 contentType:false,
                 cache:false,
@@ -607,7 +502,7 @@
                         alert('REGISTRO DE GUÍA EXITOSO');
                         $('#modal_registro_guia').modal('hide');
                         $('#form_registrar_guia')[0].reset();
-                        window.location.href = "{{ route('registro_guia')}}";
+                        window.location.reload();
                     } else {
                         alert('Ha ocurrido un error al registrar la guía.');
                     } 
@@ -617,11 +512,12 @@
             });
         }
 
+
         function editarGuia(){
             var formData = new FormData(document.getElementById("form_editar_guia"));
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("registro_guia.editar_guia") }}',
+                url:'{{route("detalle_libro.editar_guia") }}',
                 type:'POST',
                 contentType:false,
                 cache:false,
@@ -633,7 +529,7 @@
                     if (response.success) {
                         alert('LA GUÍA SE HA EDITADO EXITOSAMENTE');
                         $('#modal_editar_guia').modal('hide');
-                        window.location.href = "{{ route('registro_guia')}}";
+                        window.location.reload();
                     } else {
                         alert('Ha ocurrido un error al editar la guía.');
                     } 
@@ -642,6 +538,10 @@
                 }
             });
         }
+
+
+
+       
 
         
        

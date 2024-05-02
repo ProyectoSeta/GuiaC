@@ -17,27 +17,37 @@
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
                 <thead class="border-light-subtle">
-                    <!-- <th>#</th> -->
-                    <th>Cantera</th>
-                    <th>Contribuyente</th>
-                    <th>R.I.F.</th>
-                    <th>Guías a Solicitar por Período</th>
-                    <th>Inicio</th>
-                    <th>Fin</th> 
-                    <th>Total de Guías solicitadas</th>
-                    <!-- <th>Opciones</th> -->
+                    <tr>
+                        <th colspan="2"></th>
+                        <th colspan="2" class="text-secondary">Período</th>
+                        <th colspan="3">Guías</th>
+                        <th colspan="1"></th>
+                    </tr>
+                    <tr>
+                        <th>Cantera</th>
+                        <!-- <th>Contribuyente</th> -->
+                        <th>R.I.F.</th>
+                        <th class="text-secondary">Inicio</th>
+                        <th class="text-secondary">Fin</th>
+                        <th>Límite</th>
+                        <th>Solicitadas</th>
+                        <th>Extención</th>
+                        <th>Opciones</th>
+                    </tr>                    
                 </thead>
                 <tbody id="list_canteras"> 
                     @foreach ($limites as $limite)
                         <tr>
                             <td class="fw-bold">{{ $limite->nombre }}</td>
-                            <td>{{ $limite->razon_social }}</td>
+                            <!-- <td>{{ $limite->razon_social }}</td> -->
                             <td>
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $limite->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$limite->rif_condicion}}-{{$limite->rif_nro}}</a>
                             </td>
+                            <td class="text-secondary">{{ $limite->inicio_periodo }}</td>
+                            <td class="text-secondary">{{ $limite->fin_periodo }}</td>
+
                             <td class="fw-bold">{{ $limite->total_guias_periodo }} Guías</td>
-                            <td class="text-muted">{{ $limite->inicio_periodo }}</td>
-                            <td class="text-muted">{{ $limite->fin_periodo }}</td>
+                            
                             @php
                                 if($limite->total_guias_solicitadas_periodo == $limite->total_guias_periodo){
                             @endphp
@@ -49,7 +59,12 @@
                             @php     
                                 }
                             @endphp
-                            
+                            <td>
+                                <span class="text-secondary fst-italic">Sin extención</span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" style="font-size:13px">Extender límite</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody> 

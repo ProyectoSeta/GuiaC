@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use Illuminate\Http\Request;
 
 class LibrosController extends Controller
@@ -11,8 +11,19 @@ class LibrosController extends Controller
      */
     public function index()
     {
-        return view('libros');
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
+
+        $libros = DB::table('libros')->join('clasificacions', 'libros.estado', '=', 'clasificacions.id_clasificacion')
+                                    ->select('libros.*', 'clasificacions.nombre')
+                                    ->where('libros.id_sujeto','=',$id_sp)->get();
+        
+
+        return view('libros', compact('libros'));
     }
+
+   
 
     /**
      * Show the form for creating a new resource.
