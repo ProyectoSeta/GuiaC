@@ -22,6 +22,21 @@ class ClasificacionesSeeder extends Seeder
         DB::table('clasificacions')->insert([
             'nombre' => 'Extemporanea',
         ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Verificando',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Verificado',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Negado',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Declaración de Libro',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Declaración de Guías Extemporaneas',
+        ]);
     
     }
 }

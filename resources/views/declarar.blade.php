@@ -16,33 +16,58 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Declarar Guías</h2>
             <div class="mb-3">
-                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm btn_declarar fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_declarar_guias">
-                    <i class='bx bx-pen fw-bold fs-5 pe-2'></i>
-                    <span>Declarar</span>
-                </button>
+                
             </div>
         </div>
 
-        <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
-                <thead>
-                    <th>#</th>
-                    <th>Fecha emisión</th>
-                    <th>Mes de pago</th>
-                    <th>Guías utilizadas</th>
-                    <th>UCD</th>
-                    <th>Monto (Bs)</th>
-                    <th>Referencia</th> 
-                    <th>Estado</th> 
-                </thead>
-                <tbody id="list_canteras" class="border-light-subtle"> 
-                
-                   
-                </tbody> 
-                
-            </table>
-            
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="table-responsive" style="font-size:14px">
+                    <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+                        <thead>
+                            <th></th>
+                            <th>Libro</th>
+                            <th>Opción</th>
+                        </thead>
+                        <tbody id="list_canteras" class="border-light-subtle"> 
+                            @foreach ($libros as $libro)
+                                <tr>
+                                    <th>#</th>
+                                    <th>
+                                        @php
+                                            $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+                                            $mes_bd = $libro->mes;
+                                            $mes_libro = $meses[$mes_bd];
+                                        @endphp
+                                        <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}">{{$mes_libro}} {{$libro->year}}</a>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-primary btn-sm px-3 fw-bold rounded-4 btn_declarar" data-bs-toggle="modal" data-bs-target="#modal_declarar_libro" id_libro="{{$libro->id_libro}}" mes="{{$libro->mes}}" year="{{$libro->year}}">Declarar</button>
+                                    </th>
+                                </tr>
+                            @endforeach
+                            
+                        </tbody> 
+                        
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="card mb-3">
+                    <img src="{{asset('assets/fondo.jpg')}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        
+
     </div>
     
     
@@ -53,7 +78,7 @@
     
 <!--****************** MODALES **************************-->
     <!-- *********  ******** -->
-    <div class="modal" id="modal_declarar_guias" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal" id="modal_declarar_libro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
@@ -63,9 +88,7 @@
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:15px;" id="content_modal_declarar">
-                
-                   
-
+                    
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -132,25 +155,25 @@
        ///////MODAL: INFO DECLARAR
        $(document).on('click','.btn_declarar', function(e) { 
             e.preventDefault(e); 
+            var mes = $(this).attr('mes');
+            var year = $(this).attr('year');
+            var libro = $(this).attr('id_libro');
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 type: 'POST',
                 url: '{{route("declarar.info_declarar") }}',
+                data: {mes:mes,year:year,libro:libro},
                 success: function(response) {    
                     console.log(response);  
-                    // if (response.success) {
-                    //     $('#content_modal_declarar').html(response.html);
+                    $('#content_modal_declarar').html(response.html);
 
-                    //     if (response.actividad == 'no') {
-                    //         $("#actividad").removeClass('d-none');
-                    //         $("#referencia").attr('disabled', true);
-                    //         $(".btn_form_declarar").attr('disabled', false);
-                    //     }else{
-                    //         $("#actividad").addClass('d-none');
-                    //     }
-                    // } else {
-                    //     alert(response.nota);
-                    // }  
+                    if (response.actividad == 'no') {
+                        $("#actividad").removeClass('d-none');
+                        $("#referencia").attr('disabled', true);
+                        $(".btn_form_declarar").attr('disabled', false);
+                    }else{
+                        $("#actividad").addClass('d-none');
+                    }
                     
                 },
                 error: function() {
@@ -178,14 +201,14 @@
                 async: true,
                 data: formData,
                 success: function(response){
-                    alert(response);
+                    // alert(response);
                     console.log(response);
-                    if (response.success) {
-                        alert('DECLARACIÓN REALIZADA CORRECTAMENTE');
-                        window.location.href = "{{ route('declarar')}}";
-                    } else {
-                        alert('Ha ocurrido un error al declarar las guías.');
-                    }    
+                    // if (response.success) {
+                    //     alert('DECLARACIÓN REALIZADA CORRECTAMENTE');
+                    //     window.location.href = "{{ route('declarar')}}";
+                    // } else {
+                    //     alert('Ha ocurrido un error al declarar las guías.');
+                    // }    
 
                 },
                 error: function(error){

@@ -343,8 +343,23 @@ return [
         ],
         ['header' => 'Declaración'],
         [
-            'text' => 'Declarar Guías',
-            'url'  => '/declarar',
+            'text' => 'Declarar',
+            'submenu' => [
+                        [
+                            'text' => 'Libros',
+                            'url'  => '/declarar',
+                            'icon' => 'pe-5',
+                        ],
+                        [
+                            'text' => 'Guias Extemp.',
+                            'url'  => '/',
+                            'icon' => 'pe-5',
+                        ],
+            ],
+        ],
+        [
+            'text' => 'Historial',
+            'url'  => '/',
             // 'icon' => 'fas fa-file-circle-plus',
         ],
         ['header' => 'Control de Solicitudes'],

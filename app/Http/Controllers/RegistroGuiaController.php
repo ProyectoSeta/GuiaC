@@ -17,21 +17,25 @@ class RegistroGuiaController extends Controller
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
-        $registros = DB::table('control_guias')
-                                ->join('canteras', 'control_guias.id_cantera', '=', 'canteras.id_cantera')
-                                ->join('minerals', 'control_guias.id_mineral', '=', 'minerals.id_mineral')
-                                ->select('control_guias.*', 'canteras.nombre', 'minerals.mineral')
-                                ->where('control_guias.id_sujeto', $id_sp)->get();
-
-
         $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
         $hoy = date('d');
         $mes = date('n');
         $year = date('Y');
         $fecha = '';
 
-        if ($hoy >= 10) {
+        $mes_declarando = '';
+        $year_declarando = '';
+
+        $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
+        if ($cierre) {
+            $dia_cierre = $cierre->fecha;
+        }
+
+        if ($hoy >= $dia_cierre) {
             $fecha = $meses[$mes].' '.$year;
+            $mes_declarando = $mes;
+            $year_declarando = $year;
+
         }else{
             $mes_anterior = $mes-1;
             if ($mes_anterior == 0) {
@@ -39,7 +43,22 @@ class RegistroGuiaController extends Controller
                 $year = $year - 1;
             }
             $fecha = $meses[$mes_anterior].' '.$year;
+
+            $mes_declarando = $mes_anterior;
+            $year_declarando = $year;
         }
+
+
+        $registros = DB::table('control_guias')
+                                ->join('canteras', 'control_guias.id_cantera', '=', 'canteras.id_cantera')
+                                ->join('minerals', 'control_guias.id_mineral', '=', 'minerals.id_mineral')
+                                ->select('control_guias.*', 'canteras.nombre', 'minerals.mineral')
+                                ->where('control_guias.id_sujeto', $id_sp)
+                                ->whereMonth('control_guias.fecha', $mes_declarando)
+                                ->whereYear('control_guias.fecha', $year_declarando)
+                                ->get();
+
+
 
         return view('registro_guia', compact('registros','fecha'));
     }
@@ -687,7 +706,8 @@ class RegistroGuiaController extends Controller
                                                     'hora_salida' => $hora_salida,
                                                     'anulada' => $anulada,
                                                     'motivo' => $motivo,
-                                                    'estado' => null
+                                                    'estado' => null,
+                                                    'declaracion' => 2
                                                     ]);
 
         if ($insert) {

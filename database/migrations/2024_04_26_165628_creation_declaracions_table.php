@@ -22,12 +22,17 @@ return new class extends Migration
             $table->integer('nro_guias_declaradas');
             $table->integer('total_ucd');
             $table->float('monto_total');
-            $table->float('id_ucd');
+            $table->integer('id_ucd')->unsigned();
+            $table->foreign('id_ucd')->references('id')->on('ucds')->onDelete('cascade');
             $table->string('referencia');
-            // $table->enum('nota',['Pago a tiempo','Pago a destiempo']);
-            // $table->date('fecha_emision');
-            $table->enum('estado',['Verificando','Verificada','Negada']);
-            // $table->string('observacion');
+            $table->date('fecha');
+
+            $table->integer('estado')->unsigned();
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); /////VERIFICANDO, VERIFICADO, NEGADO
+             
+            $table->integer('tipo')->unsigned();
+            $table->foreign('tipo')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');  //////DECLARACIÓN DE LIBRO, DECLARACION DE GUÍAS EXTEMPORANEAS
+            
 
             $table->timestamps();
         });

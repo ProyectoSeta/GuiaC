@@ -55,7 +55,10 @@ return new class extends Migration
             $table->string('motivo')->nullable();
 
             $table->integer('estado')->nullable()->unsigned();
-            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); ///////NULL, EXTEMPORANEA
+
+            $table->integer('declaracion')->unsigned();
+            $table->foreign('declaracion')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); /////SIN DECLARAR, DECLARADO
 
             $table->timestamps();
         });

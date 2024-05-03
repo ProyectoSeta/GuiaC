@@ -533,6 +533,7 @@ class DetalleLibroController extends Controller
                                                     'anulada' => $anulada,
                                                     'motivo' => $motivo,
                                                     'estado' => 3,
+                                                    'declaracion' => 2
                                                     ]);
 
         if ($insert) {

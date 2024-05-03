@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ucds', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->float('valor');
             $table->string('moneda'); // a cambiar por un enum
             $table->date('fecha');
