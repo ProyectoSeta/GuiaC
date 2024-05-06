@@ -608,7 +608,7 @@ class RegistroGuiaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request){
-
+        
         $user = auth()->id();
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
@@ -649,6 +649,8 @@ class RegistroGuiaController extends Controller
         $mes_declarado = $request->post('mes_declarado');
         $year_declarado = $request->post('year_declarado');
         $id_libro = '';
+
+        
         /////consulta de libro
         $c = DB::table('libros')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)
                                                                 ->where('mes','=',$mes_declarado)
@@ -656,7 +658,7 @@ class RegistroGuiaController extends Controller
         if ($c) {
             if ($c->total == 0) {
                 ////no hay libro para este mes
-                $new_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 'mes' => $mes_declarado, 'year' => $year_declarado]);
+                $new_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 'mes' => $mes_declarado, 'year' => $year_declarado, 'estado' => 2]);
                 if ($new_libro) {
                     $id_libro = DB::table('libros')->max('id_libro');
                 }

@@ -13,16 +13,16 @@
 @section('content')
     
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Declarar Guías</h2>
-            <div class="mb-3">
-                
-            </div>
-        </div>
-
+        
         <div class="row">
+            <!-- /////////////  DECLARACIÓN DE LIBROS -->
             <div class="col-sm-8">
-                <div class="table-responsive" style="font-size:14px">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-3">Declaración de <span class="text-navy">Libros</span></h3>
+                    <div class="mb-3">
+                    </div>
+                </div>
+                <div class="table-responsive mb-3" style="font-size:14px">
                     <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
                         <thead>
                             <th></th>
@@ -30,7 +30,7 @@
                             <th>Opción</th>
                         </thead>
                         <tbody id="list_canteras" class="border-light-subtle"> 
-                            @foreach ($libros as $libro)
+                            @foreach ($declaracion_libros as $libro)
                                 <tr>
                                     <th>#</th>
                                     <th>
@@ -52,8 +52,59 @@
                     </table>
                 </div>
             </div>
+            <!-- /////////////   CARD INFO: DECLARACIÓN DE LIBROS -->
+            <div class="col-sm-4">
+                <div class="card mb-3">
+                    <img src="{{asset('assets/Libros.png')}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- /////////////////////////////////////////////////////////////////////////////// -->
 
+        <div class="row">
+            <!-- ///////////// DECLARACION DE GUIAS EXTEMPORANEAS -->
+            <div class="col-sm-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-3">Declaración de <span class="text-navy">Guías Extemporaneas</span></h3>
+                    <div class="mb-3">
+                    </div>
+                </div>
+                <div class="table-responsive mb-3" style="font-size:14px">
+                    <table id="example2" class="table text-center border-light-subtle" style="font-size:14px">
+                        <thead>
+                            <th></th>
+                            <th>Libro</th>
+                            <th>Opción</th>
+                        </thead>
+                        <tbody id="list_canteras" class="border-light-subtle"> 
+                            @foreach ($declaracion_guias as $libro)
+                                <tr>
+                                    <th>#</th>
+                                    <th>
+                                        @php
+                                            $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+                                            $mes_bd = $libro->mes;
+                                            $mes_libro = $meses[$mes_bd];
+                                        @endphp
+                                        <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}">{{$mes_libro}} {{$libro->year}}</a>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-primary btn-sm px-3 fw-bold rounded-4 btn_declarar_extemp" data-bs-toggle="modal" data-bs-target="#modal_declarar_libro" id_libro="{{$libro->id_libro}}" mes="{{$libro->mes}}" year="{{$libro->year}}">Declarar</button>
+                                    </th>
+                                </tr>
+                            @endforeach
+                        </tbody> 
+                        
+                    </table>
+                </div>
+            </div>
+            <!-- ////////////  CARD INFO: DECLARACIÓN DE GUIAS EXTEMPORANEAS -->
             <div class="col-sm-4">
                 <div class="card mb-3">
                     <img src="{{asset('assets/fondo.jpg')}}" class="card-img-top" alt="...">
@@ -84,7 +135,7 @@
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
                         <!-- <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i> -->
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">Declaración - Guías de Circulación</h1>
+                        <h1 class="modal-title fs-5" id="title-modal-declarar" style="color: #0072ff"></h1>
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:15px;" id="content_modal_declarar">
@@ -147,6 +198,23 @@
                 }
             );
 
+            $('#example2').DataTable(
+                {
+                    "language": {
+                        "lengthMenu": " Mostrar  _MENU_  Registros por página",
+                        "zeroRecords": "No se encontraron registros",
+                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encuentran Registros",
+                        "infoFiltered": "(filtered from _MAX_ total records)",
+                        'search':"Buscar",
+                        'paginate':{
+                            'next':'Siguiente',
+                            'previous':'Anterior'
+                        }
+                    }
+                }
+            );
+
         });
     </script>
 
@@ -164,7 +232,38 @@
                 url: '{{route("declarar.info_declarar") }}',
                 data: {mes:mes,year:year,libro:libro},
                 success: function(response) {    
+                    console.log(response); 
+                    $('#title-modal-declarar').html('Declarar Libro');
+                    $('#content_modal_declarar').html(response.html);
+
+                    if (response.actividad == 'no') {
+                        $("#actividad").removeClass('d-none');
+                        $("#referencia").attr('disabled', true);
+                        $(".btn_form_declarar").attr('disabled', false);
+                    }else{
+                        $("#actividad").addClass('d-none');
+                    }
+                    
+                },
+                error: function() {
+                }
+            });
+        });
+
+        ///////MODAL: INFO DECLARAR EXTEMPORANEAS
+       $(document).on('click','.btn_declarar_extemp', function(e) { 
+            e.preventDefault(e); 
+            var mes = $(this).attr('mes');
+            var year = $(this).attr('year');
+            var libro = $(this).attr('id_libro');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("declarar.info_declarar_extemporaneas") }}',
+                data: {mes:mes,year:year,libro:libro},
+                success: function(response) {    
                     console.log(response);  
+                    $('#title-modal-declarar').html('Declarar Guías Extemporaneas');
                     $('#content_modal_declarar').html(response.html);
 
                     if (response.actividad == 'no') {

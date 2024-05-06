@@ -344,18 +344,8 @@ return [
         ['header' => 'Declaración'],
         [
             'text' => 'Declarar',
-            'submenu' => [
-                        [
-                            'text' => 'Libros',
-                            'url'  => '/declarar',
-                            'icon' => 'pe-5',
-                        ],
-                        [
-                            'text' => 'Guias Extemp.',
-                            'url'  => '/',
-                            'icon' => 'pe-5',
-                        ],
-            ],
+            'url'  => '/declarar',
+            // 'icon' => 'fas fa-layer-group',
         ],
         [
             'text' => 'Historial',
