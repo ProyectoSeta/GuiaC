@@ -55,7 +55,7 @@
             <!-- /////////////   CARD INFO: DECLARACIÓN DE LIBROS -->
             <div class="col-sm-4">
                 <div class="card mb-3">
-                    <img src="{{asset('assets/Libros.png')}}" class="card-img-top" alt="...">
+                    <img src="{{asset('assets/3.png')}}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>
                         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
@@ -107,11 +107,14 @@
             <!-- ////////////  CARD INFO: DECLARACIÓN DE GUIAS EXTEMPORANEAS -->
             <div class="col-sm-4">
                 <div class="card mb-3">
-                    <img src="{{asset('assets/fondo.jpg')}}" class="card-img-top" alt="...">
+                    <img src="{{asset('assets/4.png')}}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        <!-- <h5 class="card-title">Card title</h5> -->
+                        <p class="card-text text-justify" style="font-size:14px">Las Guías Extemporáneas ingresadas en un Libro previamente Declarado, 
+                            deberán ser declaradas en la <span class="fw-bold">"Declaración de guías extemporáneas"</span>. Por lo tanto, en el 
+                            periodo señalado solo aparecerán las Guías Extemporáneas, pendientes por Declarar, 
+                            ingresadas en la Apertura del Libro. </p>
+                        <p class="card-text fst-italic text-secondary"><small class="text-body-secondary">Declaración de Guías Extemporáneas</small></p>
                     </div>
                 </div>
             </div>
@@ -233,7 +236,7 @@
                 data: {mes:mes,year:year,libro:libro},
                 success: function(response) {    
                     console.log(response); 
-                    $('#title-modal-declarar').html('Declarar Libro');
+                    $('#title-modal-declarar').html('Declarar Libro de Control');
                     $('#content_modal_declarar').html(response.html);
 
                     if (response.actividad == 'no') {
@@ -288,11 +291,11 @@
 
     });
 
-    function declararGuias(){
-        var formData = new FormData(document.getElementById("form_declarar_guias"));
+    function declararLibros(){
+        var formData = new FormData(document.getElementById("form_declarar_libros"));
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("declarar.store") }}',
+                url:'{{route("declarar.declarar_libros") }}',
                 type:'POST',
                 contentType:false,
                 cache:false,
@@ -302,12 +305,41 @@
                 success: function(response){
                     // alert(response);
                     console.log(response);
-                    // if (response.success) {
-                    //     alert('DECLARACIÓN REALIZADA CORRECTAMENTE');
-                    //     window.location.href = "{{ route('declarar')}}";
-                    // } else {
-                    //     alert('Ha ocurrido un error al declarar las guías.');
-                    // }    
+                    if (response.success) {
+                        alert('DECLARACIÓN DE LIBRO REALIZADA CORRECTAMENTE');
+                        window.location.href = "{{ route('declarar')}}";
+                    } else {
+                        alert('Ha ocurrido un error al declarar el Libro.');
+                    }    
+
+                },
+                error: function(error){
+                    
+                }
+            });
+    }
+
+
+    function declararGuias(){
+        var formData = new FormData(document.getElementById("form_declarar_guias"));
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("declarar.declarar_guias") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    // alert(response);
+                    console.log(response);
+                    if (response.success) {
+                        alert('DECLARACIÓN DE GUÍA EXTEMPORANEA REALIZADA CORRECTAMENTE');
+                        window.location.href = "{{ route('declarar')}}";
+                    } else {
+                        alert('Ha ocurrido un error al declarar el Libro.');
+                    }    
 
                 },
                 error: function(error){

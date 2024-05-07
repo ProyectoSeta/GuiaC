@@ -114,12 +114,12 @@ class DeclararController extends Controller
 
         $html = '<p class="text-secondary-emphasis me-3 ms-3 text-justify" style="font-size:13px"><span class="fw-bold">IMPORTANTE:
                     </span>Estimado contribuyente, <span class="fw-bold">PARA PODER REALIZAR LA DECLARACIÓN</span> deberá haber <span class="fw-bold">REPORTADO</span> previamente en el 
-                    <span class="fw-bold">Libro de Control, TODAS LAS GUÍAS GENERADAS DURANTE EL PERÍODO A DECLARAR</span>. Debido a, 
+                    <span class="fw-bold">LIBRO DE CONTRO, TODAS LAS GUÍAS GENERADAS DURANTE EL PERÍODO A DECLARAR</span>. Debido a, 
                     que si no reporta todas las guías emitidas, incluyendo las que hayan sido anuladas, estaría evadiendo 
                     el deber formal. Lo cual, según la <span class="fst-italic">Gaceta ordinaria N°2679, 2018. Ley Sobre el Régimen, Administración y Aprovechamiento de 
                     Minerales no Metálicos del Estado Aragua, Art. 92.</span> La empresa puede resivir sanciones por el incumplimiento de deberes formales.     
                 </p>
-                <form id="form_declarar_guias" method="post" onsubmit="event.preventDefault(); declararGuias()" enctype="multipart/form-data">
+                <form id="form_declarar_libros" method="post" onsubmit="event.preventDefault(); declararLibros()" enctype="multipart/form-data">
                     <div class="d-flex justify-content-center mx-5 px-5 mb-2">
                         <table class="table" style="font-size:14px;">
                             <tr>
@@ -190,10 +190,19 @@ class DeclararController extends Controller
 
     }
 
+
+
+
+
+
+
+
+
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function declarar_libros(Request $request)
     {
         $user = auth()->id();
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
@@ -201,17 +210,15 @@ class DeclararController extends Controller
  
         $mes_declarar = $request->post('mes_declarar');
         $year_declarar = $request->post('year_declarar');
-        $valor_ucd = $request->post('valor_ucd');
-        $referencia = $request->post('referencia');
+        $id_ucd = $request->post('id_ucd');
         $guias_extemp = $request->post('guias_extemp');
         $guias_emitidas = $request->post('guias_emitidas');
         $total_ucd = $request->post('total_ucd');
         $total_pagar = $request->post('total_pagar');
         $id_libro = $request->post('id_libro');
         
-
-
-
+        $year = date("Y");
+        $mes = date("F");
 
         ///////////CREAR CARPETA PARA REFERENCIAS SI NO EXISTE
         if (!is_dir('../public/assets/declaraciones/'.$year)){   ////no existe la carpeta del año
@@ -225,17 +232,59 @@ class DeclararController extends Controller
             }
         }
 
+        if ($request->hasFile('referencia')){
+            $rand = rand(1000, 9999);
+            $photo         =   $request->file('referencia');
+            $nombreimagen  =   'dclrGuias_'.$id_libro.'_'.$rand.'.'.$photo->getClientOriginalExtension();
+            $ruta          =   public_path('assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen);
+            $ruta_n        = 'assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen;
+            if(copy($photo->getRealPath(),$ruta)){
+                $insert = DB::table('declaracions')->insert([
+                                                    'id_sujeto'=>$id_sp,
+                                                    'id_libro' => $id_libro,
+                                                    'year_declarado' => $year_declarar,
+                                                    'mes_declarado' => $mes_declarar,
+                                                    'nro_guias_declaradas' => $guias_emitidas,
+                                                    'total_ucd' => $total_ucd,
+                                                    'monto_total' => $total_pagar,
+                                                    'id_ucd' => $id_ucd,
+                                                    'referencia' => $ruta_n,
+                                                    'estado' => 4,
+                                                    'tipo' => 7,
+                                                    ]);
+                if ($insert) {
+                    $updates = DB::table('control_guias')->where('id_sujeto', '=', $id_sp)
+                                                        ->where('id_libro', '=', $id_libro)
+                                                        ->update(['declaracion' => 1]);
+                    if ($updates) {
+                        $update_2 = DB::table('libros')->where('id_sujeto', '=', $id_sp)
+                                                        ->where('id_libro', '=', $id_libro)
+                                                        ->update(['estado' => 1]);
+                        if ($update_2) {
+                            return response()->json(['success' => true]);
+                        }else{
+                            return response()->json(['success' => false]);
+                        }
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
 
+                }else{
+                    return response()->json(['success' => false]);
+                }                              
 
-
-
-
-
-
-
+            }
+        }else{
+            return response()->json(['success' => false]);
+        }
 
 
     }
+
+
+
+
+
 
     /**
      * Display the specified resource.
@@ -253,27 +302,14 @@ class DeclararController extends Controller
         $extemporaneas = DB::table('control_guias')->selectRaw("count(*) as total")
                                                         ->where('id_sujeto','=',$id_sp)
                                                         ->where('id_libro','=',$idLibro)
-                                                        ->where('estado','=',3)->first();
+                                                        ->where('estado','=',3)
+                                                        ->where('declaracion','=',2)->first();
         if ($extemporaneas) {
             $guias_extemp = $extemporaneas->total;
         }
 
-        $emitidas = DB::table('control_guias')->selectRaw("count(*) as total")
-                                                        ->where('id_sujeto','=',$id_sp)
-                                                        ->where('id_libro','=',$idLibro)->first();
-        if ($emitidas) {
-            $guias_emitidas = $emitidas->total;
-            $actividad = '';
-            if ($guias_emitidas == 0) {
-                //sin actividad economica
-                $actividad = 'no';
-            }else{
-                //con actividad
-                $actividad = 'si';
-            }
-        }
 
-        $total_ucd = $guias_emitidas * 5;
+        $total_ucd = $guias_extemp * 5;
 
         $ucd =  DB::table('ucds')->select('id','valor')->orderBy('id', 'desc')->first();
         if ($ucd){
@@ -286,13 +322,9 @@ class DeclararController extends Controller
         $mes_libro = $meses[$mes];
 
 
-        $html = '<p class="text-secondary-emphasis me-3 ms-3 text-justify" style="font-size:13px"><span class="fw-bold">IMPORTANTE:
-                    </span>Estimado contribuyente, <span class="fw-bold">PARA PODER REALIZAR LA DECLARACIÓN</span> deberá haber <span class="fw-bold">REPORTADO</span> previamente en el 
-                    <span class="fw-bold">Libro de Control, TODAS LAS GUÍAS GENERADAS DURANTE EL PERÍODO A DECLARAR</span>. Debido a, 
-                    que si no reporta todas las guías emitidas, incluyendo las que hayan sido anuladas, estaría evadiendo 
-                    el deber formal. Lo cual, según la <span class="fst-italic">Gaceta ordinaria N°2679, 2018. Ley Sobre el Régimen, Administración y Aprovechamiento de 
-                    Minerales no Metálicos del Estado Aragua, Art. 92.</span> La empresa puede resivir sanciones por el incumplimiento de deberes formales.     
-                </p>
+        $html = '<p class="text-secondary-emphasis me-3 ms-3 text-justify" style="font-size:13px"><span class="fw-bold">IMPORTANTE:</span>
+                    Amigo contribuyente, ANTES DE DECLARAR asegúrese de haber ingresado previamente en la apertura 
+                    del libro de control, TODAS LAS GUÍAS EXTEMPORÁNEAS.</p>
                 <form id="form_declarar_guias" method="post" onsubmit="event.preventDefault(); declararGuias()" enctype="multipart/form-data">
                     <div class="d-flex justify-content-center mx-5 px-5 mb-2">
                         <table class="table" style="font-size:14px;">
@@ -310,12 +342,7 @@ class DeclararController extends Controller
                                     <input type="text" readonly class="form-control-plaintext form-control-sm" name="guias_extemp" id="guias_extemp" value="'.$guias_extemp.'">
                                 </td>
                             </tr>
-                            <tr>
-                                <th>Total de Guías Emitidas</th>
-                                <td>
-                                    <input type="text" readonly class="form-control-plaintext form-control-sm" name="guias_emitidas" id="guias_emitidas" value="'.$guias_emitidas.'">
-                                </td>
-                            </tr>
+                            
                             <tr>
                                 <th>Total UCD</th>
                                 <td>
@@ -360,11 +387,85 @@ class DeclararController extends Controller
                     </div>
                 </form>';
 
-                return response()->json(['html' => $html, 'actividad' => $actividad]);
+                return response()->json(['html' => $html, 'actividad' => 'si']);
 
     }
 
 
+
+
+    public function declarar_guias(Request $request)
+    {
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
+ 
+        $mes_declarar = $request->post('mes_declarar');
+        $year_declarar = $request->post('year_declarar');
+        $id_ucd = $request->post('id_ucd');
+        $guias_extemp = $request->post('guias_extemp');
+        $total_ucd = $request->post('total_ucd');
+        $total_pagar = $request->post('total_pagar');
+        $id_libro = $request->post('id_libro');
+        
+        $year = date("Y");
+        $mes = date("F");
+
+        ///////////CREAR CARPETA PARA REFERENCIAS SI NO EXISTE
+        if (!is_dir('../public/assets/declaraciones/'.$year)){   ////no existe la carpeta del año
+            if(mkdir('../public/assets/declaraciones/'.$year, 0777)){
+                mkdir('../public/assets/declaraciones/'.$year.'/'.$mes, 0777);
+            }
+        }
+        else{   /////si existe la carpeta del año
+            if (!is_dir('../public/assets/declaraciones/'.$year.'/'.$mes)) {
+                mkdir('../public/assets/declaraciones/'.$year.'/'.$mes, 0777);
+            }
+        }
+
+        if ($request->hasFile('referencia')){
+            $rand = rand(1000, 9999);
+            $photo         =   $request->file('referencia');
+            $nombreimagen  =   'dclrGuias_'.$id_libro.'_'.$rand.'.'.$photo->getClientOriginalExtension();
+            $ruta          =   public_path('assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen);
+            $ruta_n        = 'assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen;
+            if(copy($photo->getRealPath(),$ruta)){
+                $insert = DB::table('declaracions')->insert([
+                                                    'id_sujeto'=>$id_sp,
+                                                    'id_libro' => $id_libro,
+                                                    'year_declarado' => $year_declarar,
+                                                    'mes_declarado' => $mes_declarar,
+                                                    'nro_guias_declaradas' => $guias_extemp,
+                                                    'total_ucd' => $total_ucd,
+                                                    'monto_total' => $total_pagar,
+                                                    'id_ucd' => $id_ucd,
+                                                    'referencia' => $ruta_n,
+                                                    'estado' => 4,
+                                                    'tipo' => 8,
+                                                    ]);
+                if ($insert) {
+                    $updates = DB::table('control_guias')->where('id_sujeto', '=', $id_sp)
+                                                        ->where('id_libro', '=', $id_libro)
+                                                        ->where('estado', '=', 3)
+                                                        ->update(['declaracion' => 1]);
+                    if ($updates) {
+                        return response()->json(['success' => true]);
+                       
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
+
+                }else{
+                    return response()->json(['success' => false]);
+                }                              
+
+            }
+        }else{
+            return response()->json(['success' => false]);
+        }
+
+
+    }
 
 
 

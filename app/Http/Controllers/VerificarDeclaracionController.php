@@ -1,0 +1,164 @@
+<?php
+
+namespace App\Http\Controllers;
+use DB;
+use Illuminate\Http\Request;
+
+class VerificarDeclaracionController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $declaraciones = DB::table('declaracions')
+                                ->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                ->join('clasificacions', 'declaracions.tipo', '=', 'clasificacions.id_clasificacion')
+                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre')
+                                ->where('declaracions.estado', 4)
+                                ->get();
+
+
+        return view('verificar_declaracion', compact('declaraciones'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function info(Request $request)
+    {
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
+
+        $id_declaracion = $request->post('declaracion');
+        $declaracion = DB::table('declaracions')
+                                ->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                ->join('clasificacions', 'declaracions.tipo', '=', 'clasificacions.id_clasificacion')
+                                ->join('ucds', 'declaracions.id_ucd', '=', 'ucds.id')
+                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre', 'ucds.valor', 'ucds.moneda')
+                                ->where('declaracions.id_declaracion', $id_declaracion)
+                                ->first();
+        if ($declaracion) {
+            $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+            $mes_bd = $declaracion->mes_declarado;
+            $mes_libro = $meses[$mes_bd];
+
+            $format_monto = number_format($declaracion->monto_total, 2);
+
+            $html = '<h6 class="text-muted text-center" style="font-size:14px;">Datos de la Declaración</h6>
+            <div class="d-flex justify-content-center px-5 mx-5">
+                <table class="table">
+                    <tr>
+                        <th>Contribuyente</th>
+                        <td class="d-flex flex-column">
+                            <span class="fw-bold">'.$declaracion->razon_social.'</span>
+                            <span class="text-muted">'.$declaracion->rif_condicion.'-'.$declaracion->rif_nro.'</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Período</th>
+                        <td class="fw-bold text-success">'.$mes_libro.' '.$declaracion->year_declarado.'</td>
+                    </tr>
+                    <tr>
+                        <th>Tipo de Declaración</th>
+                        <td class="fst-italic text-secondary">'.$declaracion->nombre.'</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de emisión</th>
+                        <td>'.$declaracion->fecha.'</td>
+                    </tr>
+                    <tr>
+                        <th>Total de Guías Emitidas</th>
+                        <td class="fw-bold">'.$declaracion->nro_guias_declaradas.' und.</td>
+                    </tr>
+                    <tr>
+                        <th>UCD del día</th>
+                        <td>'.$declaracion->valor.' ('.$declaracion->moneda.')</td>
+                    </tr>
+                    <tr>
+                        <th>Total UCD</th>
+                        <td>'.$declaracion->total_ucd.' UCD</td>
+                    </tr>
+                    <tr class="table-warning">
+                        <th>Monto Total</th>
+                        <td class="fw-bold">'.$format_monto.' Bs.</td>
+                    </tr>
+                    <tr>
+                        <th>Referencia</th>
+                        <td>
+                            <a target="_blank" class="ver_pago" href="'.asset($declaracion->referencia).'">Ver</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-center my-3">
+                <button type="button" class="btn btn-success verificar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Verificar</button>
+                <button type="button" class="btn btn-danger denegar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Denegar</button>
+                <button type="button" class="btn btn-secondary btn-sm " data-bs-dismiss="modal">Cancelar</button>
+            </div>';
+
+            return response($html);
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function verificar(Request $request)
+    {
+        $id_declaracion = $request->post('declaracion');
+        $updates = DB::table('declaracions')->where('id_declaracion', '=', $id_declaracion)->update(['estado' => 5]);
+        if ($updates) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
+
+    public function denegar(Request $request)
+    {
+        $id_declaracion = $request->post('declaracion');
+        $updates = DB::table('declaracions')->where('id_declaracion', '=', $id_declaracion)->update(['estado' => 6]);
+        if ($updates) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}

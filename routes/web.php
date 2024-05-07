@@ -102,6 +102,12 @@ Route::post('/verificar_cantera/verificar', [App\Http\Controllers\VerificarCante
 Route::post('/verificar_cantera/info_denegar', [App\Http\Controllers\VerificarCanteraController::class, 'info_denegar'])->name('verificar_cantera.info_denegar');
 Route::post('/verificar_cantera/denegar', [App\Http\Controllers\VerificarCanteraController::class, 'denegar'])->name('verificar_cantera.denegar');
 
+////////////////VERIFICAR DECLARACIONES
+Route::get('/verificar_declaracion', [App\Http\Controllers\VerificarDeclaracionController::class, 'index'])->name('verificar_declaracion');
+Route::post('/verificar_declaracion/info', [App\Http\Controllers\VerificarDeclaracionController::class, 'info'])->name('verificar_declaracion.info');
+Route::post('/verificar_declaracion/verificar', [App\Http\Controllers\VerificarDeclaracionController::class, 'verificar'])->name('verificar_declaracion.verificar');
+Route::post('/verificar_declaracion/denegar', [App\Http\Controllers\VerificarDeclaracionController::class, 'denegar'])->name('verificar_declaracion.denegar');
+
 ////////////////LIBRO DE CONTRO: REGISTRO DE GUÍAS
 Route::get('/registro_guia', [App\Http\Controllers\RegistroGuiaController::class, 'index'])->name('registro_guia');
 Route::post('/registro_guia/modal_registro', [App\Http\Controllers\RegistroGuiaController::class, 'modal_registro'])->name('registro_guia.modal_registro');
@@ -121,8 +127,9 @@ Route::post('/settings_contribuyente/representante', [App\Http\Controllers\Setti
 ////////////////DECLARAR GUIAS (VISTA: CONTRIBUYENTE)
 Route::get('/declarar', [App\Http\Controllers\DeclararController::class, 'index'])->name('declarar');
 Route::post('/declarar/info_declarar', [App\Http\Controllers\DeclararController::class, 'info_declarar'])->name('declarar.info_declarar');
-Route::post('/declarar/store', [App\Http\Controllers\DeclararController::class, 'store'])->name('declarar.store');
+Route::post('/declarar/declarar_libros', [App\Http\Controllers\DeclararController::class, 'declarar_libros'])->name('declarar.declarar_libros');
 Route::post('/declarar/info_declarar_extemporaneas', [App\Http\Controllers\DeclararController::class, 'info_declarar_extemporaneas'])->name('declarar.info_declarar_extemporaneas');
+Route::post('/declarar/declarar_guias', [App\Http\Controllers\DeclararController::class, 'declarar_guias'])->name('declarar.declarar_guias');
 
 ///////////LIBROS
 Route::get('/libros', [App\Http\Controllers\LibrosController::class, 'index'])->name('libros');
@@ -133,3 +140,7 @@ Route::post('/detalle_libro/modal_registro', [App\Http\Controllers\DetalleLibroC
 Route::post('/detalle_libro/store', [App\Http\Controllers\DetalleLibroController::class, 'store'])->name('detalle_libro.store');
 Route::post('/detalle_libro/editar', [App\Http\Controllers\DetalleLibroController::class, 'editar'])->name('detalle_libro.editar');
 Route::post('/detalle_libro/editar_guia', [App\Http\Controllers\DetalleLibroController::class, 'editar_guia'])->name('detalle_libro.editar_guia');
+
+
+////////////////HISTORIAL DECLARACIONES
+Route::get('/historial_declaraciones', [App\Http\Controllers\DeclararHistorialController::class, 'index'])->name('historial_declaraciones');

@@ -349,7 +349,7 @@ return [
         ],
         [
             'text' => 'Historial',
-            'url'  => '/',
+            'url'  => '/historial_declaraciones',
             // 'icon' => 'fas fa-file-circle-plus',
         ],
         ['header' => 'Control de Solicitudes'],
@@ -376,7 +376,7 @@ return [
         ],
         [
             'text' => 'Declaraciones',
-            'url'  => '/declaraciones',
+            'url'  => '/verificar_declaracion',
             // 'icon' => 'fas fa-fw fa-user',
         ],
         ['header' => 'Historial'],
