@@ -162,6 +162,7 @@ class DeclararController extends Controller
                     <input type="hidden" name="year_declarar" value="'.$year.'">
                     <input type="hidden" name="id_ucd" value="'.$id_ucd.'">
                     <input type="hidden" name="id_libro" value="'.$idLibro.'">
+                    <input type="hidden" name="actividad" value="'.$actividad.'">
 
                     <div class="d-flex justify-content-center align-items-center mb-4">
                         <div class="row">
@@ -215,6 +216,7 @@ class DeclararController extends Controller
         $guias_emitidas = $request->post('guias_emitidas');
         $total_ucd = $request->post('total_ucd');
         $total_pagar = $request->post('total_pagar');
+        $actividad = $request->post('actividad');
         $id_libro = $request->post('id_libro');
         
         $year = date("Y");
@@ -232,50 +234,84 @@ class DeclararController extends Controller
             }
         }
 
-        if ($request->hasFile('referencia')){
-            $rand = rand(1000, 9999);
-            $photo         =   $request->file('referencia');
-            $nombreimagen  =   'dclrGuias_'.$id_libro.'_'.$rand.'.'.$photo->getClientOriginalExtension();
-            $ruta          =   public_path('assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen);
-            $ruta_n        = 'assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen;
-            if(copy($photo->getRealPath(),$ruta)){
-                $insert = DB::table('declaracions')->insert([
-                                                    'id_sujeto'=>$id_sp,
-                                                    'id_libro' => $id_libro,
-                                                    'year_declarado' => $year_declarar,
-                                                    'mes_declarado' => $mes_declarar,
-                                                    'nro_guias_declaradas' => $guias_emitidas,
-                                                    'total_ucd' => $total_ucd,
-                                                    'monto_total' => $total_pagar,
-                                                    'id_ucd' => $id_ucd,
-                                                    'referencia' => $ruta_n,
-                                                    'estado' => 4,
-                                                    'tipo' => 7,
-                                                    ]);
-                if ($insert) {
-                    $updates = DB::table('control_guias')->where('id_sujeto', '=', $id_sp)
-                                                        ->where('id_libro', '=', $id_libro)
-                                                        ->update(['declaracion' => 1]);
-                    if ($updates) {
-                        $update_2 = DB::table('libros')->where('id_sujeto', '=', $id_sp)
-                                                        ->where('id_libro', '=', $id_libro)
-                                                        ->update(['estado' => 1]);
-                        if ($update_2) {
-                            return response()->json(['success' => true]);
+        if ($actividad == 'si') {
+
+            //////////DECLARACION DE GUÍAS 
+            if ($request->hasFile('referencia')){
+                $rand = rand(1000, 9999);
+                $photo         =   $request->file('referencia');
+                $nombreimagen  =   'dclrGuias_'.$id_libro.'_'.$rand.'.'.$photo->getClientOriginalExtension();
+                $ruta          =   public_path('assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen);
+                $ruta_n        = 'assets/declaraciones/'.$year.'/'.$mes.'/'.$nombreimagen;
+                if(copy($photo->getRealPath(),$ruta)){
+                    $insert = DB::table('declaracions')->insert([
+                                                        'id_sujeto'=>$id_sp,
+                                                        'id_libro' => $id_libro,
+                                                        'year_declarado' => $year_declarar,
+                                                        'mes_declarado' => $mes_declarar,
+                                                        'nro_guias_declaradas' => $guias_emitidas,
+                                                        'total_ucd' => $total_ucd,
+                                                        'monto_total' => $total_pagar,
+                                                        'id_ucd' => $id_ucd,
+                                                        'referencia' => $ruta_n,
+                                                        'estado' => 4,
+                                                        'tipo' => 7,
+                                                        ]);
+                    if ($insert) {
+                        $updates = DB::table('control_guias')->where('id_sujeto', '=', $id_sp)
+                                                            ->where('id_libro', '=', $id_libro)
+                                                            ->update(['declaracion' => 1]);
+                        if ($updates) {
+                            $update_2 = DB::table('libros')->where('id_sujeto', '=', $id_sp)
+                                                            ->where('id_libro', '=', $id_libro)
+                                                            ->update(['estado' => 1]);
+                            if ($update_2) {
+                                return response()->json(['success' => true]);
+                            }else{
+                                return response()->json(['success' => false]);
+                            }
                         }else{
                             return response()->json(['success' => false]);
                         }
+
                     }else{
                         return response()->json(['success' => false]);
-                    }
+                    }                              
 
+                }
+            }else{
+                return response()->json(['success' => false]);
+            }
+
+        }else{  
+            /////////DECLARACIÓN: SIN ACTIVIDAD ECONOMICA
+            $insert = DB::table('declaracions')->insert([
+                                                        'id_sujeto'=>$id_sp,
+                                                        'id_libro' => $id_libro,
+                                                        'year_declarado' => $year_declarar,
+                                                        'mes_declarado' => $mes_declarar,
+                                                        'nro_guias_declaradas' => $guias_emitidas,
+                                                        'total_ucd' => $total_ucd,
+                                                        'monto_total' => $total_pagar,
+                                                        'id_ucd' => $id_ucd,
+                                                        'referencia' => NULL,
+                                                        'estado' => 4,
+                                                        'tipo' => 7,
+                                                        ]);
+            if ($insert) {
+                $update_2 = DB::table('libros')->where('id_sujeto', '=', $id_sp)
+                                    ->where('id_libro', '=', $id_libro)
+                                    ->update(['estado' => 1]);
+                if ($update_2) {
+                    return response()->json(['success' => true]);
                 }else{
                     return response()->json(['success' => false]);
-                }                              
+                }
+            }else{
+                return response()->json(['success' => false]);
+            }                              
 
-            }
-        }else{
-            return response()->json(['success' => false]);
+
         }
 
 

@@ -41,7 +41,17 @@
                             </td>
                             <td>{{$declaracion->nombre}}</td>
                             <td>
-                                <a target="_blank" class="ver_pago" href="{{ asset($declaracion->referencia) }}">Ver</a>
+                                @php
+                                    if($declaracion->referencia == null){
+                                @endphp
+                                    <span class="fw-bold text-danger">SIN ACTIVIDAD ECONÓMICA</span>    
+                                @php
+                                    }else{
+                                @endphp
+                                    <a target="_blank" class="ver_pago" href="{{ asset($declaracion->referencia) }}">Ver</a>
+                                @php
+                                    }
+                                @endphp
                             </td>
                             <td>
                                 <button class="btn btn-primary btn-sm btn_verificar_declaracion px-3 rounded-4 fw-bold" id_declaracion="{{$declaracion->id_declaracion}}" data-bs-toggle="modal" data-bs-target="#modal_verificar_declaracion">Verificar</button>
@@ -98,11 +108,11 @@
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:15px;" id="content_verificar_declaracion">
-                    <form id="form_denegar_declaracion" method="post" onsubmit="event.preventDefault(); denegarDeclaracion()">
+                    <form id="form_denegar_declaracion" method="post" onsubmit="event.preventDefault();">
                         <div class="ms-2 me-2">
                             <label for="observacion" class="form-label">Observación</label><span class="text-danger">*</span>
-                            <textarea class="form-control" id="observacion" name="observacion" rows="3" required=""></textarea>
-                            <input type="hidden" name="id_declaracion" id="declaracion" value="">
+                            <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
+                            <input type="hidden" name="id_declaracion" id="declaracion" value="" required>
                         </div>
                         <div class="text-muted text-end" style="font-size:13px">
                             <span class="text-danger">*</span> Campos Obligatorios
@@ -117,7 +127,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center m-3">
-                            <button type="submit" class="btn btn-danger btn-sm me-4">Denegar</button>
+                            <button type="submit" class="btn btn-danger btn_form_denegar_declaracion btn-sm me-4" disabled>Denegar</button>
                             <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
@@ -211,7 +221,7 @@
                     url: '{{route("verificar_declaracion.info") }}',
                     data: {declaracion:declaracion},
                     success: function(response) {    
-                        console.log(response);          
+                        // console.log(response);          
                         $('#content_verificar_declaracion').html(response);
                     },
                     error: function() {
@@ -224,7 +234,7 @@
                 e.preventDefault(e); 
                 var declaracion = $(this).attr('id_declaracion');
 
-                if (confirm("¿Esta seguro que desea Verificar la Declaración?")) {
+                if (confirm("¿Esta seguro que desea Aprobar la Declaración?")) {
                     $.ajax({
                         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         type: 'POST',
@@ -248,6 +258,15 @@
                 
             });
 
+            ////////////////////
+            $(document).on('keyup','#observacion', function(e) {  
+                var cant = $(this).val();
+                if (cant != '') {
+                    $(".btn_form_denegar_declaracion").attr('disabled', false);
+                }else{
+                    $(".btn_form_denegar_declaracion").attr('disabled', true);
+                }
+            });
 
             ////////////////////DENEGAR DECLARACIÓN: OBSERVACIONES
             $(document).on('click','.denegar_declaracion', function(e) { 
@@ -259,38 +278,47 @@
                 $('#modal_box_obv').modal('show');
 
             });
+
+            ////////////////////
+            $(document).on('click','.btn_form_denegar_declaracion', function(e) { 
+                e.preventDefault(e); 
+                // var declaracion = $(this).attr('id_declaracion');
+                var formData = new FormData(document.getElementById("form_denegar_declaracion"));
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url:'{{route("verificar_declaracion.denegar") }}',
+                    type:'POST',
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    data: formData,
+                    success: function(response){
+                        // alert(response);
+                        // console.log(response);
+                        if (response.success) {
+                        alert('SE HA DENEGADO LA DECLARACIÓN CORRECTAMENTE');
+                        window.location.href = "{{ route('verificar_declaracion')}}";
+                        } else {
+                        alert('Ha ocurrido un error al denegar la Declaración.');
+                        }    
+
+                    },
+                    error: function(error){
+                        
+                    }
+                });
+                
+
+            });
            
            
 
         });
 
-       function denegarDeclaracion(){
-        var formData = new FormData(document.getElementById("form_denegar_declaracion"));
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("verificar_declaracion.denegar") }}',
-                type:'POST',
-                contentType:false,
-                cache:false,
-                processData:false,
-                async: true,
-                data: formData,
-                success: function(response){
-                    // alert(response);
-                    console.log(response);
-                    if (response.success) {
-                        alert('DECLARACIÓN DE GUÍA EXTEMPORANEA REALIZADA CORRECTAMENTE');
-                        window.location.href = "{{ route('declarar')}}";
-                    } else {
-                        alert('Ha ocurrido un error al declarar el Libro.');
-                    }    
-
-                },
-                error: function(error){
-                    
-                }
-            });
-       }
+    //    function denegarDeclaracion(){
+        
+    //    }
 
         
     </script>

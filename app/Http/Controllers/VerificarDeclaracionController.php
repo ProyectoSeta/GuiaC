@@ -46,6 +46,12 @@ class VerificarDeclaracionController extends Controller
 
             $format_monto = number_format($declaracion->monto_total, 2);
 
+            if ($declaracion->referencia == null) {
+                $referencia = '<span class="fw-bold text-danger">SIN ACTIVIDAD ECONÓMICA</span>';
+            }else{
+                $referencia = '<a target="_blank" class="ver_pago" href="'.asset($declaracion->referencia).'">Ver</a>';
+            }
+
             $html = '<h6 class="text-muted text-center" style="font-size:14px;">Datos de la Declaración</h6>
             <div class="d-flex justify-content-center px-5 mx-5">
                 <table class="table">
@@ -87,14 +93,14 @@ class VerificarDeclaracionController extends Controller
                     <tr>
                         <th>Referencia</th>
                         <td>
-                            <a target="_blank" class="ver_pago" href="'.asset($declaracion->referencia).'">Ver</a>
+                            '.$referencia.'
                         </td>
                     </tr>
                 </table>
             </div>
 
             <div class="d-flex justify-content-center my-3">
-                <button type="button" class="btn btn-success verificar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Verificar</button>
+                <button type="button" class="btn btn-success verificar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Aprobar</button>
                 <button type="button" class="btn btn-danger denegar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Denegar</button>
                 <button type="button" class="btn btn-secondary btn-sm " data-bs-dismiss="modal">Cancelar</button>
             </div>';
@@ -121,8 +127,10 @@ class VerificarDeclaracionController extends Controller
 
     public function denegar(Request $request)
     {
-        $id_declaracion = $request->post('declaracion');
-        $updates = DB::table('declaracions')->where('id_declaracion', '=', $id_declaracion)->update(['estado' => 6]);
+        $id_declaracion = $request->post('id_declaracion');
+        $observaciones = $request->post('observacion');
+
+        $updates = DB::table('declaracions')->where('id_declaracion', '=', $id_declaracion)->update(['estado' => 6, 'observaciones' => $observaciones]);
         if ($updates) {
             return response()->json(['success' => true]);
         }else{

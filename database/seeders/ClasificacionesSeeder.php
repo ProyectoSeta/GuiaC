@@ -35,7 +35,7 @@ class ClasificacionesSeeder extends Seeder
             'nombre' => 'Declaración de Libro',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Declaración de Guías Extemporaneas',
+            'nombre' => 'Declaración de Guías Extemporáneas',
         ]);
     
     }

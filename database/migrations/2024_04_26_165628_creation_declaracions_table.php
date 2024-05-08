@@ -24,7 +24,7 @@ return new class extends Migration
             $table->float('monto_total');
             $table->integer('id_ucd')->unsigned();
             $table->foreign('id_ucd')->references('id')->on('ucds')->onDelete('cascade');
-            $table->string('referencia');
+            $table->string('referencia')->nullable();
             $table->date('fecha');
 
             $table->integer('estado')->unsigned();
@@ -32,7 +32,7 @@ return new class extends Migration
              
             $table->integer('tipo')->unsigned();
             $table->foreign('tipo')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');  //////DECLARACIÓN DE LIBRO, DECLARACION DE GUÍAS EXTEMPORANEAS
-            
+            $table->string('observaciones',400)->nullable();
 
             $table->timestamps();
         });

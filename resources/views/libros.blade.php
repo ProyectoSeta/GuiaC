@@ -11,7 +11,7 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Libros</h2>
+            <h2 class="mb-3">Libros de Control</h2>
         </div>
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table display border-light-subtle text-center table-sm" style="width:100%; font-size:14px">
@@ -21,6 +21,7 @@
                         <th scope="col">Mes</th>
                         <th scope="col">Año</th>
                         <th scope="col">Declaración</th>
+                        <th scope="col">Detalles</th>
                         <th scope="col">Opciones</th>
                     </tr>
                 </thead>
@@ -37,11 +38,39 @@
                             <td>{{$libro->id_libro}}</td>
                             <td>{{$mes_libro}}</td>
                             <td>{{$libro->year}}</td>
+                            @php
+                                if($libro->nombre == 'Declarado'){
+                            @endphp
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center badge bg-success-subtle border text-success rounded-pill px-0 py-2" style="font-size:13px;">
+                                        <i class='bx bx-check-circle fs-6 me-2'></i>
+                                        <span>{{$libro->nombre}}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal_detalle_declaracion" id_libro="{{$libro->id_libro}}">Ver</a>
+                                </td>
+                            @php
+                                }else{
+                            @endphp
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center badge bg-secondary-subtle text-secondary-emphasis rounded-pill px-0 py-2" style="font-size:13px;">
+                                        <i class="bx bx-error-circle fs-6 me-2"></i>
+                                        <span>Sin Declarar</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a class="disabled text-secondary" id_libro="{{$libro->id_libro}}">Ver</a>
+                                </td>
+                            @php
+                                }
+                            @endphp
+                            
                             <td>
-                                <span class="text-secondary fst-italic">{{$libro->nombre}}</span>
-                            </td>
-                            <td>
-                                <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4" mes="{{$libro->mes}}" year="{{$libro->year}}" >Ver libro</a>
+                                <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4 fw-bold" mes="{{$libro->mes}}" year="{{$libro->year}}" >
+                                    <!-- <i class='bx bx-show-alt fs-5 me-1'></i> -->
+                                    <span>Ver Libro</span>
+                                </a>
                             </td>
                         </tr>
                     @endforeach
@@ -71,6 +100,109 @@
                 </div>
                 <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
 
+                    
+                </div>  <!-- cierra modal-body -->
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* DETALLES: DECLARACIÓN ******** -->
+    <div class="modal" id="modal_detalle_declaracion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header d-flex flex-column justify-content-center">
+                    <h1 class="modal-title fs-5 text-muted" id="exampleModalLabel">
+                        Declaración(es) del Libro
+                    </h1>
+                    <span class="fw-bold text-navy fs-5">Marzo 2024</span>
+                </div>
+                <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
+
+                    <p class="fw-bold fs-6 text-navy d-flex align-items-center">
+                        <span>Declaración del Libro</span>
+                    </p>
+                    <div class="mx-2">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>Nro. Guías Emitidas</th>
+                                    <td>12 und.</td>
+                                </tr>
+                                <tr>
+                                    <th>Nro. Guías Extemporaneas</th>
+                                    <td>2 und.</td>
+                                </tr>
+                                <tr>
+                                    <th>Total de Guías Declaradas</th>
+                                    <td>14 und.</td>
+                                </tr>
+                                <tr>
+                                    <th>Total UCD</th>
+                                    <td>70</td>
+                                </tr>
+                                <tr>
+                                    <th>Monto Total</th>
+                                    <td>2.758,7 Bs.</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <td>8/5/2024</td>
+                                </tr>
+                                <tr>
+                                    <th>Referencia</th>
+                                    <td>
+                                        Ver
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Estado</th>
+                                    <td>
+                                        <span class="fw-bold text-success">Verificado</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <p class="fw-bold fs-6 text-navy d-flex align-items-center">
+                        <span>Declaración de Guías Extemporáneas</span>
+                    </p>
+                    <div class="mx-2">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>Nro. Guías Declaradas</th>
+                                    <td>2 und.</td>
+                                </tr>
+                                <tr>
+                                    <th>Total UCD</th>
+                                    <td>10</td>
+                                </tr>
+                                <tr>
+                                    <th>Monto Total</th>
+                                    <td>394,1 Bs.</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <td>9/5/2024</td>
+                                </tr>
+                                <tr>
+                                    <th>Referencia</th>
+                                    <td>
+                                        Ver
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Estado</th>
+                                    <td>
+                                        <span class="fw-bold text-secondary">Verificando</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
                     
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
