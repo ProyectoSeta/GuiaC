@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Sujetos Pasivos')
+@section('title', 'Libros')
 
 @section('content_header')
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
@@ -48,7 +48,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal_detalle_declaracion" id_libro="{{$libro->id_libro}}">Ver</a>
+                                    <a href="#" class="detalle_declaracion" data-bs-toggle="modal" data-bs-target="#modal_detalle_declaracion" id_libro="{{$libro->id_libro}}">Ver</a>
                                 </td>
                             @php
                                 }else{
@@ -60,7 +60,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a class="disabled text-secondary" id_libro="{{$libro->id_libro}}">Ver</a>
+                                    <span class="fst-italic text-secondary">No Aplica</span>
                                 </td>
                             @php
                                 }
@@ -108,103 +108,9 @@
 
     <!-- ********* DETALLES: DECLARACIÓN ******** -->
     <div class="modal" id="modal_detalle_declaracion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header d-flex flex-column justify-content-center">
-                    <h1 class="modal-title fs-5 text-muted" id="exampleModalLabel">
-                        Declaración(es) del Libro
-                    </h1>
-                    <span class="fw-bold text-navy fs-5">Marzo 2024</span>
-                </div>
-                <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
-
-                    <p class="fw-bold fs-6 text-navy d-flex align-items-center">
-                        <span>Declaración del Libro</span>
-                    </p>
-                    <div class="mx-2">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr>
-                                    <th>Nro. Guías Emitidas</th>
-                                    <td>12 und.</td>
-                                </tr>
-                                <tr>
-                                    <th>Nro. Guías Extemporaneas</th>
-                                    <td>2 und.</td>
-                                </tr>
-                                <tr>
-                                    <th>Total de Guías Declaradas</th>
-                                    <td>14 und.</td>
-                                </tr>
-                                <tr>
-                                    <th>Total UCD</th>
-                                    <td>70</td>
-                                </tr>
-                                <tr>
-                                    <th>Monto Total</th>
-                                    <td>2.758,7 Bs.</td>
-                                </tr>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <td>8/5/2024</td>
-                                </tr>
-                                <tr>
-                                    <th>Referencia</th>
-                                    <td>
-                                        Ver
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Estado</th>
-                                    <td>
-                                        <span class="fw-bold text-success">Verificado</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-
-                    <p class="fw-bold fs-6 text-navy d-flex align-items-center">
-                        <span>Declaración de Guías Extemporáneas</span>
-                    </p>
-                    <div class="mx-2">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr>
-                                    <th>Nro. Guías Declaradas</th>
-                                    <td>2 und.</td>
-                                </tr>
-                                <tr>
-                                    <th>Total UCD</th>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                    <th>Monto Total</th>
-                                    <td>394,1 Bs.</td>
-                                </tr>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <td>9/5/2024</td>
-                                </tr>
-                                <tr>
-                                    <th>Referencia</th>
-                                    <td>
-                                        Ver
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Estado</th>
-                                    <td>
-                                        <span class="fw-bold text-secondary">Verificando</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    
-                </div>  <!-- cierra modal-body -->
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_detalle_declaracion">
+               
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -269,7 +175,26 @@
     </script> 
     <script type="text/javascript">
         $(document).ready(function () {
-        
+            ///////MODAL: INFO DECLARAR EXTEMPORANEAS
+            $(document).on('click','.detalle_declaracion', function(e) { 
+                e.preventDefault(e); 
+                var libro = $(this).attr('id_libro');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("libros.detalles") }}',
+                    data: {libro:libro},
+                    success: function(response) {    
+                        console.log(response);  
+                        
+                        $('#content_detalle_declaracion').html(response);
+
+                        
+                    },
+                    error: function() {
+                    }
+                });
+            });
            
 
         });

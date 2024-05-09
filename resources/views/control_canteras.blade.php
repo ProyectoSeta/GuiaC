@@ -31,7 +31,6 @@
                         <th class="text-secondary">Fin</th>
                         <th>Límite</th>
                         <th>Solicitadas</th>
-                        <th>Extención</th>
                         <th>Opciones</th>
                     </tr>                    
                 </thead>
@@ -59,11 +58,11 @@
                             @php     
                                 }
                             @endphp
+                            
                             <td>
-                                <span class="text-secondary fst-italic">Sin extención</span>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-sm" style="font-size:13px">Extender límite</button>
+                                <span class="badge update_limite" style="background-color: #169131;" role="button" data-bs-toggle="modal" data-bs-target="#modal_update_limite" id_cantera="{{ $limite->id_cantera }}">
+                                    <i class="bx bx-pencil fs-6"></i>
+                                </span>
                             </td>
                         </tr>
                     @endforeach
@@ -83,28 +82,21 @@
     
 <!--****************** MODALES **************************-->
     <!-- ********* ******** -->
-    <!-- <div class="modal" id="modal_info_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal" id="modal_update_limite" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <i class='bx bxs-hard-hat fs-2' style="color:#ff8f00"></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Producción de la Cantera</h1>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agua Viva II</h1>
+                        <i class="bx bx-refresh bx-spin  fs-1" style="color:#0d8a01"></i>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">Actualizar Límite</h1>
                     </div>
-                    
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="font-size:15px;">
+                <div class="modal-body" style="font-size:14px;" id="content_update_limite">
                     
-                    <div class="d-flex flex-column text-center" id="info_produccion">
-                        
-                    </div>
-
                 </div>  
             </div>  
         </div>  
-    </div> -->
+    </div>
 
 
      <!-- ********* INFO SUJETO ******** -->
@@ -189,12 +181,57 @@
                     }
                 });
             });
+
+
+            ///////MODAL: ACTUALIZAR LÍMITE
+            $(document).on('click','.update_limite', function(e) { 
+                e.preventDefault(e); 
+                var cantera = $(this).attr('id_cantera');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("control_canteras.update_limite") }}',
+                    data: {cantera:cantera},
+                    success: function(response) {              
+                        $('#content_update_limite').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
             
 
            
 
         });
 
+        function updateLimite(){
+            var formData = new FormData(document.getElementById("form_update_limite"));
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    url:'{{route("control_canteras.update") }}',
+                    type:'POST',
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    async: true,
+                    data: formData,
+                    success: function(response){
+                        // alert(response);
+                        console.log(response);
+                        if (response.success) {
+                            alert('ACTUALIZACIÓN DEL LÍMITE REALIZADA CORRECTAMENTE');
+                            window.location.href = "{{ route('control_canteras')}}";
+                        } else {
+                            alert('Ha ocurrido un error al actualizar el límite.');
+                        }    
+
+                    },
+                    error: function(error){
+                        
+                    }
+                });
+        }
         
 
         

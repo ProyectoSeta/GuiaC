@@ -31,7 +31,7 @@ return new class extends Migration
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); /////VERIFICANDO, VERIFICADO, NEGADO
              
             $table->integer('tipo')->unsigned();
-            $table->foreign('tipo')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');  //////DECLARACIÓN DE LIBRO, DECLARACION DE GUÍAS EXTEMPORANEAS
+            $table->foreign('tipo')->references('id_tipo')->on('tipos')->onDelete('cascade');  //////DECLARACIÓN DE LIBRO, DECLARACION DE GUÍAS EXTEMPORANEAS
             $table->string('observaciones',400)->nullable();
 
             $table->timestamps();

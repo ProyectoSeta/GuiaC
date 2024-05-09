@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(ClasificacionesSeeder::class);
+        $this->call(TiposSeeder::class);
         $this->call(FechasSeeder::class);
         // \App\Models\User::factory(10)->create();
 

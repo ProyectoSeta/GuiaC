@@ -125,18 +125,18 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 
-                    <div class="row mx-3 mt-3 mb-1 d-flex align-items-center">
-                        <div class="col-3 d-flex justify-content-center">
-                            <img src="{{asset('assets/aragua.png')}}" alt="" width="100px">
-                        </div>
-                        <div class="col-6 d-flex flex-column text-center pt-4">
-                            <span class="fs-6 fw-bold">GUÍA DE CIRCULACIÓN DE MINERALES NO METÁLICOS</span>
-                            <span>GOBIERNO BOLIVARIANO DEL ESTADO ARAGUA SERVICIO TRIBUTARIO DE ARAGUA (SETA)</span>
-                        </div>
-                        <div class="col-3 d-flex justify-content-center">
-                            <img src="{{asset('assets/logo-seta-2.png')}}" alt="" class="mt-3 ms-2" width="110px">
-                        </div>
+                <div class="row mx-3 mt-3 mb-1 d-flex align-items-center">
+                    <div class="col-3 d-flex justify-content-center">
+                        <img src="{{asset('assets/aragua.png')}}" alt="" width="100px">
                     </div>
+                    <div class="col-6 d-flex flex-column text-center pt-4">
+                        <span class="fs-6 fw-bold">GUÍA DE CIRCULACIÓN DE MINERALES NO METÁLICOS</span>
+                        <span>GOBIERNO BOLIVARIANO DEL ESTADO ARAGUA SERVICIO TRIBUTARIO DE ARAGUA (SETA)</span>
+                    </div>
+                    <div class="col-3 d-flex justify-content-center">
+                        <img src="{{asset('assets/logo-seta-2.png')}}" alt="" class="mt-3 ms-2" width="110px">
+                    </div>
+                </div>
                 <div class="modal-body mx-4" style="font-size:14px" id="content_info_guia">
                     
                 </div>

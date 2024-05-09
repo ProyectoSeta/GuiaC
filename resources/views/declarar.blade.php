@@ -254,7 +254,7 @@
         });
 
         ///////MODAL: INFO DECLARAR EXTEMPORANEAS
-       $(document).on('click','.btn_declarar_extemp', function(e) { 
+        $(document).on('click','.btn_declarar_extemp', function(e) { 
             e.preventDefault(e); 
             var mes = $(this).attr('mes');
             var year = $(this).attr('year');

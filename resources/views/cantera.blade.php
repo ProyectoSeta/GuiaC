@@ -327,7 +327,7 @@
                                 </div>
                             </div> <!-- cierra .col-9 produccion -->
                        </div>  <!-- cierra .row produccion -->
-                        
+                       <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
 
                         <div class="d-flex justify-content-center mt-3 mb-3" >
                             <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>

@@ -540,7 +540,7 @@ class AprobacionController extends Controller
         $talonario = DB::table('talonarios')
                         ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
                         ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
-                        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'canteras.lugar_aprovechamiento')
+                        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'canteras.municipio_cantera', 'canteras.parroquia_cantera', 'canteras.lugar_aprovechamiento')
                         ->where('talonarios.id_talonario','=', $idTalonario)
                         ->first();
 

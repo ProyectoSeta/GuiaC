@@ -70,7 +70,8 @@ Route::get('/aprobacion_solicitud/qr', [App\Http\Controllers\AprobacionControlle
 
 //////////CONTROL DE CANTERAS
 Route::get('/control_canteras', [App\Http\Controllers\ControlCanterasController::class, 'index'])->name('control_canteras');
-
+Route::post('/control_canteras/update_limite', [App\Http\Controllers\ControlCanterasController::class, 'update_limite'])->name('control_canteras.update_limite');
+Route::post('/control_canteras/update', [App\Http\Controllers\ControlCanterasController::class, 'update'])->name('control_canteras.update');
 
 ///////////ESTADO DE SOLICITUDES
 Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->name('estado');
@@ -133,6 +134,8 @@ Route::post('/declarar/declarar_guias', [App\Http\Controllers\DeclararController
 
 ///////////LIBROS
 Route::get('/libros', [App\Http\Controllers\LibrosController::class, 'index'])->name('libros');
+Route::post('/libros/detalles', [App\Http\Controllers\LibrosController::class, 'detalles'])->name('libros.detalles');
+
 
 ///////////DETALLE DE LIBRO
 Route::get('/detalle_libro/{mes?}/{year?}/', [App\Http\Controllers\DetalleLibroController::class, 'index'])->name('detalle_libro.index');

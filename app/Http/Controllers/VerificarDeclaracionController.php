@@ -13,8 +13,8 @@ class VerificarDeclaracionController extends Controller
     {
         $declaraciones = DB::table('declaracions')
                                 ->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                                ->join('clasificacions', 'declaracions.tipo', '=', 'clasificacions.id_clasificacion')
-                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre')
+                                ->join('tipos', 'declaracions.tipo', '=', 'tipos.id_tipo')
+                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'tipos.nombre_tipo')
                                 ->where('declaracions.estado', 4)
                                 ->get();
 

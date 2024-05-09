@@ -66,11 +66,11 @@ class SolicitudController extends Controller
                                 <input type="text" class="form-control form-control-sm mb-3 text-center" name="tipo" id="tipo" value="50 guías" readonly>
                             </div>
                             <div class="col-6">
-                                <label for="cant_talonario">Cantidad</label>
+                                <label for="cant_talonario">Cantidad <span class="text-danger">*</span></label>
                                 <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" required>
                             </div>
                         </div> 
-
+                        <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
                         <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-secondary btn-sm" id="calcular">Calular</button>
                         </div>

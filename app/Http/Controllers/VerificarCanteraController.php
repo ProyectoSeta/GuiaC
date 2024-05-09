@@ -81,7 +81,7 @@ class VerificarCanteraController extends Controller
                                     <tr>
                                         <th>Límite de Guías solicitadas por período</th>
                                         <td>
-                                            <input type="number" class="form-control" id="limite_guia_cantera" name="limite_guia_cantera">
+                                            <input type="number" class="form-control" id="limite_guia_cantera" name="limite_guia_cantera" required>
                                             <input type="hidden" name="id_cantera" value="'.$idCantera.'">
                                         </td>
                                     </tr>

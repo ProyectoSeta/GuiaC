@@ -193,12 +193,10 @@ class CorrelativoController extends Controller
                                 <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
                                 <table class="table">
                                     <tr>   
-                                        <th>Tipo de Guía:</th>
-                                        <td>'.$g->tipo_guia.'</td>
                                         <th>Nro. Factura:</th>
-                                        <td>'.$nro_factura.'</td>
+                                        <td colspan="2">'.$nro_factura.'</td>
                                         <th>Fecha de Facturación:</th>
-                                        <td>'.$g->fecha_facturacion.'</td>
+                                        <td colspan="2">'.$g->fecha_facturacion.'</td>
                                     </tr>
                                     <tr>
                                         <th>Mineral:</th>

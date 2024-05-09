@@ -19,6 +19,7 @@
                 <thead class="border-light-subtle">
                     <th>#</th>
                     <th>Contribuyente</th>
+                    <th>R.I.F.</th>
                     <th>Libro</th>
                     <th>Tipo de Declaración</th>
                     <th>Referencia</th>
@@ -28,6 +29,7 @@
                     @foreach ($declaraciones as $declaracion)
                         <tr>
                             <td>{{$declaracion->id_declaracion}}</td>
+                            <td>{{$declaracion->razon_social}}</td>
                             <td>
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $declaracion->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$declaracion->rif_condicion}}-{{$declaracion->rif_nro}}</a>
                             </td>
@@ -39,7 +41,7 @@
                             <td>
                                 <a href="{{ route('detalle_libro.index', ['mes' =>$declaracion->mes_declarado, 'year' =>$declaracion->year_declarado]) }}">{{$mes_libro}} {{$declaracion->year_declarado}}</a>
                             </td>
-                            <td>{{$declaracion->nombre}}</td>
+                            <td>{{$declaracion->nombre_tipo}}</td>
                             <td>
                                 @php
                                     if($declaracion->referencia == null){

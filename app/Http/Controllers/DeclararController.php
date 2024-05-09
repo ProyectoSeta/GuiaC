@@ -255,7 +255,7 @@ class DeclararController extends Controller
                                                         'id_ucd' => $id_ucd,
                                                         'referencia' => $ruta_n,
                                                         'estado' => 4,
-                                                        'tipo' => 7,
+                                                        'tipo' => 1,
                                                         ]);
                     if ($insert) {
                         $updates = DB::table('control_guias')->where('id_sujeto', '=', $id_sp)
@@ -296,7 +296,7 @@ class DeclararController extends Controller
                                                         'id_ucd' => $id_ucd,
                                                         'referencia' => NULL,
                                                         'estado' => 4,
-                                                        'tipo' => 7,
+                                                        'tipo' => 1,
                                                         ]);
             if ($insert) {
                 $update_2 = DB::table('libros')->where('id_sujeto', '=', $id_sp)
@@ -477,7 +477,7 @@ class DeclararController extends Controller
                                                     'id_ucd' => $id_ucd,
                                                     'referencia' => $ruta_n,
                                                     'estado' => 4,
-                                                    'tipo' => 8,
+                                                    'tipo' => 2,
                                                     ]);
                 if ($insert) {
                     $updates = DB::table('control_guias')->where('id_sujeto', '=', $id_sp)

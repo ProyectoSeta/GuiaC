@@ -24,9 +24,34 @@ class ControlCanterasController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function update_limite(Request $request)
     {
-        //
+        $cantera = $request->post('cantera');
+
+        $limite = DB::table('limite_guias')->select('total_guias_periodo')->where('id_cantera','=',$cantera)->first();
+        if ($limite) {
+            $html = '<form id="form_update_limite" method="post" onsubmit="event.preventDefault(); updateLimite()">
+                        <p class="text-secondary text-justify">*La actualización del límite de guías que puede solicitar el Contribuyente en un período de tres (3) meses.</p>
+                        <div class="row text-center mx-3 mb-4">
+                            <div class="col-sm-6 fw-bold">Límite Actual</div>
+                            <div class="col-sm-6 text-muted">'.$limite->total_guias_periodo.' Guías</div>
+                        </div>
+                        <div class="row text-center mx-2 mb-4">
+                            <div class="col-sm-6 fw-bold">Nuevo Límite<span style="color:red">*</span></div>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control form-control-sm" name="limite" id="new_limite" required>
+                            </div>
+                        </div>
+                        <p class="text-muted mx-2 mb-3"><span style="color:red">*</span> Campos requeridos.</p>
+                        <input type="hidden" name="id_cantera" value="'.$cantera.'">
+                        <div class="d-flex justify-content-center my-3">
+                            <button type="submit" class="btn btn-success btn-sm me-4">Actualizar</button>
+                            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>';
+            return response($html);
+        }
+
     }
 
     /**
@@ -56,9 +81,17 @@ class ControlCanterasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $cantera = $request->post('id_cantera');
+        $limite = $request->post('limite');
+
+        $updates = DB::table('limite_guias')->where('id_cantera', '=', $cantera)->update(['total_guias_periodo' => $limite]);
+        if ($updates) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 
     /**

@@ -258,7 +258,7 @@ class CanteraController extends Controller
         $id_sp = $sp->id_sujeto;
 
         $idCantera = $request->post('cantera');
-        $conteo = DB::table('control_guias')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->get();
+        $conteo = DB::table('control_guias')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->where('id_cantera','=',$idCantera)->get();
         if ($conteo) {
             foreach ($conteo as $c){
                 if ($c->total == 0){
