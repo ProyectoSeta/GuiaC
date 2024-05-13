@@ -37,6 +37,8 @@ Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->nam
 /////// CANTERAS
 Route::get('/cantera', [App\Http\Controllers\CanteraController::class, 'index'])->name('cantera');
 Route::post('/cantera/store', [App\Http\Controllers\CanteraController::class, 'store'])->name('cantera.store');
+// Route::post('/cantera/edit', [App\Http\Controllers\CanteraController::class, 'edit'])->name('cantera.edit');
+// Route::post('/cantera/modal_new', [App\Http\Controllers\CanteraController::class, 'modal_new'])->name('cantera.modal_new');
 Route::post('/cantera/minerales', [App\Http\Controllers\CanteraController::class, 'minerales'])->name('cantera.minerales');
 Route::post('/cantera/info_denegada', [App\Http\Controllers\CanteraController::class, 'info_denegada'])->name('cantera.info_denegada');
 Route::post('/cantera/info_limite', [App\Http\Controllers\CanteraController::class, 'info_limite'])->name('cantera.info_limite');

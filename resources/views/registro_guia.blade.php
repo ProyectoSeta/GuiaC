@@ -7,6 +7,8 @@
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
+
+    <img src="{{asset('assets/bf-4.svg')}}" class="w-100" alt="...">
 @stop
 
 @section('content')
@@ -111,80 +113,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-4" style="font-size:14px;" id="content_registro_guia">
-                    
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    <!-- ********* ELIMINAR GUIA ******** -->
-    <div class="modal" id="modal_delete_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Eliminar Guía</h1>
-                    </div>
-                    
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body" style="font-size:14px;">
-                    
-                    <p class="text-center">¿Desea eliminar la guía registrada con los siguientes datos?</p>
-
-                    <table class="table">
-                        <tr>
-                            <th>Nro. Guía</th>
-                            <td>A00000125</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha</th>
-                            <td class="text-muted">12/02/2024</td>
-                        </tr>
-                        <tr>
-                            <th>Cantera</th>
-                            <td>Agua Viva II</td>
-                        </tr>
-
-                        <tr>
-                            <th>Razon social del destinatario</th>
-                            <td>Ferrepontal, C.A.</td>
-                        </tr>                    
-                        <tr>
-                            <th>Tipo de mineral</th>
-                            <td>Gravilla</td>
-                        </tr>  
-                        <tr>
-                            <th>Cantidad</th>
-                            <td>2,5 Toneladas</td>
-                        </tr>
-                        <tr>
-                            <th>Tipo de guía</th>
-                            <td>Salida</td>
-                        </tr>
-                        <tr>
-                            <th>Nro. Factura</th>
-                            <td>125</td>
-                        </tr>
-                        <tr>
-                            <th>Anulada</th>
-                            <td>No</td>
-                        </tr>
-                    </table>
-
-                    
-
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger btn-sm">Eliminar</button>
-                    </div> 
-
-
-                 </div>  <!-- cierra modal-body -->
-            </div>  <!-- cierra modal-content -->
-        </div>  <!-- cierra modal-dialog -->
-    </div>
+    
 
     <!-- ********* EDITAR GUIA ******** -->
     <div class="modal" id="modal_editar_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -198,7 +136,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="font-size:14px;" id="content_editar_guia">
-                   
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
                 
 
 

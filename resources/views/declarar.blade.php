@@ -8,6 +8,8 @@
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
+
+    <img src="{{asset('assets/bf-5.svg')}}" class="w-100" alt="...">
 @stop
 
 @section('content')
@@ -142,7 +144,10 @@
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:15px;" id="content_modal_declarar">
-                    
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->

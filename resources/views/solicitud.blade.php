@@ -7,6 +7,8 @@
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
+
+    <img src="{{asset('assets/bf-2.svg')}}" class="w-100" alt="...">
 @stop
 
 @section('content')
@@ -107,70 +109,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body mx-2" style="font-size:14px;" id="content_info_new">
-                    
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    <!-- ********* ELIMINAR SOLICITUD ******** -->
-    <div class="modal fade" id="modal_delete_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Eliminar solicitud</h1>
-                    </div>
-                    
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body" style="font-size:14px;">
-                    
-                    <p class="text-center">¿Desea cancelar la Solicitud registrada con los siguientes datos?</p>
 
-                    <table class="table">
-                        <tr>
-                            <th>Nro. Solicitud</th>
-                            <td>105</td>
-                        </tr>
-                        <tr>
-                            <th>Solicitante</th>
-                            <td>Prueba, C.A.</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha</th>
-                            <td>12/02/2024</td>
-                        </tr>
-
-                        <tr>
-                            <th>Nro. Talonario(s)</th>
-                            <td>2</td>
-                        </tr>                    
-                        <tr>
-                            <th>Tipo de talonario(s)</th>
-                            <td>25 - 50</td>
-                        </tr>  
-                    </table>
-
-                    
-
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger btn-sm">Eliminar</button>
-                    </div> 
-
-
-                 </div>  <!-- cierra modal-body -->
-            </div>  <!-- cierra modal-content -->
-        </div>  <!-- cierra modal-dialog -->
-    </div>
 
     <!-- ********* VER INFO TALONARIO(S) ******** -->
     <div class="modal fade" id="modal_info_talonario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_info_talonarios">
-                
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -179,7 +136,10 @@
     <div class="modal" id="modal_info_denegada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_info_denegada">
-                
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>

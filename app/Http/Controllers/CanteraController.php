@@ -130,16 +130,33 @@ class CanteraController extends Controller
         $query = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
          
         if($query){
-            $html = '';
+            $produccion = '';
             foreach ($query as $id_min) {
                 $id = $id_min->id_mineral;
                 $query_min = DB::table('minerals')->select('mineral')->where('id_mineral','=',$id)->get();
                 if($query_min){
                     foreach ($query_min as $mineral) {
                         $name_mineral = $mineral->mineral;
-                        $html .= '<span>'.$name_mineral.'</span>';
+                        $produccion .= '<span>'.$name_mineral.'</span>';
                     }
                 } 
+            }
+            $name = DB::table('canteras')->select('nombre')->where('id_cantera','=',$idCantera)->first();
+            if ($name) {
+                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                                <div class="text-center">
+                                    <i class="bx bxs-hard-hat fs-2" style="color:#ff8f00"></i>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Producción de la Cantera</h1>
+                                    <h1 class="modal-title fs-5 px-2" id="exampleModalLabel">'.$name->nombre.'</h1>
+                                </div>
+                                
+                                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                            </div>
+                            <div class="modal-body" style="font-size:15px;">
+                                <div class="d-flex flex-column text-center" >
+                                    '.$produccion.'
+                                </div>
+                            </div>';
             }
 
             return response($html);

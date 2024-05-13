@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ClasificacionesSeeder::class);
         $this->call(TiposSeeder::class);
         $this->call(FechasSeeder::class);
+        $this->call(MineralesSeeder::class);
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

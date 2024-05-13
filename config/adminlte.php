@@ -339,7 +339,7 @@ return [
         [
             'text' => 'Libros',
             'url'  => '/libros',
-            // 'icon' => 'fas fa-fw fa-user',
+            'icon' => 'bluetooth-outline',
         ],
         ['header' => 'Declaración'],
         [

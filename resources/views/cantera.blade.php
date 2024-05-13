@@ -8,12 +8,14 @@
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
+
+    <img src="{{asset('assets/bf-1.svg')}}" class="w-100" alt="...">
 @stop
 
 @section('content')
     
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
             <h2 class="mb-3">Registro de Cantera(s)</h2>
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_new_cantera">
@@ -22,6 +24,8 @@
                 </button>
             </div>
         </div>
+
+        
 
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
@@ -340,75 +344,18 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-     <!-- ********* ELIMINAR CANTERA ******** -->
-     <!-- <div class="modal" id="modal_delete_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Eliminar cantera</h1>
-                    </div>
-                </div>
-                <div class="modal-body" style="font-size:14px;">
-                    
-                    <p class="text-center">¿Desea elimnar la Cantera registrada con los siguientes datos?</p>
+  
 
-                    <table class="table">
-                        <tr>
-                            <th>Cod. Cantera</th>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th>Nombre</th>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th>Dirección</th>
-                            <td></td>
-                        </tr>
-
-                        <tr>
-                            <th>Producción</th>
-                            <td class="d-flex flex-column">
-
-                            </td>
-                        </tr>                    
-                    </table>
-
-                    
-
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger btn-sm">Eliminar</button>
-                    </div> 
-
-
-                 </div>  
-            </div>
-        </div> 
-    </div> -->
 
     <!-- ********* INFO CANTERA ******** -->
     <div class="modal" id="modal_info_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <div class="text-center">
-                        <i class='bx bxs-hard-hat fs-2' style="color:#ff8f00"></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Producción de la Cantera</h1>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agua Viva II</h1>
-                    </div>
-                    
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            <div class="modal-content" id="info_produccion">
+                <div class="py-4 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
                 </div>
-                <div class="modal-body" style="font-size:15px;">
-                    
-                    <div class="d-flex flex-column text-center" id="info_produccion">
-                        
-                    </div>
-
-                </div>  <!-- cierra modal-body -->
+                
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -417,7 +364,10 @@
     <div class="modal" id="modal_info_denegada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_info_denegada">
-                
+                <div class="py-4 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -426,7 +376,10 @@
     <div class="modal" id="modal_info_limite" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_info_limite">
-                
+                <div class="py-4 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -444,7 +397,9 @@
                 <div class="modal-body" style="font-size:15px;">
                     <div class="d-flex flex-column text-center" id="info_produccion">
                         <span class="fw-bold">Observaciones de la Denegación</span>
-                        <p class="mx-3 mt-1" id="observacion_access"></p>
+                        <p class="mx-3 mt-1" id="observacion_access">
+            
+                        </p>
 
                         <div class="mt-3 mb-2">
                             <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
@@ -467,7 +422,6 @@
   
 
 @stop
-
 
 
 

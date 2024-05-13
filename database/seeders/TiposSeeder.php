@@ -14,10 +14,10 @@ class TiposSeeder extends Seeder
     public function run(): void
     {
         DB::table('tipos')->insert([
-            'nombre' => 'Declaración de Libro',
+            'nombre_tipo' => 'Declaración de Libro',
         ]);
         DB::table('tipos')->insert([
-            'nombre' => 'Declaración de Guías Extemporáneas',
+            'nombre_tipo' => 'Declaración de Guías Extemporáneas',
         ]);
     }
 }
