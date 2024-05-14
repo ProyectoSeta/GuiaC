@@ -95,7 +95,7 @@ class EstadoController extends Controller
                     }   
 
                     $html_talonarios = '<div class="my-3">
-                                            <h6 class="text-center mb-3" style="color: #0064cd;">Talonarios Emitidos</h6>
+                                            <h6 class="text-center mb-3 text-navy fw-bold">Talonarios Emitidos</h6>
                                             <table class="table text-center">
                                                 <tr>
                                                     <th>#</th>
@@ -111,14 +111,14 @@ class EstadoController extends Controller
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bxs-layer fs-1" style="color:#0c82ff"  ></i>                    
+                                <i class="bx bxs-layer fs-1 text-navy"  ></i>                    
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Datos de la Solicitud</h1>
                             </div>
                         </div>
                         <div class="modal-body" style="font-size:14px;">
 
                            <div class="mb-3">
-                                <h6 class="text-center mb-3" style="color: #0064cd;">Solicitud de Talonario(s) Realizada</h6>
+                                <h6 class="text-center mb-3 text-navy fw-bold">Solicitud de Talonario(s) Realizada</h6>
                                 <table class="table text-center">
                                     <thead>
                                         <tr>
@@ -147,7 +147,7 @@ class EstadoController extends Controller
                             
 
                             <div class="d-flex justify-content-center">
-                                <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Salir</button>
+                                <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
                             </div>
 
                         </div>';
@@ -171,11 +171,11 @@ class EstadoController extends Controller
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                                 <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
-                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Información</h1>
+                                <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Información</h1>
                             </div>
                         </div>
                         <div class="modal-body">
-                            <span class="fw-bold">Observaciones de la Denegación</span>
+                            <p class="text-muted text-center">OBSERVACIONES DE LA DENEGACIÓN</p>
                             <p class="mx-3 mt-1">'.$c->observaciones.'</p>
 
                             <div class="mt-3 mb-2">
@@ -276,15 +276,15 @@ class EstadoController extends Controller
 
                     $tr_historial = '<tr>
                                         <th>Emisión</th>
-                                        <td class="text-success">'.$talonario->fecha_emision.'</td>
+                                        <td class="text-success fw-bold">'.$talonario->fecha_emision.'</td>
                                     </tr>
                                     <tr>
                                         <th>Recepción</th>
-                                        <td class="text-success">'.$fecha_recibido.'</td>
+                                        <td class="text-success fw-bold">'.$fecha_recibido.'</td>
                                     </tr>
                                     <tr>
                                         <th>Entrega</th>
-                                        <td class="text-success">'.$fecha_retiro.'</td>
+                                        <td class="text-success fw-bold">'.$fecha_retiro.'</td>
                                     </tr>';
                 }
             }else{
@@ -304,7 +304,7 @@ class EstadoController extends Controller
                         </table>  
                     </div>
 
-                    <h6 class="text-center mb-3" style="color: #0064cd;">Datos de la Solicitud</h6>
+                    <h6 class="text-center mb-3 text-navy fw-bold">Datos de la Solicitud</h6>
                     <table class="table text-center">
                         <thead>
                             <tr>
@@ -316,7 +316,7 @@ class EstadoController extends Controller
                             '.$tr.'
                         </tbody>
                     </table>
-                    <h6 class="text-center mb-3" style="color: #0064cd;">Historial de Estados</h6>
+                    <h6 class="text-center mb-3  text-navy fw-bold">Historial de Estados</h6>
                     <div class="d-flex justify-content-end">
                         <table class="table text-center mx-5 px-5">
                             '.$tr_historial.'

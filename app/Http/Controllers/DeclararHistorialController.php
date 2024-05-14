@@ -32,9 +32,20 @@ class DeclararHistorialController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function nota(Request $request)
     {
-        //
+        $declaracion = $request->post('declaracion');
+        $query = DB::table('declaracions')->select('observaciones')->where('id_declaracion','=',$declaracion)->first();
+        if ($query) {
+            $html = '<h5 class="text-muted text-center mb-2">NOTA</h5>
+                    <p class="text-justify" style="font-size:14px">
+                        '.$query->observaciones.'
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>';
+            return response($html);
+        }
     }
 
     /**

@@ -8,14 +8,14 @@
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
 
-    <img src="{{asset('assets/bf-4.svg')}}" class="w-100" alt="...">
+    <!-- <img src="{{asset('assets/bf-4.svg')}}" class="w-100" alt="..."> -->
 @stop
 
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Libro de Control</h2>
-            <h4 class="text-muted">Libro de <span class="text-success">{{$fecha}}</span></h4>
+            <h3 class="mb-3 text-navy titulo">Libro de Control</h3>
+            <h4 class="text-muted titulo">Libro de <span class="text-success">{{$fecha}}</span></h4>
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"> 
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:14px;">
+            <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:13px;">
             <thead class=" border-light-subtle">
                 <tr>
                     <th scope="col">Nro. Guía</th>
@@ -45,7 +45,7 @@
                             <td class="fw-bold">{{$registro->nombre}}</td>
                             <td>{{$registro->mineral}}</td>
                             <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
-                            <td>{{$registro->razon_destinatario}}</td>
+                            <td class="fw-bold">{{$registro->razon_destinatario}}</td>
                             <td>{{$registro->destino}}</td>
                             @php
                                 if($registro->nro_factura == ''){
@@ -106,7 +106,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel" style="color: #0072ff">
+                    <h1 class="modal-title fs-5 d-flex align-items-center text-navy" id="exampleModalLabel">
                         <i class='bx bx-barcode fs-1 me-2'></i>
                         Registro de Guía
                     </h1>
@@ -129,7 +129,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel" style="color: #0072ff">
+                    <h1 class="modal-title fs-5 d-flex align-items-center text-navy" id="exampleModalLabel">
                         <i class='bx bx-barcode fs-1 me-2'></i>
                         Editar Guía
                     </h1>

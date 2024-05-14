@@ -146,14 +146,14 @@ class CanteraController extends Controller
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                                 <div class="text-center">
                                     <i class="bx bxs-hard-hat fs-2" style="color:#ff8f00"></i>
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Producción de la Cantera</h1>
-                                    <h1 class="modal-title fs-5 px-2" id="exampleModalLabel">'.$name->nombre.'</h1>
+                                    <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Producción de la Cantera</h1>
+                                    <h1 class="modal-title fs-6 px-2" id="exampleModalLabel">'.$name->nombre.'</h1>
                                 </div>
                                 
                                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                             </div>
                             <div class="modal-body" style="font-size:15px;">
-                                <div class="d-flex flex-column text-center" >
+                                <div class="d-flex flex-column text-center py-2" >
                                     '.$produccion.'
                                 </div>
                             </div>';
@@ -175,11 +175,11 @@ class CanteraController extends Controller
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                                 <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
-                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Información</h1>
+                                <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Información</h1>
                             </div>
                         </div>
                         <div class="modal-body">
-                            <span class="fw-bold">Observaciones de la Denegación</span>
+                            <p class=" text-center text-muted">OBSERVACIÓN DE LA DENEGACIÓN</p>
                             <p class="mx-3 mt-1">'.$c->observaciones.'</p>
 
                             <div class="mt-3 mb-2">
@@ -206,23 +206,23 @@ class CanteraController extends Controller
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                            <i class="bx bx-show-alt fs-1" style="color:#0072ff"  ></i>
-                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff"> Información</h1>
+                                <i class="bx bx-show-alt fs-1 text-navy mb-0 pb-0"></i>
+                                <h1 class="modal-title fs-5 text-navy mt-0 pt-0" id="exampleModalLabel"> Información</h1>
                             </div>
                         </div>
                         <div class="modal-body">
-                            <p class="fw-bold text-center mb-0 pb-0">Límite de Guías que puede solicitar cada tres (3) meses</p>
-                            <p class="mx-3 text-center">'.$query->total_guias_periodo.' Guías</p>
+                            <p class=" text-center mb-0 pb-0 text-muted">LÍMITE DE GUÍAS A SOLICITAR CADA TRES (3) MESES</p>
+                            <p class="mx-3 text-center text-navy fw-bold">'.$query->total_guias_periodo.' Guías</p>
 
-                            <span class="fw-bold">Período Actual</span>
-                            <div class="row mt-2 text-center">
+                            <p class=" text-center text-muted mb-0 pb-0">PERÍODO ACTUAL</p>
+                            <div class="row text-center">
                                 <div class="col-sm-6">
-                                    <span class="fw-bold">Inicio: </span>
-                                    <span>2024-02-24</span>
+                                    <span>Inicio: </span>
+                                    <span class="fw-bold text-navy">2024-02-24</span>
                                 </div>
                                 <div class="col-sm-6">
-                                    <span class="fw-bold">Fin del período: </span>
-                                    <span class="text-success">2024-05-24</span>
+                                    <span class="">Fin del período: </span>
+                                    <span class="text-success fw-bold">2024-05-24</span>
                                 </div>
                             </div>
 
@@ -245,8 +245,31 @@ class CanteraController extends Controller
 
 
 
-    public function show(Request $request){
-        
+    public function modal_edit(Request $request){
+
+        $idCantera = $request->post('cantera');
+        $produccion = [];
+        $query = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
+        if ($query) {
+            foreach ($query as $id_min) {
+                $id = $id_min->id_mineral;
+                $query_min = DB::table('minerals')->select('mineral')->where('id_mineral','=',$id)->get();
+                if($query_min){
+                    foreach ($query_min as $mineral) {
+                        $name_mineral = $mineral->mineral;
+                        $check = '';
+
+                     
+
+                        $produccion = array_push($produccion, $d);
+                    }
+                } 
+            }
+        }
+
+   
+
+
     }
 
     /**
@@ -254,7 +277,7 @@ class CanteraController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
     }
 
     /**

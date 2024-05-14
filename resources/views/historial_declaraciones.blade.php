@@ -12,10 +12,10 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Declaraciones</h2>
+            <h3 class="mb-3 text-navy titulo">Declaraciones</h3>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
                 <thead class="border-light-subtle">
                     <th>#</th>
                     <!-- <th>Contribuyente</th>
@@ -63,17 +63,40 @@
                                         <span>{{$dclr->nombre}}</span>
                                     </div>
                                 @php
+                                    }elseif($dclr->nombre == 'Verificando'){
+                                @endphp
+                                    <div class="d-flex align-items-center justify-content-center badge bg-secondary-subtle text-muted rounded-pill px-2 py-2" style="font-size:13px;">
+                                        <i class="bx bx-error-circle fs-6 me-2"></i>
+                                        <span>{{$dclr->nombre}}</span>
+                                    </div>
+                                @php
                                     }else{
                                 @endphp
                                     <div class="d-flex align-items-center justify-content-center badge bg-danger-subtle text-danger rounded-pill px-2 py-2" style="font-size:13px;">
-                                        <i class="bx bx-error-circle fs-6 me-2"></i>
+                                    <i class='bx bx-x-circle fs-6 me-2'></i>
                                         <span>{{$dclr->nombre}}</span>
                                     </div>
                                 @php
                                     }
                                 @endphp
                             </td>
-                            <td>{{$dclr->observaciones}}</td>
+                            <td>
+                                @php
+                                    if($dclr->observaciones != ''){
+                                        $cadena = $dclr->observaciones;
+                                        $longitud = 50;
+                                        $subcadena = substr($cadena, 0, $longitud).' ...';
+                                @endphp  
+                                    <span class="text-secondary-emphasis ver_nota" role="button" data-bs-toggle="modal" data-bs-target="#modal_ver_nota" id_declaracion="{{$dclr->id_declaracion}}">{{$subcadena}}</span>
+                                @php   
+                                    }else{
+                                @endphp  
+                                    <span class="fst-italic text-secondary">Sin Nota</span>
+                                @php 
+                                    }
+                                @endphp
+                                
+                            </td>
                         </tr>
                     @endforeach
                 </tbody> 
@@ -91,7 +114,19 @@
     
     
 <!--****************** MODALES **************************-->
-   
+    <!-- ********* VER NOTA ******** -->
+    <div class="modal" id="modal_ver_nota" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" id="content-edit-cantera">
+                <div class="modal-body px-3 py-4" id="content_ver_nota">
+                    <div class="py-4 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
+                </div>                   
+            </div>  
+        </div>  <!-- cierra modal-dialog -->
+    </div>
 
 <!--************************************************-->
 
@@ -150,7 +185,24 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-           
+           ///////MODAL: VER NOTA
+            $(document).on('click','.ver_nota', function(e) { 
+                e.preventDefault(e); 
+                var declaracion = $(this).attr('id_declaracion');
+                // alert(cantera);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("historial_declaraciones.nota") }}',
+                    data: {declaracion:declaracion},
+                    success: function(response) {
+                        // alert(response);                 
+                        $('#content_ver_nota').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
 
         });
 

@@ -35,8 +35,8 @@ class AprobacionController extends Controller
             foreach ($query as $sujeto) {
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-user-circle fs-1" style="color:#0072ff"></i>
-                                <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$sujeto->razon_social.'</h1>
+                                <i class="bx bx-user-circle fs-1 text-navy" ></i>
+                                <h1 class="modal-title fs-5 text-navy" id="" >'.$sujeto->razon_social.'</h1>
                                 <h5 class="modal-title" id="" style="font-size:14px">Contribuyente</h5>
                             </div>
                         </div>

@@ -11,10 +11,10 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Libros de Control</h2>
+            <h3 class="mb-3 text-navy titulo">Libros de Control</h3>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table display border-light-subtle text-center table-sm" style="width:100%; font-size:14px">
+            <table id="example" class="table display border-light-subtle text-center table-sm" style="width:100%; font-size:13px">
                 <thead class="bg-primary border-light-subtle">
                     <tr>
                         <th scope="col">#</th>
@@ -67,7 +67,7 @@
                             @endphp
                             
                             <td>
-                                <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4 fw-bold" mes="{{$libro->mes}}" year="{{$libro->year}}" >
+                                <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4 " mes="{{$libro->mes}}" year="{{$libro->year}}" >
                                     <!-- <i class='bx bx-show-alt fs-5 me-1'></i> -->
                                     <span>Ver Libro</span>
                                 </a>

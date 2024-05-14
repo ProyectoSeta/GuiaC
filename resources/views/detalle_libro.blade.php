@@ -12,7 +12,7 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Libro <span class="text-navy">{{$mes_nombre}} {{$year}}</span></h2>
+            <h3 class="mb-3 titulo">Libro <span class="text-navy">{{$mes_nombre}} {{$year}}</span></h3>
             
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_guia_extemp" data-bs-toggle="modal" data-bs-target="#modal_registro_guia" mes="{{$mes}}" year="{{$year}}"> 
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:14px;">
+            <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:13px;">
             <thead class=" border-light-subtle">
                 <tr>
                     <th scope="col">Nro. Guía</th>

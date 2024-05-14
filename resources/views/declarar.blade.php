@@ -9,7 +9,7 @@
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
 
-    <img src="{{asset('assets/bf-5.svg')}}" class="w-100" alt="...">
+    <!-- <img src="{{asset('assets/bf-5.svg')}}" class="w-100" alt="..."> -->
 @stop
 
 @section('content')
@@ -20,7 +20,7 @@
             <!-- /////////////  DECLARACIÓN DE LIBROS -->
             <div class="col-sm-8">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="mb-3">Declaración de <span class="text-navy">Libros</span></h3>
+                    <h3 class="mb-3 titulo">Declaración de <span class="text-navy">Libros</span></h3>
                     <div class="mb-3">
                     </div>
                 </div>
@@ -73,12 +73,12 @@
             <!-- ///////////// DECLARACION DE GUIAS EXTEMPORANEAS -->
             <div class="col-sm-8">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="mb-3">Declaración de <span class="text-navy">Guías Extemporaneas</span></h3>
+                    <h3 class="mb-3 titulo">Declaración de <span class="text-navy">Guías Extemporaneas</span></h3>
                     <div class="mb-3">
                     </div>
                 </div>
                 <div class="table-responsive mb-3" style="font-size:14px">
-                    <table id="example2" class="table text-center border-light-subtle" style="font-size:14px">
+                    <table id="example2" class="table text-center border-light-subtle" style="font-size:13px">
                         <thead>
                             <th></th>
                             <th>Libro</th>
@@ -113,10 +113,10 @@
                     <div class="card-body">
                         <!-- <h5 class="card-title">Card title</h5> -->
                         <p class="card-text text-justify" style="font-size:14px">Las Guías Extemporáneas ingresadas en un Libro previamente Declarado, 
-                            deberán ser declaradas en la <span class="fw-bold">"Declaración de guías extemporáneas"</span>. Por lo tanto, en el 
+                            deberán ser declaradas en la <span class="fw-bold titulo">"Declaración de guías extemporáneas"</span>. Por lo tanto, en el 
                             periodo señalado solo aparecerán las Guías Extemporáneas, pendientes por Declarar, 
                             ingresadas en la Apertura del Libro. </p>
-                        <p class="card-text fst-italic text-secondary"><small class="text-body-secondary">Declaración de Guías Extemporáneas</small></p>
+                        <p class="card-text fst-italic text-secondary"><small class="text-body-secondary titulo">Declaración de Guías Extemporáneas</small></p>
                     </div>
                 </div>
             </div>

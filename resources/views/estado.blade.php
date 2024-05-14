@@ -12,10 +12,10 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Actualización - Estado de Solicitudes</h2>
+            <h3 class="mb-3 text-navy titulo">Actualización - Estado de Solicitudes</h3>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
                 <thead class="border-light-subtle">
                     <th>Cod.</th>
                     <th>Cantera</th>

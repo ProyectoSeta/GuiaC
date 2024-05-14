@@ -46,7 +46,7 @@ class SolicitudController extends Controller
                 $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
             }
             $html = '<div class="text-center mb-2">
-                        <span class="fs-6 fw-bold" style="color: #0072ff">Datos de la Solicitud</span>
+                        <span class="fs-6 fw-bold text-navy">Datos de la Solicitud</span>
                     </div>
                     <form id="form_generar_solicitud" method="post" onsubmit="event.preventDefault(); generarSolicitud();">
                         
@@ -221,15 +221,15 @@ class SolicitudController extends Controller
             }
         }
         $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-beetwen">
-                    <div class="ps-3">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">'.$nombre_cantera.'</h1>
+                    <div class="ps-3" style="font-size: 14px;">
+                        <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel" >'.$nombre_cantera.'</h1>
                         <span class="text-muted">'.$razon.'</span><br>
                         <span class="text-muted">'.$sp->rif_condicion.'-'.$sp->rif_nro.'</span>
                     </div>
                     <button type="button" class="btn-close pe-5" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="font-size:14px;">
-                    <h6 class="text-center mb-3">Solicitud de Talonario(s) Realizada</h6>
+                    <h6 class="text-center mb-3 text-navy fw-bold">Detalles de la Solicitud Realizada</h6>
                     <table class="table text-center">
                         <thead>
                             <tr>

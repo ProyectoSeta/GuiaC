@@ -8,13 +8,13 @@
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
     <script src="{{asset('vendor/sweetalert.js') }}"></script>
 
-    <img src="{{asset('assets/bf-2.svg')}}" class="w-100" alt="...">
+    <!-- <img src="{{asset('assets/bf-2.svg')}}" class="w-100" alt="..."> -->
 @stop
 
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Solicitud de Guías</h2>
+            <h3 class="mb-3 text-navy titulo">Solicitud de Guías</h3>
             <div class="me-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 fw-bold btn-sm d-flex align-items-center" id="new_solicitud" data-bs-toggle="modal" data-bs-target="#modal_new_solicitud">
                     <i class='bx bx-plus fw-bold fs-6 pe-2' ></i>
@@ -25,7 +25,7 @@
         
         
         <div class="table-responsive" style="font-size:14px">        
-            <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:14px">
+            <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                 <thead class="bg-primary border-light-subtle">
                     <tr>
                         <th scope="col">Cod.</th>
@@ -47,7 +47,7 @@
                                 <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
                             </td>
                             <td>
-                                <span>{{$solicitud->ucd_pagar}}</span>
+                                <span>{{$solicitud->ucd_pagar}} UCD</span>
                             <td>
                                 @switch($solicitud->estado)
                                 @case('Verificando')
@@ -102,7 +102,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #0072ff">
+                    <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel">
                     <!-- <i class='bx bxs-file-plus'></i> -->
                         Solicitud de Guías - Talonario
                     </h1>
