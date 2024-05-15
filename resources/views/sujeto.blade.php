@@ -14,29 +14,30 @@
             <h3 class="mb-3 text-navy titulo">Sujetos Pasivos</h3>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table display border-light-subtle" style="width:100%; font-size:14px">
+            <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                 <thead class="bg-primary border-light-subtle">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Rif</th>
-                            <th scope="col">Tipo</th>
+                            <!-- <th scope="col">Tipo</th> -->
                             <th scope="col">Razon social</th>
                             <th scope="col">Dirección</th>
                             <th scope="col">Telefonos</th>
                             <th scope="col">Representante</th>
                             <th scope="col">Estado</th>
-                            <!-- <th scope="col">Opciones</th> -->
+                            <th scope="col">Opciones</th>
                         </tr>
                 </thead>
                 <tbody>
                     @foreach( $sujeto as $sujeto)               
                         <tr>
                             <td>{{$sujeto->id_sujeto}}</td>
-                            <td>{{$sujeto->rif}}</td>
-                            <td>{{$sujeto->tipo_sujeto}}</td>
-                            <td>{{$sujeto->razon_social}}</td>
+                            <td>
+                                <a class="info_sujeto" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sujeto->rif_condicion}}-{{$sujeto->rif_nro}}</a>
+                            </td>
+                            <td class="text-navy fw-bold">{{$sujeto->razon_social}}</td>
                             <td>{{$sujeto->direccion}}</td>
-                            <td>{{$sujeto->tlf_movil."-".$sujeto->tlf_fijo }}</td>
+                            <td>{{$sujeto->tlf_movil." - ".$sujeto->tlf_fijo }}</td>
                             <td>
                                 <a class="info_representante" role="button" id_sujeto='{{ $sujeto->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_representante">{{$sujeto->name_repr}}</a>
                             </td>
@@ -53,11 +54,9 @@
                                         @break
                                     @endswitch
                             </td>
-                            <!-- <td>
-                                <span class="badge delete_solicitud" style="background-color: #ed0000;" role="button" >
-                                    <i class="bx bx-trash-alt fs-6"></i>
-                                </span>
-                            </td> -->
+                            <td>
+                                <button class="btn btn-primary btn-sm rounded-4 px-3 edit_estado_sj" id_sujeto="{{$sujeto->id_sujeto}}" data-bs-toggle="modal" data-bs-target="#modal_edit_estado_sj">Editar</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -82,6 +81,27 @@
                     <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
                     <span class="text-muted">Cargando, por favor espere un momento...</span>
                 </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* INFO SUJETO ******** -->
+   <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_info_sujeto">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* EDITAR ESTADO: SUJETO PASIVO ******** -->
+    <div class="modal" id="modal_edit_estado_sj" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_estado_sj">
+                
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -146,6 +166,24 @@
     </script> 
     <script type="text/javascript">
         $(document).ready(function () {
+             ///////MODAL: INFO SUJETO PASIVO
+             $(document).on('click','.info_sujeto', function(e) { 
+                e.preventDefault(e); 
+                var sujeto = $(this).attr('id_sujeto');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("aprobacion.sujeto") }}',
+                    data: {sujeto:sujeto},
+                    success: function(response) {              
+                        $('#html_info_sujeto').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
             ///////MODAL: INFO REPRESENTANTE
             $(document).on('click','.info_representante', function(e) { 
                 e.preventDefault(e); 
@@ -163,7 +201,54 @@
                 });
             });
 
+            ///////MODAL: INFO REPRESENTANTE
+            $(document).on('click','.edit_estado_sj', function(e) { 
+                e.preventDefault(e); 
+                var sujeto = $(this).attr('id_sujeto');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("sujeto.edit_estado") }}',
+                    data: {sujeto:sujeto},
+                    success: function(response) {            
+                        $('#content_estado_sj').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
         });
+
+        function editEstadoSP(){
+            var formData = new FormData(document.getElementById("form_edit_estado_sp"));
+            // console.log("alo");
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("sujeto.update_estado") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    if (response.success) {
+                        alert('ESTADO ACTUALIZADO CORRECTAMENTE');
+                        $('#form_edit_estado_sp')[0].reset();
+                        $('#modal_edit_estado_sj').modal('hide');
+                        window.location.href = "{{ route('sujeto')}}";
+                        
+                    }else{
+                        alert('Ha ocurrido un error al actualizar el estado del Sujeto Pasivo.');
+                    }
+                },
+                error: function(error){
+                    
+                }
+            });
+        }
             
     </script>
 @stop

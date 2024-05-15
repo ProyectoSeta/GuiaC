@@ -253,7 +253,7 @@
 
         function denegarUser(){
             var formData = new FormData(document.getElementById("form_denegar_sujeto"));
-            console.log("alo");
+            // console.log("alo");
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 url:'{{route("verificar_user.denegar") }}',

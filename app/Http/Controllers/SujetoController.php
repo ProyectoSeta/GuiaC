@@ -28,7 +28,7 @@ class SujetoController extends Controller
                 $html = '<div class="modal-header  p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                                 <i class="bx bx-briefcase-alt fs-1" style="color:#c14900"></i>
-                                <h1 class="modal-title fs-5" id="" style="color: #0072ff">Datos del Representante</h1>
+                                <h1 class="modal-title fs-5 text-navy" id="">Datos del Representante</h1>
                                 <h5 class="modal-title" id="" style="font-size:14px">Sujeto Pasivo</h5>
                             </div>
                         </div>
@@ -61,17 +61,92 @@ class SujetoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function edit_estado(Request $request)
     {
-        //
+        $idSujeto = $request->post('sujeto');
+        $sujeto = DB::table('sujeto_pasivos')->select('razon_social', 'rif_condicion', 'rif_nro', 'estado')->where('id_sujeto','=',$idSujeto)->first();
+        if ($sujeto) {
+
+            $option = '';
+            switch ($sujeto->estado) {
+                case 'Verificando':
+                    $option = '<option value="Verificando">Verificando</option>
+                                <option value="Verificado">Verificado</option>
+                                <option value="Rechazado">Rechazado</option>';
+                    break;
+                case 'Verificado':
+                    $option = '<option value="Verificado">Verificado</option>
+                                <option value="Verificando">Verificando</option>
+                                <option value="Rechazado">Rechazado</option>';
+                    break;
+                case 'Rechazado':
+                    $option = '<option value="Rechazado">Rechazado</option>
+                                <option value="Verificando">Verificando</option>
+                                <option value="Verificado">Verificado</option>';
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
+            $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                        <div class="text-center">
+                            <i class="bx bx-refresh bx-spin  fs-1" style="color:#0d8a01"></i>       
+                            <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel">Editar Estado</h1>
+                        </div>
+                    </div>
+                    <div class="modal-body p-2">
+                        <form id="form_edit_estado_sp" method="post" onsubmit="event.preventDefault(); editEstadoSP()">
+                            <div class="mx-4 my-2" style="font-size:14px">
+                                <div class="row" >
+                                    <div class="col-sm-4 fw-bold">R.I.F.:</div>
+                                    <div class="col-sm-8 text-muted">'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 fw-bold">Razon Social:</div>
+                                    <div class="col-sm-8 text-muted">'.$sujeto->razon_social.'</div>
+                                </div>
+
+                                <div class="row px-5 my-3 mb-4">
+                                    <div class="col-sm-5">
+                                        <label for="estado" class="fw-bold fs-6 text-navy">Editar Estado</label>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <select class="form-select form-select-sm" id="estado" aria-label="Small select" name="estado" required="">
+                                            '.$option.'
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="sujeto" value="'.$idSujeto.'">
+
+                                <div class="d-flex justify-content-center mt-3 mb-3">
+                                    <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success btn-sm">Actualizar</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        
+                    </div>';
+            return response($html);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function update_estado(Request $request)
     {
-        //
+        $idSujeto = $request->post('sujeto');
+        $estado = $request->post('estado');
+
+        $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => $estado]);
+        if ($update) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 
     /**

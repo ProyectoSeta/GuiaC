@@ -18,7 +18,7 @@
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h3 class="mb-3 text-navy titulo">Registro de Canteras</h3>
             <div class="mb-3">
-                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_new_cantera">
+                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_cantera" data-bs-toggle="modal" data-bs-target="#modal_new_cantera">
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
                     <span>Registrar Cantera</span>
                 </button>
@@ -85,270 +85,25 @@
     <!-- ********* NUEVA CANTERA ******** -->
     <div class="modal" id="modal_new_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-navy d-flex align-items-center" id="exampleModalLabel">
-                        <i class='bx bx-plus fw-bold fs-4 pe-2'></i>
-                        <span>Registro de Cantera</span>
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content" id="content_new_cantera">
+                <div class="py-4 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
                 </div>
-                <div class="modal-body" style="font-size:14px;">
-                    <form id="agregar_cantera" class="p-3">
-                    @csrf
-                        <!-- nombre cantera -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-2">
-                                <label for="" class="col-form-label">Nombre<span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-10">
-                                <input type="text" id="" class="form-control form-control-sm" name="nombre" >
-                            </div>
-                        </div>
-                        <!-- municipio y parroqui cantera -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-sm-2">
-                                <label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-sm-4">
-                                <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio">
-                                    <option value="Bolívar">Bolívar</option>
-                                    <option value="Camatagua">Camatagua</option>
-                                    <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
-                                    <option value="Girardot">Girardot</option>
-                                    <option value="José Ángel Lamas">José Ángel Lamas</option>
-                                    <option value="José Félix Ribas">José Félix Ribas</option>
-                                    <option value="José Rafael Revenga">José Rafael Revenga</option>
-                                    <option value="Libertador">Libertador</option>
-                                    <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
-                                    <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
-                                    <option value="San Casimiro">San Casimiro</option>
-                                    <option value="San Sebastián">San Sebastián</option>
-                                    <option value="Santiago Mariño">Santiago Mariño</option>
-                                    <option value="Santos Michelena">Santos Michelena</option>
-                                    <option value="Sucre">Sucre</option>
-                                    <option value="Tovar">Tovar</option>
-                                    <option value="Urdaneta">Urdaneta</option>
-                                    <option value="Zamora">Zamora </option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-2">
-                                <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-sm-4">
-                                <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia">
-                                    <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- direccion cantera -->
-                        <div class="row g-3 align-items-center mb-2">
-                            <div class="col-sm-3">
-                                <label for="" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-sm-9">
-                                <input type="text" id="" class="form-control form-control-sm" name="direccion" >
-                            </div>
-                        </div>
-                        <!-- produccion cantera -->
-                        <div class="row col-12">
-                                <label for="" class="col-form-label ps-1 pb-3">Producción<span style="color:red">*</span></label>
-                            </div>
-                        <div class="row g-3 align-items-center mb-2">
-                            
-                            <div class="col-12">
-                                <div class="row row-cols-sm-3">
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Caliza (EN BRUTO)" id="caliza">
-                                        <label class="form-check-label" for="caliza">
-                                            Caliza (EN BRUTO)
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value='Piedra Caliza (¾ - 1")' id="piedra_caliza">
-                                        <label class="form-check-label" for="piedra_caliza">
-                                            Piedra Caliza (¾ - 1")
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value='Arrocillo de Caliza (3/8")' id="caolin">
-                                        <label class="form-check-label" for="caolin">
-                                            Arrocillo de Caliza (3/8")
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Polvillo de Caliza" id="polvillo_caliza">
-                                        <label class="form-check-label" for="polvillo_caliza">
-                                            Polvillo de Caliza
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Carbonato de Calcio" id="carbonato_calcio">
-                                        <label class="form-check-label" for="carbonato_calcio">
-                                            Carbonato de Calcio
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Ripio" id="ripio">
-                                        <label class="form-check-label" for="ripio">
-                                            Ripio
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Dolomita - Dolomita (EN BRUTO)" id="dolomita">
-                                        <label class="form-check-label" for="dolomita">
-                                            Dolomita - Dolomita (EN BRUTO)
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Piedra Blanca Dolomita" id="piedra_dolomita">
-                                        <label class="form-check-label" for="piedra_dolomita">
-                                            Piedra Blanca Dolomita
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Cal Hidratada" id="cal_hidratada">
-                                        <label class="form-check-label" for="cal_hidratada">
-                                            Cal Hidratada
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Cal Agrícola" id="cal_agricola">
-                                        <label class="form-check-label" for="cal_agricola">
-                                            Cal Agrícola
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Concreto" id="concreto">
-                                        <label class="form-check-label" for="concreto">
-                                            Concreto
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Cemento" id="cemento">
-                                        <label class="form-check-label" for="cemento">
-                                            Cemento
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena de Río" id="arena_rio">
-                                        <label class="form-check-label" for="arena_rio">
-                                            Arena de Río
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena Lavada" id="arena_lavada">
-                                        <label class="form-check-label" for="arena_lavada">
-                                            Arena Lavada
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Arena Cernida" id="arena_cernida">
-                                        <label class="form-check-label" for="arena_cernida">
-                                            Arena Cernida
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Gravilla ¾" id="gravilla_3_4">
-                                        <label class="form-check-label" for="gravilla_3_4">
-                                            Gravilla ¾
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Ceramicos" id="Ceramicos">
-                                        <label class="form-check-label" for="Ceramicos">
-                                            Ceramicos
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Arcillas" id="Arcillas">
-                                        <label class="form-check-label" for="Arcillas">
-                                            Arcillas
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Adoquines" id="Adoquines">
-                                        <label class="form-check-label" for="Adoquines">
-                                            Adoquines
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value='Gravilla (¾ - 1")' id="gravilla_3_4_1">
-                                        <label class="form-check-label" for="gravilla_3_4_1">
-                                            Gravilla (¾ - 1")
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Bloques" id="Bloques">
-                                        <label class="form-check-label" for="Bloques">
-                                            Bloques
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Piedra Integral" id="piedra_integral">
-                                        <label class="form-check-label" for="piedra_integral">
-                                            Piedra Integral
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Gavión" id="gavion">
-                                        <label class="form-check-label" for="gavion">
-                                            Gavión
-                                        </label>
-                                    </div>
-                                    <div class="col form-check">
-                                        <input class="form-check-input" type="checkbox" name="mineral[]" value="Granzón" id="granzon">
-                                        <label class="form-check-label" for="granzon">
-                                            Granzón
-                                        </label>
-                                    </div>
-                                </div> <!-- cierra .row  -->
-
-
-                                <div class="row pt-3">
-                                    <div class="col-sm-9">
-                                        <div class="form-check ps-0">
-                                            <label class="form-check-label" >
-                                                Otro(s)
-                                            </label>
-                                        </div>
-                                        <div class="mb-2 otros_minerales">
-                                            <div class="row">
-                                                <div class="col-9">
-                                                    <input class="form-control form-control-sm" type="text" name="mineral[]">
-                                                </div>
-                                                <div class="col-2">
-                                                    <a  href="javascript:void(0);" class="btn add_button" >
-                                                        <i class='bx bx-plus fs-4' style='color:#038ae4'></i>
-                                                    </a>
-                                                </div>
-                                            </div>         
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- cierra .col-9 produccion -->
-                       </div>  <!-- cierra .row produccion -->
-                       <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
-
-                        <div class="d-flex justify-content-center mt-3 mb-3" >
-                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
-                        </div>
-                    </form>
-                    
-                 </div>  <!-- cierra modal-body -->
-            </div>  cierra modal-content 
+             </div><!--  cierra modal-content  -->
         </div>  <!-- cierra modal-dialog -->
     </div>
 
   
-    <!-- ********* NUEVA CANTERA ******** -->
+    <!-- ********* EDITAR CANTERA ******** -->
     <div class="modal" id="modal_edit_cantera" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content" id="content-edit-cantera">
-
-            </div>  
+            <div class="modal-content" id="content_edit_cantera">
+                <div class="py-4 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>  <!--  cierra modal-content  -->
         </div>  <!-- cierra modal-dialog -->
     </div>
 
@@ -496,43 +251,29 @@
                            '</div>';
                                 //New input field html 
             var x = 1; //Initial field counter is 1
-            $(addButton).click(function(){ //Once add button is clicked
+            $(document).on('click', '.add_button', function(e){ //Once add button is clicked
                 if(x < maxField){ //Check maximum number of input fields
                     x++; //Increment field counter
-                    $(wrapper).append(fieldHTML); // Add field html
+                    $('.otros_minerales').append(fieldHTML); // Add field html
                 }
             });
-            $(wrapper).on('click', '.remove_button', function(e){ //Once remove button is clicked
+            $(document).on('click', '.remove_button', function(e){ //Once remove button is clicked
                 e.preventDefault();
                 $(this).parent('div').parent('div').remove(); //Remove field html
                 x--; //Decrement field counter
             });
 
         
-        ///////REGISTRAR CANTERA
-        $('#agregar_cantera').submit(function(e) {
-            e.preventDefault(e);    
+        ///////MODAL: INFO CANTERA DENEGADA
+        $(document).on('click','#new_cantera', function(e) { 
+            e.preventDefault(e);
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 type: 'POST',
-                url: '{{route("cantera.store") }}',
-                data: $(this).serialize(),
+                url: '{{route("cantera.modal_new") }}',
                 success: function(response) {
-                    if (response.success) {
-                        alert('La cantera ha sido registrada exitosamente');
-                        $('#agregar_cantera')[0].reset();
-                        $('#modal_new_cantera').modal('hide');
-                        window.location.href = "{{ route('cantera')}}";
-                        
-                    }else{
-                        if (response.nota == 'Rachazado') {
-                            $('#modal_new_cantera').modal('hide');
-                            $('#modal_info_access_denegado').modal('show');
-                            $('#observacion_access').html(response.obv);
-                        }else{
-                            alert(response.nota);
-                        }
-                    }
+                    // alert(response);                 
+                    $('#content_new_cantera').html(response);
                 },
                 error: function() {
                 }
@@ -551,8 +292,8 @@
                 url: '{{route("cantera.modal_edit") }}',
                 data: {cantera:cantera},
                 success: function(response) {
-                    // alert(response);                 
-                    $('#content-edit-cantera').html(response);
+                    // console.log(response);                 
+                    $('#content_edit_cantera').html(response);
                 },
                 error: function() {
                 }
@@ -749,6 +490,81 @@
         });   
 
     });
+
+    function newCantera(){
+        var formData = new FormData(document.getElementById("form_new_cantera"));
+        // console.log("alo");
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url:'{{route("cantera.store") }}',
+            type:'POST',
+            contentType:false,
+            cache:false,
+            processData:false,
+            async: true,
+            data: formData,
+            success: function(response){
+                console.log(response);
+                if (response.success) {
+                    alert('La cantera ha sido registrada exitosamente');
+                    $('#form_new_cantera')[0].reset();
+                    $('#modal_new_cantera').modal('hide');
+                    window.location.href = "{{ route('cantera')}}";
+                    
+                }else{
+                    if (response.nota == 'Rachazado') {
+                        $('#modal_new_cantera').modal('hide');
+                        $('#modal_info_access_denegado').modal('show');
+                        $('#observacion_access').html(response.obv);
+                    }else{
+                        alert(response.nota);
+                    }
+                }
+            },
+            error: function(error){
+                
+            }
+        });
+    }
+
+
+    function editCantera(){
+        var formData = new FormData(document.getElementById("form_edit_cantera"));
+        // console.log("alo");
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url:'{{route("cantera.editar") }}',
+            type:'POST',
+            contentType:false,
+            cache:false,
+            processData:false,
+            async: true,
+            data: formData,
+            success: function(response){
+                console.log(response);
+                if (response.success) {
+                    alert('La cantera ha sido editada exitosamente');
+                    $('#form_edit_cantera')[0].reset();
+                    $('#modal_edit_cantera').modal('hide');
+                    window.location.href = "{{ route('cantera')}}";
+                    
+                }else{
+                    if (response.nota == 'Rachazado') {
+                        $('#modal_edit_cantera').modal('hide');
+                        $('#modal_info_access_denegado').modal('show');
+                        $('#observacion_access').html(response.obv);
+                    }else{
+                        alert(response.nota);
+                    }
+                }
+            },
+            error: function(error){
+                
+            }
+        });
+    }
+
+
     </script>
 
 

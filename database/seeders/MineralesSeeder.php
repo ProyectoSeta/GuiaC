@@ -14,8 +14,8 @@ class MineralesSeeder extends Seeder
     public function run(): void
     {   
         $minerales = [  'Caliza (EN BRUTO)',
-                        'Piedra Caliza (¾ - 1")',
-                        'Arrocillo de Caliza (3/8")',
+                        'Piedra Caliza (¾ - 1)',
+                        'Arrocillo de Caliza (3/8)',
                         'Polvillo de Caliza',
                         'Carbonato de Calcio',
                         'Ripio',
@@ -32,7 +32,7 @@ class MineralesSeeder extends Seeder
                         'Ceramicos',
                         'Arcillas',
                         'Adoquines',
-                        'Gravilla (¾ - 1")',
+                        'Gravilla (¾ - 1)',
                         'Bloques',
                         'Piedra Integral',
                         'Gavión',

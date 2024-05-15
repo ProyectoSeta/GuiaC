@@ -31,9 +31,132 @@ class CanteraController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function modal_new()
     {
-        //
+        $html = '';
+        $cols = '';
+
+        $minerales = DB::table('minerals')->get();
+        if ($minerales) {
+            foreach ($minerales as $m) {
+                $cols .=   '<div class="col form-check">
+                                <input class="form-check-input" type="checkbox" name="mineral[]" value="'.$m->mineral.'" id="'.$m->id_mineral.'">
+                                <label class="form-check-label" for="'.$m->id_mineral.'">
+                                    '.$m->mineral.'
+                                </label>
+                            </div>';
+            }
+
+            $html = '<div class="modal-header">
+                        <h1 class="modal-title fs-5 text-navy d-flex align-items-center" id="exampleModalLabel">
+                            <i class="bx bx-plus fw-bold fs-4 pe-2"></i>
+                            <span>Registro de Cantera</span>
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="font-size:14px;">
+                        <form id="form_new_cantera" method="post" onsubmit="event.preventDefault(); newCantera()" class="p-3">
+                            <!-- nombre cantera -->
+                            <div class="row g-3 align-items-center mb-2">
+                                <div class="col-2">
+                                    <label for="" class="col-form-label">Nombre<span style="color:red">*</span></label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" id="" class="form-control form-control-sm" name="nombre" >
+                                </div>
+                            </div>
+                            <!-- municipio y parroqui cantera -->
+                            <div class="row g-3 align-items-center mb-2">
+                                <div class="col-sm-2">
+                                    <label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio">
+                                        <option value="Bolívar">Bolívar</option>
+                                        <option value="Camatagua">Camatagua</option>
+                                        <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                        <option value="Girardot">Girardot</option>
+                                        <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                        <option value="José Félix Ribas">José Félix Ribas</option>
+                                        <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                        <option value="Libertador">Libertador</option>
+                                        <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                        <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                        <option value="San Casimiro">San Casimiro</option>
+                                        <option value="San Sebastián">San Sebastián</option>
+                                        <option value="Santiago Mariño">Santiago Mariño</option>
+                                        <option value="Santos Michelena">Santos Michelena</option>
+                                        <option value="Sucre">Sucre</option>
+                                        <option value="Tovar">Tovar</option>
+                                        <option value="Urdaneta">Urdaneta</option>
+                                        <option value="Zamora">Zamora </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia">
+                                        <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- direccion cantera -->
+                            <div class="row g-3 align-items-center mb-2">
+                                <div class="col-sm-3">
+                                    <label for="" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" id="" class="form-control form-control-sm" name="direccion" >
+                                </div>
+                            </div>
+                            <!-- produccion cantera -->
+                            <div class="row col-12">
+                                    <label for="" class="col-form-label ps-1 pb-3">Producción<span style="color:red">*</span></label>
+                                </div>
+                            <div class="row g-3 align-items-center mb-2">
+                                
+                                <div class="col-12">
+                                    <div class="row row-cols-sm-3 px-3">
+                                        '.$cols.'
+                                    </div> <!-- cierra .row  -->
+
+                                    <div class="row pt-3">
+                                        <div class="col-sm-9">
+                                            <div class="form-check ps-0">
+                                                <label class="form-check-label fw-bold" >
+                                                    Otro(s)
+                                                </label>
+                                            </div>
+                                            <div class="mb-2 otros_minerales">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <input class="form-control form-control-sm" type="text" name="mineral[]">
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <a  href="javascript:void(0);" class="btn add_button">
+                                                            <i class="bx bx-plus fs-4" style="color:#038ae4"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>         
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- cierra .col-9 produccion -->
+                        </div>  <!-- cierra .row produccion -->
+                        <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
+
+                            <div class="d-flex justify-content-center mt-3 mb-3" >
+                                <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                            </div>
+                        </form>
+                    </div>';
+
+            return response($html);
+        }
+
     }
 
     /**
@@ -49,7 +172,7 @@ class CanteraController extends Controller
         $parroquia = $request->post('parroquia');
         $direccion = $request->post('direccion');
 
-       switch ($sp->estado) {
+        switch ($sp->estado) {
             case 'Verificado':
                 $cantera = DB::table('canteras')->insert([
                                         'id_sujeto' =>  $id_sp,
@@ -113,7 +236,7 @@ class CanteraController extends Controller
             default:
                 # code...
                 break;
-       }
+        }
 
         
          
@@ -249,34 +372,229 @@ class CanteraController extends Controller
 
         $idCantera = $request->post('cantera');
         $produccion = [];
+        $cols = '';
+        $html = '';
+
         $query = DB::table('produccions')->select('id_mineral')->where('id_cantera','=',$idCantera)->get();
         if ($query) {
+            ////////////////////////PRODUCCIÓN
             foreach ($query as $id_min) {
-                $id = $id_min->id_mineral;
-                $query_min = DB::table('minerals')->select('mineral')->where('id_mineral','=',$id)->get();
-                if($query_min){
-                    foreach ($query_min as $mineral) {
-                        $name_mineral = $mineral->mineral;
-                        $check = '';
-
-                     
-
-                        $produccion = array_push($produccion, $d);
-                    }
-                } 
+                $id = $id_min->id_mineral; 
+                array_push($produccion, $id);    
             }
+
+            ///////////////////////COLS: MINERALES
+            $minerales = DB::table('minerals')->get();
+            if ($minerales) {
+                foreach ($minerales as $m) {
+
+                    if(in_array($m->id_mineral,$produccion)){ 
+                        $check = 'checked="checked" disabled';
+                    }else{
+                        $check = '';
+                    }
+                    $cols .=   '<div class="col form-check">
+                                    <input class="form-check-input" type="checkbox" name="mineral[]" value="'.$m->mineral.'" id="'.$m->id_mineral.'" '.$check.'>
+                                    <label class="form-check-label" for="'.$m->id_mineral.'">
+                                        '.$m->mineral.'
+                                    </label>
+                                </div>';
+                }
+            }
+
+            /////////////////////DATOS CANTERA
+            $cantera = DB::table('canteras')->where('id_cantera','=',$idCantera)->first();
+            if ($cantera) {
+                $html = '<div class="modal-header">
+                            <h1 class="modal-title fs-5 text-navy d-flex align-items-center" id="exampleModalLabel">
+                                
+                                <i class="bx bx-pencil fw-bold fs-4 pe-2"></i>
+                                <span>Editar Cantera</span>
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="font-size:14px;">
+                            <form id="form_edit_cantera" method="post" onsubmit="event.preventDefault(); editCantera()" class="p-3">
+                                <!-- nombre cantera -->
+                                <div class="row g-3 align-items-center mb-2">
+                                    <div class="col-2">
+                                        <label for="" class="col-form-label">Nombre<span style="color:red">*</span></label>
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="text" id="" class="form-control form-control-sm" name="nombre" value="'.$cantera->nombre.'">
+                                    </div>
+                                </div>
+                                <!-- municipio y parroqui cantera -->
+                                <div class="row g-3 align-items-center mb-2">
+                                    <div class="col-sm-2">
+                                        <label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio">
+                                            <option value="'.$cantera->municipio_cantera.'">'.$cantera->municipio_cantera.'</option>    
+                                            <option value="Bolívar">Bolívar</option>
+                                            <option value="Camatagua">Camatagua</option>
+                                            <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                            <option value="Girardot">Girardot</option>
+                                            <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                            <option value="José Félix Ribas">José Félix Ribas</option>
+                                            <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                            <option value="Libertador">Libertador</option>
+                                            <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                            <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                            <option value="San Casimiro">San Casimiro</option>
+                                            <option value="San Sebastián">San Sebastián</option>
+                                            <option value="Santiago Mariño">Santiago Mariño</option>
+                                            <option value="Santos Michelena">Santos Michelena</option>
+                                            <option value="Sucre">Sucre</option>
+                                            <option value="Tovar">Tovar</option>
+                                            <option value="Urdaneta">Urdaneta</option>
+                                            <option value="Zamora">Zamora </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia">
+                                            <option value="'.$cantera->parroquia_cantera.'">'.$cantera->parroquia_cantera.'</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- direccion cantera -->
+                                <div class="row g-3 align-items-center mb-2">
+                                    <div class="col-sm-3">
+                                        <label for="" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="" class="form-control form-control-sm" name="direccion" value="'.$cantera->lugar_aprovechamiento.'">
+                                    </div>
+                                </div>
+                                <!-- produccion cantera -->
+                                <div class="row col-12">
+                                        <label for="" class="col-form-label ps-1 pb-3">Producción<span style="color:red">*</span></label>
+                                    </div>
+                                <div class="row g-3 align-items-center mb-2">
+                                    
+                                    <div class="col-12">
+                                        <div class="row row-cols-sm-3 px-3">
+                                            '.$cols.'
+                                        </div> <!-- cierra .row  -->
+
+                                        <div class="row pt-3">
+                                            <div class="col-sm-9">
+                                                <div class="form-check ps-0">
+                                                    <label class="form-check-label fw-bold" >
+                                                        Otro(s)
+                                                    </label>
+                                                </div>
+                                                <div class="mb-2 otros_minerales">
+                                                    <div class="row">
+                                                        <div class="col-9">
+                                                            <input class="form-control form-control-sm" type="text" name="mineral[]">
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a  href="javascript:void(0);" class="btn add_button">
+                                                                <i class="bx bx-plus fs-4" style="color:#038ae4"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>         
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> <!-- cierra .col-9 produccion -->
+                                </div>  <!-- cierra .row produccion -->
+                                <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
+
+                                <input type="hidden" name="id_cantera" value="'.$cantera->id_cantera.'">
+
+                                <div class="d-flex justify-content-center mt-3 mb-3" >
+                                    <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                                </div>
+                            </form>
+                        </div>';
+                return response($html);
+            }
+
         }
-
-   
-
 
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function editar(Request $request)
     {
+        $user = auth()->id();
+        $sp = DB::table('sujeto_pasivos')->select('id_sujeto', 'estado')->where('id_user','=',$user)->first();
+        $id_sp = $sp->id_sujeto;
+
+        $idCantera = $request->post('id_cantera');
+        $nombre = $request->post('nombre');
+        $municipio = $request->post('municipio');
+        $parroquia = $request->post('parroquia');
+        $direccion = $request->post('direccion');
+
+
+        switch ($sp->estado) {
+            case 'Verificado':
+                $cantera = DB::table('canteras')->where('id_cantera', '=', $idCantera)
+                                        ->update(['nombre' => $nombre, 
+                                                'municipio_cantera' => $municipio, 
+                                                'parroquia_cantera' => $parroquia, 
+                                                'lugar_aprovechamiento' => $direccion]);
+                $minerales = $request->post('mineral');
+
+                foreach($minerales as $mineral){
+                    if($mineral != null){
+                        $id_min = '';
+                        $query_min = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
+
+                        if(count($query_min) > 0 ){
+                            foreach ($query_min as $min) {
+                
+                                $id_min = $min->id_mineral;
+
+                            }
+                        }else{
+                            ///el mineral NO existe en la tabla minerals
+                            $new_min = DB::table('minerals')->insert(['mineral' => $mineral]);
+                            if ($new_min) {
+                                $query_new = DB::table('minerals')->select('id_mineral')->where('mineral','=',$mineral)->get();
+                                foreach ($query_new as $new) {
+                
+                                    $id_min = $new->id_mineral;
+
+                                }
+                            }
+
+                        }
+
+                        $produccions = DB::table('produccions')->insert(['id_cantera' => $idCantera,'id_mineral' => $id_min]);
+                        
+                    } /////cierra if ($mineral != null)
+                }//////cierra foreach
+                return response()->json(['success' => true]);
+                break;
+            case 'Verificando':
+                return response()->json(['success' => false, 'nota' => 'Disculpe, los datos de la cantera no pueden ser actualizados ya que su usuario esta en proceso de Verificación.']);
+                break;
+            case 'Rechazado':
+                $motivo = DB::table('sujeto_pasivos')->select('observaciones')->where('id_sujeto','=',$id_sp)->first();
+                if ($motivo) {
+                    $obv = $motivo->observaciones;
+                    return response()->json(['success' => false, 'nota' => 'Rachazado', 'obv' => $obv]);
+                }
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+
         
     }
 
