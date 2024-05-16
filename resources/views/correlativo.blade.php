@@ -88,7 +88,7 @@
             <div class="modal-content" >
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <i class="bx bxs-layer fs-1" style="color:#0c82ff"  ></i>                    
+                        <i class="bx bxs-layer fs-1 text-navy" ></i>                    
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Datos del talonario</h1>
                     </div>
                 </div>
