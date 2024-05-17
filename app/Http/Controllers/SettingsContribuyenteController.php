@@ -36,46 +36,53 @@ class SettingsContribuyenteController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function contribuyente(Request $request)
+    public function editar(Request $request)
     {
         $idSujeto = $request->post('id_sujeto'); 
+        $user = auth()->id(); 
+
+        $correo = $request->post('correo');
+        if ($correo != '') {
+            $update_correo = DB::table('users')->where('id', '=', $user)->update(['email' => $correo]);
+        }
+
+        $rif_condicion_sp = $request->post('rif_condicion_sp');
+        $rif_nro_sp = $request->post('rif_nro_sp');
         $razon_social = $request->post('razon_social');
         $direccion = $request->post('direccion');
-        $tlf_movil = $request->post('tlf_movil');
-        $tlf_fijo = $request->post('tlf_fijo');
+        $tlf_movil_sp = $request->post('tlf_movil_sp');
+        $tlf_fijo_sp = $request->post('tlf_fijo_sp');
 
-        $update_cont = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['razon_social' => $razon_social, 'direccion' => $direccion, 'tlf_movil' => $tlf_movil, 'tlf_fijo' => $tlf_fijo]);
-
-        if ($update_cont) {
-            return response()->json(['success' => true]);
-        }else{
-            return response()->json(['success' => false]);
-        }
-    }
-
-    public function representante(Request $request)
-    {
-        $idSujeto = $request->post('id_sujeto'); 
         $ci_condicion_repr = $request->post('ci_condicion_repr');
         $ci_nro_repr = $request->post('ci_nro_repr');
         $rif_condicion_repr = $request->post('rif_condicion_repr');
         $rif_nro_repr = $request->post('rif_nro_repr');
-        $name_repr = $request->post('name_repr');
-        $tlf_repr = $request->post('tlf_repr');
+        $nombre_repr = $request->post('nombre_repr');
+        $tlf_movil_repr = $request->post('tlf_movil_repr');
 
-        $update_repr = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['ci_condicion_repr' => $ci_condicion_repr, 
-                                                                                                'ci_nro_repr' => $ci_nro_repr, 
-                                                                                                'rif_condicion_repr' => $rif_condicion_repr,
-                                                                                                'rif_nro_repr' => $rif_nro_repr, 
-                                                                                                'name_repr' => $name_repr,
-                                                                                                'tlf_repr' => $tlf_repr]);
+        $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)
+                                                    ->update(['rif_condicion' => $rif_condicion_sp,
+                                                            'rif_nro' => $rif_nro_sp,
+                                                            'razon_social' => $razon_social, 
+                                                            'direccion' => $direccion, 
+                                                            'tlf_movil' => $tlf_movil_sp, 
+                                                            'tlf_fijo' => $tlf_fijo_sp,
+                                                            'ci_condicion_repr' => $ci_condicion_repr,
+                                                            'ci_nro_repr' => $ci_nro_repr,
+                                                            'rif_condicion_repr' => $rif_condicion_repr,
+                                                            'rif_nro_repr' => $rif_nro_repr,
+                                                            'name_repr' => $nombre_repr,
+                                                            'tlf_repr' => $tlf_movil_repr]);
 
-        if ($update_repr) {
+
+        if ($update || $update_correo) {
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);
         }
     }
+
+
 
 
     public function store(Request $request)

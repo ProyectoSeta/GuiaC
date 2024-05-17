@@ -126,8 +126,8 @@ Route::post('/registro_guia', [App\Http\Controllers\RegistroGuiaController::clas
 
 //////////////////CONFIGURACION DE USUARIO:CONTRIBUYENTES
 Route::get('/settings_contribuyente', [App\Http\Controllers\SettingsContribuyenteController::class, 'index'])->name('settings_contribuyente');
-Route::post('/settings_contribuyente/contribuyepost', [App\Http\Controllers\SettingsContribuyenteController::class, 'contribuyente'])->name('settings_contribuyente.contribuyente');
-Route::post('/settings_contribuyente/representante', [App\Http\Controllers\SettingsContribuyenteController::class, 'representante'])->name('settings_contribuyente.representante');
+Route::post('/settings_contribuyente/editar', [App\Http\Controllers\SettingsContribuyenteController::class, 'editar'])->name('settings_contribuyente.editar');
+// Route::post('/settings_contribuyente/representante', [App\Http\Controllers\SettingsContribuyenteController::class, 'representante'])->name('settings_contribuyente.representante');
 
 
 ////////////////DECLARAR GUIAS (VISTA: CONTRIBUYENTE)
@@ -153,3 +153,7 @@ Route::post('/detalle_libro/editar_guia', [App\Http\Controllers\DetalleLibroCont
 ////////////////HISTORIAL DECLARACIONES
 Route::get('/historial_declaraciones', [App\Http\Controllers\DeclararHistorialController::class, 'index'])->name('historial_declaraciones');
 Route::post('/historial_declaraciones/nota', [App\Http\Controllers\DeclararHistorialController::class, 'nota'])->name('historial_declaraciones.nota');
+
+
+///////////BITACORA
+Route::get('/bitacora', [App\Http\Controllers\BitacoraController::class, 'index'])->name('bitacora');

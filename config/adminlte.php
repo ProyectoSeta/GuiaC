@@ -397,16 +397,15 @@ return [
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/control_canteras',
         ],
-        
-        ['header' => 'Usuarios'],
+        ['header' => 'Bitácora'],
         [
             'text' => 'Bitácora',
-            'url'  => '/',
-            // 'icon' => 'fas fa-fw fa-user',
+            'url'  => '/bitacora',
+            // 'icon' => '',
         ],
         ['header' => 'Configuración'],
         [
-            'text' => 'Configuración',
+            'text' => 'Actualizar datos',
             'url'  => '/settings_contribuyente',
             // 'icon' => '',
         ],
