@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Canteras')
+@section('title', 'BitácorA')
 
 @section('content_header')
     
@@ -23,7 +23,7 @@
             <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
                 <thead>
                     <th>#</th>
-                    <th>Nombre</th>
+                    <th></th>
                     <th>Direccion</th>
                     <th>Producción</th>
                     <!-- <th>Guias a solicitar cada tres (3) meses</th> -->

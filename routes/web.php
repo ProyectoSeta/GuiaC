@@ -154,6 +154,9 @@ Route::post('/detalle_libro/editar_guia', [App\Http\Controllers\DetalleLibroCont
 Route::get('/historial_declaraciones', [App\Http\Controllers\DeclararHistorialController::class, 'index'])->name('historial_declaraciones');
 Route::post('/historial_declaraciones/nota', [App\Http\Controllers\DeclararHistorialController::class, 'nota'])->name('historial_declaraciones.nota');
 
+///////////USUARIOS
+Route::get('/usuarios', [App\Http\Controllers\UsuariosController::class, 'index'])->name('usuarios');
+Route::post('/usuarios/store', [App\Http\Controllers\UsuariosController::class, 'store'])->name('usuarios.store');
 
 ///////////BITACORA
 Route::get('/bitacora', [App\Http\Controllers\BitacoraController::class, 'index'])->name('bitacora');

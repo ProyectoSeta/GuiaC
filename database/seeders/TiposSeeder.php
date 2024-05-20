@@ -19,5 +19,11 @@ class TiposSeeder extends Seeder
         DB::table('tipos')->insert([
             'nombre_tipo' => 'Declaración de Guías Extemporáneas',
         ]);
+        DB::table('tipos')->insert([
+            'nombre_tipo' => 'Contribuyente',
+        ]);
+        DB::table('tipos')->insert([
+            'nombre_tipo' => 'Administrativo',
+        ]);
     }
 }

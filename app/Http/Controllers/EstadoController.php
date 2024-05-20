@@ -17,9 +17,6 @@ class EstadoController extends Controller
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
             ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
             ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-            // ->where('solicituds.estado','En proceso')
-            // ->where('solicituds.estado','Retirar')
-            // ->where('solicituds.estado','Retirado')
             ->get();
 
         return view('estado', compact('solicitudes'));

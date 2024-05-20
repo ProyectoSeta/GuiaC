@@ -397,7 +397,12 @@ return [
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/control_canteras',
         ],
-        ['header' => 'Bitácora'],
+        ['header' => 'Usuarios'],
+        [
+            'text' => 'Usuarios',
+            'url'  => '/usuarios',
+            // 'icon' => '',
+        ],
         [
             'text' => 'Bitácora',
             'url'  => '/bitacora',
@@ -407,6 +412,12 @@ return [
         [
             'text' => 'Actualizar datos',
             'url'  => '/settings_contribuyente',
+            // 'icon' => '',
+        ],
+        ['header' => 'Administración'],
+        [
+            'text' => 'UCD',
+            'url'  => '/ucd',
             // 'icon' => '',
         ],
 

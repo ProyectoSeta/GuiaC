@@ -42,7 +42,7 @@
                     <div class="mb-2">
                         <label class="form-label" for="correo">Correo Electrónico</label><span class="text-danger">*</span>
                         <input type="email" id="correo" name="correo" class="form-control form-control-sm" value="{{ $sp->email}}" placeholder="example@gmail.com" disabled>
-                        <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
+                        <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: ejemplo@gmail.com</p>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">

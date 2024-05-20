@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="col-1">-</div>
                                     <div class="col-8">
-                                        <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro" placeholder="Ejemplo: 30563223" autofocus/>
+                                        <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro" placeholder="Ejemplo: 30563223" autofocus value="{{ old('rif_nro') }}"/>
                                         <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                 <!-- razon social input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="razon_social">Razon Social</label><span class="text-danger"> *</span>
-                                    <input type="text" id="razon_social" class="form-control form-control-sm" name="razon_social"/>
+                                    <input type="text" id="razon_social" class="form-control form-control-sm" name="razon_social" value="{{ old('razon_social') }}"/>
                                 </div>
 
                                 <!-- artesanal? input -->
@@ -81,20 +81,20 @@
                                 <!-- direccion input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="direccion">Dirección</label><span class="text-danger"> *</span>
-                                    <input type="text" id="direccion" class="form-control form-control-sm" name="direccion"/>
+                                    <input type="text" id="direccion" class="form-control form-control-sm" name="direccion" value="{{ old('direccion') }}"/>
                                 </div>
 
                                 <!-- tlf movil input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="tlf_movil">Teléfono Movil</label><span class="text-danger"> *</span>
-                                    <input type="number" id="tlf_movil" class="form-control form-control-sm" name="tlf_movil" placeholder="Ejemplo: 04125231102"/>
+                                    <input type="number" id="tlf_movil" class="form-control form-control-sm" name="tlf_movil" placeholder="Ejemplo: 04125231102" value="{{ old('tlf_movil') }}"/>
                                     <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
                                 </div>
 
                                 <!-- tlf fijo input -->
                                 <div class="form-outline mb-2">
                                     <label class="form-label" for="tlf_fijo">Teléfono Fijo</label>
-                                    <input type="number" id="tlf_fijo" class="form-control form-control-sm" name="tlf_fijo" placeholder="Ejemplo: 02432632201"/>
+                                    <input type="number" id="tlf_fijo" class="form-control form-control-sm" name="tlf_fijo" placeholder="Ejemplo: 02432632201" value="{{ old('tlf_fijo') }}"/>
                                     <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 02432632201</p>
                                 </div>
 
@@ -114,7 +114,7 @@
                                     </div>
                                     <div class="col-1">-</div>
                                     <div class="col-8">
-                                        <input type="number" id="rif_nro_repr" class="form-control form-control-sm" name="rif_nro_repr" placeholder="Ejemplo: 084561221"/>
+                                        <input type="number" id="rif_nro_repr" class="form-control form-control-sm" name="rif_nro_repr" placeholder="Ejemplo: 084561221" value="{{ old('rif_nro_repr') }}"/>
                                         <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 084561221</p>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                     </div>
                                     <div class="col-1">-</div>
                                     <div class="col-8">
-                                        <input type="number" id="ci_nro_repr" class="form-control form-control-sm" name="ci_nro_repr" placeholder="Ejemplo: 8456122"/>
+                                        <input type="number" id="ci_nro_repr" class="form-control form-control-sm" name="ci_nro_repr" placeholder="Ejemplo: 8456122" value="{{ old('ci_nro_repr') }}"/>
                                         <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 8456122</p>
                                     </div>
                                 </div>
@@ -138,13 +138,13 @@
                                  <!-- nombre:repr input -->
                                  <div class="form-outline mb-2">
                                     <label class="form-label" for="name_repr">Nombre del Representante</label><span class="text-danger"> *</span>
-                                    <input type="text" id="name_repr" class="form-control form-control-sm" name="name_repr"/>
+                                    <input type="text" id="name_repr" class="form-control form-control-sm" name="name_repr" value="{{ old('name_repr') }}"/>
                                 </div>
 
                                  <!-- tlf:repr input -->
                                  <div class="form-outline mb-2">
                                     <label class="form-label" for="tlf_repr">Teléfono del Representante</label><span class="text-danger"> *</span>
-                                    <input type="number" id="tlf_repr" class="form-control form-control-sm" name="tlf_repr" placeholder="Ejemplo: 04125231102"/>
+                                    <input type="number" id="tlf_repr" class="form-control form-control-sm" name="tlf_repr" placeholder="Ejemplo: 04125231102" value="{{ old('tlf_repr') }}"/>
                                     <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
                                 </div>
 
@@ -192,8 +192,26 @@
                                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                                 </div>
                                 <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
+                                
+                                <div class="text-muted mt-4" style="font-size:14px">
+                                    <span>La Contraseña debe contener:</span>
+                                    <ol>
+                                        <li>Mínimo 8 caracteres.</li>
+                                        <li>Caracteres alfanuméricos.</li>
+                                        <li>Caracteres especiales (Ejemplo: ., @, $, *, %, !, &, entre otros.).</li>
+                                    </ol>
+                                </div>
+                                
 
-                               
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
 
                                 <div class="d-flex justify-content-center">
                                     <!-- Submit button -->
