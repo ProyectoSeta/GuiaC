@@ -157,6 +157,13 @@ Route::post('/historial_declaraciones/nota', [App\Http\Controllers\DeclararHisto
 ///////////USUARIOS
 Route::get('/usuarios', [App\Http\Controllers\UsuariosController::class, 'index'])->name('usuarios');
 Route::post('/usuarios/store', [App\Http\Controllers\UsuariosController::class, 'store'])->name('usuarios.store');
+Route::post('/usuarios/modal_edit', [App\Http\Controllers\UsuariosController::class, 'modal_edit'])->name('usuarios.modal_edit');
+Route::post('/usuarios/editar', [App\Http\Controllers\UsuariosController::class, 'editar'])->name('usuarios.editar');
+Route::post('/usuarios', [App\Http\Controllers\UsuariosController::class, 'destroy'])->name('usuarios.destroy');
 
 ///////////BITACORA
 Route::get('/bitacora', [App\Http\Controllers\BitacoraController::class, 'index'])->name('bitacora');
+
+///////////UCD
+Route::get('/ucd', [App\Http\Controllers\UcdController::class, 'index'])->name('ucd');
+Route::post('/ucd/update', [App\Http\Controllers\UcdController::class, 'update'])->name('ucd.update');
