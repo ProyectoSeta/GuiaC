@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'BitácorA')
+@section('title', 'Bitácora')
 
 @section('content_header')
     
@@ -20,19 +20,24 @@
         </div>
 
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
-                <thead>
+            <table id="example" class="table border-light-subtle text-center" style="font-size:13px">
+                <thead class="">
                     <th>#</th>
-                    <th></th>
-                    <th>Direccion</th>
-                    <th>Producción</th>
-                    <!-- <th>Guias a solicitar cada tres (3) meses</th> -->
-                    <th>Estado</th>
-                    <th>Opciones</th> 
+                    <th>Usuario</th>
+                    <th>Modulo</th>
+                    <th>Fecha</th> 
+                    <th>Accción</th>
                 </thead>
-                <tbody id="list_canteras" class="border-light-subtle"> 
-                
-                   
+                <tbody class="border-light-subtle "> 
+                    @foreach ($bitacoras as $b)
+                        <tr>
+                            <td>{{ $b->correlativo }}</td>
+                            <td class="text-navy fw-bold">{{ $b->name }}</td>
+                            <td class="text-muted">{{ $b->nombre }}</td>
+                            <td class="fw-bold">{{ $b->fecha }}</td>
+                            <td class="w-50">{{ $b->accion }}</td>
+                        </tr>
+                    @endforeach
                 </tbody> 
                 
             </table>
@@ -86,6 +91,7 @@
         $(document).ready(function () {
             $('#example').DataTable(
                 {
+                    "order": [[ 0, "desc" ]],
                     "language": {
                         "lengthMenu": " Mostrar  _MENU_  Registros por página",
                         "zeroRecords": "No se encontraron registros",

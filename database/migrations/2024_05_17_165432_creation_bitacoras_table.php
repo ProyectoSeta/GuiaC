@@ -15,6 +15,8 @@ return new class extends Migration
             $table->increments('correlativo');
             $table->integer('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('modulo')->unsigned();
+            $table->foreign('modulo')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
             $table->date('fecha');
             $table->string('accion');
 

@@ -88,6 +88,11 @@ class ControlCanterasController extends Controller
 
         $updates = DB::table('limite_guias')->where('id_cantera', '=', $cantera)->update(['total_guias_periodo' => $limite]);
         if ($updates) {
+            $user = auth()->id();
+            $c =  DB::table('canteras')->select('nombre')->where('id_cantera','=',$cantera)->first(); 
+            $accion = 'LÍMITE DE SOLICITUD DE GUÍAS ACTUALIZADO A '.$limite.' GUÍAS, CANTERA: '.$c->nombre.'.';
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 14, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

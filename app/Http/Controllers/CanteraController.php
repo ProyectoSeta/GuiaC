@@ -50,7 +50,7 @@ class CanteraController extends Controller
             $html = '<div class="modal-header">
                         <h1 class="modal-title fs-5 text-navy d-flex align-items-center" id="exampleModalLabel">
                             <i class="bx bx-plus fw-bold fs-4 pe-2"></i>
-                            <span>Registro de Cantera</span>
+                            <span>Registro de Cantera o Desazolve</span>
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>

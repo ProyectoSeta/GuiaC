@@ -27,16 +27,14 @@ class VerificarDeclaracionController extends Controller
      */
     public function info(Request $request)
     {
-        $user = auth()->id();
-        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
-        $id_sp = $sp->id_sujeto;
 
         $id_declaracion = $request->post('declaracion');
         $declaracion = DB::table('declaracions')
                                 ->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                                ->join('clasificacions', 'declaracions.tipo', '=', 'clasificacions.id_clasificacion')
+                                ->join('clasificacions', 'declaracions.estado', '=', 'clasificacions.id_clasificacion')
+                                ->join('tipos', 'declaracions.tipo', '=', 'tipos.id_tipo')
                                 ->join('ucds', 'declaracions.id_ucd', '=', 'ucds.id')
-                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre', 'ucds.valor', 'ucds.moneda')
+                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre', 'tipos.nombre_tipo', 'ucds.valor', 'ucds.moneda')
                                 ->where('declaracions.id_declaracion', $id_declaracion)
                                 ->first();
         if ($declaracion) {
@@ -68,7 +66,7 @@ class VerificarDeclaracionController extends Controller
                     </tr>
                     <tr>
                         <th>Tipo de Declaración</th>
-                        <td class="fst-italic text-secondary">'.$declaracion->nombre.'</td>
+                        <td class="fst-italic text-secondary">'.$declaracion->nombre_tipo.'</td>
                     </tr>
                     <tr>
                         <th>Fecha de emisión</th>
@@ -119,6 +117,14 @@ class VerificarDeclaracionController extends Controller
         $id_declaracion = $request->post('declaracion');
         $updates = DB::table('declaracions')->where('id_declaracion', '=', $id_declaracion)->update(['estado' => 5]);
         if ($updates) {
+            $user = auth()->id();
+            $sp =  DB::table('declaracions')->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                            ->select('sujeto_pasivos.razon_social')
+                                            ->where('id_declaracion','=',$id_declaracion)
+                                            ->first(); 
+            $accion = 'DECLARACIÓN NRO.'.$id_declaracion.' APROBADA, Contribuyente: '.$sp->razon_social;
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 11, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);
@@ -132,6 +138,14 @@ class VerificarDeclaracionController extends Controller
 
         $updates = DB::table('declaracions')->where('id_declaracion', '=', $id_declaracion)->update(['estado' => 6, 'observaciones' => $observaciones]);
         if ($updates) {
+            $user = auth()->id();
+            $sp =  DB::table('declaracions')->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                            ->select('sujeto_pasivos.razon_social')
+                                            ->where('id_declaracion','=',$id_declaracion)
+                                            ->first(); 
+            $accion = 'DECLARACIÓN NRO.'.$id_declaracion.' RECHAZADA, Contribuyente: '.$sp->razon_social;
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 11, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

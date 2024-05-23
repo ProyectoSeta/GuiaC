@@ -217,6 +217,8 @@ class AprobacionController extends Controller
         $idCantera = $request->post('cantera');
         $idSujeto = $request->post('sujeto');
         $fecha = $request->post('fecha');
+
+        $nro_talonarios = 0;
       
 
         $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get();   
@@ -230,6 +232,7 @@ class AprobacionController extends Controller
                 foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
+                    $nro_talonarios = $nro_talonarios + $cant;
                     // return response($cant); 
                     for ($i=0; $i < $cant; $i++) {                        
                         $c = $c + 1; 
@@ -265,6 +268,12 @@ class AprobacionController extends Controller
                 }/////cierra foreach
 
                 $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+
+                $user = auth()->id();
+                $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
+                $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
+                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
+               
                 return response()->json(['success' => true]);
                 
             }else{   //////////Hay registros en la tabla Talonarios
@@ -272,6 +281,7 @@ class AprobacionController extends Controller
                 foreach ($detalles as $detalle){
                     $tipo = $detalle->tipo_talonario;
                     $cant = $detalle->cantidad;
+                    $nro_talonarios = $nro_talonarios + $cant;
 
                     for ($i=1; $i <= $cant; $i++) {  
                         $id_max= DB::table('talonarios')->max('id_talonario');
@@ -313,6 +323,12 @@ class AprobacionController extends Controller
                 } ////cierra foreach
 
                 $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+
+                $user = auth()->id();
+                $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
+                $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
+                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
+
                 return response()->json(['success' => true]);
             }
            
@@ -407,6 +423,7 @@ class AprobacionController extends Controller
             $fecha = $s->fecha;
             $cantera = $s->nombre;
             $id_cantera = $s->id_cantera;
+            $sujeto = $s->id_sujeto;
         }
 
         $tr = '';
@@ -473,6 +490,7 @@ class AprobacionController extends Controller
                             <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
                             <input type="hidden" name="id_solicitud" value="'.$idSolicitud.'">
                             <input type="hidden" name="id_cantera" value="'.$id_cantera.'">
+                            <input type="hidden" name="id_sujeto" value="'.$sujeto.'">
                         </div>
                         <div class="text-muted text-end" style="font-size:13px">
                             <span class="text-danger">*</span> Campos Obligatorios
@@ -500,11 +518,8 @@ class AprobacionController extends Controller
     {
         $idSolicitud = $request->post('id_solicitud');
         $idCantera = $request->post('id_cantera'); 
+        $idSujeto = $request->post('id_sujeto'); 
         $observacion = $request->post('observacion');
-
-        $user = auth()->id();
-        $sp = DB::table('sujeto_pasivos')->where('id_user','=',$user)->first();
-        $id_sp = $sp->id_sujeto;
 
         ////////////ELIMINAR NUMERO DE GUIAS, EN GUIAS SOLICITADAS (LIMTE_GUIAS)/////
         $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
@@ -525,6 +540,11 @@ class AprobacionController extends Controller
         $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);
         
         if ($updates && $update_limite) {
+            $user = auth()->id();
+            $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
+            $accion = 'SOLICITUD NRO. '.$idSolicitud.' RECHAZADA, Contribuyente: '.$sp->razon_social;
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

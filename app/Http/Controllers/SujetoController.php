@@ -143,6 +143,11 @@ class SujetoController extends Controller
 
         $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => $estado]);
         if ($update) {
+            $user = auth()->id();
+            $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
+            $accion = 'ESTADO DEL USUARIO '.$sp->razon_social.' ACTUALIZADO A: '.$estado;
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 12, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

@@ -46,7 +46,7 @@
                                 <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
                             </td>
                             <td>
-                                <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
+                                <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' talonario="{{$talonario->id_talonario}}" data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
                             </td>
                             <td>
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
@@ -272,11 +272,12 @@
             $(document).on('click','.qr', function(e) { 
                 e.preventDefault(e); 
                 var ruta = $(this).attr('ruta');
+                var talonario = $(this).attr('talonario');
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("correlativo.qr") }}',
-                    data: {ruta:ruta},
+                    data: {ruta:ruta,talonario:talonario},
                     success: function(response) {              
                         console.log(response);
                         $('#content_ver_qr').html(response);
@@ -287,7 +288,27 @@
                 });
             });
 
+            $(document).on('click','#descargar_qr', function(e) { 
+                
+                var talonario = $(this).attr('talonario');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.accion") }}',
+                    data: {talonario:talonario},
+                    success: function(response) {              
+                       
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
         });
+
+        function accion(){
+
+        }
     </script>
 
 

@@ -31,6 +31,37 @@ class ClasificacionesSeeder extends Seeder
         DB::table('clasificacions')->insert([
             'nombre' => 'Negado',
         ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Aprobacion de Solicitudes',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Actualización de Estado - Solicitudes',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Nuevos Usuarios',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Canteras registradas',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Declaraciones',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Sujetos Pasivos',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Talonarios',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Control de Canteras',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'Usuarios',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre' => 'UCD',
+        ]);
+
     
     }
 }

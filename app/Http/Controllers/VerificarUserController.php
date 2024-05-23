@@ -110,6 +110,12 @@ class VerificarUserController extends Controller
 
         $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => 'Verificado']);
         if ($update) {
+
+            $user = auth()->id();
+            $sp = DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
+            $accion = 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: '.$sp->razon_social.'.';
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 9, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);
@@ -230,6 +236,12 @@ class VerificarUserController extends Controller
 
         $updates = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)->update(['estado' => 'Rechazado', 'observaciones' => $observacion]);
         if ($updates) {
+
+            $user = auth()->id();
+            $sp = DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
+            $accion = 'VERIFICACIÓN DE USUARIO RECHAZADA, Contribuyente: '.$sp->razon_social.'.';
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 9, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

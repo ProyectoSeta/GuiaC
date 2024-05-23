@@ -91,6 +91,7 @@ Route::get('/correlativo', [App\Http\Controllers\CorrelativoController::class, '
 Route::post('/correlativo/talonario', [App\Http\Controllers\CorrelativoController::class, 'talonario'])->name('correlativo.talonario');
 Route::post('/correlativo/guia', [App\Http\Controllers\CorrelativoController::class, 'guia'])->name('correlativo.guia');
 Route::post('/correlativo/qr', [App\Http\Controllers\CorrelativoController::class, 'qr'])->name('correlativo.qr');
+Route::post('/correlativo/accion', [App\Http\Controllers\CorrelativoController::class, 'accion'])->name('correlativo.accion');
 
 
 ////////////////VERIFICAR NUEVO USUARIO

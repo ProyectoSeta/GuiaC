@@ -11,7 +11,9 @@ class bitacoraController extends Controller
      */
     public function index()
     {
-        $bitacoras = DB::table('bitacoras')->get();
+        $bitacoras = DB::table('bitacoras')->join('users', 'bitacoras.id_user', '=', 'users.id')
+                    ->join('clasificacions', 'bitacoras.modulo', '=', 'clasificacions.id_clasificacion')
+                    ->select('bitacoras.*', 'users.name','clasificacions.nombre')->get();
 
         return view('bitacora', compact('bitacoras'));
     }

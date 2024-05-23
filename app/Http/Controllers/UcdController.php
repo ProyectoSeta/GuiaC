@@ -12,7 +12,10 @@ class UcdController extends Controller
     public function index()
     {
         $ucd = DB::table('ucds')->get();
-        return view('ucd', compact('ucd'));
+
+        $actual =  DB::table('ucds')->select('valor','moneda')->orderBy('id', 'desc')->first();
+        
+        return view('ucd', compact('ucd','actual'));
     }
 
     /**

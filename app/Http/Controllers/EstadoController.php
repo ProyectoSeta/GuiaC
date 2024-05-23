@@ -369,6 +369,10 @@ class EstadoController extends Controller
                     break;
             }
             if ($update_talonario) {
+                $user = auth()->id();
+                $accion = 'ESTADO DE LA SOLICITUD NRO.'.$idSolicitud.' ACTUALIZADO A: '.$estado;
+                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
+
                 return response()->json(['success' => true]);
             }else{
                 return response()->json(['success' => false]);

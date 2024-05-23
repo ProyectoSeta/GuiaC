@@ -270,12 +270,13 @@ class CorrelativoController extends Controller
     public function qr(Request $request)
     {
         $ruta = $request->post('ruta');
+        $talonario = $request->post('talonario');
 
         $html = '<div class="text-center my-4">
                     <img src="'.asset($ruta).'" alt="">
                 </div>
                 <div class="d-flex justify-content-center my-2">
-                    <a href="'.asset($ruta).'" download class="btn btn-primary btn-sm">Descargar QR</a>
+                    <a href="'.asset($ruta).'" id="descargar_qr" talonario="'.$talonario.'" download class="btn btn-primary btn-sm">Descargar QR</a>
                 </div>';
         return response($html);
       
@@ -284,9 +285,12 @@ class CorrelativoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function accion(Request $request)
     {
-        //
+        $talonario = $request->post('talonario');
+        $user = auth()->id();
+        $accion = 'QR DESCARGADO DEL TALONARIO NRO.'.$talonario.'.';
+        $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 13, 'accion'=> $accion]);
     }
 
     /**

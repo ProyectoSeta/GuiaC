@@ -117,6 +117,13 @@ class VerificarCanteraController extends Controller
             $insert = DB::table('limite_guias')->insert(['id_sujeto' => $idSujeto, 'id_cantera' => $idCantera, 'total_guias_periodo'=>$limite, 'inicio_periodo' => $hoy, 'fin_periodo' => $fin, 'total_guias_solicitadas_periodo' => '0']);
             $updates = DB::table('canteras')->where('id_cantera', '=', $idCantera)->update(['status' => 'Verificada']);
             if ($insert && $updates) {
+                $user = auth()->id();
+                $sp = DB::table('canteras')->join('sujeto_pasivos', 'canteras.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                        ->select('canteras.nombre','sujeto_pasivos.razon_social')
+                                        ->where('canteras.id_cantera','=',$idCantera)->first(); 
+                $accion = 'VERIFICACIÓN APROBADA, Cantera: '.$sp->nombre.', Contribuyente: '.$sp->razon_social.'.';
+                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 10, 'accion'=> $accion]);
+
                 return response()->json(['success' => true]);
             }else{
                 return response()->json(['success' => false]);
@@ -229,6 +236,13 @@ class VerificarCanteraController extends Controller
 
         $updates = DB::table('canteras')->where('id_cantera', '=', $idCantera)->update(['status' => 'Denegada', 'observaciones' => $observacion]);
         if ($updates) {
+            $user = auth()->id();
+            $sp = DB::table('canteras')->join('sujeto_pasivos', 'canteras.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                    ->select('canteras.nombre','sujeto_pasivos.razon_social')
+                                    ->where('canteras.id_cantera','=',$idCantera)->first(); 
+            $accion = 'VERIFICACIÓN RECHAZADA, Cantera: '.$sp->nombre.', Contribuyente: '.$sp->razon_social.'.';
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 10, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

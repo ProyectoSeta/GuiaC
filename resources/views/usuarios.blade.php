@@ -332,7 +332,8 @@
                 if (confirmar == pass) {
                     $("#btn_aceptar_new_user").attr('disabled', false);
                     $("#btn_aceptar_edit_user").attr('disabled', false);
-                }else{
+                }
+                else{
                     $("#btn_aceptar_new_user").attr('disabled', true);
                     $("#btn_aceptar_edit_user").attr('disabled', true);
                 }

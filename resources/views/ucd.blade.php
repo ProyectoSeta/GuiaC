@@ -12,8 +12,8 @@
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         
         <h3 class="mb-2 text-navy text-center titulo">Actualización del UCD <span class="text-muted fs-4">(Unidad de Cuenta Dinámica)</span></h3>
-        <p class="fs-5 text-center mb-5 text-muted bg-warning-subtle rounded-pill">UCD del día: <span class="fw-bold text-navy">39.7 (Euro)</span></p>
-        <div class="mb-5 d-flex justify-content-center" id="div_btn_update_ucd">
+        <p class="fs-5 text-center mb-4 text-muted bg-warning-subtle rounded-pill">UCD del día: <span class="fw-bold text-navy">{{$actual->valor}} ({{$actual->moneda}})</span></p>
+        <div class="mb-4 d-flex justify-content-center" id="div_btn_update_ucd">
             <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center text-center" id="btn_update_ucd" data-bs-toggle="modal" data-bs-target="#modal_new_user"> 
                 <i class='bx bx-refresh  fs-5 pe-2' ></i> 
                 <span>Actualizar</span>
@@ -67,7 +67,7 @@
                                 <td class="text-navy">
                                     {{ $u->valor }}
                                 </td>
-                                <td>{{ $u->moneda }}</td>
+                                <td class="fw-bold">{{ $u->moneda }}</td>
                             </tr>
                         @endforeach
                     </tbody> 
@@ -124,6 +124,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#table_ucd').DataTable({
+                "order": [[ 0, "desc" ]],
                 "language": {
                     "lengthMenu": " Mostrar  _MENU_  Registros por página",
                     "zeroRecords": "No se encontraron registros",

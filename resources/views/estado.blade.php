@@ -127,7 +127,7 @@
             <div class="modal-content" >
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <!-- <i class="bx bx-refresh fs-1" style="color:#0c82ff"  ></i>  --><i class='bx bx-refresh bx-spin  fs-1' style='color:#0d8a01' ></i>       
+                        <i class='bx bx-refresh bx-spin  fs-1' style='color:#0d8a01' ></i>       
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Actualización de Estado</h1>
                     </div>
                 </div>
