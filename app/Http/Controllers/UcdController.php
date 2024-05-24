@@ -61,6 +61,11 @@ class UcdController extends Controller
         $insert = DB::table('ucds')->insert(['valor' => $valor,'moneda' => $moneda]);
 
         if ($insert) {
+            $id_ucd= DB::table('ucds')->max('id');
+            $user = auth()->id(); 
+            $accion = 'VALOR DEL UCD ACTUALIZADO, ID: '.$id_ucd.', VALOR: '.$valor.'.';
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 16, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);

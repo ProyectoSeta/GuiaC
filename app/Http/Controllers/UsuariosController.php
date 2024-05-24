@@ -120,7 +120,7 @@ class UsuariosController extends Controller
 
             if ($usuario) {
                 $user = auth()->id();
-                $accion = 'NUEVO USUARIO ADMINISTRATIVO CREADO: '.$name.'.';
+                $accion = 'NUEVO USUARIO ADMINISTRATIVO CREADO: '.$request->post('nombre').'.';
                 $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 15, 'accion'=> $accion]);
                 return response()->json(['success' => true]);
             }
@@ -178,8 +178,8 @@ class UsuariosController extends Controller
                                                     'password' => $pass]);
                 if ($update) {
                     $user = auth()->id();
-                    $sp =  DB::table('users')->select('name')->where('id','=',$idSujeto)->first(); 
-                    $accion = 'DATOS DEL USUARIO: '.$name.' ACTUALIZADOS.';
+                    $sp =  DB::table('users')->select('name')->where('id','=',$idUser)->first(); 
+                    $accion = 'DATOS DEL USUARIO: '.$sp->name.' ACTUALIZADOS.';
                     $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 15, 'accion'=> $accion]);
 
                     return response()->json(['success' => true]);
@@ -209,6 +209,11 @@ class UsuariosController extends Controller
         $user = $request->post('user');
         $delete = DB::table('users')->where('id', '=', $user)->delete();
         if($delete){
+            $user = auth()->id();
+            $sp =  DB::table('users')->select('name')->where('id','=',$user)->first(); 
+            $accion = 'USUARIO ELIMINADO: '.$sp->name.'.';
+            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 15, 'accion'=> $accion]);
+
             return response()->json(['success' => true]);
         }else{
             return response()->json(['success' => false]);
