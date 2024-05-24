@@ -144,6 +144,7 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
+    
 
 <!--************************************************-->
 
@@ -211,32 +212,81 @@
                 });
             });
 
-            ////////////////////CALCULAR LOS UCD A PAGAR
+            // ///////MODAL: INFO TALONARIOS
+            // $(document).on('click','#calcular', function(e) { 
+            //     e.preventDefault(e); 
+            //     var cant = $('#cantidad').val();
+            //     $.ajax({
+            //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            //         type: 'POST',
+            //         url: '{{route("solicitud.talonarios") }}',
+            //         data: {cant:cant},
+            //         success: function(response) {    
+            //             // console.log(response);          
+            //             $('#content_info_talonarios').html(response);
+            //         },
+            //         error: function() {
+            //         }
+            //     });
+            // });
+
+            //////////////////CALCULAR LOS UCD A PAGAR
             $(document).on('click','#calcular', function(e) { 
                 e.preventDefault(e); 
                 var cant = $('#cantidad').val();
-                console.log(cant);
+                // console.log(cant);
 
-                if (cant == '') {
-                    $('#total_ucd').html('0 UCD');
-                }else{
-                    var total_guias = cant * 50;
-                    var total_ucd = total_guias * 5;
-                    $('#total_ucd').html(total_ucd +' UCD');
+                if (cant != 0) {
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("solicitud.calcular") }}',
+                        data: {cant:cant},
+                        success: function(response) {
+                            
+                            $('#total_ucd').html(response.ucd+' UCD');
+                            $('#precio_ucd').html(response.precio_ucd+' Bs.');
+                            $('#total_pagar').html(response.total+' Bs.');
 
-                    $("#btn_cancelar").attr('disabled', false);
-                    $("#btn_generar_solicitud").attr('disabled', false);
+                            $('#id_ucd').val(response.id_ucd);
+                            // $('#ucd').val(response.ucd);
+                            // $('#monto_total').val(response.total);
+
+                            $('#ref_pago').attr('disabled', false); 
+                        },
+                        error: function() {
+                        }
+                    });
                 }
+                
+                
+
             });
 
             ////////////////////
             $(document).on('keyup','#cantidad', function(e) {  
                 var cant = $(this).val();
                 if (cant == 0) {
+                    $('#ref_pago').attr('disabled', true);
                     $("#btn_cancelar").attr('disabled', true);
                     $("#btn_generar_solicitud").attr('disabled', true);
+
+                    $('#total_ucd').html('0 UCD');
+                    $('#precio_ucd').html('0 Bs.');
+                    $('#total_pagar').html('0 Bs.');
                 }
                 console.log(cant);
+            });
+
+            ////////HABILITAR EL BUTTON PARA GENERAR LA SOLICITUD
+            $(document).on('change','#ref_pago', function(e) {
+                e.preventDefault(); 
+                var value = $(this).val();
+                if (value != '') {
+                    $('#btn_generar_solicitud').attr('disabled', false);
+                }else{
+                    $('#btn_generar_solicitud').attr('disabled', true);
+                }
             });
 
 

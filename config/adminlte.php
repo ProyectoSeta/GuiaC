@@ -341,17 +341,17 @@ return [
             'url'  => '/libros',
             'icon' => 'bluetooth-outline',
         ],
-        ['header' => 'Declaración'],
-        [
-            'text' => 'Declarar',
-            'url'  => '/declarar',
-            // 'icon' => 'fas fa-layer-group',
-        ],
-        [
-            'text' => 'Historial',
-            'url'  => '/historial_declaraciones',
-            // 'icon' => 'fas fa-file-circle-plus',
-        ],
+        // ['header' => 'Declaración'],
+        // [
+        //     'text' => 'Declarar',
+        //     'url'  => '/declarar',
+        //     // 'icon' => 'fas fa-layer-group',
+        // ],
+        // [
+        //     'text' => 'Historial',
+        //     'url'  => '/historial_declaraciones',
+        //     // 'icon' => 'fas fa-file-circle-plus',
+        // ],
         ['header' => 'Control de Solicitudes'],
         [
             'text'       => 'Aprobación de solicitudes',
@@ -359,7 +359,7 @@ return [
             'url'        => '/aprobacion_solicitud',
         ],
         [
-            'text'       => 'Actualización/Estado',
+            'text'       => 'Actualización - Estado',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => 'estado',
         ],
@@ -374,11 +374,11 @@ return [
             'url'  => '/verificar_cantera',
             // 'icon' => 'fas fa-fw fa-user',
         ],
-        [
-            'text' => 'Declaraciones',
-            'url'  => '/verificar_declaracion',
-            // 'icon' => 'fas fa-fw fa-user',
-        ],
+        // [
+        //     'text' => 'Declaraciones',
+        //     'url'  => '/verificar_declaracion',
+        //     // 'icon' => 'fas fa-fw fa-user',
+        // ],
         ['header' => 'Historial'],
         [
             'text'          =>'Sujetos pasivos',
@@ -396,6 +396,10 @@ return [
             'text'       => 'Control de Canteras',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/control_canteras',
+        ],[
+            'text'       => 'Recaudación',
+            // 'icon_color' => 'fas fa-fw fa-user',
+            'url'        => '/',
         ],
         ['header' => 'Usuarios'],
         [

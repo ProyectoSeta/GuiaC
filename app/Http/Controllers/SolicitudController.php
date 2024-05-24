@@ -70,16 +70,33 @@ class SolicitudController extends Controller
                                 <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" required>
                             </div>
                         </div> 
-                        <p class="text-muted text-end"><span style="color:red">*</span> Campos requeridos.</p>
+                        
                         <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-secondary btn-sm" id="calcular">Calular</button>
                         </div>
 
-                        <div class="d-flex justify-content-end align-items-center me-2 fs-6 mb-2">
-                            <span class="fw-bold me-4">Total: </span>
-                            <span id="total_ucd" class="fs-5">0 UCD</span>
-                        </div>
+                        <table class="table d-flex justify-content-center table-borderless table-sm my-4">
+                            <tr>
+                                <th>UCD</th>
+                                <td id="total_ucd" class="text-end">0</td>
+                            </tr>
+                            <tr>
+                                <th>Precio del día</th>
+                                <td id="precio_ucd" class="text-end">0</td>
+                            </tr>
+                            <tr class="table-warning fs-6">
+                                <th>TOTAL A PAGAR</th> 
+                                <td id="total_pagar" class="text-end ps-3">0 Bs.</td>
+                            </tr>
+                        </table>
 
+                        <input id="id_ucd" name="id_ucd" type="hidden" value="">
+                       
+
+                        <label for="ref_pago">Referencia del Pago <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm" id="ref_pago" name="ref_pago" type="file" disabled> 
+
+                        <p class="text-muted text-end mt-2"><span style="color:red">*</span> Campos requeridos.</p>
                         <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Notas: </span><br>
                             <span class="fw-bold">1. </span>Cada Guía tiene un valor de <span class="fw-bold">cinco (5) UCD</span> (Unidad de Cuenta Dinámica).<br>
                             <span class="fw-bold">2. </span>Solo podrá eligir las canteras que hayan sido verificadas previamente.
@@ -186,7 +203,7 @@ class SolicitudController extends Controller
                     }else{
                         return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
                     }
-
+ 
                 }
 
 
@@ -255,9 +272,19 @@ class SolicitudController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function calcular(Request $request)
     {
-        //
+        $cantidad = $request->post('cant');
+        $ucd = (50 * $cantidad) * 5;
+
+        $actual =  DB::table('ucds')->select('id', 'valor')->orderBy('id', 'desc')->first();
+        $precio_ucd = $actual->valor;
+        $id_ucd = $actual->id;
+
+        $total = $ucd * $precio_ucd;
+        $total = number_format($total, 2, ',', '.');
+
+        return response()->json(['ucd' => $ucd, 'precio_ucd' => $precio_ucd, 'total' => $total, 'id_ucd' => $id_ucd]);
     }
 
     /**
