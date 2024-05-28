@@ -17,10 +17,21 @@ return new class extends Migration
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
             $table->integer('id_cantera')->unsigned();
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
-            $table->float('ucd_pagar');
-            $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
+            $table->integer('id_ucd')->unsigned();
+            $table->foreign('id_ucd')->references('id')->on('ucds')->onDelete('cascade');
+            $table->string('banco_emisor');
+            $table->integer('nro_referencia');
+            $table->string('banco_receptor');
+            $table->date('fecha_emision_pago');
+            $table->float('monto_transferido');
+            $table->string('referencia');
+            $table->integer('total_ucd');
+            $table->float('monto_total');
             $table->dateTime('fecha');
+            $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
             $table->string('observaciones')->nullable();
+
+            
             $table->timestamps();
         });
     }

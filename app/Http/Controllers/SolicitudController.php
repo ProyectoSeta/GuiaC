@@ -45,8 +45,9 @@ class SolicitudController extends Controller
             foreach ($canteras as $cantera) {
                 $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
             }
+            $fecha_actual = date('Y-m-d');
             $html = '<div class="text-center mb-2">
-                        <span class="fs-6 fw-bold text-navy">Datos de la Solicitud</span>
+                        <span class="fs-6 fw-bold text-navy">DATOS DE LA SOLICITUD</span>
                     </div>
                     <form id="form_generar_solicitud" method="post" onsubmit="event.preventDefault(); generarSolicitud();">
                         
@@ -67,13 +68,98 @@ class SolicitudController extends Controller
                             </div>
                             <div class="col-6">
                                 <label for="cant_talonario">Cantidad <span class="text-danger">*</span></label>
-                                <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" required>
+                                <input class="form-control form-control-sm mb-3" type="number" name="cantidad" id="cantidad" min="1" required>
                             </div>
                         </div> 
                         
                         <div class="d-flex justify-content-center">
                             <button type="button" class="btn btn-secondary btn-sm" id="calcular">Calular</button>
                         </div>
+
+                        <p class="fs-6 fw-bold text-navy text-center mt-3 mb-2">DATOS DEL PAGO</p>
+
+                        <table class="table d-flex justify-content-center table-borderless table-sm">
+                            <tr class="table-warning fs-6">
+                                <th>TOTAL A PAGAR</th> 
+                                <td class="total_pagar" class="text-end ps-3">0 Bs.</td>
+                            </tr>
+                        </table>
+
+                        <input id="id_ucd" name="id_ucd" type="hidden" value="" required>
+
+                        <label for="banco_emisor">Banco emisor <span class="text-danger">*</span></label>
+                        <select class="form-select form-select-sm mb-3" id="banco_emisor" aria-label="Default select example" name="banco_emisor" disabled required>
+                            <option value="BANCO DE VENEZUELA">BANCO DE VENEZUELA</option>
+                            <option value="100% BANCO">100% BANCO</option>
+                            <option value="BANCAMIGA BANCO MICROFINANCIERO">BANCAMIGA BANCO MICROFINANCIERO</option>
+                            <option value="BANCARIBE">BANCARIBE</option>
+                            <option value="BANCO ACTIVO">BANCO ACTIVO</option>
+                            <option value="BANCO AGRICOLA DE VENEZUELA">BANCO AGRICOLA DE VENEZUELA</option>
+                            <option value="BANCO BICENTENARIO DEL PUEBLO">BANCO BICENTENARIO DEL PUEBLO</option>
+                            <option value="BANCO CARONI">BANCO CARONI</option>
+                            <option value="BANCO DEL TESORO">BANCO DEL TESORO</option>
+                            <option value="BANCO EXTERIOR">BANCO EXTERIOR</option>
+                            <option value="BANCO FONDO COMUN">BANCO FONDO COMUN</option>
+                            <option value="BANCO INTERNACIONAL DE DESARROLLO">BANCO INTERNACIONAL DE DESARROLLO</option>
+                            <option value="BANCO MERCANTIL<">BANCO MERCANTIL</option>
+                            <option value="BANCO NACIONAL DE CREDITO">BANCO NACIONAL DE CREDITO</option>
+                            <option value="BANCO PLAZA">BANCO PLAZA</option>
+                            <option value="BANCO SOFITASA">BANCO SOFITASA</option>
+                            <option value="BANCO VENEZOLANO DE CREDITO">BANCO VENEZOLANO DE CREDITO</option>
+                            <option value="BANCRECER">BANCRECER</option>
+                            <option value="BANESCO">BANESCO</option>
+                            <option value="BANFANB">BANFANB</option>
+                            <option value="BANGENTE">BANGENTE</option>
+                            <option value="BANPLUS">BANPLUS</option>
+                            <option value="BBVA PROVINCIAL">BBVA PROVINCIAL</option>
+                            <option value="DELSUR BANCO UNIVERSAL>DELSUR BANCO UNIVERSAL</option>
+                            <option value="MI BANCO">MI BANCO</option>
+                            <option value="N58 BANCO DIGITAL BANCO MICROFINANCIERO">N58 BANCO DIGITAL BANCO MICROFINANCIERO</option>
+                        </select>
+
+                        <label for="nro_referencia">No. Referencia <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm mb-3" id="nro_referencia" name="nro_referencia" type="number" required disabled> 
+                        
+                        <label for="banco_receptor">Banco receptor <span class="text-danger">*</span></label>
+                        <select class="form-select form-select-sm mb-3" id="banco_receptor" aria-label="Default select example" name="banco_receptor" disabled required>
+                            <option value="BANCO DE VENEZUELA">BANCO DE VENEZUELA</option>
+                            <option value="100% BANCO">100% BANCO</option>
+                            <option value="BANCAMIGA BANCO MICROFINANCIERO">BANCAMIGA BANCO MICROFINANCIERO</option>
+                            <option value="BANCARIBE">BANCARIBE</option>
+                            <option value="BANCO ACTIVO">BANCO ACTIVO</option>
+                            <option value="BANCO AGRICOLA DE VENEZUELA">BANCO AGRICOLA DE VENEZUELA</option>
+                            <option value="BANCO BICENTENARIO DEL PUEBLO">BANCO BICENTENARIO DEL PUEBLO</option>
+                            <option value="BANCO CARONI">BANCO CARONI</option>
+                            <option value="BANCO DEL TESORO">BANCO DEL TESORO</option>
+                            <option value="BANCO EXTERIOR">BANCO EXTERIOR</option>
+                            <option value="BANCO FONDO COMUN">BANCO FONDO COMUN</option>
+                            <option value="BANCO INTERNACIONAL DE DESARROLLO">BANCO INTERNACIONAL DE DESARROLLO</option>
+                            <option value="BANCO MERCANTIL<">BANCO MERCANTIL</option>
+                            <option value="BANCO NACIONAL DE CREDITO">BANCO NACIONAL DE CREDITO</option>
+                            <option value="BANCO PLAZA">BANCO PLAZA</option>
+                            <option value="BANCO SOFITASA">BANCO SOFITASA</option>
+                            <option value="BANCO VENEZOLANO DE CREDITO">BANCO VENEZOLANO DE CREDITO</option>
+                            <option value="BANCRECER">BANCRECER</option>
+                            <option value="BANESCO">BANESCO</option>
+                            <option value="BANFANB">BANFANB</option>
+                            <option value="BANGENTE">BANGENTE</option>
+                            <option value="BANPLUS">BANPLUS</option>
+                            <option value="BBVA PROVINCIAL">BBVA PROVINCIAL</option>
+                            <option value="DELSUR BANCO UNIVERSAL>DELSUR BANCO UNIVERSAL</option>
+                            <option value="MI BANCO">MI BANCO</option>
+                            <option value="N58 BANCO DIGITAL BANCO MICROFINANCIERO">N58 BANCO DIGITAL BANCO MICROFINANCIERO</option>
+                        </select>
+
+                        <label for="fecha_emision">Fecha de Emisión <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm mb-3" id="fecha_emision" name="fecha_emision" type="date" value="'.$fecha_actual.'" required disabled>
+
+                        <label for="monto_trans">Monto Transferido <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm mb-3" id="monto_trans" name="monto_trans" type="number" required disabled>
+
+
+                        <label for="ref_pago">Referencia del Pago <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm" id="ref_pago" name="ref_pago" type="file" disabled> 
+                        <p class="text-muted text-end mt-2"><span style="color:red">*</span> Campos requeridos.</p>
 
                         <table class="table d-flex justify-content-center table-borderless table-sm my-4">
                             <tr>
@@ -86,17 +172,10 @@ class SolicitudController extends Controller
                             </tr>
                             <tr class="table-warning fs-6">
                                 <th>TOTAL A PAGAR</th> 
-                                <td id="total_pagar" class="text-end ps-3">0 Bs.</td>
+                                <td class="total_pagar" class="text-end ps-3">0 Bs.</td>
                             </tr>
                         </table>
-
-                        <input id="id_ucd" name="id_ucd" type="hidden" value="">
-                       
-
-                        <label for="ref_pago">Referencia del Pago <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-sm" id="ref_pago" name="ref_pago" type="file" disabled> 
-
-                        <p class="text-muted text-end mt-2"><span style="color:red">*</span> Campos requeridos.</p>
+                        
                         <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Notas: </span><br>
                             <span class="fw-bold">1. </span>Cada Guía tiene un valor de <span class="fw-bold">cinco (5) UCD</span> (Unidad de Cuenta Dinámica).<br>
                             <span class="fw-bold">2. </span>Solo podrá eligir las canteras que hayan sido verificadas previamente.
@@ -125,90 +204,117 @@ class SolicitudController extends Controller
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
+        $year = date("Y");
+        $mes = date("F");
+
         $idCantera = $request->post('cantera');
         $cant = $request->post('cantidad');
         $tipo = 50;
+        
+        $id_ucd = $request->post('id_ucd');
+        $banco_emisor = $request->post('banco_emisor');
+        $nro_referencia = $request->post('nro_referencia');
+        $banco_receptor = $request->post('banco_receptor');
+        $fecha_emision = $request->post('fecha_emision');
+        $monto_trans = $request->post('monto_trans');
 
-        $limites = DB::table('limite_guias')->where('id_cantera','=',$idCantera)->get();
-        // return response($limites);
-        if ($limites) {
-            foreach ($limites as $limite) {
-                $fecha_actual = date('Y-m-d');
-                if ($fecha_actual > $limite->fin_periodo) {
-                    ////ALCANZO LA FECHA LIMITE, TOCA NUEVO PERIODO
-                    $inicio = $fecha_actual;
-                    $fin = date("Y-m-d", strtotime($inicio . "+ 3 months"));
+        $ucd = DB::table('ucds')->select('valor')->where('id','=',$id_ucd)->first();
+        if ($ucd) {
+            $precio_ucd = $ucd->valor;
+        }
 
-                    $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => 0, 'inicio_periodo' => $inicio, 'fin_periodo' => $fin]);
-                    if ($update_limite) {
-                        $limites_actualizado = DB::table('limite_guias')->where('id_cantera','=',$idCantera)->get();
-                        if ($limites_actualizado) {
-                            foreach ($limites_actualizado as $l) {
-                                $solicitado = $cant * $tipo;
-                                $total_guias_prev = $l->total_guias_solicitadas_periodo + $solicitado;
-                                if ($total_guias_prev <= $l->total_guias_periodo) {
-                                    $ucd_pagar = $solicitado * 5;
+        ///////////CREAR CARPETA PARA REFERENCIAS SI NO EXISTE
+        if (!is_dir('../public/assets/referencias/'.$year)){   ////no existe la carpeta del año
+            if(mkdir('../public/assets/referencias/'.$year, 0777)){
+                mkdir('../public/assets/referencias/'.$year.'/'.$mes, 0777);
+            }
+        }
+        else{   /////si existe la carpeta del año
+            if (!is_dir('../public/assets/referencias/'.$year.'/'.$mes)) {
+                mkdir('../public/assets/referencias/'.$year.'/'.$mes, 0777);
+            }
+        }
 
-                                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 'Verificando']);
-                                    if ($query_solicitud){
-                                        $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
-                                        if ($query_detalle) {
+        $solicitado = $cant * $tipo;
 
-                                            $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
-                                            if ($update_limite) {
-                                                return response()->json(['success' => true]);
-                                            }
-                                        }
-                                
-                                    }else{
-                                        return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
-                                    }
-                                    
-                                }else{
-                                    return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
-                                }
+        $limite = DB::table('limite_guias')->where('id_cantera','=',$idCantera)->first();
+        if ($limite){
+            $fecha_actual = date('Y-m-d');
+            if ($fecha_actual > $limite->fin_periodo){
+                ////ALCANZO LA FECHA LIMITE, TOCA NUEVO PERIODO
+                $inicio = $fecha_actual;
+                $fin = date("Y-m-d", strtotime($inicio . "+ 3 months"));
+
+                $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => 0, 'inicio_periodo' => $inicio, 'fin_periodo' => $fin]);
+                if ($update_limite){
+                    $limite_update = DB::table('limite_guias')->where('id_cantera','=',$idCantera)->first();
+                    if ($limite_update){
+                        $total_guias_prev = $solicitado;
+                        if ($total_guias_prev > $limite_update->total_guias_periodo){
+
+                            return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
+                        }
+                    }
+                }
+            }else{
+                $total_guias_prev = $limite->total_guias_solicitadas_periodo + $solicitado;
+                if ($total_guias_prev > $limite->total_guias_periodo){
+                    return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
+                }
+            }
+
+            if ($request->hasFile('ref_pago')) {
+                $total_ucd = $solicitado * 5;
+                $monto_total = $total_ucd * $precio_ucd;
+                $insert = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 
+                                                            'id_cantera'=>$idCantera,
+                                                            'id_ucd'=>$id_ucd,
+                                                            'banco_emisor'=>$banco_emisor, 
+                                                            'nro_referencia'=>$nro_referencia,
+                                                            'banco_receptor'=>$banco_receptor, 
+                                                            'fecha_emision_pago'=>$fecha_emision, 
+                                                            'monto_transferido'=>$monto_trans, 
+                                                            'referencia' => null,
+                                                            'total_ucd'=>$total_ucd, 
+                                                            'monto_total'=> $monto_total,
+                                                            'estado' => 'Verificando']);
+                if ($insert) {
+                    $id_solicitud = DB::table('solicituds')->max('id_solicitud');
+
+                    $photo         = $request->file('ref_pago');
+                    $nombreimagen  = 'REF_S'.$id_solicitud.'.'.$photo->getClientOriginalExtension();
+                    $ruta          = public_path('assets/referencias/'.$year.'/'.$mes.'/'.$nombreimagen);
+                    $ruta_n        = 'assets/referencias/'.$year.'/'.$mes.'/'.$nombreimagen;
+
+                    if(copy($photo->getRealPath(),$ruta)){
+                        $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $id_solicitud)->update(['referencia' => $ruta_n]);
+                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
+
+                        if ($query_detalle && $update_solicitud){
+                            $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
+                            if ($update_limite) {
+                                return response()->json(['success' => true]);
+                            }else{
+                                return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
                             }
                         }else{
                             return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
                         }
-                        
                     }else{
                         return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
                     }
                     
                 }else{
-                    ////NO HA ALCANZADO EL FIN DEL PERIODO
-                    $solicitado = $cant * $tipo;
-                    $total_guias_prev = $limite->total_guias_solicitadas_periodo + $solicitado;
-                    if ($total_guias_prev <= $limite->total_guias_periodo) {
-                        $ucd_pagar = $solicitado * 5;
-
-                        $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 'Verificando']);
-                        if ($query_solicitud){
-                            $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                            $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
-                            if ($query_detalle) {
-
-                                $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
-                                if ($update_limite) {
-                                    return response()->json(['success' => true]);
-                                }
-                            }
-                    
-                        }else{
-                            return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
-                        }
-                        
-                    }else{
-                        return response()->json(['success' => false, 'nota' => 'EXCEDE EL NÚMERO DE GUÍAS A SOLICITAR EN EL ACTUAL PERÍODO']);
-                    }
- 
+                    return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
                 }
-
-
+            }else{   
+                return response()->json(['success' => false, 'nota' => 'ERROR AL SOLICITAR EL TALONARIO']);
             }
         }
+
+        // return response($precio_ucd);
+
+
     }
 
     public function talonarios(Request $request){

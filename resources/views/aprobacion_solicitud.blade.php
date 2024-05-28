@@ -41,10 +41,10 @@
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
                             </td>
                             <td>
-                                <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
+                                <a class="text-primary info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</a>
                             </td>
                             <td>
-                                <span>{{$solicitud->ucd_pagar}}</span>
+                                <span>{{$solicitud->total_ucd}}</span>
                             </td>
                             @php
                                 $separar = (explode(" ",$solicitud->fecha));

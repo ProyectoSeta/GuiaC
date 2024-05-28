@@ -32,7 +32,8 @@
                         <th scope="col">Cantera</th>
                         <th scope="col">Fecha de emisión</th>
                         <th scope="col">Solicitud</th>
-                        <th scope="col">UCD a Pagar</th>
+                        <th scope="col">Pago</th>
+                        <th scope="col">Total UCD</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Opciones</th>
                     </tr>
@@ -44,10 +45,13 @@
                             <td class="fw-bold">{{$solicitud->nombre}}</td>
                             <td>{{$solicitud->fecha}}</td>
                             <td>
-                                <p class="text-primary fw-bold info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</p>
+                                <a class="text-primary info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</a>
                             </td>
                             <td>
-                                <span>{{$solicitud->ucd_pagar}} UCD</span>
+                                <a target="_blank" class="ver_pago" href="{{ asset($solicitud->referencia) }}">Ver</a>
+                            </td>
+                            <td>
+                                <span>{{$solicitud->total_ucd}} UCD</span>
                             <td>
                                 @switch($solicitud->estado)
                                 @case('Verificando')
@@ -91,8 +95,6 @@
     
    
 
-
-      
 
     
     
@@ -246,11 +248,17 @@
                             
                             $('#total_ucd').html(response.ucd+' UCD');
                             $('#precio_ucd').html(response.precio_ucd+' Bs.');
-                            $('#total_pagar').html(response.total+' Bs.');
+                            $('.total_pagar').html(response.total+' Bs.');
 
                             $('#id_ucd').val(response.id_ucd);
                             // $('#ucd').val(response.ucd);
                             // $('#monto_total').val(response.total);
+
+                            $('#banco_emisor').attr('disabled', false); 
+                            $('#nro_referencia').attr('disabled', false); 
+                            $('#banco_receptor').attr('disabled', false); 
+                            $('#fecha_emision').attr('disabled', false); 
+                            $('#monto_trans').attr('disabled', false); 
 
                             $('#ref_pago').attr('disabled', false); 
                         },
@@ -271,9 +279,15 @@
                     $("#btn_cancelar").attr('disabled', true);
                     $("#btn_generar_solicitud").attr('disabled', true);
 
+                    $('#banco_emisor').attr('disabled', true); 
+                    $('#nro_referencia').attr('disabled', true); 
+                    $('#banco_receptor').attr('disabled', true); 
+                    $('#fecha_emision').attr('disabled', true); 
+                    $('#monto_trans').attr('disabled', true); 
+
                     $('#total_ucd').html('0 UCD');
                     $('#precio_ucd').html('0 Bs.');
-                    $('#total_pagar').html('0 Bs.');
+                    $('.total_pagar').html('0 Bs.');
                 }
                 console.log(cant);
             });
@@ -377,7 +391,7 @@
                     processData:false,
                     async: true,
                     success: function(response) {
-                        // console.log(response);
+                        console.log(response);
                        if (response.success) {
                             alert('La solicitud a sido generada exitosamente!');
                             $('#form_generar_solicitud')[0].reset();
