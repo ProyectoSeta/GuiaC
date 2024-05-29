@@ -24,7 +24,9 @@ class AprobacionController extends Controller
             ->where('solicituds.estado','=','Verificando')
             ->get();
 
-        return view('aprobacion_solicitud', compact('solicitudes'));
+        $count_aprobar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Verificando')->first();
+
+        return view('aprobacion_solicitud', compact('solicitudes','count_aprobar'));
     }
 
     public function sujeto(Request $request)
@@ -101,8 +103,9 @@ class AprobacionController extends Controller
         $idCantera = $request->post('cantera');
        
         $solicitudes = DB::table('solicituds')
+        ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
         ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro')
+        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
        
@@ -116,6 +119,7 @@ class AprobacionController extends Controller
                     $contador = 0;
                     foreach ($detalles as $i) {
                         $tr .= '<tr>
+                                    <td>'.$solicitud->fecha.'</td>
                                     <td>'.$i->tipo_talonario.' Guías</td>
                                     <td>'.$i->cantidad.' und.</td>
                                 </tr>';
@@ -144,41 +148,77 @@ class AprobacionController extends Controller
                     $val_ucd = $u->valor;
                 }
 
+                $ucd = DB::table('ucds')->select('valor')->where('id','=',$solicitud->id_ucd)->first();
+                $formato_monto_total = number_format($solicitud->monto_total, 2, ',', '.');
+                $formato_monto_transferido = number_format($solicitud->monto_transferido, 2, ',', '.');
+
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
+                                <i class="bx bx-help-circle fs-2 text-navy"></i>                       
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la siguiente solicitud?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$solicitud->razon_social.'</h1>
-                                    <h5 class="modal-title" id="" style="font-size:14px">'.$solicitud->rif_condicion.'-'.$solicitud->rif_nro.'</h5>
+                                    <h1 class="modal-title fs-5 text-navy" id="">'.$solicitud->nombre.'</h1>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$solicitud->razon_social.'</h5>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$solicitud->rif_condicion.'-'.$solicitud->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-body" style="font-size:14px;">
-                            <h6 class="text-center mb-3">Solicitud de Talonario(s) Realizada</h6>
+                        <div class="modal-body mx-3" style="font-size:14px;">
+                            <h6 class="text-center mb-3 text-navy fw-bold">SOLICITUD DE TALONARIO(S) REALIZADA</h6>
                             <table class="table text-center">
                                 <thead>
-                                    <tr>
+                                    <tr class="table-primary">
+                                        <th scope="col">Emisión</th>
                                         <th scope="col">Contenido del Talonario</th>
                                         <th scope="col">Cantidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   '.$tr.'
+                                    '.$tr.'
+                                    <tr class="table-primary">
+                                        <th>Total UCD</th>
+                                        <th>UCD del día</th>
+                                        <th>Monto a Pagar</th>
+                                    </tr>
+                                    <tr>
+                                        <td>'.$solicitud->total_ucd.' UCD</td>
+                                        <td>'.$ucd->valor.' Bs.</td>
+                                        <td>'.$formato_monto_total.' Bs.</td>
+                                    </tr>
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-center mt-3">
-                                <table class="table table-sm w-75">
-                                    <tr>
-                                        <th>Total de Guías a emitir</th>
-                                        <td>'.$total_guias.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total UCD</th>
-                                        <td>'.$solicitud->ucd_pagar.'</td>
-                                    </tr>
-                                </table>
-                            </div>
+
+                            <h6 class="text-center mt-4 text-navy fw-bold">DATOS DEL PAGO</h6>
+                            <table class="table">
+                                <tr>
+                                    <th>Banco emisor</th>
+                                    <td>'.$solicitud->banco_emisor.'</td>
+                                </tr>
+                                <tr>
+                                    <th>No. Referencia</th>
+                                    <td>#'.$solicitud->nro_referencia.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Banco receptor</th>
+                                    <td>'.$solicitud->banco_receptor.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de emisión</th>
+                                    <td>'.$solicitud->fecha_emision_pago.'</td>
+                                </tr>
+                                <tr class="table-warning">
+                                    <th>Monto transferido</th>
+                                    <td>'.$formato_monto_transferido.' Bs.</td>
+                                </tr>
+                                <tr class="">
+                                    <th>Referencia</th>
+                                    <td>
+                                        <a target="_blank" class="ver_pago" href="'.asset($solicitud->referencia).'">Ver</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            
                             
 
                             <div class="d-flex justify-content-center">
@@ -342,8 +382,9 @@ class AprobacionController extends Controller
         $idSolicitud = $request->post('solicitud');
         $tables = '';
         $talonarios = DB::table('talonarios')
+        ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
         ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro')
+        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
         ->where('id_solicitud','=',$idSolicitud)
         ->get();
 
@@ -391,8 +432,9 @@ class AprobacionController extends Controller
                             <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¡La solicitud a sido Aprobada!</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$talonario->razon_social.'</h1>
-                                    <h5 class="modal-title" id="" style="font-size:14px">'.$talonario->rif_condicion.'-'.$talonario->rif_nro.'</h5>
+                                    <h1 class="modal-title fs-5 text-navy" id="">'.$talonario->nombre.'</h1>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$talonario->razon_social.'</h5>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$talonario->rif_condicion.'-'.$talonario->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>
@@ -414,7 +456,7 @@ class AprobacionController extends Controller
         $idSolicitud = $request->post('solicitud');
         $solicitudes = DB::table('solicituds')->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
         ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
-        ->select('solicituds.fecha','solicituds.id_sujeto','solicituds.id_cantera', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
         ->where('solicituds.id_solicitud','=',$idSolicitud)
         ->get();
         foreach ($solicitudes as $s) {
@@ -424,6 +466,13 @@ class AprobacionController extends Controller
             $cantera = $s->nombre;
             $id_cantera = $s->id_cantera;
             $sujeto = $s->id_sujeto;
+            $total_ucd = $s->total_ucd;
+            $total_ucd = $s->total_ucd;
+
+            $ucd = DB::table('ucds')->select('valor')->where('id','=',$s->id_ucd)->first();
+            $valor_ucd = $ucd->valor;
+            $formato_monto_total = number_format($s->monto_total, 2, ',', '.');
+
         }
 
         $tr = '';
@@ -431,8 +480,8 @@ class AprobacionController extends Controller
         if($detalles){
             foreach ($detalles as $solicitud) {
                 $tr .= '<tr>
-                            <td>'.$solicitud->tipo_talonario.'</td>
-                            <td>'.$solicitud->cantidad.'</td>
+                            <td colspan="2">'.$solicitud->tipo_talonario.' Guías</td>
+                            <td >'.$solicitud->cantidad.'</td>
                         </tr>';
             }
         }
@@ -444,45 +493,54 @@ class AprobacionController extends Controller
                     </div>
                 </div>
                 <div class="modal-body px-4" style="font-size:14px">
-                    <div class="d-flex justify-content-between mb-2">
-                        <table class="table table-borderless table-sm me-3">
-                            <tr>
-                                <th>Solicitud Nro.:</th>
-                                <td>'.$idSolicitud.'</td>
-                            </tr>
-                            <tr>
-                                <th>Fecha de emisión:</th>
-                                <td>'.$fecha.'</td>
-                            </tr>
-                        </table>
-                        <table class="table table-borderless table-sm">
-                            <tr>
-                                <th>Cantera:</th>
-                                <td class="text-primary fw-bold">'.$cantera.'</td>
-                            </tr>
-                            <tr>
-                                <th>Razon social.:</th>
-                                <td>'.$razon.'</td>
-                            </tr>
-                            <tr>
-                                <th>R.I.F.:</th>
-                                <td>'.$rif.'</td>
-                            </tr>
-                        </table>
-                    </div>
 
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <th>Cantera:</th>
+                            <td class="text-navy fw-bold">'.$cantera.'</td>
+                        </tr>
+                        <tr>
+                            <th>Razon social:</th>
+                            <td>'.$razon.'</td>
+                        </tr>
+                        <tr>
+                            <th>R.I.F.:</th>
+                            <td>'.$rif.'</td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Cod. Solicitud:</th>
+                            <td class="text-muted">'.$idSolicitud.'</td>
+                            <th>Fecha de emisión:</th>
+                            <td class="text-muted">'.$fecha.'</td>
+                        </tr>
+                    </table>
                     
                     <table class="table text-center">
                         <thead>
-                            <tr>
-                                <th scope="col">Tipo de talonario</th>
+                            <tr class="table-primary">
+                                <th scope="col" colspan="2">Contenido del talonario</th>
                                 <th scope="col">Cantidad</th>
                             </tr>
                         </thead>
                         <tbody>
                             '.$tr.'
+                            <tr class="table-primary">
+                                <th>Total UCD</th>
+                                <th>UCD del día</th>
+                                <th>Monto a Pagar</th>
+                            </tr>
+                            <tr>
+                                <td>'.$total_ucd.' UCD</td>
+                                <td>'.$valor_ucd.' Bs.</td>
+                                <td>'.$formato_monto_total.' Bs.</td>
+                            </tr>
                         </tbody>
                     </table>
+
+                    
                     <form id="form_denegar_solicitud" method="post" onsubmit="event.preventDefault(); denegarSolicitud()">
                         
                         <div class="ms-2 me-2">

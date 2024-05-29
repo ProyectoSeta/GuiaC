@@ -12,7 +12,21 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-3 text-navy titulo">Actualización - Estado de Solicitudes</h3>
+            <h3 class="mb-3 text-navy titulo">Actualización de Estado</h3>
+
+            <div class=" d-flex">
+                <div class="badge d-flex align-items-center fs-6 px-3 py-2 text-info-emphasis bg-info-subtle border border-info-subtle rounded-pill me-3">
+                    <i class='bx bx-refresh bx-spin me-2 fs-4' ></i>
+                    <span> En Proceso</span>
+                    <span class="badge bg-white border border-info-subtle rounded-pill ms-2 fs-5 text-info-emphasis">{{$count_proceso->total}}</span>
+                </div>
+
+                <div class="badge d-flex align-items-center fs-6 px-3 py-2 text-warning-emphasis bg-warning-subtle border border-warning-subtle rounded-pill">
+                    <i class='bx bx-error-circle bx-tada me-2 fs-4' ></i>
+                    <span> Por Retirar</span>
+                    <span class="badge bg-white border border-warning-subtle rounded-pill ms-2 fs-5 text-warning-emphasis">{{$count_retirar->total}}</span>
+                </div>
+            </div>
         </div>
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
@@ -38,7 +52,7 @@
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
                             </td>
                             <td>
-                                <p class="text-primary fw-bold ver_solicitud" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_ver_solicitud">Ver</p>
+                                <a class="text-primary ver_solicitud" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_ver_solicitud">Ver</a>
                             </td>
                             <td>
                                 @switch($solicitud->estado)
@@ -60,7 +74,7 @@
                     
                                 @endswitch                    
                             </td>
-                            <td>{{$solicitud->fecha}}</td>
+                            <td class="text-muted">{{$solicitud->fecha}}</td>
                             <td>
                                 <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado">Actualizar</button>
                             </td>
@@ -182,6 +196,7 @@
         $(document).ready(function () {
             $('#example').DataTable(
                 {
+                    "order": [[ 0, "desc" ]],
                     "language": {
                         "lengthMenu": " Mostrar  _MENU_  Registros por página",
                         "zeroRecords": "No se encontraron registros",

@@ -18,8 +18,11 @@ class EstadoController extends Controller
             ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
             ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
             ->get();
+            
+            $count_proceso = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','En proceso')->first();
+            $count_retirar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Retirar')->first();
 
-        return view('estado', compact('solicitudes'));
+        return view('estado', compact('solicitudes','count_proceso','count_retirar'));
     }
 
     public function solicitud(Request $request)
@@ -42,7 +45,7 @@ class EstadoController extends Controller
                     $contador = 0;
                     foreach ($detalles as $i) {
                         $tr .= '<tr>
-                                    <td>'.$i->tipo_talonario.' Guías</td>
+                                    <td colspan="2">'.$i->tipo_talonario.' Guías</td>
                                     <td>'.$i->cantidad.' und.</td>
                                 </tr>';
 
@@ -88,15 +91,17 @@ class EstadoController extends Controller
                                                 <td>'.$i.'</td>
                                                 <td class="fst-italic">'.$formato_desde.'</td>
                                                 <td class="fst-italic">'.$formato_hasta.'</td>
+                                                
                                             </tr>';
                     }   
 
                     $html_talonarios = '<div class="my-3">
-                                            <h6 class="text-center mb-3 text-navy fw-bold">Talonarios Emitidos</h6>
+                                            <h6 class="text-center my-3 text-navy fw-bold">Talonarios Emitidos</h6>
                                             <table class="table text-center">
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Desde</th>
+                                                    <th>Hasta</th>
                                                     <th>Hasta</th>
                                                 </tr>
                                                 '.$tr_talonarios.'
@@ -105,6 +110,11 @@ class EstadoController extends Controller
                 }else{
                     $html_talonarios = '';
                 }
+
+                $ucd = DB::table('ucds')->select('valor')->where('id','=',$solicitud->id_ucd)->first();
+                $valor_ucd = $ucd->valor;
+                $formato_monto_total = number_format($solicitud->monto_total, 2, ',', '.');
+                $formato_monto_transferido = number_format($solicitud->monto_transferido, 2, ',', '.');
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
@@ -116,31 +126,63 @@ class EstadoController extends Controller
 
                            <div class="mb-3">
                                 <h6 class="text-center mb-3 text-navy fw-bold">Solicitud de Talonario(s) Realizada</h6>
+                                
+
                                 <table class="table text-center">
                                     <thead>
-                                        <tr>
-                                            <th scope="col">Contenido del Talonario</th>
+                                        <tr class="table-primary">
+                                            <th scope="col" colspan="2">Contenido del talonario</th>
                                             <th scope="col">Cantidad</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    '.$tr.'
+                                        '.$tr.'
+                                        <tr class="table-primary">
+                                            <th>Total UCD</th>
+                                            <th>UCD del día</th>
+                                            <th>Monto a Pagar</th>
+                                        </tr>
+                                        <tr>
+                                            <td>'.$solicitud->total_ucd.' UCD</td>
+                                            <td>'.$valor_ucd.' Bs.</td>
+                                            <td>'.$formato_monto_total.' Bs.</td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                           </div>
-                            '.$html_talonarios.'
-                            <div class="d-flex justify-content-center my-3">
-                                <table class="table table-sm w-75">
-                                    <tr>
-                                        <th>Total de Guías a emitir</th>
-                                        <td>'.$total_guias.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>UCD a pagar</th>
-                                        <td>'.$solicitud->ucd_pagar.'</td>
-                                    </tr>
-                                </table>
                             </div>
+
+                            <h6 class="text-center my-3 text-navy fw-bold">Datos del Pago</h6>
+                            <table class="table">
+                                <tr>
+                                    <th>Banco emisor</th>
+                                    <td>'.$solicitud->banco_emisor.'</td>
+                                </tr>
+                                <tr>
+                                    <th>No. Referencia</th>
+                                    <td>#'.$solicitud->nro_referencia.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Banco receptor</th>
+                                    <td>'.$solicitud->banco_receptor.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de emisión</th>
+                                    <td>'.$solicitud->fecha_emision_pago.'</td>
+                                </tr>
+                                <tr class="table-warning">
+                                    <th>Monto transferido</th>
+                                    <td>'.$formato_monto_transferido.' Bs.</td>
+                                </tr>
+                                <tr class="">
+                                    <th>Referencia</th>
+                                    <td>
+                                        <a target="_blank" class="ver_pago" href="'.asset($solicitud->referencia).'">Ver</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            '.$html_talonarios.'
+                            
                             
 
                             <div class="d-flex justify-content-center">
@@ -292,7 +334,7 @@ class EstadoController extends Controller
                         <table class="table table-borderless table-sm">
                             <tr>
                                 <th>Cantera:</th>
-                                <td>'.$cantera.'</td>
+                                <td class="text-navy fw-bold fs-6">'.$cantera.'</td>
                             </tr>
                             <tr>
                                 <th>Contribuyente:</th>

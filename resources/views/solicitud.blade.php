@@ -93,8 +93,6 @@
     </div>
     
     
-   
-
 
     
     
@@ -147,8 +145,10 @@
     </div>
 
     
-
 <!--************************************************-->
+
+
+
 
 
 @stop
@@ -180,6 +180,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#example').DataTable({
+                "order": [[ 0, "desc" ]],
                 "language": {
                     "lengthMenu": " Mostrar  _MENU_  Registros por página",
                     "zeroRecords": "No se encontraron registros",
@@ -255,8 +256,8 @@
                             // $('#monto_total').val(response.total);
 
                             $('#banco_emisor').attr('disabled', false); 
-                            $('#nro_referencia').attr('disabled', false); 
                             $('#banco_receptor').attr('disabled', false); 
+                            $('#nro_referencia').attr('disabled', false);  
                             $('#fecha_emision').attr('disabled', false); 
                             $('#monto_trans').attr('disabled', false); 
 
@@ -280,8 +281,8 @@
                     $("#btn_generar_solicitud").attr('disabled', true);
 
                     $('#banco_emisor').attr('disabled', true); 
-                    $('#nro_referencia').attr('disabled', true); 
                     $('#banco_receptor').attr('disabled', true); 
+                    $('#nro_referencia').attr('disabled', true); 
                     $('#fecha_emision').attr('disabled', true); 
                     $('#monto_trans').attr('disabled', true); 
 
@@ -380,6 +381,7 @@
 
         function generarSolicitud(){
                 var formData = new FormData(document.getElementById("form_generar_solicitud"));
+                $('#btn_generar_solicitud').attr('disabled', true);
                 // alert(formData);
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },

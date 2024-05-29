@@ -14,6 +14,14 @@
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-3 text-navy titulo">Aprobación de Solicitudes</h3>
+
+            <div class="">
+                <div class="badge d-flex align-items-center fs-6 px-3 py-2 text-warning-emphasis bg-warning-subtle border border-warning-subtle rounded-pill">
+                    <i class='bx bx-error-circle bx-tada me-2 fs-4' ></i>
+                    <span> Solicitudes Pendientes</span>
+                    <span class="badge bg-white border border-warning-subtle rounded-pill ms-2 fs-5 text-warning-emphasis">{{$count_aprobar->total}}</span>
+                </div>
+            </div>
         </div>
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table border-light-subtle text-center" style="font-size:13px">
@@ -25,7 +33,6 @@
                     <th>Solicitud</th>
                     <th>UCD</th>
                     <th>Emisión</th>
-                    <th>Correlativo</th> 
                     <th>Opciones</th>
                 </thead>
                 <tbody> 
@@ -44,16 +51,14 @@
                                 <a class="text-primary info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</a>
                             </td>
                             <td>
-                                <span>{{$solicitud->total_ucd}}</span>
+                                <span>{{$solicitud->total_ucd}} UCD</span>
                             </td>
                             @php
                                 $separar = (explode(" ",$solicitud->fecha));
                                 $fecha = $separar[0];
                             @endphp
-                            <td>{{$fecha}}</td>
-                            <td>
-                                <span class="fst-italic text-secondary">Sin asignar</span>
-                            </td>
+                            <td class="text-muted">{{$fecha}}</td>
+                            
                             <td>
                                 <button class="btn btn-success btn-sm aprobar_solicitud rounded-4" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
                                 <button class="btn btn-danger btn-sm denegar_solicitud rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
@@ -179,6 +184,7 @@
         $(document).ready(function () {
             $('#example').DataTable(
                 {
+                    "order": [[ 0, "desc" ]],
                     "language": {
                         "lengthMenu": " Mostrar  _MENU_  Registros por página",
                         "zeroRecords": "No hay Solicitudes por Aprobar",
