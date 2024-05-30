@@ -22,9 +22,11 @@
                     <th>Cantera</th>
                     <th>Nro. Solicitud</th>
                     <th>Correlativo</th>
+                    <th>Reportado</th>
                     <th>QR</th>
                     <th>R.I.F.</th>
                     <th>Empresa</th>
+                    <th>Mensaje</th>
                 </thead>
                 <tbody> 
                 @foreach ($talonarios as $talonario)
@@ -46,13 +48,26 @@
                                 <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
                             </td>
                             <td>
+                                <span>{{$talonario->reportado}}%</span>
+                            </td>
+                            <td>
                                 <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' talonario="{{$talonario->id_talonario}}" data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
                             </td>
                             <td>
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
                             </td>
                             <td>{{$talonario->razon_social}}</td>
-                            
+                            <td class="align-middle">
+                                @if ($talonario->alert == '1')
+                                    <span class="alert_talonario" role="button" intervalo="{{ $talonario->intervalo }}" data-bs-toggle="modal" data-bs-target="#modal_alert_talonario">
+                                        <i class='bx bx-error-circle fs-4 text-danger'></i>
+                                    </span>
+                                    
+                                @else
+                                    <span class="text-secondary">S/M</span>
+                                @endif
+
+                            </td>
                         </tr>
                 @endforeach
                     
@@ -148,6 +163,26 @@
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
+
+
+    <!-- ********* ALERT ******** -->
+    <div class="modal" id="modal_alert_talonario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" >
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <!-- <i class="bx bx-barcode-reader fs-1" style="color:#0c82ff"  ></i>     -->
+                        <i class='bx bx-error-circle bx-tada fs-1 text-danger'></i>       
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">IMPORTANTE</h1>
+                    </div>
+                </div>
+
+                <div class="modal-body" style="font-size:14px" id="content_alert_talonario">
+                    
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
     
 
 <!--************************************************-->
@@ -235,7 +270,7 @@
                     url: '{{route("correlativo.talonario") }}',
                     data: {talonario:talonario},
                     success: function(response) {              
-                       console.log(response);
+                    //    console.log(response);
                             $('#content_ver_talonario').html(response);
                             $('#tableGuias').DataTable();
 
@@ -259,9 +294,8 @@
                         console.log(response);
                         $('#modal_ver_talonario').modal('hide');             
                         $('#modal_content_guia').modal('show');
-
+                        
                         $('#content_info_guia').html(response);
-
                     },
                     error: function() {
                     }
@@ -288,27 +322,21 @@
                 });
             });
 
-            $(document).on('click','#descargar_qr', function(e) { 
-                
-                var talonario = $(this).attr('talonario');
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("correlativo.accion") }}',
-                    data: {talonario:talonario},
-                    success: function(response) {              
-                       
-                    },
-                    error: function() {
-                    }
-                });
+
+            ///////MODAL: alert talonario
+            $(document).on('click','.alert_talonario', function(e) { 
+                e.preventDefault(e); 
+                var intervalo = $(this).attr('intervalo');
+
+                $('#content_alert_talonario').html('<p class="text-justify text-muted"><span class="fw-bold">NOTA: </span>'+
+                            'Han pasado '+intervalo+' días desde que el Contribuyente retiro el Talonario de la institución,'+ 
+                            'y todavía no ha reportado ninguna guía en el Libro de Control.</p>');
             });
+
 
         });
 
-        function accion(){
-
-        }
+     
     </script>
 
 

@@ -11,15 +11,25 @@
 @stop
 
 @section('content')
-    <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-1">
             <h3 class="mb-3 text-navy titulo">Aprobación de Solicitudes</h3>
 
-            <div class="">
-                <div class="badge d-flex align-items-center fs-6 px-3 py-2 text-warning-emphasis bg-warning-subtle border border-warning-subtle rounded-pill">
-                    <i class='bx bx-error-circle bx-tada me-2 fs-4' ></i>
-                    <span> Solicitudes Pendientes</span>
-                    <span class="badge bg-white border border-warning-subtle rounded-pill ms-2 fs-5 text-warning-emphasis">{{$count_aprobar->total}}</span>
+            <div class="row w-50 d-flex justify-content-end">
+                <div class="col-sm-7">
+                    <div class="card shadow-none border-light-subtle">
+                        <div class="card-body px-3 py-2">
+                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
+                                <div class="p-2 border border-warning-subtle grd-warning-light rounded-5 d-flex">
+                                    <i class='bx bx-error-circle bx-tada fs-3' style="color:#ff8f00"></i>
+                                </div>
+                                <div class="d-flex flex-column text-center">
+                                    <span class="fs-6 pb-1">Solicitudes Pendientes</span>
+                                    <span class="" style="color:#ff8f00">{{$count_aprobar->total}}</span> 
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

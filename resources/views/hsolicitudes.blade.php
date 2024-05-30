@@ -13,56 +13,9 @@
     <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff;">
         <div class="d-flex justify-content-between mt-2">
             <div class="">
-                <h3 class="mb-1 mt-3 text-navy titulo">Actualización de Estado</h3>
-                <span class="text-muted" style="font-size:15px">Procesando un Total de: {{$count->total}} Solicitude(s)</span>
+                <h3 class="mb-3 mt-3 text-navy titulo">Historial de Solicitudes</h3>
             </div>
-            
-
-
-            <div class="row w-50">
-                <div class="col-sm-6">
-                    <div class="card shadow-none border-light-subtle">
-                        <div class="card-body px-3 py-2">
-                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
-                                <div class="p-2 border border-primary grd-primary-light rounded-5 d-flex">
-                                    <i class='bx bx-refresh bx-spin fs-3 text-primary' ></i>
-                                </div>
-                                <div class="d-flex flex-column text-center">
-                                    <span class="fs-6 pb-1">En Proceso</span>
-                                    <span class="text-primary">{{$count_proceso->total}}</span> 
-                                </div>
-                            </h3>
-
-                            <div class="d-flex align-items-center justify-content-between" style="font-size:13px">
-                                <span class="text-muted">Solicitudes en proceso</span>
-                                <span class="badge bg-primary text-primary bg-opacity-10 ">{{$porcentaje_proceso}}%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-sm-6">
-                    <div class="card shadow-none border-light-subtle">
-                        <div class="card-body px-3 py-2">
-                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
-                                <div class="p-2 border border-warning-subtle grd-warning-light rounded-5 d-flex">
-                                    <i class='bx bx-error-circle bx-tada fs-3' style="color:#ff8f00"></i>
-                                </div>
-                                <div class="d-flex flex-column text-center">
-                                    <span class="fs-6 pb-1">Por Retirar</span>
-                                    <span class="" style="color:#ff8f00">{{$count_retirar->total}}</span> 
-                                </div>
-                            </h3>
-
-                            <div class="d-flex align-items-center justify-content-between" style="font-size:13px">
-                                <span class="text-muted">Talonarios por retirar</span>
-                                <span class="badge bg-opacity-10" style="color:#ff8f00; background:#fff2e2">{{$porcentaje_retirar}}%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
 
         </div>
         <div class="table-responsive" style="font-size:14px">
@@ -73,9 +26,8 @@
                     <th>Razón Social</th>
                     <th>R.I.F.</th>
                     <th>Solicitud</th>
-                    <th>Estado Actual</th>
+                    <th>Estado</th>
                     <th>Emisión</th>
-                    <th>Opción</th>
                 </thead>
                 <tbody> 
                 @foreach ($solicitudes as $solicitud)
@@ -94,28 +46,24 @@
                             <td>
                                 @switch($solicitud->estado)
                                     @case('Verificando')
-                                        <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
+                                        <span class="badge text-bg-secondary bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
+                                    @break
+                                    @case('Negada')
+                                        <span role="button" class="badge text-bg-danger bg-opacity-75 p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
                                     @break
                                     @case('En proceso')
-                                        <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                        <span class="badge text-bg-primary bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
                                     @case('Retirar') 
-                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
+                                        <span class="badge text-bg-warning bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
                                     @break
                                     @case('Retirado')
-                                        <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
+                                        <span class="badge text-bg-success bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
                                     @break
                     
                                 @endswitch                    
                             </td>
                             <td class="text-muted">{{$solicitud->fecha}}</td>
-                            <td>
-                                @if ($solicitud->estado == 'Verificando')
-                                    <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado" disabled>Actualizar</button>
-                                @else
-                                    <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado">Actualizar</button>
-                                @endif
-                            </td>
                             
                         </tr>
                 @endforeach
@@ -334,32 +282,6 @@
         });
 
 
-        function actualizarEstado(){
-            var formData = new FormData(document.getElementById("form_actualizar_estado"));
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    url:'{{route("estado.update") }}',
-                    type:'POST',
-                    contentType:false,
-                    cache:false,
-                    processData:false,
-                    async: true,
-                    data: formData,
-                    success: function(response){
-                        //alert(response);
-                        if (response.success) {
-                            alert('EL ESTADO DE LA SOLICITUD HA SIDO ACTUALIZADO CORRECTAMENTE');
-                            window.location.href = "{{ route('estado')}}";
-                        } else {
-                            alert('Ha ocurrido un error al Actualizar el estado de la Solicitud.');
-                        }    
-
-                    },
-                    error: function(error){
-                        
-                    }
-                });
-        }
     </script>
   
 @stop

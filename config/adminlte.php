@@ -65,7 +65,7 @@ return [
 
     'logo' => 'Principal',
     // 'logo2' => 'J-00000000-1',
-    'logo_img' => 'vendor/adminlte/dist/img/cube.png',
+    'logo_img' => 'vendor/adminlte/dist/img/M.png',
     'logo_img_class' => 'brand-image img-circle elevation-3 fs-6',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-lg',
@@ -87,7 +87,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/cube.png',
+            'path' => 'vendor/adminlte/dist/img/M.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -110,7 +110,7 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/cube.png',
+            'path' => 'vendor/adminlte/dist/img/M.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 100,
@@ -354,14 +354,19 @@ return [
         // ],
         ['header' => 'Control de Solicitudes'],
         [
-            'text'       => 'Aprobación de solicitudes',
+            'text'       => 'Aprobar Solicitudes',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/aprobacion_solicitud',
         ],
         [
-            'text'       => 'Actualización - Estado',
+            'text'       => 'Actualizar Estado',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => 'estado',
+        ],
+        [
+            'text'       => 'Historial',
+            // 'icon_color' => 'fas fa-fw fa-user',
+            'url'        => 'hsolicitudes',
         ],
         ['header' => 'Verificación'],
         [

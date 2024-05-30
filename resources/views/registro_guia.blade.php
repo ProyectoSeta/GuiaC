@@ -15,7 +15,7 @@
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-3 text-navy titulo">Libro de Control</h3>
-            <h4 class="text-muted titulo">Libro de <span class="text-success">{{$fecha}}</span></h4>
+            
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"> 
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>

@@ -17,12 +17,21 @@ class EstadoController extends Controller
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
             ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
             ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+            ->where('solicituds.estado','!=','Negada')
             ->get();
             
-            $count_proceso = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','En proceso')->first();
-            $count_retirar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Retirar')->first();
+        $count_proceso = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','En proceso')->first();
+        $count_retirar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Retirar')->first();
 
-        return view('estado', compact('solicitudes','count_proceso','count_retirar'));
+        $count = DB::table('solicituds')->selectRaw("count(*) as total")
+                                        ->where('estado','!=','Verificando')
+                                        ->where('estado','!=','Negada')
+                                        ->where('estado','!=','Retirado')->first();
+
+        $porcentaje_proceso = ($count_proceso->total/$count->total)*100;
+        $porcentaje_retirar = ($count_retirar->total/$count->total)*100;
+
+        return view('estado', compact('solicitudes','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
     }
 
     public function solicitud(Request $request)
@@ -101,7 +110,6 @@ class EstadoController extends Controller
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Desde</th>
-                                                    <th>Hasta</th>
                                                     <th>Hasta</th>
                                                 </tr>
                                                 '.$tr_talonarios.'
@@ -262,8 +270,7 @@ class EstadoController extends Controller
                 switch ($solicitud->estado) {
                     case 'En proceso':
                         $select = ' <option value="En proceso">En proceso</option>
-                                    <option value="Retirar">Por Retirar</option>
-                                    <option value="Retirado">Retirado</option>';
+                                    <option value="Retirar">Por Retirar</option>';
                         break;
                     case 'Retirar':
                         $select = ' <option value="Retirar">Por Retirar</option>
@@ -272,7 +279,6 @@ class EstadoController extends Controller
                         break;
                     case 'Retirado':
                         $select = ' <option value="Retirado">Retirado</option>
-                                    <option value="En proceso">En proceso</option>
                                     <option value="Retirar">Por Retirar</option>';
                         break;
 

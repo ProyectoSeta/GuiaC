@@ -17,50 +17,51 @@ class RegistroGuiaController extends Controller
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
-        $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
-        $hoy = date('d');
+        // $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+        // $hoy = date('d');
+        // $mes = date('n');
+        // $year = date('Y');
+        // $fecha = '';
+
+        // $mes_declarando = '';
+        // $year_declarando = '';
+
+        // $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
+        // if ($cierre) {
+        //     $dia_cierre = $cierre->fecha;
+        // }
+
+        // if ($hoy >= $dia_cierre) {
+        //     $fecha = $meses[$mes].' '.$year;
+        //     $mes_declarando = $mes;
+        //     $year_declarando = $year;
+
+        // }else{
+        //     $mes_anterior = $mes-1;
+        //     if ($mes_anterior == 0) {
+        //         $mes_anterior = 12;
+        //         $year = $year - 1;
+        //     }
+        //     $fecha = $meses[$mes_anterior].' '.$year;
+
+        //     $mes_declarando = $mes_anterior;
+        //     $year_declarando = $year;
+        // }
+
+
         $mes = date('n');
-        $year = date('Y');
-        $fecha = '';
-
-        $mes_declarando = '';
-        $year_declarando = '';
-
-        $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
-        if ($cierre) {
-            $dia_cierre = $cierre->fecha;
-        }
-
-        if ($hoy >= $dia_cierre) {
-            $fecha = $meses[$mes].' '.$year;
-            $mes_declarando = $mes;
-            $year_declarando = $year;
-
-        }else{
-            $mes_anterior = $mes-1;
-            if ($mes_anterior == 0) {
-                $mes_anterior = 12;
-                $year = $year - 1;
-            }
-            $fecha = $meses[$mes_anterior].' '.$year;
-
-            $mes_declarando = $mes_anterior;
-            $year_declarando = $year;
-        }
-
 
         $registros = DB::table('control_guias')
                                 ->join('canteras', 'control_guias.id_cantera', '=', 'canteras.id_cantera')
                                 ->join('minerals', 'control_guias.id_mineral', '=', 'minerals.id_mineral')
                                 ->select('control_guias.*', 'canteras.nombre', 'minerals.mineral')
                                 ->where('control_guias.id_sujeto', $id_sp)
-                                ->whereMonth('control_guias.fecha', $mes_declarando)
-                                ->whereYear('control_guias.fecha', $year_declarando)
+                                ->whereMonth('control_guias.fecha', $mes)
                                 ->get();
 
 
 
-        return view('registro_guia', compact('registros','fecha'));
+        return view('registro_guia', compact('registros'));
     }
 
     /**
@@ -82,40 +83,6 @@ class RegistroGuiaController extends Controller
                     $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
                 }
 
-                $hoy = date('d');
-                $mes = date('n');
-                $year = date('Y');
-                $mes_anterior = '0'.$mes - 1;
-                if ($mes_anterior == 00) {
-                    $mes_anterior = 12;
-                    $year = $year - 1;
-                }
-                $min = '';
-                $max = '';
-                $mes_declarado = '';
-                $year_declarado = '';
-                
-                $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
-                if ($cierre) {
-                    $dia_cierre = $cierre->fecha;
-                }
-
-                if ($hoy > $dia_cierre) {  
-                    ////declaracion del mes actual
-                    $min = date("Y-m-01");
-                    $max = date("Y-m-t");
-
-                    $mes_declarado = $mes;
-                    $year_declarado = $year;              
-                }else{
-                    ////todavia no toca cerrar libro del mes anterior
-                    $min = date("Y").'-'.$mes_anterior.'-01';
-                    // $max = date("Y-04-t");
-                    $max = date($year.'-'.$mes_anterior.'-t');  /////ver esto, me esta dando el final de mes que no es.....  
-
-                    $mes_declarado = $mes_anterior;
-                    $year_declarado = $year;
-                }
 
                 $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
                 <p class="px-3 fw-semibold fs-6 text-body-secondary">IMPORTANTE: Debe seleccionar la Cantera de la cual proviene la Guía y el Talonario, para así poder ingresar los demás datos.</p>
@@ -127,9 +94,6 @@ class RegistroGuiaController extends Controller
                                     <span class="text-danger">Nro° Guía </span><span id="nro_guia_view"></span>
                                 </div>
                             </div>
-
-                            <input type="hidden" id="mes_declarado" name="mes_declarado" value="'.$mes_declarado.'" required>
-                            <input type="hidden" id="year_declarado" name="year_declarado" value="'.$year_declarado.'" required>
 
                             <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
                             <input type="hidden" id="nro_guia" name="nro_guia" value="" required>
@@ -156,7 +120,7 @@ class RegistroGuiaController extends Controller
                                             <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
                                         </div>
                                         <div class="col-7">
-                                            <input type="date" id="fecha" class="form-control form-control-sm" min="'.$min.'" max="'.$max.'" name="fecha_emision" required disabled>
+                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required disabled>
                                         </div> 
                                     </div>
                                 </div>

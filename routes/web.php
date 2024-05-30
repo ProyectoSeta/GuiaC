@@ -73,6 +73,11 @@ Route::post('/aprobacion_solicitud/denegarInfo', [App\Http\Controllers\Aprobacio
 Route::post('/aprobacion_solicitud/denegar', [App\Http\Controllers\AprobacionController::class, 'denegar'])->name('aprobacion.denegar');
 Route::get('/aprobacion_solicitud/qr', [App\Http\Controllers\AprobacionController::class, 'qr'])->name('aprobacion.qr');
 
+
+///////////HISTORIAL DE SOLICITUDES
+Route::get('/hsolicitudes', [App\Http\Controllers\HSolicitudesController::class, 'index'])->name('hsolicitudes');
+
+
 //////////CONTROL DE CANTERAS
 Route::get('/control_canteras', [App\Http\Controllers\ControlCanterasController::class, 'index'])->name('control_canteras');
 Route::post('/control_canteras/update_limite', [App\Http\Controllers\ControlCanterasController::class, 'update_limite'])->name('control_canteras.update_limite');
