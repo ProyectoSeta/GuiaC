@@ -30,10 +30,10 @@ class VerificarUserController extends Controller
                 }
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
+                                <i class="bx bx-help-circle fs-2 text-navy" ></i>                       
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la verificación del siguente Sujeto Pasivo?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$sujeto->razon_social.'</h1>
+                                    <h1 class="modal-title fs-5 text-navy" id="">'.$sujeto->razon_social.'</h1>
                                     <h5 class="modal-title" id="" style="font-size:14px">'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</h5>
                                 </div>
                             </div>
@@ -112,9 +112,16 @@ class VerificarUserController extends Controller
         if ($update) {
 
             $user = auth()->id();
+            
             $sp = DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
             $accion = 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: '.$sp->razon_social.'.';
             $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 9, 'accion'=> $accion]);
+
+            if ($bitacora) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['success' => false]);
+            }
 
             return response()->json(['success' => true]);
         }else{

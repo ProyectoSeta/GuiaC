@@ -47,10 +47,10 @@ class VerificarCanteraController extends Controller
                 ///////////datos cantera
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
+                                <i class="bx bx-help-circle fs-2 text-navy"></i>                       
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Verificar Cantera?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$c->nombre.'</h1>
+                                    <h1 class="modal-title fs-5 text-navy" id="">'.$c->nombre.'</h1>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +167,7 @@ class VerificarCanteraController extends Controller
                                 <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>                    
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Denegar la Verificación de la Cantera?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$c->nombre.'</h1>
+                                    <h1 class="modal-title fs-5 text-navy" id="">'.$c->nombre.'</h1>
                                 </div>
                             </div>
                         </div>

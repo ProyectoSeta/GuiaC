@@ -10,16 +10,36 @@
 @stop
 
 @section('content')
-    <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mt-0 pt-0">
             <h3 class="mb-3 titulo">Libro <span class="text-navy">{{$mes_nombre}} {{$year}}</span></h3>
             
-            <div class="mb-3">
+            <div class="row w-50 d-flex justify-content-end">
+                <div class="col-sm-7">
+                    <div class="card shadow-none border-light-subtle">
+                        <div class="card-body px-3 py-2">
+                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
+                                <div class="p-2 border border-primary-subtle grd-primary-light rounded-5 d-flex">
+                                    <i class='bx bxs-collection fs-3 text-primary'></i>
+                                </div>
+                                <div class="d-flex flex-column text-center">
+                                    <span class="fs-6 pb-1">No. Guías Registradas</span>
+                                    <span class="text-primary">{{$count}}</span> 
+                                    <span class="text-muted" style="font-size:14px">en el Libro</span>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_guia_extemp" data-bs-toggle="modal" data-bs-target="#modal_registro_guia" mes="{{$mes}}" year="{{$year}}"> 
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
                     <span>Aperturar</span>
                 </button>
-            </div>
+            </div> -->
         </div>
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:13px;">
@@ -40,26 +60,26 @@
                 <tbody>
                 @foreach ($registros as $index => $registro)
                         <tr role="button">
-                            <td>{{$registro->nro_guia}}</td>
-                            <td class="fw-bold">{{$registro->nombre}}</td>
-                            <td>{{$registro->mineral}}</td>
-                            <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
-                            <td>{{$registro->razon_destinatario}}</td>
-                            <td>{{$registro->destino}}</td>
-                            <td>{{$registro->fecha}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->nro_guia}}</td>
+                            <td class="fw-bold info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->nombre}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->mineral}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->razon_destinatario}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->destino}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->fecha}}</td>
                             @php
                                 if($registro->nro_factura == ''){
                             @endphp       
-                                <td class="fst-italic text-secondary">No Aplica</td>
+                                <td class="fst-italic text-secondary info_guia"  nro_guia="{{$registro->nro_guia}}">No Aplica</td>
                             @php
                                 }else{
                             @endphp       
-                                <td>{{$registro->nro_factura}}</td>
+                                <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->nro_factura}}</td>
                             @php
                                 }
                             @endphp
                             
-                            <td>{{$registro->anulada}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->anulada}}</td>
                             <td>
                                 <div class="d-flex">
                                     @php
@@ -141,6 +161,31 @@
                     </div>
 
                 </div>  <!-- cierra modal-body -->
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+
+    <!-- ********* VER EL REGISTRO DE LA GUÍA ******** -->
+    <div class="modal" id="modal_content_guia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                
+                <div class="row mx-3 mt-3 mb-1 d-flex align-items-center">
+                    <div class="col-3 d-flex justify-content-center">
+                        <img src="{{asset('assets/aragua.png')}}" alt="" width="100px">
+                    </div>
+                    <div class="col-6 d-flex flex-column text-center pt-4">
+                        <span class="fs-6 fw-bold">GUÍA DE CIRCULACIÓN DE MINERALES NO METÁLICOS</span>
+                        <span>GOBIERNO BOLIVARIANO DEL ESTADO ARAGUA SERVICIO TRIBUTARIO DE ARAGUA (SETA)</span>
+                    </div>
+                    <div class="col-3 d-flex justify-content-center">
+                        <img src="{{asset('assets/logo-seta-2.png')}}" alt="" class="mt-3 ms-2" width="110px">
+                    </div>
+                </div>
+                <div class="modal-body mx-4" style="font-size:14px" id="content_info_guia">
+                    
+                </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -434,8 +479,8 @@
             });
 
 
-             ///////MODAL - HTML: EDITAR GUIA 
-             $(document).on('click','.editar_guia', function(e) { 
+            ///////MODAL - HTML: EDITAR GUIA 
+            $(document).on('click','.editar_guia', function(e) { 
                 e.preventDefault(e); 
                 var guia = $(this).attr('nro_guia');
                 var mes = $(this).attr('mes');
@@ -455,8 +500,8 @@
                 });
             });
 
-             //////ELIMINAR 
-             $(document).on('click','.delete_guia', function(e) { 
+            //////ELIMINAR 
+            $(document).on('click','.delete_guia', function(e) { 
                 e.preventDefault(e); 
                 var guia = $(this).attr('nro_guia');
                 // alert(guia);
@@ -482,6 +527,27 @@
                 } 
             });
             
+
+            ////////////////////MODAL: INFO GUIA
+            $(document).on('click','.info_guia', function(e) { 
+                e.preventDefault(e); 
+                var guia = $(this).attr('nro_guia');
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.guia") }}',
+                    data: {guia:guia},
+                    success: function(response) { 
+                        console.log(response);
+                        $('#modal_ver_talonario').modal('hide');             
+                        $('#modal_content_guia').modal('show');
+                        
+                        $('#content_info_guia').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
 
            
 

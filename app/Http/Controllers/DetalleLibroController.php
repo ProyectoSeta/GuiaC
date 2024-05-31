@@ -31,8 +31,17 @@ class DetalleLibroController extends Controller
                                 ->whereYear('control_guias.fecha', $year)
                                 ->get();
         
+        $count = DB::table('control_guias')
+                                ->join('canteras', 'control_guias.id_cantera', '=', 'canteras.id_cantera')
+                                ->join('minerals', 'control_guias.id_mineral', '=', 'minerals.id_mineral')
+                                ->select('control_guias.*', 'canteras.nombre', 'minerals.mineral')
+                                ->where('control_guias.id_sujeto', $id_sp)
+                                ->whereMonth('control_guias.fecha', $mes_search)
+                                ->whereYear('control_guias.fecha', $year)
+                                ->count();
+        
 
-        return view('detalle_libro', compact('mes_nombre', 'mes', 'year', 'registros'));
+        return view('detalle_libro', compact('mes_nombre', 'mes', 'year', 'registros', 'count'));
     }
 
     /**

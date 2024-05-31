@@ -15,9 +15,7 @@ class LibrosController extends Controller
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
-        $libros = DB::table('libros')->join('clasificacions', 'libros.estado', '=', 'clasificacions.id_clasificacion')
-                                    ->select('libros.*', 'clasificacions.nombre')
-                                    ->where('libros.id_sujeto','=',$id_sp)->get();
+        $libros = DB::table('libros')->where('id_sujeto','=',$id_sp)->get();
         
 
         return view('libros', compact('libros'));

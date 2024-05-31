@@ -28,8 +28,15 @@ class EstadoController extends Controller
                                         ->where('estado','!=','Negada')
                                         ->where('estado','!=','Retirado')->first();
 
-        $porcentaje_proceso = ($count_proceso->total/$count->total)*100;
-        $porcentaje_retirar = ($count_retirar->total/$count->total)*100;
+        if ($count->total == 0) {
+            $porcentaje_proceso = 0;
+            $porcentaje_retirar = 0;
+        }else{
+             $porcentaje_proceso = ($count_proceso->total/$count->total)*100;
+            $porcentaje_retirar = ($count_retirar->total/$count->total)*100;
+        }
+
+       
 
         return view('estado', compact('solicitudes','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
     }

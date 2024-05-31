@@ -154,7 +154,7 @@ class SolicitudController extends Controller
                             </div>
                             <div class="col-sm-6">
                                 <label for="monto_trans">Monto Transferido <span class="text-danger">*</span></label>
-                                <input class="form-control form-control-sm" id="monto_trans" name="monto_trans" type="number" required disabled>
+                                <input class="form-control form-control-sm" step="0.01" id="monto_trans" name="monto_trans" type="number" required disabled>
                             </div>
                         </div>
 

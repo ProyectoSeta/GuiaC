@@ -12,9 +12,28 @@
 @stop
 
 @section('content')
-    <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff;">
+        <div class="d-flex justify-content-between align-items-center mb-0">
             <h3 class="mb-3 text-navy titulo">Libro de Control</h3>
+
+            <div class="row w-25 d-flex justify-content-end">
+                <div class="col-sm-12">
+                    <div class="card shadow-none border-light-subtle">
+                        <div class="card-body px-3 py-2">
+                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
+                                <div class="p-2 border border-primary-subtle grd-primary-light rounded-5 d-flex">
+                                    <i class='bx bxs-collection fs-3 text-primary'></i>
+                                </div>
+                                <div class="d-flex flex-column text-center">
+                                    <span class=" pb-1" style="font-size:14px">Guías Registradas</span>
+                                    <span class="text-primary">{{$count}}</span> 
+                                    <span class="text-muted" style="font-size:14px">del Mes</span>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="registrar_new_guia" data-bs-toggle="modal" data-bs-target="#modal_registro_guia"> 
@@ -41,25 +60,25 @@
                 <tbody>
                     @foreach ($registros as $index => $registro)
                         <tr role="button">
-                            <td>{{$registro->nro_guia}}</td>
-                            <td class="fw-bold">{{$registro->nombre}}</td>
-                            <td>{{$registro->mineral}}</td>
-                            <td>{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
-                            <td class="fw-bold">{{$registro->razon_destinatario}}</td>
-                            <td>{{$registro->destino}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->nro_guia}}</td>
+                            <td class="fw-bold info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->nombre}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->mineral}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->cantidad_despachada}} {{$registro->unidad_medida}}</td>
+                            <td class="fw-bold info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->razon_destinatario}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->destino}}</td>
                             @php
                                 if($registro->nro_factura == ''){
                             @endphp       
-                                <td class="fst-italic text-secondary">No Aplica</td>
+                                <td class="fst-italic text-secondary info_guia" nro_guia="{{$registro->nro_guia}}">No Aplica</td>
                             @php
                                 }else{
                             @endphp       
-                                <td>{{$registro->nro_factura}}</td>
+                                <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->nro_factura}}</td>
                             @php
                                 }
                             @endphp
                             
-                            <td>{{$registro->anulada}}</td>
+                            <td class="info_guia" nro_guia="{{$registro->nro_guia}}">{{$registro->anulada}}</td>
                             <td>
                                 <div class="d-flex">
                                     @php

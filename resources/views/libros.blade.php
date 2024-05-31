@@ -20,8 +20,6 @@
                         <th scope="col">#</th>
                         <th scope="col">Mes</th>
                         <th scope="col">Año</th>
-                        <th scope="col">Declaración</th>
-                        <th scope="col">Detalles</th>
                         <th scope="col">Opciones</th>
                     </tr>
                 </thead>
@@ -38,33 +36,6 @@
                             <td>{{$libro->id_libro}}</td>
                             <td>{{$mes_libro}}</td>
                             <td>{{$libro->year}}</td>
-                            @php
-                                if($libro->nombre == 'Declarado'){
-                            @endphp
-                                <td>
-                                    <div class="d-flex align-items-center justify-content-center badge bg-success-subtle border text-success rounded-pill px-0 py-2" style="font-size:13px;">
-                                        <i class='bx bx-check-circle fs-6 me-2'></i>
-                                        <span>{{$libro->nombre}}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="#" class="detalle_declaracion" data-bs-toggle="modal" data-bs-target="#modal_detalle_declaracion" id_libro="{{$libro->id_libro}}">Ver</a>
-                                </td>
-                            @php
-                                }else{
-                            @endphp
-                                <td>
-                                    <div class="d-flex align-items-center justify-content-center badge bg-secondary-subtle text-secondary-emphasis rounded-pill px-0 py-2" style="font-size:13px;">
-                                        <i class="bx bx-error-circle fs-6 me-2"></i>
-                                        <span>Sin Declarar</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="fst-italic text-secondary">No Aplica</span>
-                                </td>
-                            @php
-                                }
-                            @endphp
                             
                             <td>
                                 <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4 " mes="{{$libro->mes}}" year="{{$libro->year}}" >
