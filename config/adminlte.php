@@ -404,7 +404,7 @@ return [
         ],[
             'text'       => 'Recaudación',
             // 'icon_color' => 'fas fa-fw fa-user',
-            'url'        => '/',
+            'url'        => '/recaudacion',
         ],
         ['header' => 'Usuarios'],
         [
