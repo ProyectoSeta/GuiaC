@@ -48,7 +48,10 @@
                                 <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
                             </td>
                             <td>
-                                <span>{{$talonario->reportado}}%</span>
+                                <!-- <span>{{$talonario->reportado}}%</span> -->
+                                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{$talonario->reportado}}" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width: {{$talonario->reportado}}%"></div>
+                                </div>
                             </td>
                             <td>
                                 <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' talonario="{{$talonario->id_talonario}}" data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>

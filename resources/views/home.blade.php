@@ -14,13 +14,13 @@
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{asset('assets/banner1.svg')}}" class="d-block w-100" alt="...">
+                        <img src="{{asset('assets/banner_sd_1.svg')}}" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{asset('assets/banner2.svg')}}" class="d-block w-100" alt="...">
+                        <img src="{{asset('assets/banner_sd_2.svg')}}" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{asset('assets/banner3.svg')}}" class="d-block w-100" alt="...">
+                        <img src="{{asset('assets/banner_sd_3.svg')}}" class="d-block w-100" alt="...">
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -60,19 +60,20 @@
             </div><!-- /.row -->
 
             <div class="row mx-5 px-5" style="font-size: 15px;">
-                <div class="col-lg-6 text-center">
+                <div class="col-sm-2"></div>
+                <div class="col-lg-8 text-center">
                     <span class="badge rounded-circle bg-gradient-danger fs-3 mb-2">4</span>
                     <h4 class="fw-semibold titulo text-navy">Registrar Guías</h4>
                     <p class="text-muted">Amigo contribuyente, debe subir todas las guías que han sido utilizadas en la(s) Cantera(s), así estas hayan sido anuladas. Para que, pueda cumplir con el deber formal.</p>
                     <p><a class="btn bg-navy  btn-sm" href="{{ route('registro_guia') }}">Registrar Guía »</a></p>
                 </div><!-- /.col-lg-4 -->
-
-                <div class="col-lg-6 text-center">
+                <div class="col-sm-2"></div>
+                <!-- <div class="col-lg-6 text-center">
                     <span class="badge rounded-circle bg-gradient-danger fs-3 mb-2">5</span>
                     <h4 class="fw-semibold titulo text-navy">Declarar Guías de Circulación</h4>
                     <p class="text-muted">Según el calendario fiscal vigente a la fecha, deberá declarar las guías que haya utilizado en el período de tiempo establecido.</p>
                     <p><a class="btn bg-navy  btn-sm" href="{{ route('declarar') }}">Ver Estado »</a></p>
-                </div><!-- /.col-lg-4 -->
+                </div>/.col-lg-4 -->
             </div>
         </div>
 
@@ -87,20 +88,53 @@
     </div>
     
 
-    
-
-
 
 
 @stop
 
 @section('footer')
 
-    <div class="d-flex justify-content-end align-items-center pb-1 my-0"> 
+    <div class="row mx-3 px-2 border-top" style="font-size:14px">
+        <div class="col-sm-2 my-3">
+            <h5 class="text-navy fw-bold">Canteras o/y Desazolve</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="{{ route('cantera') }}" class="nav-link p-0 text-body-secondary">Registro</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-2 my-3">
+            <h5 class="text-navy fw-bold">Solicitudes</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="{{ route('solicitud') }}" class="nav-link p-0 text-body-secondary">Nueva solicitud</a></li>
+                <li class="nav-item mb-2"><a href="{{ route('solicitud') }}" class="nav-link p-0 text-body-secondary">Estado de Solicitudes </a></li>
+            </ul>
+        </div>
+        <div class="col-sm-2 my-3">
+            <h5 class="text-navy fw-bold">Libro de Control</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="{{ route('registro_guia') }}" class="nav-link p-0 text-body-secondary">Registro de Guía</a></li>
+                <li class="nav-item mb-2"><a href="{{ route('libros') }}" class="nav-link p-0 text-body-secondary">Libros</a></li>
+            </ul> 
+        </div>
+        <div class="col-sm-6 my-3 text-end">
+            <div class="d-flex justify-content-end mb-2 mt-0 pt-0">
+                <img src="{{asset('assets/logo_seta_grey.png')}}" class="" alt="" width="180px">
+            </div>
+            <p class="mb-0 text-navy fw-bold">Servicio Tributario del Estado Aragua (SETA)</p>
+            <p class="mb-2">R.I.F.: G-20008920-2</p>
+
+            <p class="mb-0"><span class="text-navy">Dirección:</span> Av.10 de Diciembre ,entre calle Junin y Sucre, Edif, Invivar Municipio Girardot Maracay Estado Aragua.</p>
+            <p class="mb-0"><span class="text-navy">Contacto:</span> +58 0243 2336565</p>
+            <p class="mb-0"><span class="text-navy">Correo:</span> atencionalcddno.seta@gmail.com</p>
+        </div>
+    </div>
+
+    
+
+    <!-- <div class="d-flex justify-content-end align-items-center pb-1 my-0"> 
         <img src="{{asset('assets/logo-seta.png')}}" class=" mt-3 me-3" alt="" width="130px">
         <img src="{{asset('assets/aragua.png')}}" class="me-3" alt="" width="75px">
         <img src="{{asset('assets/gobierno.png')}}" class="" alt="" width="140px">
-    </div>
+    </div> -->
         
 @stop
 

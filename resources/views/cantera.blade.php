@@ -16,7 +16,7 @@
     
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-2">
-            <h3 class="mb-3 text-navy titulo">Registro de Canteras</h3>
+            <h3 class="mb-3 text-navy titulo">Registro de Canteras y/o Desazolves</h3>
             <div class="mb-3">
                 <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_cantera" data-bs-toggle="modal" data-bs-target="#modal_new_cantera">
                     <i class='bx bx-plus fw-bold fs-6 pe-2'></i>

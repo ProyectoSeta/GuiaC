@@ -19,6 +19,22 @@
             <h3 class="mb-3 text-navy titulo">Bitácora</h3>
         </div> -->
 
+        <!-- <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table border-light-subtle text-center" style="font-size:13px">
+                <thead class="">
+                    <th>#</th>
+                    <th>Usuario</th>
+                    <th>Modulo</th>
+                    <th>Fecha</th> 
+                    <th>Accción</th>
+                </thead>
+                <tbody class="border-light-subtle "> 
+                    
+                </tbody> 
+                
+            </table>
+            
+        </div> -->
 
         <!-- GRAFICAS: RECAUDACIÓN ANUAL (UCD - TALONARIOS)-->
         <div class="row">
@@ -154,20 +170,26 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="overflow-y-auto">
-                            <table id="contribuyentes" class="table" style="font-size:13px">
-                                <tr>
-                                    <th></th>
-                                    <th>Empresa</th>
-                                    <th>R.I.F.</th>
-                                </tr>
-                                <tr class="">
-                                    <td class="w-25">
-                                        <img src="{{asset('assets/user2.png')}}" class="img-4x rounded-circle flex-shrink-0 me-3 w-50" alt="Avatar">
-                                    </td>
-                                    <td>Aramica, S.A</td>
-                                    <td>G-200108240</td>
-                                </tr>
-                            </table>
+
+                            <div class="table-responsive">
+                                <table id="contribuyentes" class="table" style="font-size:13px">
+                                    <thead>
+                                        <th></th>
+                                        <th>Empresa</th>
+                                        <th>R.I.F.</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="">
+                                            <td class="w-25">
+                                                <img src="{{asset('assets/user2.png')}}" class="img-4x rounded-circle flex-shrink-0 me-3 w-50" alt="Avatar">
+                                            </td>
+                                            <td>Aramica, S.A</td>
+                                            <td>G-200108240</td>
+                                        </tr>
+                                    </tbody>
+                                </table> 
+                            </div>
+                           
                         </div>
                     </div>
                     <div class="col-sm-8">
@@ -248,7 +270,6 @@
             );
             $('#contribuyentes').DataTable(
                 {
-                    "order": [[ 0, "desc" ]],
                     "language": {
                         "lengthMenu": " Mostrar  _MENU_  Registros por página",
                         "zeroRecords": "No se encontraron registros",
@@ -378,7 +399,7 @@
 
     
 
-    </script>
+</script>
 
 
   
