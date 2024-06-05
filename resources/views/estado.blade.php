@@ -14,10 +14,9 @@
         <div class="d-flex justify-content-between mt-2">
             <div class="">
                 <h3 class="mb-1 mt-3 text-navy titulo">Actualización de Estado</h3>
-                <span class="text-muted" style="font-size:15px">Procesando un Total de: {{$count->total}} Solicitude(s)</span>
+                <span class="text-muted" style="font-size:15px">Talonarios a generar - Correlativos asignados - Talonarios Recibidos</span><br>
+                <span class="text-navy" style="font-size:15px">Procesando un Total de: {{$count->total}} Solicitude(s)</span>
             </div>
-            
-
 
             <div class="row w-50">
                 <div class="col-sm-6">
@@ -63,70 +62,83 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-        </div>
-        <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
-                <thead class="border-light-subtle">
-                    <th>Cod.</th>
-                    <th>Cantera</th>
-                    <th>Razón Social</th>
-                    <th>R.I.F.</th>
-                    <th>Solicitud</th>
-                    <th>Estado Actual</th>
-                    <th>Emisión</th>
-                    <th>Opción</th>
-                </thead>
-                <tbody> 
-                @foreach ($solicitudes as $solicitud)
-                        <tr>
-                            <td>{{$solicitud->id_solicitud}}</td>
-                            <td>
-                                <span class="fw-bold">{{$solicitud->nombre}}</span>
-                            </td>
-                            <td>{{$solicitud->razon_social}}</td>
-                            <td>
-                                <a class="info_sujeto" role="button" id_sujeto='{{ $solicitud->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$solicitud->rif_condicion}}-{{$solicitud->rif_nro}}</a>
-                            </td>
-                            <td>
-                                <a class="text-primary ver_solicitud" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_ver_solicitud">Ver</a>
-                            </td>
-                            <td>
-                                @switch($solicitud->estado)
-                                    @case('Verificando')
-                                        <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
-                                    @break
-                                    @case('En proceso')
-                                        <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
-                                    @break
-                                    @case('Retirar') 
-                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
-                                    @break
-                                    @case('Retirado')
-                                        <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
-                                    @break
-                    
-                                @endswitch                    
-                            </td>
-                            <td class="text-muted">{{$solicitud->fecha}}</td>
-                            <td>
-                                @if ($solicitud->estado == 'Verificando')
-                                    <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado" disabled>Actualizar</button>
-                                @else
-                                    <button class="btn btn-primary btn-sm actualizar_estado px-3 rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_actualizar_estado">Actualizar</button>
-                                @endif
-                            </td>
+        <!-- contenido -->
+        <!-- nav - option -->
+        <ul class="nav nav-tabs d-flex justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link active" id="list-enviar-list" data-bs-toggle="list" href="#list-enviar" role="tab" aria-controls="list-enviar">Enviar a Imprenta</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Enviados</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Recibidos</a>
+            </li>
+        </ul>
+
+        <!-- contenido - nav - option -->
+        <div class="tab-content py-3" id="nav-tabContent">
+            <!-- CONTENIDO: USUARIOS CONTRIBUYENTE -->
+            <div class="tab-pane fade show active" id="list-enviar" role="tabpanel" aria-labelledby="list-enviar-list">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mt-2 mb-0"><i class='bx bx-printer fs-5 me-2'></i><span>Reporte</span></button>
+                </div>
+                <div class="table-responsive" style="font-size:14px">
+                    <table id="enviar_imprenta" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+                        <thead class="bg-primary border-light-subtle">
+                                <tr>
+                                    <th scope="col">Cod. Talonario</th>
+                                    <th scope="col">Cantera</th>
+                                    <th scope="col">Contribuyente</th>
+                                    <th scope="col">R.I.F</th>
+                                    <th scope="col">Correlativo</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Opciones</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($enviar as $env)
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            <!-- CONTENIDO: USUARIOS ADMINISTRATIVO -->
+            <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
+            <div class="table-responsive" style="font-size:14px">
+                    <table id="administrativo" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+                        <thead class="bg-primary border-light-subtle">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Correo</th>
+                                    <th scope="col">Creado</th>
+                                    <th scope="col">Opciones</th>
+                                </tr>
+                        </thead>
+                        <tbody>
                             
-                        </tr>
-                @endforeach
-                
-                            
-                    
-                </tbody> 
-                
-            </table>
-            
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
         </div>
+
+        
 
     </div>
    
@@ -232,7 +244,44 @@
    
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#example').DataTable(
+            $('#enviar_imprenta').DataTable(
+                {
+                    "order": [[ 0, "desc" ]],
+                    "language": {
+                        "lengthMenu": " Mostrar  _MENU_  Registros por página",
+                        "zeroRecords": "No se encontraron registros",
+                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encuentran Registros",
+                        "infoFiltered": "(filtered from _MAX_ total records)",
+                        'search':"Buscar",
+                        'paginate':{
+                            'next':'Siguiente',
+                            'previous':'Anterior'
+                        }
+                    }
+                }
+            );
+
+            $('#recibidos').DataTable(
+                {
+                    "order": [[ 0, "desc" ]],
+                    "language": {
+                        "lengthMenu": " Mostrar  _MENU_  Registros por página",
+                        "zeroRecords": "No se encontraron registros",
+                        "info": "Mostrando página _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encuentran Registros",
+                        "infoFiltered": "(filtered from _MAX_ total records)",
+                        'search':"Buscar",
+                        'paginate':{
+                            'next':'Siguiente',
+                            'previous':'Anterior'
+                        }
+                    }
+                }
+            );
+
+
+            $('#enviados').DataTable(
                 {
                     "order": [[ 0, "desc" ]],
                     "language": {

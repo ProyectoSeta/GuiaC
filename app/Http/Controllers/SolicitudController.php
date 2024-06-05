@@ -19,7 +19,8 @@ class SolicitudController extends Controller
         $id_sp = $sp->id_sujeto;
 
         $solicitudes = DB::table('solicituds')->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
-                                            ->select('solicituds.*','canteras.nombre')
+                                            ->join('clasificacions', 'solicituds.estado', '=', 'clasificacions.id_clasificacion')
+                                            ->select('solicituds.*','canteras.nombre','clasificacions.nombre_clf')
                                             ->where('solicituds.id_sujeto', $id_sp)->get();
 
         // var_dump($solicitudes);
@@ -279,7 +280,7 @@ class SolicitudController extends Controller
                                                                 'referencia' => null,
                                                                 'total_ucd'=>$total_ucd, 
                                                                 'monto_total'=> $monto_total,
-                                                                'estado' => 'Verificando']);
+                                                                'estado' => 4]);
                     if ($insert) {
                         $id_solicitud = DB::table('solicituds')->max('id_solicitud');
 

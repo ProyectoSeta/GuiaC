@@ -14,52 +14,66 @@ class ClasificacionesSeeder extends Seeder
     public function run(): void
     {
         DB::table('clasificacions')->insert([
-            'nombre' => 'Declarado',
+            'nombre_clf' => 'Declarado',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Sin Declarar',
+            'nombre_clf' => 'Sin Declarar',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Extemporanea',
+            'nombre_clf' => 'Extemporanea',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Verificando',
+            'nombre_clf' => 'Verificando',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Verificado',
+            'nombre_clf' => 'Verificado',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Negado',
+            'nombre_clf' => 'Negado',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Aprobacion de Solicitudes',
+            'nombre_clf' => 'Aprobacion de Solicitudes',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Actualización de Estado - Solicitudes',
+            'nombre_clf' => 'Actualización de Estado - Solicitudes',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Nuevos Usuarios',
+            'nombre_clf' => 'Nuevos Usuarios',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Canteras registradas',
+            'nombre_clf' => 'Canteras registradas',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Declaraciones',
+            'nombre_clf' => 'Declaraciones',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Sujetos Pasivos',
+            'nombre_clf' => 'Sujetos Pasivos',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Talonarios',
+            'nombre_clf' => 'Talonarios',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Control de Canteras',
+            'nombre_clf' => 'Control de Canteras',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'Usuarios',
+            'nombre_clf' => 'Usuarios',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre' => 'UCD',
+            'nombre_clf' => 'UCD',
+        ]);
+
+
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Enviar a imprenta',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'En imprenta',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Recibido',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Retirado',
         ]);
 
     

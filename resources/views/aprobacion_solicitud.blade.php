@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table border-light-subtle text-center" style="font-size:13px">
+            <table id="example" class="table border-light-subtle text-center" style="font-size:12.7px">
                 <thead class="border-light-subtle">
                     <th>Cod.</th>
                     <th>Cantera</th>
@@ -69,8 +69,8 @@
                             @endphp
                             <td class="text-muted">{{$fecha}}</td>
                             
-                            <td>
-                                <button class="btn btn-success btn-sm aprobar_solicitud rounded-4" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
+                            <td class="d-flex">
+                                <button class="btn btn-success btn-sm aprobar_solicitud rounded-4 me-2" id_cantera="{{$solicitud->id_cantera}}" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
                                 <button class="btn btn-danger btn-sm denegar_solicitud rounded-4" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
                             </td>
                         </tr>

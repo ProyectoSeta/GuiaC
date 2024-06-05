@@ -20,8 +20,9 @@ class AprobacionController extends Controller
         $solicitudes = DB::table('solicituds')
             ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
             ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
-            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro','canteras.nombre')
-            ->where('solicituds.estado','=','Verificando')
+            ->join('clasificacions', 'solicituds.estado', '=', 'clasificacions.id_clasificacion')
+            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro','canteras.nombre','clasificacions.nombre_clf')
+            ->where('solicituds.estado','=',4)
             ->get();
 
         $count_aprobar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Verificando')->first();
@@ -307,7 +308,7 @@ class AprobacionController extends Controller
                  
                 }/////cierra foreach
 
-                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
 
                 $user = auth()->id();
                 $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
@@ -362,7 +363,7 @@ class AprobacionController extends Controller
                     } ////cierra for                
                 } ////cierra foreach
 
-                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'En proceso']);
+                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
 
                 $user = auth()->id();
                 $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
@@ -595,7 +596,7 @@ class AprobacionController extends Controller
         $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $new_total_guias]);
         
         ////////////////CAMBIAR ESTADO DE SOLICITUD A DENEGADA
-        $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 'Negada', 'observaciones' => $observacion]);
+        $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 6, 'observaciones' => $observacion]);
         
         if ($updates && $update_limite) {
             $user = auth()->id();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('clasificacions', function (Blueprint $table) {
             $table->increments('id_clasificacion');
-            $table->string('nombre');
+            $table->string('nombre_clf');
 
             $table->timestamps();
         });

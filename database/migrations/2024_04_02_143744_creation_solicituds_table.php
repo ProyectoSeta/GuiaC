@@ -28,7 +28,11 @@ return new class extends Migration
             $table->integer('total_ucd');
             $table->float('monto_total');
             $table->dateTime('fecha');
-            $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
+            // $table->enum('estado',['Verificando','Negada','En proceso','Retirar','Retirado']);  
+
+            $table->integer('estado')->unsigned();
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
             $table->string('observaciones')->nullable();
 
             

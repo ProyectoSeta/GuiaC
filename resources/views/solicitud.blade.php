@@ -25,7 +25,7 @@
         
         
         <div class="table-responsive" style="font-size:14px">        
-            <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+            <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:12.7px">
                 <thead class="bg-primary border-light-subtle">
                     <tr>
                         <th scope="col">Cod.</th>
@@ -54,20 +54,23 @@
                                 <span>{{$solicitud->total_ucd}} UCD</span>
                             <td>
                                 @switch($solicitud->estado)
-                                @case('Verificando')
-                                        <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
+                                @case('4') <!-- verificando -->
+                                        <span class="badge text-bg-secondary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
                                     @break
-                                    @case('Negada')
-                                        <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
+                                    @case('6')  <!-- negada -->
+                                        <span role="button" class="badge text-bg-danger p-2 py-1 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
                                     @break
-                                    @case('En proceso')
-                                        <span class="badge text-bg-primary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                    @case('17')  <!-- por enviar a imprenta -->
+                                        <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
-                                    @case('Retirar') 
-                                        <span class="badge text-bg-warning p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
+                                    @case('18')  <!-- en imprenta -->
+                                        <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
-                                    @case('Retirado')
-                                        <span class="badge text-bg-success p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
+                                    @case('19') <!-- por retirar -->
+                                        <span class="badge text-bg-warning p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
+                                    @break
+                                    @case('20') <!-- retirado -->
+                                        <span class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
                                     @break
                     
                                 @endswitch                    

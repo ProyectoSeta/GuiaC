@@ -12,13 +12,33 @@ class EstadoController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $solicitudes = DB::table('solicituds')
-            ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-            ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
-            ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-            ->where('solicituds.estado','!=','Negada')
-            ->get();
+    {   
+        $talonarios_enviar = [];
+        $solicitud_1 = DB::table('solicituds')->select('id_solicitud')->where('estado','=',18)->get();
+        foreach ($solicitud_1 as $s1) {
+            $consulta = DB::table('talonarios')
+                            ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('talonarios.id_solicitud','=',$s1)->get();
+            foreach ($consulta as $c) {
+                $array = array(
+                                'id_talonario' => $c->id_talonario,
+                                'id_solicitud' => $c->id_solicitud,
+                                'id_cantera' => $c->id_cantera,
+                                'nombre_cantera' => $c->nombre,
+                                'razon_social' => $c->razon_social,
+                                'rif_condicion' => $c->rif_condicion,
+                                'rif_nro' => $c->rif_nro,
+                                'tipo' => $c->tipo,
+                                'desde' => $c->desde,
+                                'hasta' => $c->hasta,
+                                );
+                $a = (object) $array;
+                array_push($talonarios_enviar, $a);
+            }
+        }
+        
             
         $count_proceso = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','En proceso')->first();
         $count_retirar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Retirar')->first();
@@ -38,7 +58,7 @@ class EstadoController extends Controller
 
        
 
-        return view('estado', compact('solicitudes','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
+        return view('estado', compact('enviar','enviado','recibido','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
     }
 
     public function solicitud(Request $request)
