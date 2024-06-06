@@ -25,7 +25,7 @@ class AprobacionController extends Controller
             ->where('solicituds.estado','=',4)
             ->get();
 
-        $count_aprobar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=','Verificando')->first();
+        $count_aprobar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=',4)->first();
 
         return view('aprobacion_solicitud', compact('solicitudes','count_aprobar'));
     }

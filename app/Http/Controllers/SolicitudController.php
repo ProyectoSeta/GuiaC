@@ -151,7 +151,7 @@ class SolicitudController extends Controller
                         <div class="row mb-3">
                             <div class="col-sm-6">
                                 <label for="fecha_emision">Fecha de Emisión <span class="text-danger">*</span></label>
-                                <input class="form-control form-control-sm mb-2" id="fecha_emision" name="fecha_emision" type="date" value="'.$fecha_actual.'" required disabled>
+                                <input class="form-control form-control-sm mb-2" id="fecha_emision" name="fecha_emision" type="date" value="'.$fecha_actual.'" required readonly>
                             </div>
                             <div class="col-sm-6">
                                 <label for="monto_trans">Monto Transferido <span class="text-danger">*</span></label>

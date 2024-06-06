@@ -99,7 +99,7 @@
                                 </tr>
                         </thead>
                         <tbody>
-                            @foreach ($enviar as $env)
+                            @foreach ($talonarios_enviar as $enviar)
                                 <tr>
                                     <td></td>
                                     <td></td>

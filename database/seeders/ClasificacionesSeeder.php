@@ -31,6 +31,8 @@ class ClasificacionesSeeder extends Seeder
         DB::table('clasificacions')->insert([
             'nombre_clf' => 'Negado',
         ]);
+
+        
         DB::table('clasificacions')->insert([
             'nombre_clf' => 'Aprobacion de Solicitudes',
         ]);
@@ -64,10 +66,21 @@ class ClasificacionesSeeder extends Seeder
 
 
         DB::table('clasificacions')->insert([
-            'nombre_clf' => 'Enviar a imprenta',
+            'nombre_clf' => 'En Proceso',
         ]);
         DB::table('clasificacions')->insert([
-            'nombre_clf' => 'En imprenta',
+            'nombre_clf' => 'Por retirar',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Entregado',
+        ]);
+
+
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Por enviar',
+        ]);
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Enviado',
         ]);
         DB::table('clasificacions')->insert([
             'nombre_clf' => 'Recibido',

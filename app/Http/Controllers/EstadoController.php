@@ -58,7 +58,7 @@ class EstadoController extends Controller
 
        
 
-        return view('estado', compact('enviar','enviado','recibido','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
+        return view('estado', compact('talonarios_enviar','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
     }
 
     public function solicitud(Request $request)

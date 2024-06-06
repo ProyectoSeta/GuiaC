@@ -23,8 +23,12 @@ return new class extends Migration
             $table->integer('desde');
             $table->integer('hasta');
             $table->string('qr')->nullable();
-            $table->date('fecha_emision');
-            $table->date('fecha_recibido')->nullable();
+
+            $table->integer('estado')->unsigned();
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
+            $table->date('fecha_enviado_imprenta');
+            $table->date('fecha_recibido_imprenta')->nullable();
             $table->date('fecha_retiro')->nullable();
             
             
