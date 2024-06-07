@@ -25,5 +25,11 @@ class TiposSeeder extends Seeder
         DB::table('tipos')->insert([
             'nombre_tipo' => 'Administrativo',
         ]);
+        DB::table('tipos')->insert([
+            'nombre_tipo' => 'Regular',
+        ]);
+        DB::table('tipos')->insert([
+            'nombre_tipo' => 'Reserva',
+        ]);
     }
 }

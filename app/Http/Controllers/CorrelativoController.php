@@ -63,7 +63,7 @@ class CorrelativoController extends Controller
                         'qr' => $q->qr,
                         'reportado' => $reportado,
                         'alert' => $alert,
-                        'intervalo' => $i
+                        'intervalo' => $i ///sirve para saber si se ha cumplido un tiempo desde la solicitud del talonario hasta la fecha, para mandar una alerta
                     );
             $a = (object) $array;
             array_push($talonarios,$a);

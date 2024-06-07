@@ -28,7 +28,7 @@
         
 
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
                 <thead>
                     <th>#</th>
                     <th>Nombre</th>
@@ -51,11 +51,11 @@
                             
                             <td>
                                 @if ($cantera->status == 'Verificando')
-                                    <span class="badge text-bg-secondary p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
+                                    <span class="badge text-bg-secondary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando cantera</span>
                                 @elseif ($cantera->status == 'Verificada')
-                                    <span role="button" class="badge text-bg-success p-2 d-flex justify-content-center align-items-center cantera_verificada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_limite" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
+                                    <span role="button" class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center cantera_verificada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_limite" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-check-circle fs-6 me-2'></i>Cantera verificada</span> 
                                 @elseif ($cantera->status == 'Denegada')
-                                    <span role="button" class="badge text-bg-danger p-2 d-flex justify-content-center align-items-center cantera_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-x-circle fs-6 me-2'></i>Denegada</span> 
+                                    <span role="button" class="badge text-bg-danger p-2 py-1 d-flex justify-content-center align-items-center cantera_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_cantera='{{ $cantera->id_cantera }}'><i class='bx bx-x-circle fs-6 me-2'></i>Denegada</span> 
                                 @endif
                             </td>
                             <td>

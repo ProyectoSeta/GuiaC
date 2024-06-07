@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('talonarios', function (Blueprint $table) {
             $table->increments('id_talonario');
-            $table->integer('id_solicitud')->unsigned();
+            $table->integer('id_solicitud')->unsigned()->nullable();;
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
-            $table->integer('id_cantera')->unsigned();
-            $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
-            $table->integer('id_sujeto')->unsigned();
-            $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
-            $table->enum('tipo_talonario',['50']);
+
+            $table->integer('id_reserva')->unsigned()->nullable();;
+            $table->foreign('id_reserva')->references('id_reserva')->on('reservas')->onDelete('cascade');
+
             $table->integer('desde');
             $table->integer('hasta');
-            $table->string('qr')->nullable();
+            $table->integer('clase')->unsigned();
+            $table->foreign('clase')->references('id_tipo')->on('tipos')->onDelete('cascade');
 
             $table->integer('estado')->unsigned();
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');

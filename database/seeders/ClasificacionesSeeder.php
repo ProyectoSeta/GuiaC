@@ -89,6 +89,11 @@ class ClasificacionesSeeder extends Seeder
             'nombre_clf' => 'Retirado',
         ]);
 
+
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Reservas',
+        ]);
+
     
     }
 }
