@@ -330,6 +330,22 @@ return [
             'route'  => 'solicitud',
             'icon' => 'fas fa-plus pe-2', 
         ],
+        ['header' => 'Reservas'],
+        [
+            'text' => ' Reserva de Talonarios',
+            'url'  => '/reserva',
+            // 'icon' => '', 
+        ],
+        [
+            'text' => ' Nueva Solicitud',
+            'url'  => '/#',
+            'icon' => 'fas fa-plus pe-2', 
+        ],
+        [
+            'text' => ' Aprobar Solicitudes',
+            'url'  => '/#',
+            // 'icon' => 'fas fa-plus pe-2', 
+        ],
         ['header' => 'Libro de Control'],
         [
             'text' => 'Registro de guías',

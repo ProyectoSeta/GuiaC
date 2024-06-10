@@ -292,13 +292,27 @@ class AprobacionController extends Controller
                             $hasta = ($desde + $tipo)-1;
                         }
                     
-                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
-                                            'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
+                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
+                                                                    'id_reserva' => NULL, 
+                                                                    'tipo_talonario' => '50', 
+                                                                    'desde' => $desde, 
+                                                                    'hasta' => $hasta,
+                                                                    'clase' => 5,
+                                                                    'estado' => 20]);
                         if ($insert) {
                             $id_talonario= DB::table('talonarios')->max('id_talonario');
+                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                    'id_talonario' => $id_talonario,
+                                                                    'id_cantera'=>$idCantera, 
+                                                                    'id_sujeto'=>$idSujeto, 
+                                                                    'desde' => $desde, 
+                                                                    'hasta' => $hasta,
+                                                                    'clase' => 5,
+                                                                    'id_solicitud_reserva' => null]);
+
                             $url = route('aprobacion.qr', ['id' => $id_talonario]);
                             QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                            $update_qr = DB::table('talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                            $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
     
                         }else{
                             return response('Error al generar el QR');
@@ -349,13 +363,27 @@ class AprobacionController extends Controller
                         // }
                         ////////////////////////////////////////
     
-                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud, 'id_cantera'=>$idCantera, 'id_sujeto'=>$idSujeto, 'tipo_talonario' => $tipo, 
-                                            'desde' => $desde, 'hasta' => $hasta, 'fecha_emision' => $fecha]);
+                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
+                                                                    'id_reserva' => NULL, 
+                                                                    'tipo_talonario' => '50', 
+                                                                    'desde' => $desde, 
+                                                                    'hasta' => $hasta,
+                                                                    'clase' => 5,
+                                                                    'estado' => 20]);
                         if ($insert) {
                             $id_talonario= DB::table('talonarios')->max('id_talonario');
+                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                    'id_talonario' => $id_talonario,
+                                                                    'id_cantera'=>$idCantera, 
+                                                                    'id_sujeto'=>$idSujeto, 
+                                                                    'desde' => $desde, 
+                                                                    'hasta' => $hasta,
+                                                                    'clase' => 5,
+                                                                    'id_solicitud_reserva' => null]);
+
                             $url = route('aprobacion.qr', ['id' => $id_talonario]);
                             QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                            $update_qr = DB::table('talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                            $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
               
                         }else{
                             return response('Error al generar el QR');
@@ -381,13 +409,14 @@ class AprobacionController extends Controller
     public function info(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
+        // $consulta = DB::table('talonarios')->select('id_talonario')->where('id_solicitud', '=', $idSolicitud)->first();
+
         $tables = '';
-        $talonarios = DB::table('talonarios')
-        ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
-        ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
-        ->where('id_solicitud','=',$idSolicitud)
-        ->get();
+        $talonarios = DB::table('talonarios')->select('id_talonario','tipo_talonario','desde','hasta')->where('id_solicitud','=',$idSolicitud)->get();
+
+        $razon_social = '';
+        $rif = '';
+        $cantera = '';
 
         if ($talonarios) {
             $i=0;
@@ -399,10 +428,21 @@ class AprobacionController extends Controller
                 $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
                 $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
-                $qr = $talonario->qr;
-                 
 
-                $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
+                $detalle = DB::table('detalle_talonarios')
+                    ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                    ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                    ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
+                    ->where('id_talonario','=', $talonario->id_talonario)
+                    ->first();
+
+                if ($detalle) {
+                    $qr = $detalle->qr;
+                    $razon_social = $detalle->razon_social;
+                    $rif = $detalle->rif_condicion.'-'.$detalle->rif_nro;
+                    $cantera = $detalle->nombre;
+
+                    $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
                             <div class="row d-flex align-items-center">
                                 <div class="col-sm-7">
                                     <table class="table mt-2 mb-3">
@@ -426,6 +466,9 @@ class AprobacionController extends Controller
                                     </div>
                                 </div>
                             </div>';
+                }
+
+                    
             }
 
             $html = ' <div class="modal-header p-2 pt-3 d-flex justify-content-center">
@@ -433,9 +476,9 @@ class AprobacionController extends Controller
                             <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¡La solicitud a sido Aprobada!</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5 text-navy" id="">'.$talonario->nombre.'</h1>
-                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$talonario->razon_social.'</h5>
-                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$talonario->rif_condicion.'-'.$talonario->rif_nro.'</h5>
+                                    <h1 class="modal-title fs-5 text-navy" id="">'.$cantera.'</h1>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$razon_social.'</h5>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$rif.'</h5>
                                 </div>
                             </div>
                         </div>

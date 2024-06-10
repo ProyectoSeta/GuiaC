@@ -176,3 +176,13 @@ Route::post('/ucd/update', [App\Http\Controllers\UcdController::class, 'update']
 
 ///////////RECAUDACIÓN
 Route::get('/recaudacion', [App\Http\Controllers\RecaudacionController::class, 'index'])->name('recaudacion');
+
+
+///////////RESERVAS
+Route::get('/reserva', [App\Http\Controllers\ReservaController::class, 'index'])->name('reserva');
+Route::post('/reserva/emitir', [App\Http\Controllers\ReservaController::class, 'emitir'])->name('reserva.emitir');
+Route::post('/reserva/info_correlativo', [App\Http\Controllers\ReservaController::class, 'info_correlativo'])->name('reserva.info_correlativo');
+
+
+///////////DETALLE RESERVA  
+Route::get('/detalle_reserva/{talonario?}/', [App\Http\Controllers\DetalleReservaController::class, 'index'])->name('detalle_reserva.index');

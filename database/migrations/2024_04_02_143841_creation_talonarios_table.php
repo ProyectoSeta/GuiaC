@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('id_reserva')->unsigned()->nullable();;
             $table->foreign('id_reserva')->references('id_reserva')->on('reservas')->onDelete('cascade');
 
+            $table->enum('tipo_talonario',['50']);
             $table->integer('desde');
             $table->integer('hasta');
             $table->integer('clase')->unsigned();
@@ -27,7 +28,9 @@ return new class extends Migration
             $table->integer('estado')->unsigned();
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
 
-            $table->date('fecha_enviado_imprenta');
+            $table->integer('asignado',3);
+
+            $table->date('fecha_enviado_imprenta')->nullable();
             $table->date('fecha_recibido_imprenta')->nullable();
             $table->date('fecha_retiro')->nullable();
             
