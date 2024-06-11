@@ -294,10 +294,11 @@ class AprobacionController extends Controller
                     
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
                                                                     'id_reserva' => NULL, 
-                                                                    'tipo_talonario' => '50', 
+                                                                    'tipo_talonario' => $tipo, 
                                                                     'desde' => $desde, 
                                                                     'hasta' => $hasta,
                                                                     'clase' => 5,
+                                                                    'asignado' => $tipo,
                                                                     'estado' => 20]);
                         if ($insert) {
                             $id_talonario= DB::table('talonarios')->max('id_talonario');
@@ -365,10 +366,11 @@ class AprobacionController extends Controller
     
                         $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
                                                                     'id_reserva' => NULL, 
-                                                                    'tipo_talonario' => '50', 
+                                                                    'tipo_talonario' => $tipo, 
                                                                     'desde' => $desde, 
                                                                     'hasta' => $hasta,
                                                                     'clase' => 5,
+                                                                    'asignado' => $tipo,
                                                                     'estado' => 20]);
                         if ($insert) {
                             $id_talonario= DB::table('talonarios')->max('id_talonario');

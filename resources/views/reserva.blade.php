@@ -100,12 +100,7 @@
                             <button type="submit" class="btn btn-success btn-sm" id="btn_emitir_reserva">Emitir</button>
                         </div>
                     </form>
-                    
-
-                    <!-- <div class="my-5 py-5 d-flex flex-column text-center">
-                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
-                        <span class="text-muted">Cargando, por favor espere un momento...</span>
-                    </div> -->
+                   
                 </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -182,12 +177,17 @@
     <script type="text/javascript">
         $(document).ready(function (){
            
-           
+           ////////cerrar modal info correlativo
+           $(document).on('click','#cerrar_info_correlativo_reserva', function(e) { 
+                $('#modal_emision_correlativo').modal('hide');
+                window.location.href = "{{ route('reserva')}}";
+            });
 
 
         });  
 
         function emitirReserva(){
+            $("#btn_emitir_reserva").attr('disabled', true);
             var formData = new FormData(document.getElementById("form_emitir_reserva"));
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },

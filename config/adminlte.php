@@ -337,13 +337,13 @@ return [
             // 'icon' => '', 
         ],
         [
-            'text' => ' Nueva Solicitud',
-            'url'  => '/#',
+            'text' => ' Solicitar Guías',
+            'url'  => '/solicitud_reserva',
             'icon' => 'fas fa-plus pe-2', 
         ],
         [
             'text' => ' Aprobar Solicitudes',
-            'url'  => '/#',
+            'url'  => '/aprobacion_provicional',
             // 'icon' => 'fas fa-plus pe-2', 
         ],
         ['header' => 'Libro de Control'],

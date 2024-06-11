@@ -186,3 +186,14 @@ Route::post('/reserva/info_correlativo', [App\Http\Controllers\ReservaController
 
 ///////////DETALLE RESERVA  
 Route::get('/detalle_reserva/{talonario?}/', [App\Http\Controllers\DetalleReservaController::class, 'index'])->name('detalle_reserva.index');
+
+
+///////////SOLICITUD RESERVAS
+Route::get('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaController::class, 'index'])->name('solicitud_reserva');
+Route::post('/solicitud_reserva/new_solicitud', [App\Http\Controllers\SolicitudReservaController::class, 'new_solicitud'])->name('solicitud_reserva.new_solicitud');
+Route::post('/solicitud_reserva/calcular', [App\Http\Controllers\SolicitudReservaController::class, 'calcular'])->name('solicitud_reserva.calcular');
+Route::post('/solicitud_reserva/store', [App\Http\Controllers\SolicitudReservaController::class, 'store'])->name('solicitud_reserva.store');
+Route::post('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaController::class, 'destroy'])->name('solicitud_reserva.destroy');
+
+///////////SOLICITUD RESERVAS
+Route::get('/aprobacion_provicional', [App\Http\Controllers\AprobacionProvicionalController::class, 'index'])->name('aprobacion_provicional');

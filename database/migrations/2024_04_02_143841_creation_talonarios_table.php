@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('talonarios', function (Blueprint $table) {
             $table->increments('id_talonario');
-            $table->integer('id_solicitud')->unsigned()->nullable();;
+            $table->integer('id_solicitud')->unsigned()->nullable();
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
 
-            $table->integer('id_reserva')->unsigned()->nullable();;
+            $table->integer('id_reserva')->unsigned()->nullable();
             $table->foreign('id_reserva')->references('id_reserva')->on('reservas')->onDelete('cascade');
 
             $table->enum('tipo_talonario',['50']);
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('estado')->unsigned();
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
 
-            $table->integer('asignado',3);
+            $table->integer('asignado');
 
             $table->date('fecha_enviado_imprenta')->nullable();
             $table->date('fecha_recibido_imprenta')->nullable();

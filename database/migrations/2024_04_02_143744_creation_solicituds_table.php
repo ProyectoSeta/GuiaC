@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('banco_receptor');
             $table->date('fecha_emision_pago');
             $table->float('monto_transferido');
-            $table->string('referencia')->nullable();;
+            $table->string('referencia')->nullable();
             $table->integer('total_ucd');
             $table->float('monto_total');
             $table->dateTime('fecha');

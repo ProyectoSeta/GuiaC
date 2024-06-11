@@ -80,6 +80,7 @@ class ReservaController extends Controller
                                                                             'desde' => $desde, 
                                                                             'hasta' => $hasta,
                                                                             'clase' => 6,
+                                                                            'asignado' => 0,
                                                                             'estado' => 20]);
                                 if ($insert) {
                                     $id_talonario= DB::table('talonarios')->max('id_talonario');
@@ -117,10 +118,11 @@ class ReservaController extends Controller
                                 $contador_guia = $desde;            
                                 $insert = DB::table('talonarios')->insert(['id_solicitud' => null,
                                                                             'id_reserva' => $id_reserva, 
-                                                                            'tipo_talonario' => '50', 
+                                                                            'tipo_talonario' => $tipo, 
                                                                             'desde' => $desde, 
                                                                             'hasta' => $hasta,
                                                                             'clase' => 6,
+                                                                            'asignado' => 0,
                                                                             'estado' => 20]);
                                 if ($insert) {
                                     $id_talonario= DB::table('talonarios')->max('id_talonario');
@@ -208,7 +210,7 @@ class ReservaController extends Controller
                             <p class="text-center" style="font-size:14px">El correlativo correspondiente a la reserva es el siguiente:</p>
                                 '.$tables.'
                             <div class="d-flex justify-content-center">
-                                <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo" data-bs-dismiss="modal">Salir</button>
+                                <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo_reserva" data-bs-dismiss="modal">Salir</button>
                             </div>
                         </div>';
             return response($html);
