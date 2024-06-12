@@ -174,6 +174,15 @@ Route::get('/bitacora', [App\Http\Controllers\BitacoraController::class, 'index'
 Route::get('/ucd', [App\Http\Controllers\UcdController::class, 'index'])->name('ucd');
 Route::post('/ucd/update', [App\Http\Controllers\UcdController::class, 'update'])->name('ucd.update');
 
+
+
+
+
+
+
+
+
+
 ///////////RECAUDACIÓN
 Route::get('/recaudacion', [App\Http\Controllers\RecaudacionController::class, 'index'])->name('recaudacion');
 
