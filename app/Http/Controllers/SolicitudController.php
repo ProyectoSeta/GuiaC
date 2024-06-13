@@ -134,10 +134,15 @@ class SolicitudController extends Controller
                                 if ($total_guias_prev <= $l->total_guias_periodo) {
                                     $ucd_pagar = $solicitado * 5;
 
-                                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 4]);
+                                    $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 
+                                                                                        'id_cantera'=>$idCantera, 
+                                                                                        'total_ucd'=>$ucd_pagar, 
+                                                                                        'estado' => 4]);
                                     if ($query_solicitud){
                                         $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
+                                        $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 
+                                                                                                'cantidad' => $cant, 
+                                                                                                'id_solicitud' => $id_solicitud]); 
                                         if ($query_detalle) {
 
                                             $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);
@@ -169,10 +174,15 @@ class SolicitudController extends Controller
                     if ($total_guias_prev <= $limite->total_guias_periodo) {
                         $ucd_pagar = $solicitado * 5;
 
-                        $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 'id_cantera'=>$idCantera, 'ucd_pagar'=>$ucd_pagar, 'estado' => 4]);
+                        $query_solicitud = DB::table('solicituds')->insert(['id_sujeto' => $id_sp, 
+                                                                            'id_cantera'=>$idCantera, 
+                                                                            'total_ucd'=>$ucd_pagar, 
+                                                                            'estado' => 4]);
                         if ($query_solicitud){
                             $id_solicitud = DB::table('solicituds')->max('id_solicitud');
-                            $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 'cantidad' => $cant, 'id_solicitud' => $id_solicitud]); 
+                            $query_detalle = DB::table('detalle_solicituds')->insert(['tipo_talonario' => '50', 
+                                                                                    'cantidad' => $cant, 
+                                                                                    'id_solicitud' => $id_solicitud]); 
                             if ($query_detalle) {
 
                                 $update_limite = DB::table('limite_guias')->where('id_cantera', '=', $idCantera)->update(['total_guias_solicitadas_periodo' => $total_guias_prev]);

@@ -32,7 +32,7 @@
                         <th scope="col">Cantera</th>
                         <th scope="col">Fecha de emisión</th>
                         <th scope="col">Solicitud</th>
-                        <th scope="col">Pago</th>
+                        <!-- <th scope="col">Pago</th> -->
                         <th scope="col">Total UCD</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Opciones</th>
@@ -46,9 +46,6 @@
                             <td>{{$solicitud->fecha}}</td>
                             <td>
                                 <a class="text-primary info_talonario" role="button" id_solicitud="{{$solicitud->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_info_talonario">Ver</a>
-                            </td>
-                            <td>
-                                <a target="_blank" class="ver_pago" href="{{ asset($solicitud->referencia) }}">Ver</a>
                             </td>
                             <td>
                                 <span>{{$solicitud->total_ucd}} UCD</span>
@@ -251,20 +248,20 @@
                         success: function(response) {
                             
                             $('#total_ucd').html(response.ucd+' UCD');
-                            $('#precio_ucd').html(response.precio_ucd+' Bs.');
-                            $('.total_pagar').html(response.total+' Bs.');
+                            // $('#precio_ucd').html(response.precio_ucd+' Bs.');
+                            // $('.total_pagar').html(response.total+' Bs.');
 
-                            $('#id_ucd').val(response.id_ucd);
+                            // $('#id_ucd').val(response.id_ucd);
                             // $('#ucd').val(response.ucd);
                             // $('#monto_total').val(response.total);
 
-                            $('#banco_emisor').attr('disabled', false); 
-                            $('#banco_receptor').attr('disabled', false); 
-                            $('#nro_referencia').attr('disabled', false);  
-                            $('#fecha_emision').attr('disabled', false); 
-                            $('#monto_trans').attr('disabled', false); 
+                            // $('#banco_emisor').attr('disabled', false); 
+                            // $('#banco_receptor').attr('disabled', false); 
+                            // $('#nro_referencia').attr('disabled', false);  
+                            // $('#fecha_emision').attr('disabled', false); 
+                            // $('#monto_trans').attr('disabled', false); 
 
-                            $('#ref_pago').attr('disabled', false); 
+                            // $('#ref_pago').attr('disabled', false); 
                         },
                         error: function() {
                         }
@@ -279,33 +276,65 @@
             $(document).on('keyup','#cantidad', function(e) {  
                 var cant = $(this).val();
                 if (cant == 0) {
-                    $('#ref_pago').attr('disabled', true);
+                    // $('#ref_pago').attr('disabled', true);
                     $("#btn_cancelar").attr('disabled', true);
                     $("#btn_generar_solicitud").attr('disabled', true);
 
-                    $('#banco_emisor').attr('disabled', true); 
-                    $('#banco_receptor').attr('disabled', true); 
-                    $('#nro_referencia').attr('disabled', true); 
-                    $('#fecha_emision').attr('disabled', true); 
-                    $('#monto_trans').attr('disabled', true); 
+                    // $('#banco_emisor').attr('disabled', true); 
+                    // $('#banco_receptor').attr('disabled', true); 
+                    // $('#nro_referencia').attr('disabled', true); 
+                    // $('#fecha_emision').attr('disabled', true); 
+                    // $('#monto_trans').attr('disabled', true); 
 
                     $('#total_ucd').html('0 UCD');
-                    $('#precio_ucd').html('0 Bs.');
-                    $('.total_pagar').html('0 Bs.');
+                    // $('#precio_ucd').html('0 Bs.');
+                    // $('.total_pagar').html('0 Bs.');
                 }
                 console.log(cant);
             });
 
-            ////////HABILITAR EL BUTTON PARA GENERAR LA SOLICITUD
-            $(document).on('change','#ref_pago', function(e) {
-                e.preventDefault(); 
-                var value = $(this).val();
-                if (value != '') {
-                    $('#btn_generar_solicitud').attr('disabled', false);
+            // ////////HABILITAR EL BUTTON PARA GENERAR LA SOLICITUD
+            // $(document).on('change','#', function(e) {
+            //     e.preventDefault(); 
+            //     var value = $(this).val();
+            //     console.log(value);
+            //     if (value != '') {
+            //         $('#btn_generar_solicitud').attr('disabled', false);
+            //     }else{
+            //         $('#btn_generar_solicitud').attr('disabled', true);
+            //     }
+            // });
+
+
+
+            ////////////////////CALCULAR LOS UCD A PAGAR
+            $(document).on('click','#calcular', function(e) { 
+                e.preventDefault(e); 
+                var cant = $('#cantidad').val();
+                console.log(cant);
+
+                if (cant == '') {
+                    $('#total_ucd').html('0 UCD');
                 }else{
-                    $('#btn_generar_solicitud').attr('disabled', true);
+                    var total_guias = cant * 50;
+                    var total_ucd = total_guias * 5;
+                    $('#total_ucd').html(total_ucd +' UCD');
+
+                    $("#btn_cancelar").attr('disabled', false);
+                    $("#btn_generar_solicitud").attr('disabled', false);
                 }
             });
+
+            ////////////////////
+            $(document).on('keyup','#cantidad', function(e) {  
+                var cant = $(this).val();
+                if (cant == 0) {
+                    $("#btn_cancelar").attr('disabled', true);
+                    $("#btn_generar_solicitud").attr('disabled', true);
+                }
+                console.log(cant);
+            });
+
 
 
             ///////MODAL: INFO TALONARIOS

@@ -100,14 +100,14 @@ class AprobacionController extends Controller
 
     public function aprobar(Request $request)
     {
+        
         $idSolicitud = $request->post('solicitud');
         $idCantera = $request->post('cantera');
        
         $solicitudes = DB::table('solicituds')
-        ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
         ->join('sujeto_pasivos', 'solicituds.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
-        ->where('id_solicitud','=',$idSolicitud)
+        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro')
+        ->where('solicituds.id_solicitud','=',$idSolicitud)
         ->get();
        
         $tr = '';
@@ -120,7 +120,6 @@ class AprobacionController extends Controller
                     $contador = 0;
                     foreach ($detalles as $i) {
                         $tr .= '<tr>
-                                    <td>'.$solicitud->fecha.'</td>
                                     <td>'.$i->tipo_talonario.' Guías</td>
                                     <td>'.$i->cantidad.' und.</td>
                                 </tr>';
@@ -131,99 +130,47 @@ class AprobacionController extends Controller
                 }
 
                 $total_guias = $contador;
-                // $ucds = $total_guias * 5;
-
-                ////////////////fecha de la solicitud
-                $sol_date = DB::table('solicituds')
-                        ->selectRaw('DATE(fecha) AS fecha')
-                        ->where('id_solicitud','=',$idSolicitud)->get();
-                foreach ($sol_date as $d){
-                    $date_sol = $d->fecha;
-                }
-
-                //////////////valor del ucd el dia de la solicitud
-                $query_ucd = DB::table('ucds')
-                        ->select('valor')
-                        ->where('fecha','=', $date_sol)->get();
-                foreach ($query_ucd as $u){
-                    $val_ucd = $u->valor;
-                }
-
-                $ucd = DB::table('ucds')->select('valor')->where('id','=',$solicitud->id_ucd)->first();
-                $formato_monto_total = number_format($solicitud->monto_total, 2, ',', '.');
-                $formato_monto_transferido = number_format($solicitud->monto_transferido, 2, ',', '.');
+              
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2 text-navy"></i>                       
+                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la siguiente solicitud?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5 text-navy" id="">'.$solicitud->nombre.'</h1>
-                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$solicitud->razon_social.'</h5>
-                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$solicitud->rif_condicion.'-'.$solicitud->rif_nro.'</h5>
+                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$solicitud->razon_social.'</h1>
+                                    <h5 class="modal-title" id="" style="font-size:14px">'.$solicitud->rif_condicion.'-'.$solicitud->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-body mx-3" style="font-size:14px;">
-                            <h6 class="text-center mb-3 text-navy fw-bold">SOLICITUD DE TALONARIO(S) REALIZADA</h6>
+                        <div class="modal-body" style="font-size:14px;">
+                            <h6 class="text-center mb-3">Solicitud de Talonario(s) Realizada</h6>
                             <table class="table text-center">
                                 <thead>
-                                    <tr class="table-primary">
-                                        <th scope="col">Emisión</th>
+                                    <tr>
                                         <th scope="col">Contenido del Talonario</th>
                                         <th scope="col">Cantidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    '.$tr.'
-                                    <tr class="table-primary">
-                                        <th>Total UCD</th>
-                                        <th>UCD del día</th>
-                                        <th>Monto a Pagar</th>
-                                    </tr>
-                                    <tr>
-                                        <td>'.$solicitud->total_ucd.' UCD</td>
-                                        <td>'.$ucd->valor.' Bs.</td>
-                                        <td>'.$formato_monto_total.' Bs.</td>
-                                    </tr>
+                                   '.$tr.'
                                 </tbody>
                             </table>
-
-                            <h6 class="text-center mt-4 text-navy fw-bold">DATOS DEL PAGO</h6>
-                            <table class="table">
-                                <tr>
-                                    <th>Banco emisor</th>
-                                    <td>'.$solicitud->banco_emisor.'</td>
-                                </tr>
-                                <tr>
-                                    <th>No. Referencia</th>
-                                    <td>#'.$solicitud->nro_referencia.'</td>
-                                </tr>
-                                <tr>
-                                    <th>Banco receptor</th>
-                                    <td>'.$solicitud->banco_receptor.'</td>
-                                </tr>
-                                <tr>
-                                    <th>Fecha de emisión</th>
-                                    <td>'.$solicitud->fecha_emision_pago.'</td>
-                                </tr>
-                                <tr class="table-warning">
-                                    <th>Monto transferido</th>
-                                    <td>'.$formato_monto_transferido.' Bs.</td>
-                                </tr>
-                                <tr class="">
-                                    <th>Referencia</th>
-                                    <td>
-                                        <a target="_blank" class="ver_pago" href="'.asset($solicitud->referencia).'">Ver</a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            
+                            <div class="d-flex justify-content-center mt-3">
+                                <table class="table table-sm w-75">
+                                    <tr>
+                                        <th>Total de Guías a emitir</th>
+                                        <td>'.$total_guias.'</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total UCD</th>
+                                        <td>'.$solicitud->total_ucd.'</td>
+                                    </tr>
+                                </table>
+                            </div>
                             
 
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_cantera="'.$idCantera.'" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'" fecha="'.$date_sol.'" >Aprobar</button>
+                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_cantera="'.$idCantera.'" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'">Aprobar</button>
                                 <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                             </div>
 
@@ -257,7 +204,7 @@ class AprobacionController extends Controller
         $idSolicitud = $request->post('solicitud');
         $idCantera = $request->post('cantera');
         $idSujeto = $request->post('sujeto');
-        $fecha = $request->post('fecha');
+        // $fecha = $request->post('fecha');
 
         $nro_talonarios = 0;
       
@@ -312,7 +259,7 @@ class AprobacionController extends Controller
                                                                     'id_solicitud_reserva' => null]);
 
                             $url = route('aprobacion.qr', ['id' => $id_talonario]);
-                            QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
     
                         }else{
@@ -384,7 +331,7 @@ class AprobacionController extends Controller
                                                                     'id_solicitud_reserva' => null]);
 
                             $url = route('aprobacion.qr', ['id' => $id_talonario]);
-                            QrCode::size(130)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
               
                         }else{
@@ -463,8 +410,8 @@ class AprobacionController extends Controller
                                     </table>
                                 </div>
                                 <div class="col-sm-5">
-                                    <div class="title m-b-md text-center">
-                                        <img src="'.asset($qr).'" alt="">
+                                    <div class="title text-center">
+                                        <img width="140px" src="'.asset($qr).'" alt="">
                                     </div>
                                 </div>
                             </div>';

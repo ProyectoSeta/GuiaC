@@ -55,7 +55,7 @@
                             <td>{{$solicitud->total_ucd}}</td>
                             <td>{{$solicitud->fecha}}</td>
                             <td class="d-flex">
-                                <button class="btn btn-success btn-sm aprobar_solicitud rounded-4 me-2" id_solicitud="{{$solicitud->id_solicitud_reserva}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud">Aprobar</button>
+                                <button class="btn btn-success btn-sm aprobar_solicitud_p rounded-4 me-2" id_solicitud="{{$solicitud->id_solicitud_reserva}}" data-bs-toggle="modal" data-bs-target="#modal_aprobar_solicitud_p">Aprobar</button>
                                 <button class="btn btn-danger btn-sm denegar_solicitud rounded-4" id_solicitud="{{$solicitud->id_solicitud_reserva}}" data-bs-toggle="modal" data-bs-target="#modal_denegar_solicitud">Denegar</button>
                             </td>
                         </tr>
@@ -84,7 +84,17 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    
+    <!-- ********* APROBAR SOLICITUD ******** -->
+    <div class="modal fade" id="modal_aprobar_solicitud_p" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_aprobar_solicitud_p">
+                 <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div> 
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
     
 
     
@@ -153,6 +163,27 @@
                     data: {sujeto:sujeto},
                     success: function(response) {              
                         $('#html_info_sujeto').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+            ///////MODAL: APROBAR SOLICITUD
+            $(document).on('click','.aprobar_solicitud_p', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+                // alert(solicitud);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("aprobacion_provicional.aprobar") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {           
+                        // alert(response);
+                        // console.log(response);
+                        $('#content_aprobar_solicitud_p').html(response);
                     },
                     error: function() {
                     }
