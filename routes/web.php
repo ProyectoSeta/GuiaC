@@ -207,3 +207,9 @@ Route::post('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaControll
 ///////////SOLICITUD RESERVAS
 Route::get('/aprobacion_provicional', [App\Http\Controllers\AprobacionProvicionalController::class, 'index'])->name('aprobacion_provicional');
 Route::post('/aprobacion_provicional/aprobar', [App\Http\Controllers\AprobacionProvicionalController::class, 'aprobar'])->name('aprobacion_provicional.aprobar');
+Route::post('/aprobacion_provicional/correlativo', [App\Http\Controllers\AprobacionProvicionalController::class, 'correlativo'])->name('aprobacion_provicional.correlativo');
+Route::post('/aprobacion_provicional/info', [App\Http\Controllers\AprobacionProvicionalController::class, 'info'])->name('aprobacion_provicional.info');
+
+//////////////QR
+Route::get('/qr/qr', [App\Http\Controllers\QrController::class, 'qr'])->name('qr.qr');
+

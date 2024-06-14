@@ -258,7 +258,7 @@ class AprobacionController extends Controller
                                                                     'clase' => 5,
                                                                     'id_solicitud_reserva' => null]);
 
-                            $url = route('aprobacion.qr', ['id' => $id_talonario]);
+                            $url = route('qr.qr', ['id' => $id_talonario]);
                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
     
@@ -330,7 +330,7 @@ class AprobacionController extends Controller
                                                                     'clase' => 5,
                                                                     'id_solicitud_reserva' => null]);
 
-                            $url = route('aprobacion.qr', ['id' => $id_talonario]);
+                            $url = route('qr.qr', ['id' => $id_talonario]);
                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
               
@@ -608,11 +608,12 @@ class AprobacionController extends Controller
     public function qr(Request $request)
     {
         $idTalonario = $request->get('id');
-        $talonario = DB::table('talonarios')
-                        ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                        ->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
-                        ->select('talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'canteras.municipio_cantera', 'canteras.parroquia_cantera', 'canteras.lugar_aprovechamiento')
-                        ->where('talonarios.id_talonario','=', $idTalonario)
+        $talonario = DB::table('detalle_talonarios')
+                        ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                        ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                        ->join('talonarios', 'detalle_talonarios.id_talonario', '=', 'talonarios.id_talonario')
+                        ->select('detalle_talonarios.*','talonarios.id_solicitud', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'canteras.municipio_cantera', 'canteras.parroquia_cantera', 'canteras.lugar_aprovechamiento')
+                        ->where('detalle_talonarios.id_talonario','=', $idTalonario)
                         ->first();
 
        return view('qr', compact('talonario'));

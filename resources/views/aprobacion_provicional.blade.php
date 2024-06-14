@@ -95,6 +95,20 @@
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
+
+     <!-- ********* SOLICITUD APROBADA: VER CORRELATIVO ******** -->
+     <div class="modal fade" id="modal_ver_correlativo_p"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_info_correlativo_p">
+                <div class="modal-body">
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
     
 
     
@@ -188,6 +202,58 @@
                     error: function() {
                     }
                 });
+            });
+
+
+
+
+             ///////MODAL: APROBAR Y GENERAR CORRELATIVO
+             $(document).on('click','.aprobar_correlativo_p', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+                // var sujeto = $(this).attr('id_sujeto');
+                // var fecha = $(this).attr('fecha');
+                // var cantera = $(this).attr('id_cantera');
+
+                $('#modal_aprobar_solicitud_p').modal('hide');
+                $('#modal_ver_correlativo_p').modal('show');
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("aprobacion_provicional.correlativo") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {           
+                        console.log(response);
+                        // alert(response);
+                        if (response.success) {
+                           
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("aprobacion_provicional.info") }}',
+                                data: {solicitud:solicitud},
+                                success: function(response) {           
+                                    $('#content_info_correlativo_p').html(response);
+                                },
+                                error: function() {
+                                }
+                            });
+  
+                        }else {
+                            alert('Ha ocurrido un error al aprobar la solicitud');
+                        }
+        
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+            ////////cerrar modal info correlativo
+            $(document).on('click','#cerrar_info_correlativo', function(e) { 
+                $('#modal_ver_correlativo').modal('hide');
+                window.location.href = "{{ route('aprobacion')}}";
             });
 
 
