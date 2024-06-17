@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
 
 class AprobacionProvicionalController extends Controller
 {
@@ -109,7 +112,7 @@ class AprobacionProvicionalController extends Controller
         $idSolicitud = $request->post('solicitud');
         $query = DB::table('solicitud_reservas')->select('id_sujeto','id_cantera','cantidad_guias')->where('id_solicitud_reserva','=',$idSolicitud)->first(); 
         $cant = $query->cantidad_guias;
-        $id_cantera = $query->id_cantera;
+        $id_cantera = $query->id_cantera; 
         $id_sujeto = $query->id_sujeto;
         $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->where('clase','=',6)->first(); 
         if ($query_count) {
@@ -127,7 +130,7 @@ class AprobacionProvicionalController extends Controller
                             if ($c->asignado == 0) {
                                 ////// todavia no se han asignado guías del talonario
                                 $desde = $c->desde;
-                                $hasta = $c->desde + $cant;
+                                $hasta = ($c->desde + $cant)-1;
                             }else{
                                 ////// ya se han asignado guías del talonario
                                 $detalle = DB::table('detalle_talonarios')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
@@ -149,12 +152,13 @@ class AprobacionProvicionalController extends Controller
                                                                     'clase' => 6,
                                                                     'id_solicitud_reserva' => $idSolicitud]);
                             if ($detalle_talonario) {
-                                $asignado = $cant + $c->asignado;
+                                $asignado = $asignado + $cant;
                                 $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
 
-                                $url = route('qr.qrReserva', ['idTalonario' => $c->id_talonario,'idSujeto' => $id_sujeto,'idSolicitud' => $idSolicitud]);
+                                $url = route('qr.qrReserva', ['idTalonario' => $c->id_talonario, 'idSujeto' => $id_sujeto, 'idSolicitud' => $idSolicitud]); 
+                                
                                 QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$c->id_talonario.'_SR'.$idSolicitud.'.svg'));
-                                $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $c->id_talonario)->where('id_solicitud_reserva', '=', $idSolicitud)->update(['qr' => 'assets/qr/qrcode_T'.$c->id_talonario.'_SR'.$idSolicitud.'.svg']);
+                                $update_qr = DB::table('detalle_talonarios')->where('id_talonario','=', $c->id_talonario)->where('id_solicitud_reserva', '=', $idSolicitud)->update(['qr' => 'assets/qr/qrcode_T'.$c->id_talonario.'_SR'.$idSolicitud.'.svg']);
                                 if ($update_qr) {
 
                                     $updates = DB::table('solicitud_reservas')->where('id_solicitud_reserva', '=', $idSolicitud)->update(['estado' => 17]);
@@ -171,32 +175,120 @@ class AprobacionProvicionalController extends Controller
 
                         }else{
                             /////no hay guias suficientes en el talonario para la solicitud
-                            $i = 0; //////cuenta las guías asignadas
-                            $x = 0; //////cuenta las iteraciones del bucle
+                            $i = 0; //////cuenta las guías asignadas 
+                            $talonarios = [];
+                            $url_talonarios = '';
+                            // $x = 0; //////cuenta las iteraciones del bucle
+// return response('si entro');
+                            ////////////SE HACE EL PRIMER REGISTRO DE LAS GUIAS PARA DESPUES PASAR AL BUCLE  
+                            if ($c->asignado == 0) {
+                                ////// todavia no se han asignado guías del talonario
+                                $desde = $c->desde;
+                                $hasta = $c->hasta;
+
+                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                                        'id_talonario' => $c->id_talonario,
+                                                                                        'id_cantera'=>$id_cantera, 
+                                                                                        'id_sujeto'=>$id_sujeto, 
+                                                                                        'desde' => $desde, 
+                                                                                        'hasta' => $hasta,
+                                                                                        'clase' => 6,
+                                                                                        'id_solicitud_reserva' => $idSolicitud]);
+                                if ($detalle_talonario) {
+                                    $i = 50;
+                                    $asignado = $c->asignado + $i;
+                                    $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
+                                }else{
+                                    return response()->json(['success' => false]);
+                                }
+                                
+                            }else{
+                                ////// ya se han asignado guías del talonario
+                                $detalle = DB::table('detalle_talonarios')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
+                                if ($detalle) {
+                                    $desde = $detalle->hasta + 1;
+                                    $hasta = $c->hasta;
+
+                                    $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                                        'id_talonario' => $c->id_talonario,
+                                                                                        'id_cantera'=>$id_cantera, 
+                                                                                        'id_sujeto'=>$id_sujeto, 
+                                                                                        'desde' => $desde, 
+                                                                                        'hasta' => $hasta,
+                                                                                        'clase' => 6,
+                                                                                        'id_solicitud_reserva' => $idSolicitud]);
+                                    if ($detalle_talonario) {
+                                        $i = ($hasta - $desde) + 1;
+                                        $asignado = $c->asignado + $i;
+                                        $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
+                                    }else{
+                                        return response()->json(['success' => false]);
+                                    }
+                                }else{
+                                    return response()->json(['success' => false]);
+                                }
+                            }
+
+                            array_push($talonarios,$c->id_talonario);
+                            $url_talonarios = 'T'.$c->id_talonario;
+
+
                             do {
-                                // if ($x == 0) {
-                                //     $guias_faltantes = 
-                                // }else{
+                                // $cant -> cantidad de guías solicitadas
+                                // $guias_faltantes -> cantidad de guías solicitadas que faltan por asignarle correlattivo
 
-                                // }
+                                $guias_faltantes = $cant - $i;
+                                $c2 = DB::table('talonarios')->where('clase','=',6)->where('asignado','!=',50)->first(); 
+                                if ($c2) {
+                                    ////// todavia no se han asignado guías del talonario
+                                    $desde = $c2->desde;
+                                    $hasta = 0;
+                                    if ($guias_faltantes <= 50) {
+                                        $hasta = ($desde + $guias_faltantes) - 1;
+                                    }else{
+                                        $hasta = $c2->hasta;
+                                    }
 
-
-                                $guias_faltantes = ($cant - $guias_restantes) - $i;
-                                $desde = $c->hasta + 1;
-
-
-                                $x++;
+                                    $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                                    'id_talonario' => $c2->id_talonario,
+                                                                                    'id_cantera'=>$id_cantera, 
+                                                                                    'id_sujeto'=>$id_sujeto, 
+                                                                                    'desde' => $desde, 
+                                                                                    'hasta' => $hasta,
+                                                                                    'clase' => 6,
+                                                                                    'id_solicitud_reserva' => $idSolicitud]);
+                                    if ($detalle_talonario) {
+                                        $i = $i + (($hasta - $desde) + 1);  
+                                        $asignado = $c2->asignado + $i;
+                                        array_push($talonarios,$c2->id_talonario);
+                                        $url_talonarios .= '-'.$c2->id_talonario;
+                                        $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c2->id_talonario)->update(['asignado' => $asignado]);
+                                    }else{
+                                        return response()->json(['success' => false]); 
+                                    }                             
+                                }else{
+                                    return response()->json(['success' => false]); 
+                                }
+                                // $x++;
                             } while ($i == $cant);
 
+                            //////GENERAR QR PARA EL(LOS) TALONARIO(S)
+                            $url = route('qr.qrReserva', ['idTalonario' => $talonarios ,'idSujeto' => $id_sujeto,'idSolicitud' => $idSolicitud]);
+                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_'.$url_talonarios.'_SR'.$idSolicitud.'.svg'));
+                            
+                            foreach ($talonarios as $key => $v) {
+                                $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $v)->where('id_solicitud_reserva', '=', $idSolicitud)->update(['qr' => 'assets/qr/qrcode_'.$url_talonarios.'_SR'.$idSolicitud.'.svg']);
+                            }
 
-
-
-
-
-
-
-
-
+                            $updates = DB::table('solicitud_reservas')->where('id_solicitud_reserva', '=', $idSolicitud)->update(['estado' => 17]);
+                                
+                            $user = auth()->id();
+                            $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$id_sujeto)->first(); 
+                            $accion = 'SOLICITUD DE GUÍAS PROVICIONALES NRO.'.$idSolicitud.' APROBADA, ID Talonario(s): '.$talonarios.', Contribuyente: '.$sp->razon_social;
+                            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
+                            return response()->json(['success' => true]);
+                            
+        
 
                         }
 
@@ -222,48 +314,36 @@ class AprobacionProvicionalController extends Controller
 
     public function info(Request $request)
     {
-        $idSolicitud = $request->post('solicitud');
-       
-
+        $idSolicitud = $request->post('solicitud'); ///id_solicitud_reserva
         $tables = '';
-        $talonarios = DB::table('talonarios')->select('id_talonario','tipo_talonario','desde','hasta')->where('id_solicitud','=',$idSolicitud)->get();
 
-        $razon_social = '';
-        $rif = '';
-        $cantera = '';
-
-        if ($talonarios) {
+        //////datos 
+        $datos = DB::table('solicitud_reservas')
+                    ->join('sujeto_pasivos', 'solicitud_reservas.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                    ->join('canteras', 'solicitud_reservas.id_cantera', '=', 'canteras.id_cantera')
+                    ->select('solicitud_reservas.cantidad_guias', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro','canteras.nombre')
+                    ->where('solicitud_reservas.id_solicitud_reserva','=',$idSolicitud)->first();
+        if ($datos) {
+            $razon_social = $datos->razon_social;
+            $rif = $datos->rif_condicion.'-'.$datos->rif_nro;
+            $cantera = $datos->nombre;
+            $nro_guias = $datos->cantidad_guias;
             $i=0;
-            foreach ($talonarios as $talonario) {
+
+            $detalles = DB::table('detalle_talonarios')->select('desde','hasta','qr')->where('id_solicitud_reserva','=',$idSolicitud)->get();
+            foreach ($detalles as $d) {
                 $i = $i + 1;
-                $desde = $talonario->desde;
-                $hasta = $talonario->hasta;
+                $desde = $d->desde;
+                $hasta = $d->hasta;
                 $length = 6;
                 $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
                 $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+                $qr = $d->qr;
 
-
-                $detalle = DB::table('detalle_talonarios')
-                    ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                    ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                    ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
-                    ->where('id_talonario','=', $talonario->id_talonario)
-                    ->first();
-
-                if ($detalle) {
-                    $qr = $detalle->qr;
-                    $razon_social = $detalle->razon_social;
-                    $rif = $detalle->rif_condicion.'-'.$detalle->rif_nro;
-                    $cantera = $detalle->nombre;
-
-                    $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
+                $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
                             <div class="row d-flex align-items-center">
                                 <div class="col-sm-7">
                                     <table class="table mt-2 mb-3">
-                                        <tr>
-                                            <th>Contenido:</th>
-                                            <td>'.$talonario->tipo_talonario.' Guías</td>
-                                        </tr>
                                         <tr>
                                             <th>Desde:</th>
                                             <td>'.$formato_desde.'</td>
@@ -280,31 +360,36 @@ class AprobacionProvicionalController extends Controller
                                     </div>
                                 </div>
                             </div>';
-                }
-
-                    
             }
 
             $html = ' <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                            <div class="text-center">
-                            <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">¡La solicitud a sido Aprobada!</h1>
-                                <div class="">
-                                    <h1 class="modal-title fs-5 text-navy" id="">'.$cantera.'</h1>
-                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$razon_social.'</h5>
-                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$rif.'</h5>
-                                </div>
+                        <div class="text-center">
+                        <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">¡La solicitud a sido Aprobada!</h1>
+                            <div class="">
+                                <h1 class="modal-title fs-5 text-navy" id="">'.$cantera.'</h1>
+                                <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$razon_social.'</h5>
+                                <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$rif.'</h5>
                             </div>
                         </div>
-                        <div class="modal-body" style="font-size:14px">
-                            <p class="text-center" style="font-size:14px">El correlativo correspondiente a la solicitud generada es el siguiente:</p>
-                                '.$tables.'
-                            <div class="d-flex justify-content-center">
-                                <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo" data-bs-dismiss="modal">Salir</button>
+                    </div>
+                    <div class="modal-body" style="font-size:14px">
+                        <p class="text-center" style="font-size:14px">El correlativo correspondiente a la solicitud generada es el siguiente:</p>
+                            <div class="row px-4 mb-3 text-center">
+                                <div class="col-sm-6 text-muted">NO. GUÍAS SOLICITADAS:</div>
+                                <div class="col-sm-6 text-success fw-bold">'.$nro_guias.' GUÍAS</div>
                             </div>
-                        </div>';
+                            '.$tables.'
+                        <div class="d-flex justify-content-center">
+                            <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo_p" data-bs-dismiss="modal">Salir</button>
+                        </div>
+                    </div>';
             return response($html);
+
+
+
         }
+       
 
         
     }

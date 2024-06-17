@@ -212,4 +212,5 @@ Route::post('/aprobacion_provicional/info', [App\Http\Controllers\AprobacionProv
 
 //////////////QR
 Route::get('/qr/qr', [App\Http\Controllers\QrController::class, 'qr'])->name('qr.qr');
+Route::get('/qr/qrReserva', [App\Http\Controllers\QrController::class, 'qrReserva'])->name('qr.qrReserva');
 

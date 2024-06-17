@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('total_guias_reservas', function (Blueprint $table) {
+            $table->increments('correlativo');
             $table->integer('total');
 
             $table->timestamps();

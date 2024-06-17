@@ -240,8 +240,8 @@
                                 }
                             });
   
-                        }else {
-                            alert('Ha ocurrido un error al aprobar la solicitud');
+                        }else{
+                            alert(response.nota);
                         }
         
                     },
@@ -251,9 +251,9 @@
             });
 
             ////////cerrar modal info correlativo
-            $(document).on('click','#cerrar_info_correlativo', function(e) { 
-                $('#modal_ver_correlativo').modal('hide');
-                window.location.href = "{{ route('aprobacion')}}";
+            $(document).on('click','#cerrar_info_correlativo_p', function(e) { 
+                $('#modal_ver_correlativo_p').modal('hide');
+                window.location.href = "{{ route('aprobacion_provicional')}}";
             });
 
 
