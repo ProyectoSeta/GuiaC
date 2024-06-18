@@ -34,7 +34,7 @@ class VerificarDeclaracionController extends Controller
                                 ->join('clasificacions', 'declaracions.estado', '=', 'clasificacions.id_clasificacion')
                                 ->join('tipos', 'declaracions.tipo', '=', 'tipos.id_tipo')
                                 ->join('ucds', 'declaracions.id_ucd', '=', 'ucds.id')
-                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre', 'tipos.nombre_tipo', 'ucds.valor', 'ucds.moneda')
+                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre_clf', 'tipos.nombre_tipo', 'ucds.valor', 'ucds.moneda')
                                 ->where('declaracions.id_declaracion', $id_declaracion)
                                 ->first();
         if ($declaracion) {

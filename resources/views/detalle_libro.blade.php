@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-center mt-0 pt-0">
             <h3 class="mb-3 titulo">Libro <span class="text-navy">{{$mes_nombre}} {{$year}}</span></h3>
             
-            <div class="row w-50 d-flex justify-content-end">
+            <div class="row w-50 d-flex justify-content-center">
                 <div class="col-sm-7">
                     <div class="card shadow-none border-light-subtle">
                         <div class="card-body px-3 py-2">
@@ -34,12 +34,22 @@
             </div>
 
 
-            <!-- <div class="mb-3">
-                <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_guia_extemp" data-bs-toggle="modal" data-bs-target="#modal_registro_guia" mes="{{$mes}}" year="{{$year}}"> 
-                    <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
-                    <span>Aperturar</span>
-                </button>
-            </div> -->
+            @if ($i == 'si')
+                <div class="mb-3">
+                    <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" disabled> 
+                        <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
+                        <span>Aperturar</span>
+                    </button>
+                </div>
+            @else
+                <div class="mb-3">
+                    <button type="button" class="btn bg-navy rounded-pill px-3 btn-sm fw-bold d-flex align-items-center" id="new_guia_extemp" data-bs-toggle="modal" data-bs-target="#modal_registro_guia" mes="{{$mes}}" year="{{$year}}"> 
+                        <i class='bx bx-plus fw-bold fs-6 pe-2'></i>
+                        <span>Aperturar</span>
+                    </button>
+                </div>
+            @endif
+            
         </div>
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table table-hover border-light-subtle mt-3 text-center" style="font-size:13px;">

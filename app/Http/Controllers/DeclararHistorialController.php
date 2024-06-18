@@ -20,7 +20,7 @@ class DeclararHistorialController extends Controller
                                 ->join('clasificacions', 'declaracions.estado', '=', 'clasificacions.id_clasificacion')
                                 ->join('tipos', 'declaracions.tipo', '=', 'tipos.id_tipo')
                                 ->join('sujeto_pasivos', 'declaracions.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre','tipos.nombre_tipo')
+                                ->select('declaracions.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'clasificacions.nombre_clf','tipos.nombre_tipo')
                                 ->where('declaracions.id_sujeto', $id_sp)
                                 ->orderBy('declaracions.id_declaracion', 'asc')
                                 ->get();

@@ -39,9 +39,52 @@ class DetalleLibroController extends Controller
                                 ->whereMonth('control_guias.fecha', $mes_search)
                                 ->whereYear('control_guias.fecha', $year)
                                 ->count();
-        
 
-        return view('detalle_libro', compact('mes_nombre', 'mes', 'year', 'registros', 'count'));
+        //////////////////
+        
+        $i = '';
+        $hoy = date('d');
+        $mes_i = date('n');
+        $year_i = date('Y');
+        $fecha = '';
+
+        $mes_declarando = '';
+        $year_declarando = '';
+
+        $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
+        if ($cierre) {
+            $dia_cierre = $cierre->fecha;
+        }
+
+        if ($hoy >= $dia_cierre) {
+            $fecha = $meses[$mes_i].' '.$year_i;
+            $mes_declarando = $mes_i;
+            $year_declarando = $year_i;
+
+        }else{
+            $mes_anterior = $mes_i-1;
+            if ($mes_anterior == 0) {
+                $mes_anterior = 12;
+                $year_i = $year_i - 1;
+            }
+            $fecha = $meses[$mes_anterior].' '.$year_i;
+
+            $mes_declarando = $mes_anterior;
+            $year_declarando = $year_i;
+        }
+
+        ///////////////
+
+        if ($mes_declarando == $mes && $year_declarando == $year) {
+            $i = 'si';
+        }else{
+            $i = 'no';
+        }
+
+
+                        
+
+        return view('detalle_libro', compact('mes_nombre', 'mes', 'year', 'registros', 'count','i'));
     }
 
     /**

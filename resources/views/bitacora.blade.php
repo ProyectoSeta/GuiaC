@@ -33,7 +33,7 @@
                         <tr>
                             <td>{{ $b->correlativo }}</td>
                             <td class="text-navy fw-bold">{{ $b->name }}</td>
-                            <td class="text-muted">{{ $b->nombre }}</td>
+                            <td class="text-muted">{{ $b->nombre_clf }}</td>
                             <td class="fw-bold">{{ $b->fecha }}</td>
                             <td class="w-50">{{ $b->accion }}</td>
                         </tr>

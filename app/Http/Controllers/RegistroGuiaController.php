@@ -17,36 +17,36 @@ class RegistroGuiaController extends Controller
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
 
-        // $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
-        // $hoy = date('d');
-        // $mes = date('n');
-        // $year = date('Y');
-        // $fecha = '';
+        $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+        $hoy = date('d');
+        $mes = date('n');
+        $year = date('Y');
+        $fecha = '';
 
-        // $mes_declarando = '';
-        // $year_declarando = '';
+        $mes_declarando = '';
+        $year_declarando = '';
 
-        // $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
-        // if ($cierre) {
-        //     $dia_cierre = $cierre->fecha;
-        // }
+        $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
+        if ($cierre) {
+            $dia_cierre = $cierre->fecha;
+        }
 
-        // if ($hoy >= $dia_cierre) {
-        //     $fecha = $meses[$mes].' '.$year;
-        //     $mes_declarando = $mes;
-        //     $year_declarando = $year;
+        if ($hoy >= $dia_cierre) {
+            $fecha = $meses[$mes].' '.$year;
+            $mes_declarando = $mes;
+            $year_declarando = $year;
 
-        // }else{
-        //     $mes_anterior = $mes-1;
-        //     if ($mes_anterior == 0) {
-        //         $mes_anterior = 12;
-        //         $year = $year - 1;
-        //     }
-        //     $fecha = $meses[$mes_anterior].' '.$year;
+        }else{
+            $mes_anterior = $mes-1;
+            if ($mes_anterior == 0) {
+                $mes_anterior = 12;
+                $year = $year - 1;
+            }
+            $fecha = $meses[$mes_anterior].' '.$year;
 
-        //     $mes_declarando = $mes_anterior;
-        //     $year_declarando = $year;
-        // }
+            $mes_declarando = $mes_anterior;
+            $year_declarando = $year;
+        }
 
 
         $mes = date('n');
@@ -56,7 +56,8 @@ class RegistroGuiaController extends Controller
                                 ->join('minerals', 'control_guias.id_mineral', '=', 'minerals.id_mineral')
                                 ->select('control_guias.*', 'canteras.nombre', 'minerals.mineral')
                                 ->where('control_guias.id_sujeto', $id_sp)
-                                ->whereMonth('control_guias.fecha', $mes)
+                                ->whereMonth('control_guias.fecha', $mes_declarando)
+                                ->whereYear('control_guias.fecha', $year_declarando)
                                 ->get();
 
         $count = DB::table('control_guias')
@@ -67,7 +68,7 @@ class RegistroGuiaController extends Controller
                                 ->whereMonth('control_guias.fecha', $mes)
                                 ->count();
 
-        return view('registro_guia', compact('registros','count'));
+        return view('registro_guia', compact('registros','count','fecha'));
     }
 
     /**
@@ -89,6 +90,41 @@ class RegistroGuiaController extends Controller
                     $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
                 }
 
+                $hoy = date('d');
+                $mes = date('n');
+                $year = date('Y');
+                $mes_anterior = '0'.$mes - 1;
+                if ($mes_anterior == 00) {
+                    $mes_anterior = 12;
+                    $year = $year - 1;
+                }
+                $min = '';
+                $max = '';
+                $mes_declarado = '';
+                $year_declarado = '';
+                
+                $cierre = DB::table('fechas')->select('fecha')->where('nombre','=','cierre_libro')->first();
+                if ($cierre) {
+                    $dia_cierre = $cierre->fecha;
+                }
+
+                if ($hoy > $dia_cierre) {  
+                    ////declaracion del mes actual
+                    $min = date("Y-m-01");
+                    $max = date("Y-m-t");
+
+                    $mes_declarado = $mes;
+                    $year_declarado = $year;              
+                }else{
+                    ////todavia no toca cerrar libro del mes anterior
+                    $min = date("Y").'-'.$mes_anterior.'-01';
+                    // $max = date("Y-04-t");
+                    $max = date($year.'-'.$mes_anterior.'-t');  /////ver esto, me esta dando el final de mes que no es.....  
+
+                    $mes_declarado = $mes_anterior;
+                    $year_declarado = $year;
+                }
+
 
                 $html = '<form id="form_registrar_guia" method="post" onsubmit="event.preventDefault(); registrarGuia()">
                 <p class="px-3 fw-semibold fs-6 text-body-secondary">IMPORTANTE: Debe seleccionar la Cantera de la cual proviene la Guía y el Talonario, para así poder ingresar los demás datos.</p>
@@ -100,6 +136,9 @@ class RegistroGuiaController extends Controller
                                     <span class="text-danger">Nro° Guía </span><span id="nro_guia_view"></span>
                                 </div>
                             </div>
+
+                            <input type="hidden" id="mes_declarado" name="mes_declarado" value="'.$mes_declarado.'" required>
+                            <input type="hidden" id="year_declarado" name="year_declarado" value="'.$year_declarado.'" required>
 
                             <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
                             <input type="hidden" id="nro_guia" name="nro_guia" value="" required>
@@ -126,7 +165,7 @@ class RegistroGuiaController extends Controller
                                             <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
                                         </div>
                                         <div class="col-7">
-                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" required disabled>
+                                            <input type="date" id="fecha" class="form-control form-control-sm" min="'.$min.'" max="'.$max.'" name="fecha_emision" required disabled>
                                         </div> 
                                     </div>
                                 </div>
@@ -266,7 +305,7 @@ class RegistroGuiaController extends Controller
                                             <label for="fecha_facturacion" class="col-form-label">Fecha de facturación: <span style="color:red">*</span></label>
                                         </div>
                                         <div class="col-8">
-                                            <input type="date" id="fecha_facturacion" class="form-control form-control-sm" name="fecha_facturacion" required disabled>
+                                            <input type="date" id="fecha_facturacion" class="form-control form-control-sm" name="fecha_facturacion" min="'.$min.'" max="'.$max.'" required disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -473,7 +512,10 @@ class RegistroGuiaController extends Controller
             foreach ($conteo as $c){
                 if ($c->total == 0){
                     ///////EL USUARIO TODAVIA NO HA REGISTRADO NINGUNA GUÍA DE ESTA CANTERA
-                    $talonario = DB::table('talonarios')->where('id_cantera',$idCantera)->first(); 
+                    $talonario = DB::table('detalle_talonarios')
+                                    ->join('talonarios', 'detalle_talonarios.id_talonario', '=', 'talonarios.id_talonario')
+                                    ->select('detalle_talonarios.*','talonarios.fecha_retiro')
+                                    ->where('id_cantera','=',$idCantera)->first(); 
                     
                     if ($talonario) {
                         if ($talonario->fecha_retiro != NULL) {
@@ -483,11 +525,11 @@ class RegistroGuiaController extends Controller
                             $formato_nro_guia = substr(str_repeat(0, $length).$nro_guia, - $length);
 
                         }else{
-                            return response()->json(['success' => false]);
+                            return response()->json(['success' => false, 'nota' => 'Disculpe, todavia no retirado el talonario de la institución.']);
                         }
                         
                     }else{
-                        return response()->json(['success' => false]);
+                        return response()->json(['success' => false, 'nota' => 'Amigo contribuyente, debe realizar previamente la Solicitud de Talonarios y el Retiro de los mismos para que pueda registrar las Guías de Circulación en el Libro de Control.']);
                     }
                 }else{
                     ///////EL USUARIO HA REGISTRADO GUÍAS DE ESTA CANTERA
@@ -498,7 +540,7 @@ class RegistroGuiaController extends Controller
                         $ultimo_id_talonario = $consulta->id_talonario;
                         
                         ////////////comprobar si el ultimo numero de guia registrado es la ultima guia del talonario
-                        $comprobar = DB::table('talonarios')->where('id_talonario','=',$ultimo_id_talonario)->first();
+                        $comprobar = DB::table('detalle_talonarios')->where('id_talonario','=',$ultimo_id_talonario)->first();
                         if ($comprobar) {
                             if ($ultimo_nro_guia < $comprobar->hasta){
                                 //////////////TODAVIA QUEDAN GUIAS EN EL TALONARIO
@@ -516,10 +558,10 @@ class RegistroGuiaController extends Controller
                             }else{
                                 //////////////YA NO QUEDAN GUIAS EN EL TALONARIO
                                 ////////////buscar el siguiente talonario correspondiente al sujeto pasivo
-                                $buscar = DB::table('talonarios')->where([
+                                $buscar = DB::table('detalle_talonarios')->where([
                                                                         ['id_talonario','>',$ultimo_id_talonario],
                                                                         ['id_cantera','=',$idCantera]
-                                                                    ])->orderBy('id_talonario','asc')->first();
+                                                                    ])->orderBy('correlativo','asc')->first();
                                 if ($buscar) {
                                     if ($buscar != ''){
                                         ///////HAY UN SIGUIENTE TALONARIO
@@ -615,38 +657,36 @@ class RegistroGuiaController extends Controller
         $anulada = $request->post('anulada');
         $motivo = $request->post('motivo');
 
-        
+        $mes_declarado = $request->post('mes_declarado');
+        $year_declarado = $request->post('year_declarado');
         $id_libro = '';
-        $f = strtotime($fecha);
+        // $f = strtotime($fecha);
 
-        $mes_ingresado = date('n',$f); 
-        $year_ingresado = date('Y',$f);
+        // $mes_ingresado = date('n',$f); 
+        // $year_ingresado = date('Y',$f);
 
-        $count = DB::table('libros')->where('id_sujeto','=', $id_sp)
-                                    ->where('mes','=', $mes_ingresado)
-                                    ->where('year','=', $year_ingresado)->count();
-        
-        if ($count == 0) {
-            //////No hay un libro abierto para este sujeto en el mes y año
-            $insert_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 
-                                                        'mes' => $mes_ingresado, 
-                                                        'year' => $year_ingresado]);
-            if ($insert_libro) {
-                $id_libro = DB::table('libros')->max('id_libro');
+        /////consulta de libro
+        $c = DB::table('libros')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)
+                                                                ->where('mes','=',$mes_declarado)
+                                                                ->where('year','=',$year_declarado)->first();
+        if ($c) {
+            if ($c->total == 0) {
+                ////no hay libro para este mes
+                $new_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 'mes' => $mes_declarado, 'year' => $year_declarado, 'estado' => 2]);
+                if ($new_libro) {
+                    $id_libro = DB::table('libros')->max('id_libro');
+                }
             }else{
-                return response()->json(['success' => false]);
+                ////hay un libro de este mes
+                $consulta = DB::table('libros')->select('id_libro')->where('id_sujeto','=',$id_sp)
+                                                            ->where('mes','=',$mes_declarado)
+                                                            ->where('year','=',$year_declarado)->first();
+                if ($consulta) {
+                    $id_libro = $consulta->id_libro;
+                }
             }
         }else{
-            //////Si hay un libro abierto para este sujeto en el mes y año
-            $consulta = DB::table('libros')->select('id_libro')
-                                        ->where('id_sujeto','=', $id_sp)
-                                        ->where('mes','=', $mes_ingresado)
-                                        ->where('year','=', $year_ingresado)->first();
-            if ($consulta) {
-                $id_libro = $consulta->id_libro;
-            }else{
-                return response()->json(['success' => false]);
-            }
+            return response()->json(['success' => false]);
         }
    
 
@@ -656,6 +696,7 @@ class RegistroGuiaController extends Controller
                                                     'id_cantera' => $id_cantera,
                                                     'id_libro' => $id_libro, /////
                                                     'nro_guia' => $nro_guia, 
+                                                    'id_declaracion' => null, /////
                                                     'fecha' => $fecha,
                                                     'razon_destinatario' => $razon_dest,
                                                     'ci_destinatario' => $ci_dest,
@@ -679,7 +720,9 @@ class RegistroGuiaController extends Controller
                                                     'capacidad_vehiculo' => $capacidad_vehiculo,
                                                     'hora_salida' => $hora_salida,
                                                     'anulada' => $anulada,
-                                                    'motivo' => $motivo
+                                                    'motivo' => $motivo,
+                                                    'estado' => null,
+                                                    'declaracion' => 2
                                                     ]);
 
         if ($insert) {
@@ -785,7 +828,16 @@ class RegistroGuiaController extends Controller
 
                 //////////periodo que se declara
                 $id_libro = $guia->id_libro;
-                
+                $libro = DB::table('libros')->select('mes','year')->where('id_libro','=',$id_libro)->first();
+                if ($libro) {
+                    $mes = $libro->mes;
+                    $year = $libro->year;
+
+                    $min = $year.'-0'.$mes.'-01';
+                    $max = date($year.'-0'.$mes.'-t');
+
+                    // return response($min.'/'.$max);
+                }
                 
 
                 $html = '<form id="form_editar_guia" method="post" onsubmit="event.preventDefault(); editarGuia()">
@@ -821,7 +873,7 @@ class RegistroGuiaController extends Controller
                                             <label for="fecha" class="col-form-label">Fecha Emisión: <span style="color:red">*</span></label>
                                         </div>
                                         <div class="col-7">
-                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" value="'.$guia->fecha.'">
+                                            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha_emision" min="'.$min.'" max="'.$max.'" value="'.$guia->fecha.'">
                                         </div> 
                                     </div>
                                 </div>
@@ -1177,43 +1229,42 @@ class RegistroGuiaController extends Controller
 
 
         
-        $id_libro = '';
-        $f = strtotime($fecha);
+        // $id_libro = '';
+        // $f = strtotime($fecha);
 
-        $mes_ingresado = date('n',$f); 
-        $year_ingresado = date('Y',$f);
+        // $mes_ingresado = date('n',$f); 
+        // $year_ingresado = date('Y',$f);
 
-        $count = DB::table('libros')->where('id_sujeto','=', $id_sp)
-                                    ->where('mes','=', $mes_ingresado)
-                                    ->where('year','=', $year_ingresado)->count();
+        // $count = DB::table('libros')->where('id_sujeto','=', $id_sp)
+        //                             ->where('mes','=', $mes_ingresado)
+        //                             ->where('year','=', $year_ingresado)->count();
         
-        if ($count == 0) {
-            //////No hay un libro abierto para este sujeto en el mes y año
-            $insert_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 
-                                                        'mes' => $mes_ingresado, 
-                                                        'year' => $year_ingresado]);
-            if ($insert_libro) {
-                $id_libro = DB::table('libros')->max('id_libro');
-            }else{
-                return response()->json(['success' => false]);
-            }
-        }else{
-            //////Si hay un libro abierto para este sujeto en el mes y año
-            $consulta = DB::table('libros')->select('id_libro')
-                                        ->where('id_sujeto','=', $id_sp)
-                                        ->where('mes','=', $mes_ingresado)
-                                        ->where('year','=', $year_ingresado)->first();
-            if ($consulta) {
-                $id_libro = $consulta->id_libro;
-            }else{
-                return response()->json(['success' => false]);
-            }
-        }
+        // if ($count == 0) {
+        //     //////No hay un libro abierto para este sujeto en el mes y año
+        //     $insert_libro = DB::table('libros')->insert(['id_sujeto' => $id_sp, 
+        //                                                 'mes' => $mes_ingresado, 
+        //                                                 'year' => $year_ingresado]);
+        //     if ($insert_libro) {
+        //         $id_libro = DB::table('libros')->max('id_libro');
+        //     }else{
+        //         return response()->json(['success' => false]);
+        //     }
+        // }else{
+        //     //////Si hay un libro abierto para este sujeto en el mes y año
+        //     $consulta = DB::table('libros')->select('id_libro')
+        //                                 ->where('id_sujeto','=', $id_sp)
+        //                                 ->where('mes','=', $mes_ingresado)
+        //                                 ->where('year','=', $year_ingresado)->first();
+        //     if ($consulta) {
+        //         $id_libro = $consulta->id_libro;
+        //     }else{
+        //         return response()->json(['success' => false]);
+        //     }
+        // }
 
 
         $update = DB::table('control_guias')->where('nro_guia','=',$nro_guia)
-                                            ->update([  'id_libro' => $id_libro,
-                                                        'fecha' => $fecha,
+                                            ->update([  'fecha' => $fecha,
                                                         'razon_destinatario' => $razon_dest,
                                                         'ci_destinatario' => $ci_dest,
                                                         'tlf_destinatario' => $tlf_dest,

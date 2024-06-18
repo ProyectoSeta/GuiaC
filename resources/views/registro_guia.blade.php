@@ -15,7 +15,8 @@
     <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-0">
             <h3 class="mb-3 text-navy titulo">Libro de Control</h3>
-
+            <h4 class="text-muted titulo">Libro de <span class="text-success">{{$fecha}}</span></h4> 
+            
             <div class="row w-25 d-flex justify-content-end">
                 <div class="col-sm-12">
                     <div class="card shadow-none border-light-subtle">

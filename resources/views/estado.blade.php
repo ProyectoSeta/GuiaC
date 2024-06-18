@@ -83,31 +83,51 @@
             <!-- CONTENIDO: USUARIOS CONTRIBUYENTE -->
             <div class="tab-pane fade show active" id="list-enviar" role="tabpanel" aria-labelledby="list-enviar-list">
                 <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mt-2 mb-0"><i class='bx bx-printer fs-5 me-2'></i><span>Reporte</span></button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mt-2 mb-0 me-3"><i class='bx bx-printer fs-5 me-2'></i><span>Reporte</span></button>
+                    <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center mt-2 mb-0"><i class='bx bxs-collection fs-5 me-2'></i></i><span>Lote Enviado</span></button>
                 </div>
                 <div class="table-responsive" style="font-size:14px">
-                    <table id="enviar_imprenta" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+                    <table id="enviados" class="table  border-light-subtle text-center" style="width:100%; font-size:13px">
                         <thead class="bg-primary border-light-subtle">
                                 <tr>
                                     <th scope="col">Cod. Talonario</th>
                                     <th scope="col">Cantera</th>
                                     <th scope="col">Contribuyente</th>
                                     <th scope="col">R.I.F</th>
+                                    <th scope="col">Solicitud</th>
                                     <th scope="col">Correlativo</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Opciones</th>
+                                    <th scope="col">Opcion</th>
                                 </tr>
                         </thead>
                         <tbody>
-                            @foreach ($talonarios_enviar as $enviar)
+                            @foreach ($t_enviar as $enviar)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{$enviar->id_talonario}}</td>
+                                    <td>{{$enviar->nombre_cantera}}</td>
+                                    <td>{{$enviar->razon_social}}</td>
+                                    <td>
+                                        <a class="info_sujeto" role="button" id_sujeto='{{ $enviar->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$enviar->rif_condicion}}-{{$enviar->rif_nro}}</a>
+                                    </td>
+                                    <td>
+                                        <a class="detalle_solicitud" id_solicitud="{{$enviar->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_detalles_solicitud">Ver</a>
+                                    </td>
+                                    @php
+                                        $desde = $enviar->desde;
+                                        $hasta = $enviar->hasta;
+                                        $length = 6;
+                                        $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                        $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                                    @endphp
+                                    <td>{{$formato_desde}} - {{$formato_hasta}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary d-inline-flex align-items-center" type="button">
+                                            Enviado
+                                            <!-- <i class='bx bxs-chevron-right'></i> -->
+                                            <i class='bx bx-chevron-right ms-2'></i>
+                                            <!-- <i class='bx bx-chevron-right-circle ms-2'></i> -->
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -118,8 +138,8 @@
 
             <!-- CONTENIDO: USUARIOS ADMINISTRATIVO -->
             <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
-            <div class="table-responsive" style="font-size:14px">
-                    <table id="administrativo" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+                <div class="table-responsive" style="font-size:14px">
+                    <table id="" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                         <thead class="bg-primary border-light-subtle">
                                 <tr>
                                     <th scope="col">#</th>
@@ -161,8 +181,9 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    <!-- ********* APROBAR SOLICITUD ******** -->
-    <div class="modal fade" id="modal_ver_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <!-- ********* DETALLES SOLICITUD ******** -->
+    <div class="modal fade" id="modal_detalles_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="content_ver_solicitud">
                 <div class="my-5 py-5 d-flex flex-column text-center">
@@ -172,6 +193,29 @@
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
+
+
+
+
+
+    <!-- ********* APROBAR SOLICITUD ******** -->
+    <!-- <div class="modal fade" id="modal_ver_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_ver_solicitud">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>
+        </div>  
+    </div> -->
+
+
+
+
+
+
+    
 
     <!-- *********INFO SOLICITUD DENEGADA ******** -->
     <div class="modal" id="modal_info_denegada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -244,7 +288,7 @@
    
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#enviar_imprenta').DataTable(
+            $('#enviados').DataTable(
                 {
                     "order": [[ 0, "desc" ]],
                     "language": {
@@ -323,7 +367,7 @@
 
 
             ///////MODAL: VER SOLICITUD
-            $(document).on('click','.ver_solicitud', function(e) { 
+            $(document).on('click','.detalle_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
                 // alert(solicitud);

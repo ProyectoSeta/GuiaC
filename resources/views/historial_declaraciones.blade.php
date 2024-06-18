@@ -56,25 +56,25 @@
                             </td>
                             <td>
                                 @php
-                                    if($dclr->nombre == 'Verificado'){
+                                    if($dclr->nombre_clf == 'Verificado'){
                                 @endphp
                                     <div class="d-flex align-items-center justify-content-center badge bg-success-subtle border text-success rounded-pill px-2 py-2" style="font-size:13px;">
                                         <i class='bx bx-check-circle fs-6 me-2'></i>
-                                        <span>{{$dclr->nombre}}</span>
+                                        <span>{{$dclr->nombre_clf}}</span>
                                     </div>
                                 @php
-                                    }elseif($dclr->nombre == 'Verificando'){
+                                    }elseif($dclr->nombre_clf == 'Verificando'){
                                 @endphp
                                     <div class="d-flex align-items-center justify-content-center badge bg-secondary-subtle text-muted rounded-pill px-2 py-2" style="font-size:13px;">
                                         <i class="bx bx-error-circle fs-6 me-2"></i>
-                                        <span>{{$dclr->nombre}}</span>
+                                        <span>{{$dclr->nombre_clf}}</span>
                                     </div>
                                 @php
                                     }else{
                                 @endphp
                                     <div class="d-flex align-items-center justify-content-center badge bg-danger-subtle text-danger rounded-pill px-2 py-2" style="font-size:13px;">
                                     <i class='bx bx-x-circle fs-6 me-2'></i>
-                                        <span>{{$dclr->nombre}}</span>
+                                        <span>{{$dclr->nombre_clf}}</span>
                                     </div>
                                 @php
                                     }

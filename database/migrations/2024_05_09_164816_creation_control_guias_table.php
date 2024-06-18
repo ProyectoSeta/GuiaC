@@ -23,8 +23,8 @@ return new class extends Migration
             $table->foreign('id_libro')->references('id_libro')->on('libros')->onDelete('cascade');
             $table->string('nro_guia')->unique();
 
-            // $table->integer('id_declaracion')->nullable()->unsigned();
-            // $table->foreign('id_declaracion')->references('id_declaracion')->on('declaracions')->onDelete('cascade');
+            $table->integer('id_declaracion')->nullable()->unsigned();
+            $table->foreign('id_declaracion')->references('id_declaracion')->on('declaracions')->onDelete('cascade');
 
             $table->date('fecha');
             
@@ -54,11 +54,11 @@ return new class extends Migration
             $table->enum('anulada',['No','Si']);
             $table->string('motivo')->nullable();
 
-            // $table->integer('estado')->nullable()->unsigned();
-            // $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); ///////NULL, EXTEMPORANEA
+            $table->integer('estado')->nullable()->unsigned();
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); ///////NULL, EXTEMPORANEA
 
-            // $table->integer('declaracion')->unsigned();
-            // $table->foreign('declaracion')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); /////SIN DECLARAR, DECLARADO
+            $table->integer('declaracion')->unsigned();
+            $table->foreign('declaracion')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade'); /////SIN DECLARAR, DECLARADO
 
             $table->timestamps();
         });

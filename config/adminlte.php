@@ -320,7 +320,7 @@ return [
         [
             'text'        => 'Registro de Cantera(s)',
             'route'         => 'cantera',
-            'icon'        => 'fas fa-plus pe-2',   
+            // 'icon'        => 'fas fa-plus pe-2',   
             // 'label'       => 4,
             // 'label_color' => 'success',
         ],
@@ -328,7 +328,7 @@ return [
         [
             'text' => ' Nueva Solicitud',
             'route'  => 'solicitud',
-            'icon' => 'fas fa-plus pe-2', 
+            // 'icon' => 'fas fa-plus pe-2', 
         ],
         ['header' => 'Reservas'],
         [
@@ -336,16 +336,16 @@ return [
             'url'  => '/reserva',
             // 'icon' => '', 
         ],
-        [
-            'text' => ' Solicitar Guías',
-            'url'  => '/solicitud_reserva',
-            'icon' => 'fas fa-plus pe-2', 
-        ],
-        [
-            'text' => ' Aprobar Solicitudes',
-            'url'  => '/aprobacion_provicional',
-            // 'icon' => 'fas fa-plus pe-2', 
-        ],
+        // [
+        //     'text' => ' Solicitar Guías',
+        //     'url'  => '/solicitud_reserva',
+        //     // 'icon' => 'fas fa-plus pe-2', 
+        // ],
+        // [
+        //     'text' => ' Aprobar Solicitudes',
+        //     'url'  => '/aprobacion_provicional',
+        //     // 'icon' => 'fas fa-plus pe-2', 
+        // ],
         ['header' => 'Libro de Control'],
         [
             'text' => 'Registro de guías',
@@ -355,19 +355,19 @@ return [
         [
             'text' => 'Libros',
             'url'  => '/libros',
-            'icon' => 'bluetooth-outline',
+            // 'icon' => 'bluetooth-outline',
         ],
-        // ['header' => 'Declaración'],
-        // [
-        //     'text' => 'Declarar',
-        //     'url'  => '/declarar',
-        //     // 'icon' => 'fas fa-layer-group',
-        // ],
-        // [
-        //     'text' => 'Historial',
-        //     'url'  => '/historial_declaraciones',
-        //     // 'icon' => 'fas fa-file-circle-plus',
-        // ],
+        ['header' => 'Declaración'],
+        [
+            'text' => 'Declarar',
+            'url'  => '/declarar',
+            // 'icon' => 'fas fa-layer-group',
+        ],
+        [
+            'text' => 'Historial',
+            'url'  => '/historial_declaraciones',
+            // 'icon' => 'fas fa-file-circle-plus',
+        ],
         ['header' => 'Control de Solicitudes'],
         [
             'text'       => 'Aprobar Solicitudes',
@@ -395,11 +395,11 @@ return [
             'url'  => '/verificar_cantera',
             // 'icon' => 'fas fa-fw fa-user',
         ],
-        // [
-        //     'text' => 'Declaraciones',
-        //     'url'  => '/verificar_declaracion',
-        //     // 'icon' => 'fas fa-fw fa-user',
-        // ],
+        [
+            'text' => 'Declaraciones',
+            'url'  => '/verificar_declaracion',
+            // 'icon' => 'fas fa-fw fa-user',
+        ],
         ['header' => 'Historial'],
         [
             'text'          =>'Sujetos pasivos',
@@ -417,11 +417,12 @@ return [
             'text'       => 'Control de Canteras',
             // 'icon_color' => 'fas fa-fw fa-user',
             'url'        => '/control_canteras',
-        ],[
-            'text'       => 'Recaudación',
-            // 'icon_color' => 'fas fa-fw fa-user',
-            'url'        => '/recaudacion',
         ],
+        // [
+        //     'text'       => 'Recaudación',
+        //     // 'icon_color' => 'fas fa-fw fa-user',
+        //     'url'        => '/recaudacion',
+        // ],
         ['header' => 'Usuarios'],
         [
             'text' => 'Usuarios',

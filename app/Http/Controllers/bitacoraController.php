@@ -13,7 +13,7 @@ class bitacoraController extends Controller
     {
         $bitacoras = DB::table('bitacoras')->join('users', 'bitacoras.id_user', '=', 'users.id')
                     ->join('clasificacions', 'bitacoras.modulo', '=', 'clasificacions.id_clasificacion')
-                    ->select('bitacoras.*', 'users.name','clasificacions.nombre')->get();
+                    ->select('bitacoras.*', 'users.name','clasificacions.nombre_clf')->get();
 
         return view('bitacora', compact('bitacoras'));
     }

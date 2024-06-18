@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-06-2024 a las 21:51:35
+-- Tiempo de generación: 18-06-2024 a las 21:34:02
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -42,18 +42,7 @@ CREATE TABLE `bitacoras` (
 --
 
 INSERT INTO `bitacoras` (`correlativo`, `id_user`, `modulo`, `fecha`, `accion`, `created_at`, `updated_at`) VALUES
-(1, 1, 9, '2024-06-13', 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A..', NULL, NULL),
-(2, 1, 10, '2024-06-13', 'VERIFICACIÓN APROBADA, Cantera: Unidad Técnica de Producción El Apamate, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A..', NULL, NULL),
-(3, 1, 7, '2024-06-13', 'SOLICITUD NRO.2 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(4, 1, 7, '2024-06-13', 'SOLICITUD NRO.1 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(5, 1, 7, '2024-06-13', 'SOLICITUD NRO.5 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(6, 1, 7, '2024-06-13', 'SOLICITUD NRO.4 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(7, 1, 7, '2024-06-13', 'SOLICITUD NRO.3 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(8, 1, 7, '2024-06-13', 'SOLICITUD NRO.7 APROBADA, Talonarios: 2, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(9, 1, 24, '2024-06-13', 'EMISIÓN DE 1 TALONARIOS DE RESERVA (COD: 12-)', NULL, NULL),
-(10, 1, 7, '2024-06-14', 'SOLICITUD NRO.8 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL),
-(11, 1, 14, '2024-06-14', 'LÍMITE DE SOLICITUD DE GUÍAS ACTUALIZADO A 300 GUÍAS, CANTERA: Unidad Técnica de Producción El Apamate.', NULL, NULL),
-(12, 1, 7, '2024-06-14', 'SOLICITUD NRO.9 APROBADA, Talonarios: 1, Contribuyente: ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', NULL, NULL);
+(6, 5, 15, '2024-06-18', 'NUEVO USUARIO ADMINISTRATIVO CREADO: Admin.', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -73,13 +62,6 @@ CREATE TABLE `canteras` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `canteras`
---
-
-INSERT INTO `canteras` (`id_cantera`, `id_sujeto`, `nombre`, `municipio_cantera`, `parroquia_cantera`, `lugar_aprovechamiento`, `status`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Unidad Técnica de Producción El Apamate', 'Zamora', 'Zamora', 'Carretera Nacional Cagua – Villa de Cura, Troncal 2. Haciendita El Banco, Municipio Zamora.', 'Verificada', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -152,6 +134,7 @@ CREATE TABLE `control_guias` (
   `id_cantera` int(10) UNSIGNED NOT NULL,
   `id_libro` int(10) UNSIGNED NOT NULL,
   `nro_guia` varchar(255) NOT NULL,
+  `id_declaracion` int(10) UNSIGNED DEFAULT NULL,
   `fecha` date NOT NULL,
   `razon_destinatario` varchar(255) NOT NULL,
   `ci_destinatario` varchar(15) NOT NULL,
@@ -176,6 +159,8 @@ CREATE TABLE `control_guias` (
   `hora_salida` varchar(255) NOT NULL,
   `anulada` enum('No','Si') NOT NULL,
   `motivo` varchar(255) DEFAULT NULL,
+  `estado` int(10) UNSIGNED DEFAULT NULL,
+  `declaracion` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -220,13 +205,6 @@ CREATE TABLE `detalle_reservas` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `detalle_reservas`
---
-
-INSERT INTO `detalle_reservas` (`correlativo`, `tipo_talonario`, `cantidad`, `id_reserva`, `created_at`, `updated_at`) VALUES
-(1, '50', 1, 1, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -241,15 +219,6 @@ CREATE TABLE `detalle_solicituds` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `detalle_solicituds`
---
-
-INSERT INTO `detalle_solicituds` (`id_detalle`, `tipo_talonario`, `cantidad`, `id_solicitud`, `created_at`, `updated_at`) VALUES
-(7, '50', 2, 7, NULL, NULL),
-(8, '50', 1, 8, NULL, NULL),
-(9, '50', 1, 9, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -270,16 +239,6 @@ CREATE TABLE `detalle_talonarios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `detalle_talonarios`
---
-
-INSERT INTO `detalle_talonarios` (`correlativo`, `id_talonario`, `id_cantera`, `id_sujeto`, `desde`, `hasta`, `qr`, `clase`, `id_solicitud_reserva`, `created_at`, `updated_at`) VALUES
-(10, 10, 1, 1, 1, 50, 'assets/qr/qrcode_T10.svg', 5, NULL, NULL, NULL),
-(11, 11, 1, 1, 51, 100, 'assets/qr/qrcode_T11.svg', 5, NULL, NULL, NULL),
-(12, 13, 1, 1, 151, 200, 'assets/qr/qrcode_T13.svg', 5, NULL, NULL, NULL),
-(13, 14, 1, 1, 201, 250, 'assets/qr/qrcode_T14.svg', 5, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -331,6 +290,7 @@ CREATE TABLE `libros` (
   `id_sujeto` int(10) UNSIGNED NOT NULL,
   `mes` int(11) NOT NULL,
   `year` int(11) NOT NULL,
+  `estado` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -352,13 +312,6 @@ CREATE TABLE `limite_guias` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `limite_guias`
---
-
-INSERT INTO `limite_guias` (`cod`, `id_sujeto`, `id_cantera`, `total_guias_periodo`, `total_guias_solicitadas_periodo`, `inicio_periodo`, `fin_periodo`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 300, 300, '2024-06-13', '2024-09-13', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -447,7 +400,8 @@ INSERT INTO `minerals` (`id_mineral`, `mineral`, `created_at`, `updated_at`) VAL
 (21, 'Bloques', NULL, NULL),
 (22, 'Piedra Integral', NULL, NULL),
 (23, 'Gavión', NULL, NULL),
-(24, 'Granzón', NULL, NULL);
+(24, 'Granzón', NULL, NULL),
+(25, 'Piedra Picada ¾', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -520,14 +474,6 @@ CREATE TABLE `produccions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `produccions`
---
-
-INSERT INTO `produccions` (`id_produccion`, `id_cantera`, `id_mineral`, `created_at`, `updated_at`) VALUES
-(1, 1, 5, NULL, NULL),
-(2, 1, 11, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -541,13 +487,6 @@ CREATE TABLE `reservas` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `reservas`
---
-
-INSERT INTO `reservas` (`id_reserva`, `id_user`, `fecha`, `created_at`, `updated_at`) VALUES
-(1, 1, '2024-06-13 14:27:52', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -567,15 +506,6 @@ CREATE TABLE `solicituds` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `solicituds`
---
-
-INSERT INTO `solicituds` (`id_solicitud`, `id_sujeto`, `id_cantera`, `total_ucd`, `fecha`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(7, 1, 1, 500, '2024-06-13 14:25:43', 17, NULL, NULL, NULL),
-(8, 1, 1, 250, '2024-06-14 09:02:09', 17, NULL, NULL, NULL),
-(9, 1, 1, 250, '2024-06-14 12:49:45', 17, NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -594,13 +524,6 @@ CREATE TABLE `solicitud_reservas` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `solicitud_reservas`
---
-
-INSERT INTO `solicitud_reservas` (`id_solicitud_reserva`, `id_sujeto`, `id_cantera`, `cantidad_guias`, `fecha`, `total_ucd`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 10, '2024-06-13 14:49:08', 50, 4, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -635,7 +558,10 @@ CREATE TABLE `sujeto_pasivos` (
 --
 
 INSERT INTO `sujeto_pasivos` (`id_sujeto`, `id_user`, `rif_condicion`, `rif_nro`, `artesanal`, `razon_social`, `direccion`, `tlf_movil`, `tlf_fijo`, `ci_condicion_repr`, `ci_nro_repr`, `rif_condicion_repr`, `rif_nro_repr`, `name_repr`, `tlf_repr`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 1, 'G', '200108240', 'No', 'ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.', 'Urbanización Canta Rana Av. El Canal, edificio Hotel Golf. Maracay Estado Aragua', '04120505962', NULL, 'V', '0001', 'V', '0001', 'Aramica, S.A.', '04125002215', 'Verificado', NULL, '2024-06-13 17:04:26', '2024-06-13 17:04:26');
+(2, 2, 'G', '500570155', 'No', 'TECNOCOMODITY, C.A.', 'DIRECCION', '04140000000', NULL, 'V', '18642293', 'V', '18642293', 'JARO LABRADOR', '04140000000', 'Verificando', NULL, '2024-06-18 22:58:39', '2024-06-18 22:58:39'),
+(3, 3, 'J', '412689789', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA, MUNICIPIO SAN CASIMIRO', '04140000000', NULL, 'V', '20757676', 'V', '20757676', 'AMALIO FERRER', '04140000000', 'Verificando', NULL, '2024-06-18 23:08:36', '2024-06-18 23:08:36'),
+(4, 4, 'J', '412663941', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA', '04140000000', NULL, 'V', '26715191', 'V', '26715191', 'ROANGEL RODRIGUEZ', '04140000000', 'Verificando', NULL, '2024-06-18 23:12:37', '2024-06-18 23:12:37'),
+(5, 5, 'G', '200108240', 'No', 'ARAGUA MINAS Y CANTERAS, S.A', 'DIRECCION', '04140000000', NULL, 'V', '00000001', 'V', '00000001', 'CARLOS LEON', '04140000000', 'Verificando', NULL, '2024-06-18 23:31:23', '2024-06-18 23:31:23');
 
 -- --------------------------------------------------------
 
@@ -659,17 +585,6 @@ CREATE TABLE `talonarios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `talonarios`
---
-
-INSERT INTO `talonarios` (`id_talonario`, `id_solicitud`, `id_reserva`, `tipo_talonario`, `desde`, `hasta`, `clase`, `estado`, `asignado`, `fecha_enviado_imprenta`, `fecha_recibido_imprenta`, `fecha_retiro`, `created_at`, `updated_at`) VALUES
-(10, 7, NULL, '50', 1, 50, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
-(11, 7, NULL, '50', 51, 100, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
-(12, NULL, 1, '50', 101, 150, 6, 20, 0, NULL, NULL, NULL, NULL, NULL),
-(13, 8, NULL, '50', 151, 200, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
-(14, 9, NULL, '50', 201, 250, 5, 20, 50, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -703,17 +618,11 @@ INSERT INTO `tipos` (`id_tipo`, `nombre_tipo`, `created_at`, `updated_at`) VALUE
 --
 
 CREATE TABLE `total_guias_reservas` (
+  `correlativo` int(10) UNSIGNED NOT NULL,
   `total` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `total_guias_reservas`
---
-
-INSERT INTO `total_guias_reservas` (`total`, `created_at`, `updated_at`) VALUES
-(50, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -735,7 +644,7 @@ CREATE TABLE `ucds` (
 --
 
 INSERT INTO `ucds` (`id`, `valor`, `moneda`, `fecha`, `created_at`, `updated_at`) VALUES
-(1, 39.55, 'Euro', '2024-06-13', NULL, NULL);
+(1, 38.95, 'Euro', '2024-06-18', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -760,7 +669,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `type`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Aramica, S.A.', 'aramica@gmail.com', NULL, '$2y$12$w1QZn25fM6WSl7FwYx2/aeUucAoXzHFy5k4Rss8069bwFlfo54OM.', 3, NULL, '2024-06-13 17:04:26', '2024-06-13 17:04:26');
+(2, 'TECNOCOMODITY, C.A.', 'tecnocomodity@gmail.com', NULL, '$2y$12$vVPmWCuKTNetT6cBu1RpWOhmOzBSOgx6BvYImntKEKUAZV/Gj2wlK', 3, NULL, '2024-06-18 22:58:39', '2024-06-18 22:58:39'),
+(3, 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'piedrazul@gmail.com', NULL, '$2y$12$a9sN34goBjHjkGZgnh5CXeN.TbYa8jqIZ1AhOq3YD1OlIr.EyCB02', 3, NULL, '2024-06-18 23:08:36', '2024-06-18 23:08:36'),
+(4, 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'minerosdelsur@gmail.com', NULL, '$2y$12$yq4wX0RZfgxabDy2t2mSDOB4xxJpHdSsgnaQvQutFj2Sw2KlZXwne', 3, NULL, '2024-06-18 23:12:37', '2024-06-18 23:12:37'),
+(5, 'Aramica, S.A.', 'aramica@gmail.com', NULL, '$2y$12$PTwwz6PmbnpCYYw0YP1wL.50jncSoyLSDUHuQuDtaGDPCE7vC8KNa', 3, NULL, '2024-06-18 23:31:23', '2024-06-18 23:31:23'),
+(6, 'Admin', 'administrador@gmail.com', NULL, '$2y$12$mGqUp3n7S5NQRF0gPT7A8.h9F0w8WjsY1wQHmJLVPqmphDATEwZl.', 4, NULL, '2024-06-18 23:33:13', '2024-06-18 23:33:13');
 
 --
 -- Índices para tablas volcadas
@@ -804,7 +717,10 @@ ALTER TABLE `control_guias`
   ADD KEY `control_guias_id_sujeto_foreign` (`id_sujeto`),
   ADD KEY `control_guias_id_cantera_foreign` (`id_cantera`),
   ADD KEY `control_guias_id_libro_foreign` (`id_libro`),
-  ADD KEY `control_guias_id_mineral_foreign` (`id_mineral`);
+  ADD KEY `control_guias_id_declaracion_foreign` (`id_declaracion`),
+  ADD KEY `control_guias_id_mineral_foreign` (`id_mineral`),
+  ADD KEY `control_guias_estado_foreign` (`estado`),
+  ADD KEY `control_guias_declaracion_foreign` (`declaracion`);
 
 --
 -- Indices de la tabla `declaracions`
@@ -860,7 +776,8 @@ ALTER TABLE `fechas`
 --
 ALTER TABLE `libros`
   ADD PRIMARY KEY (`id_libro`),
-  ADD KEY `libros_id_sujeto_foreign` (`id_sujeto`);
+  ADD KEY `libros_id_sujeto_foreign` (`id_sujeto`),
+  ADD KEY `libros_estado_foreign` (`estado`);
 
 --
 -- Indices de la tabla `limite_guias`
@@ -968,6 +885,12 @@ ALTER TABLE `tipos`
   ADD PRIMARY KEY (`id_tipo`);
 
 --
+-- Indices de la tabla `total_guias_reservas`
+--
+ALTER TABLE `total_guias_reservas`
+  ADD PRIMARY KEY (`correlativo`);
+
+--
 -- Indices de la tabla `ucds`
 --
 ALTER TABLE `ucds`
@@ -989,7 +912,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `bitacoras`
 --
 ALTER TABLE `bitacoras`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `canteras`
@@ -1013,31 +936,31 @@ ALTER TABLE `clasificacions`
 -- AUTO_INCREMENT de la tabla `control_guias`
 --
 ALTER TABLE `control_guias`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `declaracions`
 --
 ALTER TABLE `declaracions`
-  MODIFY `id_declaracion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_declaracion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_reservas`
 --
 ALTER TABLE `detalle_reservas`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_solicituds`
 --
 ALTER TABLE `detalle_solicituds`
-  MODIFY `id_detalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_detalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_talonarios`
 --
 ALTER TABLE `detalle_talonarios`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -1055,7 +978,7 @@ ALTER TABLE `fechas`
 -- AUTO_INCREMENT de la tabla `libros`
 --
 ALTER TABLE `libros`
-  MODIFY `id_libro` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_libro` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `limite_guias`
@@ -1073,7 +996,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `minerals`
 --
 ALTER TABLE `minerals`
-  MODIFY `id_mineral` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_mineral` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `nro_controls`
@@ -1091,43 +1014,49 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `produccions`
 --
 ALTER TABLE `produccions`
-  MODIFY `id_produccion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_produccion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `id_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `solicituds`
 --
 ALTER TABLE `solicituds`
-  MODIFY `id_solicitud` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_solicitud` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitud_reservas`
 --
 ALTER TABLE `solicitud_reservas`
-  MODIFY `id_solicitud_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_solicitud_reserva` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `sujeto_pasivos`
 --
 ALTER TABLE `sujeto_pasivos`
-  MODIFY `id_sujeto` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_sujeto` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `talonarios`
 --
 ALTER TABLE `talonarios`
-  MODIFY `id_talonario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_talonario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos`
 --
 ALTER TABLE `tipos`
   MODIFY `id_tipo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `total_guias_reservas`
+--
+ALTER TABLE `total_guias_reservas`
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ucds`
@@ -1139,7 +1068,7 @@ ALTER TABLE `ucds`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -1168,7 +1097,10 @@ ALTER TABLE `cierre_libros`
 -- Filtros para la tabla `control_guias`
 --
 ALTER TABLE `control_guias`
+  ADD CONSTRAINT `control_guias_declaracion_foreign` FOREIGN KEY (`declaracion`) REFERENCES `clasificacions` (`id_clasificacion`) ON DELETE CASCADE,
+  ADD CONSTRAINT `control_guias_estado_foreign` FOREIGN KEY (`estado`) REFERENCES `clasificacions` (`id_clasificacion`) ON DELETE CASCADE,
   ADD CONSTRAINT `control_guias_id_cantera_foreign` FOREIGN KEY (`id_cantera`) REFERENCES `canteras` (`id_cantera`) ON DELETE CASCADE,
+  ADD CONSTRAINT `control_guias_id_declaracion_foreign` FOREIGN KEY (`id_declaracion`) REFERENCES `declaracions` (`id_declaracion`) ON DELETE CASCADE,
   ADD CONSTRAINT `control_guias_id_libro_foreign` FOREIGN KEY (`id_libro`) REFERENCES `libros` (`id_libro`) ON DELETE CASCADE,
   ADD CONSTRAINT `control_guias_id_mineral_foreign` FOREIGN KEY (`id_mineral`) REFERENCES `minerals` (`id_mineral`) ON DELETE CASCADE,
   ADD CONSTRAINT `control_guias_id_sujeto_foreign` FOREIGN KEY (`id_sujeto`) REFERENCES `sujeto_pasivos` (`id_sujeto`) ON DELETE CASCADE,
@@ -1210,6 +1142,7 @@ ALTER TABLE `detalle_talonarios`
 -- Filtros para la tabla `libros`
 --
 ALTER TABLE `libros`
+  ADD CONSTRAINT `libros_estado_foreign` FOREIGN KEY (`estado`) REFERENCES `clasificacions` (`id_clasificacion`) ON DELETE CASCADE,
   ADD CONSTRAINT `libros_id_sujeto_foreign` FOREIGN KEY (`id_sujeto`) REFERENCES `sujeto_pasivos` (`id_sujeto`) ON DELETE CASCADE;
 
 --

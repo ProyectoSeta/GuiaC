@@ -12,10 +12,10 @@
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-3 text-navy titulo">Control de Canteras</h3>
+            <h3 class="mb-3 text-navy titulo">Control de Canteras y Desazolves</h3>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:13px">
                 <thead class="border-light-subtle">
                     <tr>
                         <th colspan="2"></th>
@@ -24,7 +24,7 @@
                         <th colspan="1"></th>
                     </tr>
                     <tr>
-                        <th>Cantera</th>
+                        <th>Cantera / Desazolve</th>
                         <!-- <th>Contribuyente</th> -->
                         <th>R.I.F.</th>
                         <th class="text-secondary">Inicio</th>
