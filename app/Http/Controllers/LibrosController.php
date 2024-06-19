@@ -12,20 +12,41 @@ class LibrosController extends Controller
     public function index()
     {
         $user = auth()->id();
-        $consulta = DB::table('users')->select('type')->where('id_user','=',$user)->first();
+        $userTipo = '';
+        $consulta = DB::table('users')->select('type')->where('id','=',$user)->first();
         if ($consulta->type == 3) {
             $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
             $id_sp = $sp->id_sujeto;
 
-            $libros = DB::table('libros')->where('id_sujeto','=',$id_sp)->get();
+            $x = DB::table('libros')->where('id_sujeto','=',$id_sp)->get();
+            $userTipo = 'sp';
         }else{
-
-            
+            $x = [];
+            $consulta = DB::table('sujeto_pasivos')->get();
+            foreach ($consulta as $c) {
+                $sd = DB::table('libros')
+                                            ->selectRaw("count(*) as total")
+                                            ->where('id_sujeto','=',$c->id_sujeto)
+                                            ->where('estado','=',2)->first();
+                if ($sd) {
+                    $array = array(
+                        'id_sujeto' => $c->id_sujeto,
+                        'razon_social' => $c->razon_social,
+                        'rif_condicion' => $c->rif_condicion,
+                        'rif_nro' => $c->rif_nro,
+                        'sin_declarar' => $sd->total
+                        );
+    
+                    $a = (object) $array;
+                    array_push($x, $a);
+                }
+            }
+            $userTipo = 'seta';
         }
         
         
 
-        return view('libros', compact('libros'));
+        return view('libros', compact('x','userTipo'));
     }
 
    

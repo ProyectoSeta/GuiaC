@@ -147,6 +147,8 @@ Route::post('/declarar/declarar_guias', [App\Http\Controllers\DeclararController
 Route::get('/libros', [App\Http\Controllers\LibrosController::class, 'index'])->name('libros');
 Route::post('/libros/detalles', [App\Http\Controllers\LibrosController::class, 'detalles'])->name('libros.detalles');
 
+///////////LIBROS CONTRIBUYENTES
+Route::get('/libro_contribuyente/{id_sujeto?}/', [App\Http\Controllers\LibroContribuyenteController::class, 'index'])->name('libro_contribuyente.index');
 
 ///////////DETALLE DE LIBRO
 Route::get('/detalle_libro/{mes?}/{year?}/', [App\Http\Controllers\DetalleLibroController::class, 'index'])->name('detalle_libro.index');

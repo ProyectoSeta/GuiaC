@@ -17,7 +17,7 @@
                         <img src="{{asset('assets/banner_sd_1.svg')}}" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{asset('assets/banner_sd_2.svg')}}" class="d-block w-100" alt="...">
+                        <img src="{{asset('assets/bf-6.svg')}}" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
                         <img src="{{asset('assets/banner_sd_3.svg')}}" class="d-block w-100" alt="...">
@@ -60,20 +60,19 @@
             </div><!-- /.row -->
 
             <div class="row mx-5 px-5" style="font-size: 15px;">
-                <div class="col-sm-2"></div>
-                <div class="col-lg-8 text-center">
+                <div class="col-lg-6 text-center">
                     <span class="badge rounded-circle bg-gradient-danger fs-3 mb-2">4</span>
                     <h4 class="fw-semibold titulo text-navy">Registrar Guías</h4>
                     <p class="text-muted">Amigo contribuyente, debe subir todas las guías que han sido utilizadas en la(s) Cantera(s), así estas hayan sido anuladas. Para que, pueda cumplir con el deber formal.</p>
                     <p><a class="btn bg-navy  btn-sm" href="{{ route('registro_guia') }}">Registrar Guía »</a></p>
                 </div><!-- /.col-lg-4 -->
-                <div class="col-sm-2"></div>
-                <!-- <div class="col-lg-6 text-center">
+
+                <div class="col-lg-6 text-center">
                     <span class="badge rounded-circle bg-gradient-danger fs-3 mb-2">5</span>
                     <h4 class="fw-semibold titulo text-navy">Declarar Guías de Circulación</h4>
                     <p class="text-muted">Según el calendario fiscal vigente a la fecha, deberá declarar las guías que haya utilizado en el período de tiempo establecido.</p>
                     <p><a class="btn bg-navy  btn-sm" href="{{ route('declarar') }}">Ver Estado »</a></p>
-                </div>/.col-lg-4 -->
+                </div><!-- /.col-lg-4 -->
             </div>
         </div>
 

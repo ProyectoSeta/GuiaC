@@ -12,90 +12,51 @@
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-3 text-navy titulo">Libros de Control</h3>
+
+            <div class="d-flex flex-column">
+                <p class="fs-4 text-navy fw-bold my-0">{{$razon}}</p>
+                <p class="text-muted text-end fs-6">{{$rif}}</p>
+            </div>
         </div>
 
-        @if ($userTipo == 'sp')
-            <div class="table-responsive" style="font-size:14px">
-                <table id="example" class="table display border-light-subtle text-center table-sm" style="width:100%; font-size:13px">
-                    <thead class="bg-primary border-light-subtle">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Mes</th>
-                            <th scope="col">Año</th>
-                            <th scope="col">Opciones</th>
+        
+        <div class="table-responsive" style="font-size:14px">
+            <table id="example" class="table display border-light-subtle text-center table-sm" style="width:100%; font-size:13px">
+                <thead class="bg-primary border-light-subtle">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mes</th>
+                        <th scope="col">Año</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($libros as $libro)
+                        @php
+                            $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+                            $mes_bd = $libro->mes;
+                            $mes_libro = $meses[$mes_bd];
+
+
+                        @endphp
+                        <tr class="ver_libro">
+                            <td>{{$libro->id_libro}}</td>
+                            <td>{{$mes_libro}}</td>
+                            <td>{{$libro->year}}</td>
+                            
+                            <td>
+                                <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4 " mes="{{$libro->mes}}" year="{{$libro->year}}" >
+                                    <!-- <i class='bx bx-show-alt fs-5 me-1'></i> -->
+                                    <span>Ver Libro</span>
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($x as $libro)
-                            @php
-                                $meses = ['','ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO','JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
-                                $mes_bd = $libro->mes;
-                                $mes_libro = $meses[$mes_bd];
+                    @endforeach
+                </tbody>
 
-
-                            @endphp
-                            <tr class="ver_libro">
-                                <td>{{$libro->id_libro}}</td>
-                                <td>{{$mes_libro}}</td>
-                                <td>{{$libro->year}}</td>
-                                
-                                <td>
-                                    <a href="{{ route('detalle_libro.index', ['mes' =>$libro->mes, 'year' =>$libro->year]) }}" class="btn btn-primary btn-sm px-3 rounded-4 " mes="{{$libro->mes}}" year="{{$libro->year}}" >
-                                        <!-- <i class='bx bx-show-alt fs-5 me-1'></i> -->
-                                        <span>Ver Libro</span>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-                </table>
-            </div>
-        @else
-            <div class="table-reponsive" style="font-size:14px">
-                <table class="table align-middle mb-0 border-light-subtle table-sm table-hover" id="example" style="width:100%; font-size:13px">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Contribuyente</th>
-                            <th>Sin Declarar</th>
-                            <th>Opción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($x as $sp)
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img
-                                            src="{{asset('assets/user3.jpg')}}"
-                                            alt=""
-                                            style="width: 45px; height: 45px"
-                                            class="rounded-circle"
-                                        />
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="fw-bold text-navy mb-1">{{$sp->razon_social}}</p>
-                                    <p class="text-muted mb-0">
-                                        <a class="info_sujeto" role="button" id_sujeto='{{ $sp->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$sp->rif_condicion}} - {{$sp->rif_nro}}</a>
-                                    </p>
-                                </td>
-                                <td>
-                                    <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" style="font-size:14px">{{$sp->sin_declarar}}</span>
-                                </td>
-                                <td>
-                                    <a href="{{ route('libro_contribuyente.index', ['sujeto' =>$sp->id_sujeto]) }}" class="btn btn-primary btn-sm px-3 rounded-4" >
-                                        <span>Libros</span>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-            </div>
-        @endif
+            </table>
+        </div>
+       
 
 
         
