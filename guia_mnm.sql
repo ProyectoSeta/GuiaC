@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-06-2024 a las 21:34:02
+-- Tiempo de generación: 19-06-2024 a las 16:18:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -36,13 +36,6 @@ CREATE TABLE `bitacoras` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `bitacoras`
---
-
-INSERT INTO `bitacoras` (`correlativo`, `id_user`, `modulo`, `fecha`, `accion`, `created_at`, `updated_at`) VALUES
-(6, 5, 15, '2024-06-18', 'NUEVO USUARIO ADMINISTRATIVO CREADO: Admin.', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -400,8 +393,7 @@ INSERT INTO `minerals` (`id_mineral`, `mineral`, `created_at`, `updated_at`) VAL
 (21, 'Bloques', NULL, NULL),
 (22, 'Piedra Integral', NULL, NULL),
 (23, 'Gavión', NULL, NULL),
-(24, 'Granzón', NULL, NULL),
-(25, 'Piedra Picada ¾', NULL, NULL);
+(24, 'Granzón', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -558,10 +550,10 @@ CREATE TABLE `sujeto_pasivos` (
 --
 
 INSERT INTO `sujeto_pasivos` (`id_sujeto`, `id_user`, `rif_condicion`, `rif_nro`, `artesanal`, `razon_social`, `direccion`, `tlf_movil`, `tlf_fijo`, `ci_condicion_repr`, `ci_nro_repr`, `rif_condicion_repr`, `rif_nro_repr`, `name_repr`, `tlf_repr`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(2, 2, 'G', '500570155', 'No', 'TECNOCOMODITY, C.A.', 'DIRECCION', '04140000000', NULL, 'V', '18642293', 'V', '18642293', 'JARO LABRADOR', '04140000000', 'Verificando', NULL, '2024-06-18 22:58:39', '2024-06-18 22:58:39'),
-(3, 3, 'J', '412689789', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA, MUNICIPIO SAN CASIMIRO', '04140000000', NULL, 'V', '20757676', 'V', '20757676', 'AMALIO FERRER', '04140000000', 'Verificando', NULL, '2024-06-18 23:08:36', '2024-06-18 23:08:36'),
-(4, 4, 'J', '412663941', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA', '04140000000', NULL, 'V', '26715191', 'V', '26715191', 'ROANGEL RODRIGUEZ', '04140000000', 'Verificando', NULL, '2024-06-18 23:12:37', '2024-06-18 23:12:37'),
-(5, 5, 'G', '200108240', 'No', 'ARAGUA MINAS Y CANTERAS, S.A', 'DIRECCION', '04140000000', NULL, 'V', '00000001', 'V', '00000001', 'CARLOS LEON', '04140000000', 'Verificando', NULL, '2024-06-18 23:31:23', '2024-06-18 23:31:23');
+(1, 2, 'J', '500570155', 'No', 'TECNOCOMODITY, C.A.', 'DIRECCIÓN', '04140000000', NULL, 'V', '18642293', 'V', '18642293', 'JARO LABRADOR', '04140000000', 'Verificando', NULL, '2024-06-19 18:07:42', '2024-06-19 18:07:42'),
+(2, 3, 'J', '412689789', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA, MUNICIPIO SAN CASIMIRO', '04140000000', NULL, 'V', '20757676', 'V', '20757676', 'AMALIO FERRER', '04140000000', 'Verificando', NULL, '2024-06-19 18:11:54', '2024-06-19 18:11:54'),
+(3, 4, 'J', '412663941', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA', '04140000000', NULL, 'V', '26715191', 'V', '26715191', 'ROANGEL RODRIGUEZ', '04140000000', 'Verificando', NULL, '2024-06-19 18:13:55', '2024-06-19 18:13:55'),
+(4, 5, 'G', '200108240', 'No', 'ARAGUA MINAS Y CANTERAS, S.A.', 'DIRECCIÓN', '04140000000', NULL, 'V', '00000000', 'V', '00000000', 'LEON', '04140000000', 'Verificando', NULL, '2024-06-19 18:17:28', '2024-06-19 18:17:28');
 
 -- --------------------------------------------------------
 
@@ -644,7 +636,7 @@ CREATE TABLE `ucds` (
 --
 
 INSERT INTO `ucds` (`id`, `valor`, `moneda`, `fecha`, `created_at`, `updated_at`) VALUES
-(1, 38.95, 'Euro', '2024-06-18', NULL, NULL);
+(1, 39.09, 'Euro', '2024-06-19', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -669,11 +661,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `type`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'TECNOCOMODITY, C.A.', 'tecnocomodity@gmail.com', NULL, '$2y$12$vVPmWCuKTNetT6cBu1RpWOhmOzBSOgx6BvYImntKEKUAZV/Gj2wlK', 3, NULL, '2024-06-18 22:58:39', '2024-06-18 22:58:39'),
-(3, 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'piedrazul@gmail.com', NULL, '$2y$12$a9sN34goBjHjkGZgnh5CXeN.TbYa8jqIZ1AhOq3YD1OlIr.EyCB02', 3, NULL, '2024-06-18 23:08:36', '2024-06-18 23:08:36'),
-(4, 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'minerosdelsur@gmail.com', NULL, '$2y$12$yq4wX0RZfgxabDy2t2mSDOB4xxJpHdSsgnaQvQutFj2Sw2KlZXwne', 3, NULL, '2024-06-18 23:12:37', '2024-06-18 23:12:37'),
-(5, 'Aramica, S.A.', 'aramica@gmail.com', NULL, '$2y$12$PTwwz6PmbnpCYYw0YP1wL.50jncSoyLSDUHuQuDtaGDPCE7vC8KNa', 3, NULL, '2024-06-18 23:31:23', '2024-06-18 23:31:23'),
-(6, 'Admin', 'administrador@gmail.com', NULL, '$2y$12$mGqUp3n7S5NQRF0gPT7A8.h9F0w8WjsY1wQHmJLVPqmphDATEwZl.', 4, NULL, '2024-06-18 23:33:13', '2024-06-18 23:33:13');
+(1, 'Admin', 'administrador@gmail.com', NULL, '$2y$12$MmWJKmrJdJfX5eyRDuNhI.eRkQkKPJ4R.iR5Kf63ZBbcmz5lNEOiu', 4, NULL, NULL, NULL),
+(2, 'TECNOCOMODITY, C.A.', 'tecnocomodity@gmail.com', NULL, '$2y$12$cnpFuj2zFLx4ZubGox4c8edxBzKTW2tXMYbd/JmHWQomBN3QmRVg6', 3, NULL, '2024-06-19 18:07:42', '2024-06-19 18:07:42'),
+(3, 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'piedrazul@gmail.com', NULL, '$2y$12$ZrnlHW2fwPReT8RtkF.mpex7NLKu1xwKbhZcGejytl32xZfKAyVQS', 3, NULL, '2024-06-19 18:11:54', '2024-06-19 18:11:54'),
+(4, 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'minerosdelsur@gmail.com', NULL, '$2y$12$fbe7LsY82.aSniE7leIC8uVIcWmZOYHBrH2DUncFhNfMbfX2CzdHi', 3, NULL, '2024-06-19 18:13:55', '2024-06-19 18:13:55'),
+(5, 'Aramica, S.A.', 'aramica@gmail.com', NULL, '$2y$12$I9imguKeVz.ES/fxRno5YOgoACKN4BEBhp.b5LFZuwwiMWokZmSna', 3, NULL, '2024-06-19 18:17:28', '2024-06-19 18:17:28');
 
 --
 -- Índices para tablas volcadas
@@ -912,13 +904,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `bitacoras`
 --
 ALTER TABLE `bitacoras`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `canteras`
 --
 ALTER TABLE `canteras`
-  MODIFY `id_cantera` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_cantera` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cierre_libros`
@@ -936,13 +928,13 @@ ALTER TABLE `clasificacions`
 -- AUTO_INCREMENT de la tabla `control_guias`
 --
 ALTER TABLE `control_guias`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `declaracions`
 --
 ALTER TABLE `declaracions`
-  MODIFY `id_declaracion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_declaracion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_reservas`
@@ -954,13 +946,13 @@ ALTER TABLE `detalle_reservas`
 -- AUTO_INCREMENT de la tabla `detalle_solicituds`
 --
 ALTER TABLE `detalle_solicituds`
-  MODIFY `id_detalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_detalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_talonarios`
 --
 ALTER TABLE `detalle_talonarios`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -978,13 +970,13 @@ ALTER TABLE `fechas`
 -- AUTO_INCREMENT de la tabla `libros`
 --
 ALTER TABLE `libros`
-  MODIFY `id_libro` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_libro` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `limite_guias`
 --
 ALTER TABLE `limite_guias`
-  MODIFY `cod` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `cod` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -996,7 +988,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `minerals`
 --
 ALTER TABLE `minerals`
-  MODIFY `id_mineral` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_mineral` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `nro_controls`
@@ -1014,7 +1006,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `produccions`
 --
 ALTER TABLE `produccions`
-  MODIFY `id_produccion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_produccion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas`
@@ -1026,7 +1018,7 @@ ALTER TABLE `reservas`
 -- AUTO_INCREMENT de la tabla `solicituds`
 --
 ALTER TABLE `solicituds`
-  MODIFY `id_solicitud` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_solicitud` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitud_reservas`
@@ -1038,13 +1030,13 @@ ALTER TABLE `solicitud_reservas`
 -- AUTO_INCREMENT de la tabla `sujeto_pasivos`
 --
 ALTER TABLE `sujeto_pasivos`
-  MODIFY `id_sujeto` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_sujeto` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `talonarios`
 --
 ALTER TABLE `talonarios`
-  MODIFY `id_talonario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_talonario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos`
@@ -1068,7 +1060,7 @@ ALTER TABLE `ucds`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas

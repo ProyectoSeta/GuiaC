@@ -12,10 +12,17 @@ class LibrosController extends Controller
     public function index()
     {
         $user = auth()->id();
-        $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
-        $id_sp = $sp->id_sujeto;
+        $consulta = DB::table('users')->select('type')->where('id_user','=',$user)->first();
+        if ($consulta->type == 3) {
+            $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+            $id_sp = $sp->id_sujeto;
 
-        $libros = DB::table('libros')->where('id_sujeto','=',$id_sp)->get();
+            $libros = DB::table('libros')->where('id_sujeto','=',$id_sp)->get();
+        }else{
+
+            
+        }
+        
         
 
         return view('libros', compact('libros'));
