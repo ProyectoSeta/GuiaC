@@ -82,7 +82,13 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" style="font-size:14px">{{$sp->sin_declarar}}</span>
+                                    @if ($sp->sin_declarar == 0)
+                                        <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" style="font-size:14px">{{$sp->sin_declarar}}</span>
+                                    @elseif ($sp->sin_declarar < 50)
+                                        <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill" style="font-size:14px">{{$sp->sin_declarar}}</span>
+                                    @elseif ($sp->sin_declarar >= 50)
+                                        <span class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill" style="font-size:14px">{{$sp->sin_declarar}}</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="{{ route('libro_contribuyente.index', ['sujeto' =>$sp->id_sujeto]) }}" class="btn btn-primary btn-sm px-3 rounded-4" >

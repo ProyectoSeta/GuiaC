@@ -25,9 +25,9 @@ class LibrosController extends Controller
             $consulta = DB::table('sujeto_pasivos')->get();
             foreach ($consulta as $c) {
                 $sd = DB::table('libros')
-                                            ->selectRaw("count(*) as total")
-                                            ->where('id_sujeto','=',$c->id_sujeto)
-                                            ->where('estado','=',2)->first();
+                                    ->selectRaw("count(*) as total")
+                                    ->where('id_sujeto','=',$c->id_sujeto)
+                                    ->where('estado','=',2)->first();
                 if ($sd) {
                     $array = array(
                         'id_sujeto' => $c->id_sujeto,

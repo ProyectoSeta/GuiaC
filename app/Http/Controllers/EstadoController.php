@@ -137,6 +137,10 @@ class EstadoController extends Controller
         return view('estado', compact('t_enviar','t_enviados','t_recibidos','count_proceso','count_retirar','count','porcentaje_proceso','porcentaje_retirar'));
     }
 
+
+
+    
+
     public function solicitud(Request $request)
     {
         $idSolicitud = $request->post('solicitud'); 
