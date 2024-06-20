@@ -84,17 +84,21 @@
             </div>
         </nav> --}}
 
-        <main class="">
+        <main>
+            
             @yield('content')
+
         </main>
+
+
     </div>
-
+    
+    
     @yield('js')
-           
+    
 
+</body> 
 
-
-</body>
 </html>
 
 

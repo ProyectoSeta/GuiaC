@@ -105,16 +105,6 @@ class EstadoController extends Controller
              }
          }
 
-
-
-
-
-
-
-
-
-        
-        
             
         $count_proceso = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=',17)->first();
         $count_retirar = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=',18)->first();

@@ -114,7 +114,14 @@
                 <li class="nav-item mb-2"><a href="{{ route('libros') }}" class="nav-link p-0 text-body-secondary">Libros</a></li>
             </ul> 
         </div>
-        <div class="col-sm-6 my-3 text-end">
+        <div class="col-sm-2 my-3">
+            <h5 class="text-navy fw-bold">Declaraciones</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="{{ route('registro_guia') }}" class="nav-link p-0 text-body-secondary">Declarar</a></li>
+                <li class="nav-item mb-2"><a href="{{ route('libros') }}" class="nav-link p-0 text-body-secondary">Historial</a></li>
+            </ul> 
+        </div>
+        <div class="col-sm-4 my-3 text-end">
             <div class="d-flex justify-content-end mb-2 mt-0 pt-0">
                 <img src="{{asset('assets/logo_seta_grey.png')}}" class="" alt="" width="180px">
             </div>

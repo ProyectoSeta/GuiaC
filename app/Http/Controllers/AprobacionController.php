@@ -258,7 +258,7 @@ class AprobacionController extends Controller
                                                                     'clase' => 5,
                                                                     'id_solicitud_reserva' => null]);
 
-                            $url = route('qr.qr', ['id' => $id_talonario]);
+                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
     
@@ -269,6 +269,7 @@ class AprobacionController extends Controller
                     } ////cierra for    
                  
                 }/////cierra foreach
+
 
                 $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
 
@@ -329,8 +330,9 @@ class AprobacionController extends Controller
                                                                     'hasta' => $hasta,
                                                                     'clase' => 5,
                                                                     'id_solicitud_reserva' => null]);
-
-                            $url = route('qr.qr', ['id' => $id_talonario]);
+                                                                    
+                            // $url = route('qr.qr', ['id' => $id_talonario]);
+                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
                             $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
               

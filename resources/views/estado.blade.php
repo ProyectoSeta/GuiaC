@@ -121,7 +121,7 @@
                                     @endphp
                                     <td>{{$formato_desde}} - {{$formato_hasta}}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary d-inline-flex align-items-center" type="button">
+                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button">
                                             Enviado
                                             <!-- <i class='bx bxs-chevron-right'></i> -->
                                             <i class='bx bx-chevron-right ms-2'></i>
@@ -351,7 +351,7 @@
             ///////MODAL: INFO SUJETO PASIVO
             $(document).on('click','.info_sujeto', function(e) { 
                 e.preventDefault(e); 
-                var sujeto = $(this).attr('id_sujeto');
+                var talonario = $(this).attr('id_talonario');
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
@@ -385,6 +385,36 @@
                     }
                 });
             });
+
+            ///////BTN: TALONARIO ENVIADO 
+            $(document).on('click','.talonario_enviado', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+                // alert(solicitud);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.solicitud") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {           
+                        // alert(response);
+                        // console.log(response);
+                        $('#content_ver_solicitud').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+
+
+
+
+
+
+
+
 
             ///////MODAL: INFO SOLICITUD DENEGADA
             $(document).on('click','.solicitud_denegada', function(e) { 
