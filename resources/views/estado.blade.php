@@ -289,7 +289,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#enviados').DataTable(
-                {
+                {   paging: false,
+                    searching: false,
                     "order": [[ 0, "desc" ]],
                     "language": {
                         "lengthMenu": " Mostrar  _MENU_  Registros por página",
@@ -325,7 +326,7 @@
             );
 
 
-            $('#enviados').DataTable(
+            $('#enviados_x').DataTable(
                 {
                     "order": [[ 0, "desc" ]],
                     "language": {
