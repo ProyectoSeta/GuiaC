@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-06-2024 a las 16:18:51
+-- Tiempo de generación: 20-06-2024 a las 03:25:52
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -37,6 +37,28 @@ CREATE TABLE `bitacoras` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `bitacoras`
+--
+
+INSERT INTO `bitacoras` (`correlativo`, `id_user`, `modulo`, `fecha`, `accion`, `created_at`, `updated_at`) VALUES
+(1, 1, 15, '2024-06-19', 'DATOS DEL USUARIO: Aramica, S.A. ACTUALIZADOS.', NULL, NULL),
+(2, 1, 9, '2024-06-19', 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: TECNOCOMODITY, C.A..', NULL, NULL),
+(3, 1, 9, '2024-06-19', 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL.', NULL, NULL),
+(4, 1, 9, '2024-06-19', 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR.', NULL, NULL),
+(5, 1, 9, '2024-06-19', 'VERIFICACIÓN DE USUARIO APROBADA, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(6, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN EL BANCO, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(7, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN APAMATE, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(8, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN EL SAMAN, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(9, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN EL CARMEN, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(10, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN AGUA VIVA II, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(11, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN EL PAITO, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(12, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN CHUPADERO, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(13, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN PARDILLAL, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
+(14, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: RÍO LIMÓN, Contribuyente: TECNOCOMODITY, C.A..', NULL, NULL),
+(15, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: MINEROS DEL SUR, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR.', NULL, NULL),
+(16, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: PIEDRA AZUL, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL.', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -55,6 +77,23 @@ CREATE TABLE `canteras` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `canteras`
+--
+
+INSERT INTO `canteras` (`id_cantera`, `id_sujeto`, `nombre`, `municipio_cantera`, `parroquia_cantera`, `lugar_aprovechamiento`, `status`, `observaciones`, `created_at`, `updated_at`) VALUES
+(1, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN EL BANCO', 'Zamora', 'Zamora', 'CARRETERA NACIONAL CAGUA - VILLA DE CURA, TRONCAL 2. HACIENDITA EL BANCO', 'Verificada', NULL, NULL, NULL),
+(2, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN APAMATE', 'San Sebastián', 'San Sebastián', 'AL MARGEN NORTE DE LA CARRETERA NACIONAL TRONCAL 11, TRAMO SAN JUAN DE LOS MORROS', 'Verificada', NULL, NULL, NULL),
+(3, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN EL SAMAN', 'San Sebastián', 'San Sebastián', 'AL MARGEN NORTE DE LA CARRETERA NACIONAL TRONCAL 11, TRAMO SAN JUAN DE LOS MORROS', 'Verificada', NULL, NULL, NULL),
+(4, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN EL CARMEN', 'San Sebastián', 'San Sebastián', 'AL MARGEN NORTE DE LA CARRETERA NACIONAL TRONCAL 11, TRAMO SAN JUAN DE LOS MORROS', 'Verificada', NULL, NULL, NULL),
+(5, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN AGUA VIVA II', 'San Sebastián', 'San Sebastián', 'AL MARGEN NORTE DE LA CARRETERA NACIONAL TRONCAL 11, TRAMO SAN JUAN DE LOS MORROS', 'Verificada', NULL, NULL, NULL),
+(6, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN EL PAITO', 'San Sebastián', 'San Sebastián', 'HACIENDA EL PAITO', 'Verificada', NULL, NULL, NULL),
+(7, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN CHUPADERO', 'San Sebastián', 'San Sebastián', 'SECTOR CHUPADERO', 'Verificada', NULL, NULL, NULL),
+(8, 4, 'UNIDAD TÉCNICA DE PRODUCCIÓN PARDILLAL', 'San Casimiro', 'San Casimiro', 'CARRETERA NACIONAL SAN SEBASTIÁN DE LOS REYES - PARDILLAL - CAMATAGUA. TRONCAL 11. SECTOR EL RODEO', 'Verificada', NULL, NULL, NULL),
+(9, 1, 'RÍO LIMÓN', 'Mario Briceño Iragorry', 'El Limón', 'RÍO LIMÓN SECTOR DACOPAM, FINAL AV BOLIVAR, SECTOR TAPATAPA, MARACAY', 'Verificada', NULL, NULL, NULL),
+(10, 3, 'MINEROS DEL SUR', 'San Casimiro', 'San Casimiro', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASIMIRO ARAGUA', 'Verificada', NULL, NULL, NULL),
+(11, 2, 'PIEDRA AZUL', 'San Casimiro', 'San Casimiro', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASIMIRO ARAGUA', 'Verificada', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -213,6 +252,23 @@ CREATE TABLE `detalle_solicituds` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `detalle_solicituds`
+--
+
+INSERT INTO `detalle_solicituds` (`id_detalle`, `tipo_talonario`, `cantidad`, `id_solicitud`, `created_at`, `updated_at`) VALUES
+(1, '50', 10, 1, NULL, NULL),
+(2, '50', 10, 2, NULL, NULL),
+(3, '50', 10, 3, NULL, NULL),
+(4, '50', 10, 4, NULL, NULL),
+(5, '50', 10, 5, NULL, NULL),
+(6, '50', 10, 6, NULL, NULL),
+(7, '50', 10, 7, NULL, NULL),
+(8, '50', 10, 8, NULL, NULL),
+(9, '50', 10, 9, NULL, NULL),
+(10, '50', 10, 10, NULL, NULL),
+(11, '50', 10, 11, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -306,6 +362,23 @@ CREATE TABLE `limite_guias` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `limite_guias`
+--
+
+INSERT INTO `limite_guias` (`cod`, `id_sujeto`, `id_cantera`, `total_guias_periodo`, `total_guias_solicitadas_periodo`, `inicio_periodo`, `fin_periodo`, `created_at`, `updated_at`) VALUES
+(1, 4, 1, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(2, 4, 2, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(3, 4, 3, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(4, 4, 4, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(5, 4, 5, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(6, 4, 6, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(7, 4, 7, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(8, 4, 8, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(9, 1, 9, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(10, 3, 10, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL),
+(11, 2, 11, 1000, 500, '2024-06-20', '2024-09-20', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -393,7 +466,11 @@ INSERT INTO `minerals` (`id_mineral`, `mineral`, `created_at`, `updated_at`) VAL
 (21, 'Bloques', NULL, NULL),
 (22, 'Piedra Integral', NULL, NULL),
 (23, 'Gavión', NULL, NULL),
-(24, 'Granzón', NULL, NULL);
+(24, 'Granzón', NULL, NULL),
+(25, 'PIEDRA CALIZA 3/4', NULL, NULL),
+(26, 'PIEDRA CALIZA 4', NULL, NULL),
+(27, 'PIEDRA CALIZA 1', NULL, NULL),
+(28, 'Asfalto', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -466,6 +543,26 @@ CREATE TABLE `produccions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `produccions`
+--
+
+INSERT INTO `produccions` (`id_produccion`, `id_cantera`, `id_mineral`, `created_at`, `updated_at`) VALUES
+(5, 2, 3, NULL, NULL),
+(6, 2, 4, NULL, NULL),
+(7, 2, 25, NULL, NULL),
+(8, 4, 26, NULL, NULL),
+(9, 4, 25, NULL, NULL),
+(10, 5, 3, NULL, NULL),
+(11, 5, 25, NULL, NULL),
+(12, 5, 26, NULL, NULL),
+(13, 5, 27, NULL, NULL),
+(14, 6, 14, NULL, NULL),
+(15, 7, 25, NULL, NULL),
+(16, 8, 28, NULL, NULL),
+(17, 10, 1, NULL, NULL),
+(18, 11, 1, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -497,6 +594,23 @@ CREATE TABLE `solicituds` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `solicituds`
+--
+
+INSERT INTO `solicituds` (`id_solicitud`, `id_sujeto`, `id_cantera`, `total_ucd`, `fecha`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
+(1, 4, 1, 2500, '2024-06-19 21:19:38', 4, NULL, NULL, NULL),
+(2, 4, 2, 2500, '2024-06-19 21:19:54', 4, NULL, NULL, NULL),
+(3, 4, 3, 2500, '2024-06-19 21:20:07', 4, NULL, NULL, NULL),
+(4, 4, 4, 2500, '2024-06-19 21:20:32', 4, NULL, NULL, NULL),
+(5, 4, 5, 2500, '2024-06-19 21:20:45', 4, NULL, NULL, NULL),
+(6, 4, 6, 2500, '2024-06-19 21:20:59', 4, NULL, NULL, NULL),
+(7, 4, 7, 2500, '2024-06-19 21:21:18', 4, NULL, NULL, NULL),
+(8, 4, 8, 2500, '2024-06-19 21:21:30', 4, NULL, NULL, NULL),
+(9, 1, 9, 2500, '2024-06-19 21:22:39', 4, NULL, NULL, NULL),
+(10, 3, 10, 2500, '2024-06-19 21:23:22', 4, NULL, NULL, NULL),
+(11, 2, 11, 2500, '2024-06-19 21:23:59', 4, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -550,10 +664,10 @@ CREATE TABLE `sujeto_pasivos` (
 --
 
 INSERT INTO `sujeto_pasivos` (`id_sujeto`, `id_user`, `rif_condicion`, `rif_nro`, `artesanal`, `razon_social`, `direccion`, `tlf_movil`, `tlf_fijo`, `ci_condicion_repr`, `ci_nro_repr`, `rif_condicion_repr`, `rif_nro_repr`, `name_repr`, `tlf_repr`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 2, 'J', '500570155', 'No', 'TECNOCOMODITY, C.A.', 'DIRECCIÓN', '04140000000', NULL, 'V', '18642293', 'V', '18642293', 'JARO LABRADOR', '04140000000', 'Verificando', NULL, '2024-06-19 18:07:42', '2024-06-19 18:07:42'),
-(2, 3, 'J', '412689789', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA, MUNICIPIO SAN CASIMIRO', '04140000000', NULL, 'V', '20757676', 'V', '20757676', 'AMALIO FERRER', '04140000000', 'Verificando', NULL, '2024-06-19 18:11:54', '2024-06-19 18:11:54'),
-(3, 4, 'J', '412663941', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA', '04140000000', NULL, 'V', '26715191', 'V', '26715191', 'ROANGEL RODRIGUEZ', '04140000000', 'Verificando', NULL, '2024-06-19 18:13:55', '2024-06-19 18:13:55'),
-(4, 5, 'G', '200108240', 'No', 'ARAGUA MINAS Y CANTERAS, S.A.', 'DIRECCIÓN', '04140000000', NULL, 'V', '00000000', 'V', '00000000', 'LEON', '04140000000', 'Verificando', NULL, '2024-06-19 18:17:28', '2024-06-19 18:17:28');
+(1, 2, 'J', '500570155', 'No', 'TECNOCOMODITY, C.A.', 'DIRECCIÓN', '04140000000', NULL, 'V', '18642293', 'V', '18642293', 'JARO LABRADOR', '04140000000', 'Verificado', NULL, '2024-06-19 18:07:42', '2024-06-19 18:07:42'),
+(2, 3, 'J', '412689789', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA, MUNICIPIO SAN CASIMIRO', '04140000000', NULL, 'V', '20757676', 'V', '20757676', 'AMALIO FERRER', '04140000000', 'Verificado', NULL, '2024-06-19 18:11:54', '2024-06-19 18:11:54'),
+(3, 4, 'J', '412663941', 'Si', 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'CALLE PRINCIPAL CASA NRO S/N SECTOR EL RODEO SAN CASMIRO ARAGUA', '04140000000', NULL, 'V', '26715191', 'V', '26715191', 'ROANGEL RODRIGUEZ', '04140000000', 'Verificado', NULL, '2024-06-19 18:13:55', '2024-06-19 18:13:55'),
+(4, 5, 'G', '200108240', 'No', 'ARAGUA MINAS Y CANTERAS, S.A.', 'DIRECCIÓN', '04140000000', NULL, 'V', '00000000', 'V', '00000000', 'LEON', '04140000000', 'Verificado', NULL, '2024-06-19 18:17:28', '2024-06-19 18:17:28');
 
 -- --------------------------------------------------------
 
@@ -665,7 +779,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `ty
 (2, 'TECNOCOMODITY, C.A.', 'tecnocomodity@gmail.com', NULL, '$2y$12$cnpFuj2zFLx4ZubGox4c8edxBzKTW2tXMYbd/JmHWQomBN3QmRVg6', 3, NULL, '2024-06-19 18:07:42', '2024-06-19 18:07:42'),
 (3, 'UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL', 'piedrazul@gmail.com', NULL, '$2y$12$ZrnlHW2fwPReT8RtkF.mpex7NLKu1xwKbhZcGejytl32xZfKAyVQS', 3, NULL, '2024-06-19 18:11:54', '2024-06-19 18:11:54'),
 (4, 'UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR', 'minerosdelsur@gmail.com', NULL, '$2y$12$fbe7LsY82.aSniE7leIC8uVIcWmZOYHBrH2DUncFhNfMbfX2CzdHi', 3, NULL, '2024-06-19 18:13:55', '2024-06-19 18:13:55'),
-(5, 'Aramica, S.A.', 'aramica@gmail.com', NULL, '$2y$12$I9imguKeVz.ES/fxRno5YOgoACKN4BEBhp.b5LFZuwwiMWokZmSna', 3, NULL, '2024-06-19 18:17:28', '2024-06-19 18:17:28');
+(5, 'Aramica, S.A.', 'aramica@gmail.com', NULL, '$2y$12$OWfq0Iu6P6TsxU7pYyfPNu/9l.1MuwlnKYj3CG10.KV3OcLi.0nVO', 3, NULL, '2024-06-19 18:17:28', '2024-06-19 18:17:28');
 
 --
 -- Índices para tablas volcadas
@@ -904,13 +1018,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `bitacoras`
 --
 ALTER TABLE `bitacoras`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `canteras`
 --
 ALTER TABLE `canteras`
-  MODIFY `id_cantera` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cantera` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `cierre_libros`
@@ -946,7 +1060,7 @@ ALTER TABLE `detalle_reservas`
 -- AUTO_INCREMENT de la tabla `detalle_solicituds`
 --
 ALTER TABLE `detalle_solicituds`
-  MODIFY `id_detalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_talonarios`
@@ -976,7 +1090,7 @@ ALTER TABLE `libros`
 -- AUTO_INCREMENT de la tabla `limite_guias`
 --
 ALTER TABLE `limite_guias`
-  MODIFY `cod` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `cod` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -988,7 +1102,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `minerals`
 --
 ALTER TABLE `minerals`
-  MODIFY `id_mineral` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_mineral` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `nro_controls`
@@ -1006,7 +1120,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `produccions`
 --
 ALTER TABLE `produccions`
-  MODIFY `id_produccion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_produccion` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas`
@@ -1018,7 +1132,7 @@ ALTER TABLE `reservas`
 -- AUTO_INCREMENT de la tabla `solicituds`
 --
 ALTER TABLE `solicituds`
-  MODIFY `id_solicitud` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_solicitud` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitud_reservas`
