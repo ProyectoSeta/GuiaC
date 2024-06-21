@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-06-2024 a las 03:25:52
+-- Tiempo de generación: 21-06-2024 a las 18:02:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -57,7 +57,14 @@ INSERT INTO `bitacoras` (`correlativo`, `id_user`, `modulo`, `fecha`, `accion`, 
 (13, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: UNIDAD TÉCNICA DE PRODUCCIÓN PARDILLAL, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A..', NULL, NULL),
 (14, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: RÍO LIMÓN, Contribuyente: TECNOCOMODITY, C.A..', NULL, NULL),
 (15, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: MINEROS DEL SUR, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR MINEROS DEL SUR.', NULL, NULL),
-(16, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: PIEDRA AZUL, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL.', NULL, NULL);
+(16, 1, 10, '2024-06-19', 'VERIFICACIÓN APROBADA, Cantera: PIEDRA AZUL, Contribuyente: UNIDAD PRODUCTIVA FAMILIAR PIEDRA AZUL.', NULL, NULL),
+(17, 1, 7, '2024-06-20', 'SOLICITUD NRO.1 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL),
+(18, 1, 7, '2024-06-21', 'SOLICITUD NRO.2 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL),
+(19, 1, 7, '2024-06-21', 'SOLICITUD NRO.3 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL),
+(20, 1, 7, '2024-06-21', 'SOLICITUD NRO.4 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL),
+(21, 1, 7, '2024-06-21', 'SOLICITUD NRO.5 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL),
+(22, 1, 7, '2024-06-21', 'SOLICITUD NRO.6 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL),
+(23, 1, 7, '2024-06-21', 'SOLICITUD NRO.7 APROBADA, Talonarios: 10, Contribuyente: ARAGUA MINAS Y CANTERAS, S.A.', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -288,6 +295,82 @@ CREATE TABLE `detalle_talonarios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_talonarios`
+--
+
+INSERT INTO `detalle_talonarios` (`correlativo`, `id_talonario`, `id_cantera`, `id_sujeto`, `desde`, `hasta`, `qr`, `clase`, `id_solicitud_reserva`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 4, 1, 50, 'assets/qr/qrcode_T1.svg', 5, NULL, NULL, NULL),
+(2, 2, 1, 4, 51, 100, 'assets/qr/qrcode_T2.svg', 5, NULL, NULL, NULL),
+(3, 3, 1, 4, 101, 150, 'assets/qr/qrcode_T3.svg', 5, NULL, NULL, NULL),
+(4, 4, 1, 4, 151, 200, 'assets/qr/qrcode_T4.svg', 5, NULL, NULL, NULL),
+(5, 5, 1, 4, 201, 250, 'assets/qr/qrcode_T5.svg', 5, NULL, NULL, NULL),
+(6, 6, 1, 4, 251, 300, 'assets/qr/qrcode_T6.svg', 5, NULL, NULL, NULL),
+(7, 7, 1, 4, 301, 350, 'assets/qr/qrcode_T7.svg', 5, NULL, NULL, NULL),
+(8, 8, 1, 4, 351, 400, 'assets/qr/qrcode_T8.svg', 5, NULL, NULL, NULL),
+(9, 9, 1, 4, 401, 450, 'assets/qr/qrcode_T9.svg', 5, NULL, NULL, NULL),
+(10, 10, 1, 4, 451, 500, 'assets/qr/qrcode_T10.svg', 5, NULL, NULL, NULL),
+(11, 11, 2, 4, 501, 550, 'assets/qr/qrcode_T11.svg', 5, NULL, NULL, NULL),
+(12, 12, 2, 4, 551, 600, 'assets/qr/qrcode_T12.svg', 5, NULL, NULL, NULL),
+(13, 13, 2, 4, 601, 650, 'assets/qr/qrcode_T13.svg', 5, NULL, NULL, NULL),
+(14, 14, 2, 4, 651, 700, 'assets/qr/qrcode_T14.svg', 5, NULL, NULL, NULL),
+(15, 15, 2, 4, 701, 750, 'assets/qr/qrcode_T15.svg', 5, NULL, NULL, NULL),
+(16, 16, 2, 4, 751, 800, 'assets/qr/qrcode_T16.svg', 5, NULL, NULL, NULL),
+(17, 17, 2, 4, 801, 850, 'assets/qr/qrcode_T17.svg', 5, NULL, NULL, NULL),
+(18, 18, 2, 4, 851, 900, 'assets/qr/qrcode_T18.svg', 5, NULL, NULL, NULL),
+(19, 19, 2, 4, 901, 950, 'assets/qr/qrcode_T19.svg', 5, NULL, NULL, NULL),
+(20, 20, 2, 4, 951, 1000, 'assets/qr/qrcode_T20.svg', 5, NULL, NULL, NULL),
+(21, 21, 3, 4, 1001, 1050, 'assets/qr/qrcode_T21.svg', 5, NULL, NULL, NULL),
+(22, 22, 3, 4, 1051, 1100, 'assets/qr/qrcode_T22.svg', 5, NULL, NULL, NULL),
+(23, 23, 3, 4, 1101, 1150, 'assets/qr/qrcode_T23.svg', 5, NULL, NULL, NULL),
+(24, 24, 3, 4, 1151, 1200, 'assets/qr/qrcode_T24.svg', 5, NULL, NULL, NULL),
+(25, 25, 3, 4, 1201, 1250, 'assets/qr/qrcode_T25.svg', 5, NULL, NULL, NULL),
+(26, 26, 3, 4, 1251, 1300, 'assets/qr/qrcode_T26.svg', 5, NULL, NULL, NULL),
+(27, 27, 3, 4, 1301, 1350, 'assets/qr/qrcode_T27.svg', 5, NULL, NULL, NULL),
+(28, 28, 3, 4, 1351, 1400, 'assets/qr/qrcode_T28.svg', 5, NULL, NULL, NULL),
+(29, 29, 3, 4, 1401, 1450, 'assets/qr/qrcode_T29.svg', 5, NULL, NULL, NULL),
+(30, 30, 3, 4, 1451, 1500, 'assets/qr/qrcode_T30.svg', 5, NULL, NULL, NULL),
+(31, 31, 4, 4, 1501, 1550, 'assets/qr/qrcode_T31.svg', 5, NULL, NULL, NULL),
+(32, 32, 4, 4, 1551, 1600, 'assets/qr/qrcode_T32.svg', 5, NULL, NULL, NULL),
+(33, 33, 4, 4, 1601, 1650, 'assets/qr/qrcode_T33.svg', 5, NULL, NULL, NULL),
+(34, 34, 4, 4, 1651, 1700, 'assets/qr/qrcode_T34.svg', 5, NULL, NULL, NULL),
+(35, 35, 4, 4, 1701, 1750, 'assets/qr/qrcode_T35.svg', 5, NULL, NULL, NULL),
+(36, 36, 4, 4, 1751, 1800, 'assets/qr/qrcode_T36.svg', 5, NULL, NULL, NULL),
+(37, 37, 4, 4, 1801, 1850, 'assets/qr/qrcode_T37.svg', 5, NULL, NULL, NULL),
+(38, 38, 4, 4, 1851, 1900, 'assets/qr/qrcode_T38.svg', 5, NULL, NULL, NULL),
+(39, 39, 4, 4, 1901, 1950, 'assets/qr/qrcode_T39.svg', 5, NULL, NULL, NULL),
+(40, 40, 4, 4, 1951, 2000, 'assets/qr/qrcode_T40.svg', 5, NULL, NULL, NULL),
+(41, 41, 5, 4, 2001, 2050, 'assets/qr/qrcode_T41.svg', 5, NULL, NULL, NULL),
+(42, 42, 5, 4, 2051, 2100, 'assets/qr/qrcode_T42.svg', 5, NULL, NULL, NULL),
+(43, 43, 5, 4, 2101, 2150, 'assets/qr/qrcode_T43.svg', 5, NULL, NULL, NULL),
+(44, 44, 5, 4, 2151, 2200, 'assets/qr/qrcode_T44.svg', 5, NULL, NULL, NULL),
+(45, 45, 5, 4, 2201, 2250, 'assets/qr/qrcode_T45.svg', 5, NULL, NULL, NULL),
+(46, 46, 5, 4, 2251, 2300, 'assets/qr/qrcode_T46.svg', 5, NULL, NULL, NULL),
+(47, 47, 5, 4, 2301, 2350, 'assets/qr/qrcode_T47.svg', 5, NULL, NULL, NULL),
+(48, 48, 5, 4, 2351, 2400, 'assets/qr/qrcode_T48.svg', 5, NULL, NULL, NULL),
+(49, 49, 5, 4, 2401, 2450, 'assets/qr/qrcode_T49.svg', 5, NULL, NULL, NULL),
+(50, 50, 5, 4, 2451, 2500, 'assets/qr/qrcode_T50.svg', 5, NULL, NULL, NULL),
+(51, 51, 6, 4, 2501, 2550, 'assets/qr/qrcode_T51.svg', 5, NULL, NULL, NULL),
+(52, 52, 6, 4, 2551, 2600, 'assets/qr/qrcode_T52.svg', 5, NULL, NULL, NULL),
+(53, 53, 6, 4, 2601, 2650, 'assets/qr/qrcode_T53.svg', 5, NULL, NULL, NULL),
+(54, 54, 6, 4, 2651, 2700, 'assets/qr/qrcode_T54.svg', 5, NULL, NULL, NULL),
+(55, 55, 6, 4, 2701, 2750, 'assets/qr/qrcode_T55.svg', 5, NULL, NULL, NULL),
+(56, 56, 6, 4, 2751, 2800, 'assets/qr/qrcode_T56.svg', 5, NULL, NULL, NULL),
+(57, 57, 6, 4, 2801, 2850, 'assets/qr/qrcode_T57.svg', 5, NULL, NULL, NULL),
+(58, 58, 6, 4, 2851, 2900, 'assets/qr/qrcode_T58.svg', 5, NULL, NULL, NULL),
+(59, 59, 6, 4, 2901, 2950, 'assets/qr/qrcode_T59.svg', 5, NULL, NULL, NULL),
+(60, 60, 6, 4, 2951, 3000, 'assets/qr/qrcode_T60.svg', 5, NULL, NULL, NULL),
+(61, 61, 7, 4, 3001, 3050, 'assets/qr/qrcode_T61.svg', 5, NULL, NULL, NULL),
+(62, 62, 7, 4, 3051, 3100, 'assets/qr/qrcode_T62.svg', 5, NULL, NULL, NULL),
+(63, 63, 7, 4, 3101, 3150, 'assets/qr/qrcode_T63.svg', 5, NULL, NULL, NULL),
+(64, 64, 7, 4, 3151, 3200, 'assets/qr/qrcode_T64.svg', 5, NULL, NULL, NULL),
+(65, 65, 7, 4, 3201, 3250, 'assets/qr/qrcode_T65.svg', 5, NULL, NULL, NULL),
+(66, 66, 7, 4, 3251, 3300, 'assets/qr/qrcode_T66.svg', 5, NULL, NULL, NULL),
+(67, 67, 7, 4, 3301, 3350, 'assets/qr/qrcode_T67.svg', 5, NULL, NULL, NULL),
+(68, 68, 7, 4, 3351, 3400, 'assets/qr/qrcode_T68.svg', 5, NULL, NULL, NULL),
+(69, 69, 7, 4, 3401, 3450, 'assets/qr/qrcode_T69.svg', 5, NULL, NULL, NULL),
+(70, 70, 7, 4, 3451, 3500, 'assets/qr/qrcode_T70.svg', 5, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -600,13 +683,13 @@ CREATE TABLE `solicituds` (
 --
 
 INSERT INTO `solicituds` (`id_solicitud`, `id_sujeto`, `id_cantera`, `total_ucd`, `fecha`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 4, 1, 2500, '2024-06-19 21:19:38', 4, NULL, NULL, NULL),
-(2, 4, 2, 2500, '2024-06-19 21:19:54', 4, NULL, NULL, NULL),
-(3, 4, 3, 2500, '2024-06-19 21:20:07', 4, NULL, NULL, NULL),
-(4, 4, 4, 2500, '2024-06-19 21:20:32', 4, NULL, NULL, NULL),
-(5, 4, 5, 2500, '2024-06-19 21:20:45', 4, NULL, NULL, NULL),
-(6, 4, 6, 2500, '2024-06-19 21:20:59', 4, NULL, NULL, NULL),
-(7, 4, 7, 2500, '2024-06-19 21:21:18', 4, NULL, NULL, NULL),
+(1, 4, 1, 2500, '2024-06-19 21:19:38', 17, NULL, NULL, NULL),
+(2, 4, 2, 2500, '2024-06-19 21:19:54', 17, NULL, NULL, NULL),
+(3, 4, 3, 2500, '2024-06-19 21:20:07', 17, NULL, NULL, NULL),
+(4, 4, 4, 2500, '2024-06-19 21:20:32', 17, NULL, NULL, NULL),
+(5, 4, 5, 2500, '2024-06-19 21:20:45', 17, NULL, NULL, NULL),
+(6, 4, 6, 2500, '2024-06-19 21:20:59', 17, NULL, NULL, NULL),
+(7, 4, 7, 2500, '2024-06-19 21:21:18', 17, NULL, NULL, NULL),
 (8, 4, 8, 2500, '2024-06-19 21:21:30', 4, NULL, NULL, NULL),
 (9, 1, 9, 2500, '2024-06-19 21:22:39', 4, NULL, NULL, NULL),
 (10, 3, 10, 2500, '2024-06-19 21:23:22', 4, NULL, NULL, NULL),
@@ -691,6 +774,82 @@ CREATE TABLE `talonarios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `talonarios`
+--
+
+INSERT INTO `talonarios` (`id_talonario`, `id_solicitud`, `id_reserva`, `tipo_talonario`, `desde`, `hasta`, `clase`, `estado`, `asignado`, `fecha_enviado_imprenta`, `fecha_recibido_imprenta`, `fecha_retiro`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, '50', 1, 50, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(2, 1, NULL, '50', 51, 100, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(3, 1, NULL, '50', 101, 150, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(4, 1, NULL, '50', 151, 200, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(5, 1, NULL, '50', 201, 250, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(6, 1, NULL, '50', 251, 300, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(7, 1, NULL, '50', 301, 350, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(8, 1, NULL, '50', 351, 400, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(9, 1, NULL, '50', 401, 450, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(10, 1, NULL, '50', 451, 500, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(11, 2, NULL, '50', 501, 550, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(12, 2, NULL, '50', 551, 600, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(13, 2, NULL, '50', 601, 650, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(14, 2, NULL, '50', 651, 700, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(15, 2, NULL, '50', 701, 750, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(16, 2, NULL, '50', 751, 800, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(17, 2, NULL, '50', 801, 850, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(18, 2, NULL, '50', 851, 900, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(19, 2, NULL, '50', 901, 950, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(20, 2, NULL, '50', 951, 1000, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(21, 3, NULL, '50', 1001, 1050, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(22, 3, NULL, '50', 1051, 1100, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(23, 3, NULL, '50', 1101, 1150, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(24, 3, NULL, '50', 1151, 1200, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(25, 3, NULL, '50', 1201, 1250, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(26, 3, NULL, '50', 1251, 1300, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(27, 3, NULL, '50', 1301, 1350, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(28, 3, NULL, '50', 1351, 1400, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(29, 3, NULL, '50', 1401, 1450, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(30, 3, NULL, '50', 1451, 1500, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(31, 4, NULL, '50', 1501, 1550, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(32, 4, NULL, '50', 1551, 1600, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(33, 4, NULL, '50', 1601, 1650, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(34, 4, NULL, '50', 1651, 1700, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(35, 4, NULL, '50', 1701, 1750, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(36, 4, NULL, '50', 1751, 1800, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(37, 4, NULL, '50', 1801, 1850, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(38, 4, NULL, '50', 1851, 1900, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(39, 4, NULL, '50', 1901, 1950, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(40, 4, NULL, '50', 1951, 2000, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(41, 5, NULL, '50', 2001, 2050, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(42, 5, NULL, '50', 2051, 2100, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(43, 5, NULL, '50', 2101, 2150, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(44, 5, NULL, '50', 2151, 2200, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(45, 5, NULL, '50', 2201, 2250, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(46, 5, NULL, '50', 2251, 2300, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(47, 5, NULL, '50', 2301, 2350, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(48, 5, NULL, '50', 2351, 2400, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(49, 5, NULL, '50', 2401, 2450, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(50, 5, NULL, '50', 2451, 2500, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(51, 6, NULL, '50', 2501, 2550, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(52, 6, NULL, '50', 2551, 2600, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(53, 6, NULL, '50', 2601, 2650, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(54, 6, NULL, '50', 2651, 2700, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(55, 6, NULL, '50', 2701, 2750, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(56, 6, NULL, '50', 2751, 2800, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(57, 6, NULL, '50', 2801, 2850, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(58, 6, NULL, '50', 2851, 2900, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(59, 6, NULL, '50', 2901, 2950, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(60, 6, NULL, '50', 2951, 3000, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(61, 7, NULL, '50', 3001, 3050, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(62, 7, NULL, '50', 3051, 3100, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(63, 7, NULL, '50', 3101, 3150, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(64, 7, NULL, '50', 3151, 3200, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(65, 7, NULL, '50', 3201, 3250, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(66, 7, NULL, '50', 3251, 3300, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(67, 7, NULL, '50', 3301, 3350, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(68, 7, NULL, '50', 3351, 3400, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(69, 7, NULL, '50', 3401, 3450, 5, 20, 50, NULL, NULL, NULL, NULL, NULL),
+(70, 7, NULL, '50', 3451, 3500, 5, 20, 50, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1018,7 +1177,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `bitacoras`
 --
 ALTER TABLE `bitacoras`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `canteras`
@@ -1066,7 +1225,7 @@ ALTER TABLE `detalle_solicituds`
 -- AUTO_INCREMENT de la tabla `detalle_talonarios`
 --
 ALTER TABLE `detalle_talonarios`
-  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `correlativo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -1150,7 +1309,7 @@ ALTER TABLE `sujeto_pasivos`
 -- AUTO_INCREMENT de la tabla `talonarios`
 --
 ALTER TABLE `talonarios`
-  MODIFY `id_talonario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_talonario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos`

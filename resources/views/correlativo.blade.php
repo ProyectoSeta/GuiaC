@@ -16,7 +16,7 @@
             <h3 class="mb-3 text-navy titulo">Talonarios</h3>
         </div>
         <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:14px">
+            <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
                 <thead class="border-light-subtle">
                     <th>Cod. Talonario</th>
                     <th>Cantera</th>
@@ -27,13 +27,14 @@
                     <th>R.I.F.</th>
                     <th>Empresa</th>
                     <th>Mensaje</th>
+                    <th>Estado</th>
                 </thead>
                 <tbody> 
                 @foreach ($talonarios as $talonario)
                         <tr>
                             <td>{{$talonario->id_talonario}}</td>
                             <td>
-                                <span class="fw-bold">{{$talonario->nombre}}</span>
+                                <span class="fw-bold text-navy">{{$talonario->nombre}}</span>
                             </td>
                             <td>{{$talonario->id_solicitud}}</td>
                             <td>
@@ -59,7 +60,7 @@
                             <td>
                                 <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
                             </td>
-                            <td>{{$talonario->razon_social}}</td>
+                            <td class="text-muted">{{$talonario->razon_social}}</td>
                             <td class="align-middle">
                                 @if ($talonario->alert == '1')
                                     <span class="alert_talonario" role="button" intervalo="{{ $talonario->intervalo }}" data-bs-toggle="modal" data-bs-target="#modal_alert_talonario">
@@ -70,6 +71,25 @@
                                     <span class="text-secondary">S/M</span>
                                 @endif
 
+                            </td>
+                            <td>
+                                @switch($talonario->estado)
+                                    @case('Por enviar')
+                                        <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill">Por Enviar</span>
+                                        @break
+                                    @case('Enviado')
+                                        
+                                        @break
+                                    @case('Recibido')
+                                        
+                                        @break
+                                    @case('Retirado')
+                                        
+                                        @break
+                                
+                                    @default
+                                        
+                                @endswitch
                             </td>
                         </tr>
                 @endforeach
