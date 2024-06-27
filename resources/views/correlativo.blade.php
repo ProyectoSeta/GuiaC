@@ -74,17 +74,17 @@
                             </td>
                             <td>
                                 @switch($talonario->estado)
-                                    @case('Por enviar')
-                                        <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill">Por Enviar</span>
+                                    @case('20') <!-- Por Enviar warning -->
+                                        <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill" style="font-size:12px">Por Enviar</span>
                                         @break
-                                    @case('Enviado')
-                                        
+                                    @case('21') <!-- Enviado primary -->
+                                        <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill" style="font-size:12px">Enviado</span>
                                         @break
-                                    @case('Recibido')
-                                        
+                                    @case('22') <!-- Recibido success-->
+                                        <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" style="font-size:12px">Recibido</span>
                                         @break
-                                    @case('Retirado')
-                                        
+                                    @case('23') <!-- Retirado secondary-->
+                                        <span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill" style="font-size:12px">Retirado</span>
                                         @break
                                 
                                     @default
