@@ -25,6 +25,11 @@ return new class extends Migration
             $table->integer('clase')->unsigned();
             $table->foreign('clase')->references('id_tipo')->on('tipos')->onDelete('cascade');
 
+            
+            $table->integer('asignacion_talonario')->unsigned()->nullable(); ////////EN RESERVA - ASIGNADO (SOLO PARA TALONARIOS REGULARES)
+            $table->foreign('asignacion_talonario')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
+
             $table->integer('id_solicitud_reserva')->unsigned()->nullable();
             $table->foreign('id_solicitud_reserva')->references('id_solicitud_reserva')->on('solicitud_reservas')->onDelete('cascade');
 

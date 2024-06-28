@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('clase')->unsigned();
             $table->foreign('clase')->references('id_tipo')->on('tipos')->onDelete('cascade');
 
-            $table->integer('estado')->unsigned();
+            $table->integer('estado')->unsigned();   ////////POR ENVIAR - ENVIADO - RECIBIDO - RETIRADO
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
 
             $table->integer('asignado');

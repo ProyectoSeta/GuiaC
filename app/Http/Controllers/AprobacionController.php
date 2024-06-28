@@ -114,23 +114,43 @@ class AprobacionController extends Controller
 
         if ($solicitudes) {
             foreach ($solicitudes as $solicitud) {
-                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->first();
                 if($detalles){ 
-                    // return response($solicitudes);
-                    $contador = 0;
-                    foreach ($detalles as $i) {
-                        $tr .= '<tr>
-                                    <td>'.$i->tipo_talonario.' Guías</td>
-                                    <td>'.$i->cantidad.' und.</td>
-                                </tr>';
+                    $reserva = DB::table('detalle_talonarios')->selectRaw("count(*) as total")
+                                                ->where('id_sujeto','=',$solicitud->id_sujeto)
+                                                ->where('id_cantera','=',$solicitud->id_cantera)
+                                                ->where('asignacion_talonario','=',25)
+                                                ->first();
+                                                
+                    // $contador = 0;
+                    
+                    $tr_asignacion =   '<tr class="table-warning">
+                                            <th>Solicitados</th>
+                                            <td>'.$detalles->cantidad.'</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Reserva</th>
+                                            <td>'.$reserva->total.'</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Emitir</th>
+                                            <td>
+                                                <div class="row d-flex align-items-center">
+                                                    <div class="col-sm-6">
+                                                        <input class="form-control form-control-sm" type="number" min="10" >
+                                                    </div>
+                                                    <div class="col-sm-6 text-start">
+                                                        Talonarios
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>';
 
-                        $contador = $contador + ($i->tipo_talonario * $i->cantidad);
-
-                    }
+                    $contador = $detalles->tipo_talonario * $detalles->cantidad;                    
                 }
 
                 $total_guias = $contador;
-              
+                // return response($total_guias);
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
@@ -144,30 +164,35 @@ class AprobacionController extends Controller
                         </div>
                         <div class="modal-body" style="font-size:14px;">
                             <h6 class="text-center mb-3">Solicitud de Talonario(s) Realizada</h6>
-                            <table class="table text-center">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Contenido del Talonario</th>
-                                        <th scope="col">Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                   '.$tr.'
-                                </tbody>
-                            </table>
+                            <div class="d-flex justify-content-center  mb-4">
+                                <table class="table w-75 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Talonarios</th>
+                                            <th>Cantidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        '.$tr_asignacion.'
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6 class="text-center mb-3 text-secondary">Detalle de la Solicitud a Aprobar</h6>
                             <div class="d-flex justify-content-center mt-3">
                                 <table class="table table-sm w-75">
-                                    <tr>
-                                        <th>Total de Guías a emitir</th>
-                                        <td>'.$total_guias.'</td>
+                                    <tbody><tr>
+                                        <th>Total de Guías a Asignar</th>
+                                        <td class="text-secondary">'.$total_guias.' Guías</td>
                                     </tr>
                                     <tr>
                                         <th>Total UCD</th>
-                                        <td>'.$solicitud->total_ucd.'</td>
+                                        <td class="text-secondary">'.$solicitud->total_ucd.' UCD</td>
                                     </tr>
-                                </table>
+                                </tbody></table>
                             </div>
-                            
+
+                            <p class="text-muted mb-3  mt-2 mx-3"><span class="text-danger">*</span> Cada Talonario tiene un contenido de 50 Guías de Circulación en total.</p>
 
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_cantera="'.$idCantera.'" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'">Aprobar</button>
@@ -225,7 +250,7 @@ class AprobacionController extends Controller
                     for ($i=0; $i < $cant; $i++) {                        
                         $c = $c + 1; 
                         
-                        if ($c == 1) {
+                        if ($c == 1) {     
                            $desde = 1;
                            $hasta = $tipo; 
 

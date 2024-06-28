@@ -94,6 +94,14 @@ class ClasificacionesSeeder extends Seeder
             'nombre_clf' => 'Reservas',
         ]);
 
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'En Reserva',
+        ]);
+        
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Asignado',
+        ]);
+
     
     }
 }
