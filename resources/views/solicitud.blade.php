@@ -313,7 +313,7 @@
                 var cant = $('#cantidad').val();
                 console.log(cant);
 
-                if (cant == '') {
+                if (cant == '' || cant == 0) {
                     $('#total_ucd').html('0 UCD');
                 }else{
                     var total_guias = cant * 50;

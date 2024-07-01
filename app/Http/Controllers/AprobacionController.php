@@ -123,6 +123,28 @@ class AprobacionController extends Controller
                                                 ->first();
                                                 
                     // $contador = 0;
+                    $tr_emitir = '';
+                    $disabled = '';
+                    if ($detalles->cantidad <= $reserva->total) {
+                        ///////SI hay suficiente guías en reserva de esta cantera para cubrir la solicitud 
+                        $tr_emitir = '<input class="" type="hidden" value="0" id="emitir_talonarios" name="emitir_talonarios">';
+                    }else{
+                        ///////NO hay suficiente guías en reserva de esta cantera para cubrir la solicitud 
+                        $tr_emitir = '<tr>
+                                        <th>Emitir</th>
+                                        <td>
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-sm-6">
+                                                    <input class="form-control form-control-sm" type="number" min="10" id="emitir_talonarios" name="emitir_talonarios">
+                                                </div>
+                                                <div class="col-sm-6 text-start">
+                                                    Talonarios
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>';
+                        $disabled = 'disabled';
+                    }
                     
                     $tr_asignacion =   '<tr class="table-warning">
                                             <th>Solicitados</th>
@@ -132,19 +154,7 @@ class AprobacionController extends Controller
                                             <th>Reserva</th>
                                             <td>'.$reserva->total.'</td>
                                         </tr>
-                                        <tr>
-                                            <th>Emitir</th>
-                                            <td>
-                                                <div class="row d-flex align-items-center">
-                                                    <div class="col-sm-6">
-                                                        <input class="form-control form-control-sm" type="number" min="10" >
-                                                    </div>
-                                                    <div class="col-sm-6 text-start">
-                                                        Talonarios
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>';
+                                        '.$tr_emitir.'';
 
                     $contador = $detalles->tipo_talonario * $detalles->cantidad;                    
                 }
@@ -195,7 +205,7 @@ class AprobacionController extends Controller
                             <p class="text-muted mb-3  mt-2 mx-3"><span class="text-danger">*</span> Cada Talonario tiene un contenido de 50 Guías de Circulación en total.</p>
 
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" id_cantera="'.$idCantera.'" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'">Aprobar</button>
+                                <button type="submit" class="btn btn-success btn-sm me-4 aprobar_correlativo" '.$disabled.' id_cantera="'.$idCantera.'" id_solicitud="'.$idSolicitud.'" id_sujeto="'.$solicitud->id_sujeto.'">Aprobar</button>
                                 <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                             </div>
 
@@ -224,162 +234,253 @@ class AprobacionController extends Controller
     //     return DB::table('nro_controls')->where('nro_control', $token)->exists();
     // }
 
+    ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
+    // for ($t=0; $t < $tipo; $t++) {
+    //     do {
+    //         $nuevoToken = $this->generarToken();
+    //     } while ($this->tokenExiste($nuevoToken));
+        
+    //     // Guarda el nuevo token en la base de datos
+    //     $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
+        
+    //     if ($insert_control) {
+    //         $contador_guia = $contador_guia + 1;
+    //     }
+    // }
+    ////////////////////////////////////////
+
     public function correlativo(Request $request)
     {
         $idSolicitud = $request->post('solicitud');
         $idCantera = $request->post('cantera');
         $idSujeto = $request->post('sujeto');
-        // $fecha = $request->post('fecha');
+        $talonarios_emitir = $request->post('emitir');
+
+        $user = auth()->id();
+        $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
 
         $nro_talonarios = 0;
-      
 
-        $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get();   
-        if ($query_count) { 
-            foreach ($query_count as $c) {
-                $count = $c->total; 
-            }
-            if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
-                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
-                $c = 0; 
-                foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
-                    $tipo = $detalle->tipo_talonario;
-                    $cant = $detalle->cantidad;
-                    $nro_talonarios = $nro_talonarios + $cant;
-                    // return response($cant); 
-                    for ($i=0; $i < $cant; $i++) {                        
-                        $c = $c + 1; 
+        $consulta_cantidad = DB::table('detalle_solicituds')->select('cantidad')->where('id_solicitud','=',$idSolicitud)->first(); 
+        $consulta_reserva = DB::table('detalle_talonarios')->selectRaw("count(*) as total")
+                                                            ->where('id_sujeto','=',$idSujeto)
+                                                            ->where('id_cantera','=',$idCantera)
+                                                            ->where('asignacion_talonario','=',25)->first();
+        
+        if ($consulta_cantidad && $consulta_reserva) {
+            if ($consulta_reserva->total == 0) {
+                ////no hay talonarios de reserva para esta cantera
+                if ($talonarios_emitir != 0) {
+                    $insert_emision_talonarios = DB::table('emision_talonarios')->insert(['id_solicitud' => $idSolicitud,
+                                                                                    'tipo_talonario' => '50', 
+                                                                                    'cantidad' => $talonarios_emitir, 
+                                                                                    'id_user' => $user]);
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+                    $count_ciclo = 0; ////////contador para los ciclos de asignación de los talonarios
+
+                    $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->get();   
+                    if ($query_count) { 
+                        foreach ($query_count as $c) {
+                            $count = $c->total; 
+                        }
+                        if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
+                            $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
+                            $c = 0; 
+                            foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
+                                $tipo = $detalle->tipo_talonario;
+                                $cant_solicitada = $detalle->cantidad;
+                                $nro_talonarios = $nro_talonarios + $cant_solicitada;
+                                // return response($cant); 
+                                for ($i=0; $i < $talonarios_emitir; $i++) { 
+                                    //////////////////////////////////////////////////////////////////////////////////////         
+                                    $count_ciclo = $count_ciclo + 1; 
+                                    $asignacion_talonario = '';
+                                    if ($count_ciclo <= $cant_solicitada) {
+                                        ///////no se han completado los ciclos correspondientes a los talonarios solicitados
+                                        $asignacion_talonario = 26;  /////Asignado
+                                    }else{
+                                        //////ya se completaron los ciclos correspondientes a los talonarios solicitados, por lo tanto los demás son de reserva para la proxima solicitud
+                                        $asignacion_talonario = 25;  /////En reserva
+                                    }     
+                                    ///////////////////////////////////////////////////////////////////////////////////////
+                                    $c = $c + 1; 
+                                    
+                                    if ($c == 1) {     
+                                       $desde = 1;
+                                       $hasta = $tipo; 
+
+                                    }else{
+                                        $id_max= DB::table('talonarios')->max('id_talonario');
+                                        $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
+                                        foreach ($query_hasta as $hasta) {
+                                            $prev_hasta = $hasta->hasta;
+                                        }
+                                        $desde = $prev_hasta +1;
+                                        $hasta = ($desde + $tipo)-1;
+                                    }
+                                
+                                    $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
+                                                                                'id_reserva' => NULL, 
+                                                                                'tipo_talonario' => $tipo, 
+                                                                                'desde' => $desde, 
+                                                                                'hasta' => $hasta,
+                                                                                'clase' => 5,
+                                                                                'asignado' => $tipo,
+                                                                                'estado' => 20]);
+                                    if ($insert) {
+                                        $id_talonario= DB::table('talonarios')->max('id_talonario');
+                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                                'id_talonario' => $id_talonario,
+                                                                                'id_cantera'=>$idCantera, 
+                                                                                'id_sujeto'=>$idSujeto, 
+                                                                                'desde' => $desde, 
+                                                                                'hasta' => $hasta,
+                                                                                'clase' => 5,
+                                                                                'asignacion_talonario' => $asignacion_talonario,
+                                                                                'id_solicitud_reserva' => null]);
+
+                                        $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
+                                        QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                                        $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                
+                                    }else{
+                                        return response('Error al generar el QR');
+                                    }
+                                    
+                                } ////cierra for    
+                            
+                            }/////cierra foreach
+
+
+                            $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
+
+                            $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
+                            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
                         
-                        if ($c == 1) {     
-                           $desde = 1;
-                           $hasta = $tipo; 
+                            return response()->json(['success' => true]);
+                            
+                        }else{   //////////Hay registros en la tabla Talonarios
+                            $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+                            foreach ($detalles as $detalle){
+                                $tipo = $detalle->tipo_talonario;
+                                $cant_solicitada = $detalle->cantidad;
+                                $nro_talonarios = $nro_talonarios + $cant_solicitada;
 
-                        }else{
-                            $id_max= DB::table('talonarios')->max('id_talonario');
-                            $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
-                            foreach ($query_hasta as $hasta) {
-                                $prev_hasta = $hasta->hasta;
-                            }
-                            $desde = $prev_hasta +1;
-                            $hasta = ($desde + $tipo)-1;
+                                for ($i=1; $i <= $talonarios_emitir; $i++) {  
+                                    //////////////////////////////////////////////////////////////////////////////////////         
+                                    $count_ciclo = $count_ciclo + 1; 
+                                    $asignacion_talonario = '';
+                                    if ($count_ciclo <= $cant_solicitada) {
+                                        ///////no se han completado los ciclos correspondientes a los talonarios solicitados
+                                        $asignacion_talonario = 26;  /////Asignado
+                                    }else{
+                                        //////ya se completaron los ciclos correspondientes a los talonarios solicitados, por lo tanto los demás son de reserva para la proxima solicitud
+                                        $asignacion_talonario = 25;  /////En reserva
+                                    }     
+                                    ///////////////////////////////////////////////////////////////////////////////////////
+
+                                    $id_max= DB::table('talonarios')->max('id_talonario');
+                                    $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
+                                    foreach ($query_hasta as $hasta) {
+                                        $prev_hasta = $hasta->hasta;
+                                    }
+                                    $desde = $prev_hasta +1;
+                                    $hasta = ($desde + $tipo)-1;
+
+                                    $contador_guia = $desde;
+                
+                                    $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
+                                                                                'id_reserva' => NULL, 
+                                                                                'tipo_talonario' => $tipo, 
+                                                                                'desde' => $desde, 
+                                                                                'hasta' => $hasta,
+                                                                                'clase' => 5,
+                                                                                'asignado' => $tipo,
+                                                                                'estado' => 20]);
+                                    if ($insert) {
+                                        $id_talonario= DB::table('talonarios')->max('id_talonario');
+                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                                                'id_talonario' => $id_talonario,
+                                                                                'id_cantera'=>$idCantera, 
+                                                                                'id_sujeto'=>$idSujeto, 
+                                                                                'desde' => $desde, 
+                                                                                'hasta' => $hasta,
+                                                                                'clase' => 5,
+                                                                                'asignacion_talonario' => $asignacion_talonario,
+                                                                                'id_solicitud_reserva' => null]);
+                                                                                
+                                        // $url = route('qr.qr', ['id' => $id_talonario]);
+                                        $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
+                                        QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                                        $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                        
+                                    }else{
+                                        return response('Error al generar el QR');
+                                    }
+                                } ////cierra for                
+                            } ////cierra foreach
+
+                            $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
+
+                            $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
+                            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
+
+                            return response()->json(['success' => true]);
                         }
                     
-                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
-                                                                    'id_reserva' => NULL, 
-                                                                    'tipo_talonario' => $tipo, 
-                                                                    'desde' => $desde, 
-                                                                    'hasta' => $hasta,
-                                                                    'clase' => 5,
-                                                                    'asignado' => $tipo,
-                                                                    'estado' => 20]);
-                        if ($insert) {
-                            $id_talonario= DB::table('talonarios')->max('id_talonario');
-                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                                    'id_talonario' => $id_talonario,
-                                                                    'id_cantera'=>$idCantera, 
-                                                                    'id_sujeto'=>$idSujeto, 
-                                                                    'desde' => $desde, 
-                                                                    'hasta' => $hasta,
-                                                                    'clase' => 5,
-                                                                    'id_solicitud_reserva' => null]);
-
-                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
-                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                            $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
-    
-                        }else{
-                            return response('Error al generar el QR');
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
+                }else{
+                    return response()->json(['success' => false, 'nota' => 'Por favor, ingrese el número de talonarios a emitir para poder procesar la Solicitud.']);
+                }
+            }else{
+                ////si hay talonarios de reserva para esta cantera
+                if ($consulta_cantidad->cantidad <= $consulta_reserva->total) {
+                    ////////////hay suficientes talonarios de reserva para atender la solicitud
+                    $consulta_tln_reserva = DB::table('detalle_talonarios')->select('id_talonario')
+                                            ->where('id_sujeto','=',$idSujeto)
+                                            ->where('id_cantera','=',$idCantera)
+                                            ->where('asignacion_talonario','=',25)->get();
+                    foreach ($consulta_tln_reserva as $c3) {
+                        for ($i=0; $i < $consulta_cantidad->cantidad; $i++) { 
+                            $update_asignacion = DB::table('talonarios')
+                                                ->where('id_talonario', '=', $c3->id_talonario)
+                                                ->update(['id_solicitud' => $idSolicitud]);
+                            if ($update_asignacion) {
+                                return response()->json(['success' => true]);
+                            }else{
+                                return response()->json(['success' => false]);
+                            }
                         }
-                        
-                    } ////cierra for    
-                 
-                }/////cierra foreach
+                    }
+
+                }else{
+                    ////////////no hay suficientes talonarios de reserva para atender la solicitud
+                }
 
 
-                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
 
-                $user = auth()->id();
-                $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
-                $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
-                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
-               
-                return response()->json(['success' => true]);
-                
-            }else{   //////////Hay registros en la tabla Talonarios
-                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
-                foreach ($detalles as $detalle){
-                    $tipo = $detalle->tipo_talonario;
-                    $cant = $detalle->cantidad;
-                    $nro_talonarios = $nro_talonarios + $cant;
 
-                    for ($i=1; $i <= $cant; $i++) {  
-                        $id_max= DB::table('talonarios')->max('id_talonario');
-                        $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
-                        foreach ($query_hasta as $hasta) {
-                            $prev_hasta = $hasta->hasta;
-                        }
-                        $desde = $prev_hasta +1;
-                        $hasta = ($desde + $tipo)-1;
 
-                        $contador_guia = $desde;
-                        ////////////////INSERTAR CORRELATIVO DE LOS NUMEROS DE CONTROL
-                        // for ($t=0; $t < $tipo; $t++) {
-                        //     do {
-                        //         $nuevoToken = $this->generarToken();
-                        //     } while ($this->tokenExiste($nuevoToken));
-                            
-                        //     // Guarda el nuevo token en la base de datos
-                        //     $insert_control = DB::table('nro_controls')->insert(['id_solicitud' =>$idSolicitud,'nro_guia' =>$contador_guia, 'nro_control' => $nuevoToken]);
-                            
-                        //     if ($insert_control) {
-                        //         $contador_guia = $contador_guia + 1;
-                        //     }
-                        // }
-                        ////////////////////////////////////////
-    
-                        $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
-                                                                    'id_reserva' => NULL, 
-                                                                    'tipo_talonario' => $tipo, 
-                                                                    'desde' => $desde, 
-                                                                    'hasta' => $hasta,
-                                                                    'clase' => 5,
-                                                                    'asignado' => $tipo,
-                                                                    'estado' => 20]);
-                        if ($insert) {
-                            $id_talonario= DB::table('talonarios')->max('id_talonario');
-                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                                    'id_talonario' => $id_talonario,
-                                                                    'id_cantera'=>$idCantera, 
-                                                                    'id_sujeto'=>$idSujeto, 
-                                                                    'desde' => $desde, 
-                                                                    'hasta' => $hasta,
-                                                                    'clase' => 5,
-                                                                    'id_solicitud_reserva' => null]);
-                                                                    
-                            // $url = route('qr.qr', ['id' => $id_talonario]);
-                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
-                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                            $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
-              
-                        }else{
-                            return response('Error al generar el QR');
-                        }
-                    } ////cierra for                
-                } ////cierra foreach
 
-                $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
 
-                $user = auth()->id();
-                $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$idSujeto)->first(); 
-                $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
-                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 7, 'accion'=> $accion]);
 
-                return response()->json(['success' => true]);
+
+
+
+
+
+
+
+
             }
-           
         }else{
             return response()->json(['success' => false]);
         }
+
+       
     }
 
     public function info(Request $request)

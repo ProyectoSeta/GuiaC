@@ -276,7 +276,7 @@
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
                 var sujeto = $(this).attr('id_sujeto');
-                var fecha = $(this).attr('fecha');
+                var emitir = $('#emitir_talonarios').val();
                 var cantera = $(this).attr('id_cantera');
 
                 $('#modal_aprobar_solicitud').modal('hide');
@@ -286,7 +286,7 @@
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("aprobacion.correlativo") }}',
-                    data: {solicitud:solicitud, sujeto:sujeto, fecha:fecha, cantera:cantera},
+                    data: {solicitud:solicitud, sujeto:sujeto, emitir:emitir, cantera:cantera},
                     success: function(response) {           
                         console.log(response);
                         // alert(response);
@@ -336,6 +336,18 @@
                     error: function() {
                     }
                 });
+            });
+
+            $(document).on('keyup','#emitir_talonarios', function(e) {  
+                var cant = $(this).val();
+                if (cant == 0 || cant == '' || cant < 10) {
+                    $(".aprobar_correlativo").attr('disabled', true);
+                }else{
+                    $(".aprobar_correlativo").attr('disabled', false);
+                }
+
+               
+                // console.log(cant);
             });
 
         });
