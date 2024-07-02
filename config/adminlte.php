@@ -65,7 +65,7 @@ return [
 
     'logo' => 'Principal',
     // 'logo2' => 'J-00000000-1',
-    'logo_img' => 'vendor/adminlte/dist/img/M.png',
+    'logo_img' => 'vendor/adminlte/dist/img/M.svg',
     'logo_img_class' => 'brand-image img-circle elevation-3 fs-6',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-lg',
@@ -87,7 +87,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/M.png',
+            'path' => 'vendor/adminlte/dist/img/M.svg',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -110,7 +110,7 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/M.png',
+            'path' => 'vendor/adminlte/dist/img/M.svg',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 100,
@@ -434,10 +434,15 @@ return [
             'url'  => '/bitacora',
             // 'icon' => '',
         ],
-        ['header' => 'Configuración'],
+        ['header' => 'Mi Cuenta'],
         [
             'text' => 'Actualizar datos',
-            'url'  => '/settings_contribuyente',
+            'url'  => '/actualizar_datos',
+            // 'icon' => '',
+        ],
+        [
+            'text' => 'Nueva Contraseña',
+            'url'  => '/nueva_contraseña',
             // 'icon' => '',
         ],
         ['header' => 'Administración'],

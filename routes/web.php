@@ -131,8 +131,8 @@ Route::post('/registro_guia', [App\Http\Controllers\RegistroGuiaController::clas
 
 
 //////////////////CONFIGURACION DE USUARIO:CONTRIBUYENTES
-Route::get('/settings_contribuyente', [App\Http\Controllers\SettingsContribuyenteController::class, 'index'])->name('settings_contribuyente');
-Route::post('/settings_contribuyente/editar', [App\Http\Controllers\SettingsContribuyenteController::class, 'editar'])->name('settings_contribuyente.editar');
+Route::get('/actualizar_datos', [App\Http\Controllers\SettingsContribuyenteController::class, 'index'])->name('actualizar_datos');
+Route::post('/actualizar_datos/editar', [App\Http\Controllers\SettingsContribuyenteController::class, 'editar'])->name('actualizar_datos.editar');
 // Route::post('/settings_contribuyente/representante', [App\Http\Controllers\SettingsContribuyenteController::class, 'representante'])->name('settings_contribuyente.representante');
 
 

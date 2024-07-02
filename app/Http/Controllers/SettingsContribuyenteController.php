@@ -21,7 +21,7 @@ class SettingsContribuyenteController extends Controller
         $id_sp = $sp->id_sujeto;
         $canteras = DB::table('canteras')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->first();
 
-        return view('settings_contribuyente', compact('sp', 'canteras'));
+        return view('actualizar_datos', compact('sp', 'canteras'));
     }
 
     /**
@@ -45,6 +45,7 @@ class SettingsContribuyenteController extends Controller
         if ($correo != '') {
             $update_correo = DB::table('users')->where('id', '=', $user)->update(['email' => $correo]);
         }
+        return response($idSujeto);
 
         $rif_condicion_sp = $request->post('rif_condicion_sp');
         $rif_nro_sp = $request->post('rif_nro_sp');
@@ -61,18 +62,18 @@ class SettingsContribuyenteController extends Controller
         $tlf_movil_repr = $request->post('tlf_movil_repr');
 
         $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)
-                                                    ->update(['rif_condicion' => $rif_condicion_sp,
-                                                            'rif_nro' => $rif_nro_sp,
-                                                            'razon_social' => $razon_social, 
-                                                            'direccion' => $direccion, 
-                                                            'tlf_movil' => $tlf_movil_sp, 
-                                                            'tlf_fijo' => $tlf_fijo_sp,
-                                                            'ci_condicion_repr' => $ci_condicion_repr,
-                                                            'ci_nro_repr' => $ci_nro_repr,
-                                                            'rif_condicion_repr' => $rif_condicion_repr,
-                                                            'rif_nro_repr' => $rif_nro_repr,
-                                                            'name_repr' => $nombre_repr,
-                                                            'tlf_repr' => $tlf_movil_repr]);
+                                            ->update(['rif_condicion' => $rif_condicion_sp,
+                                                    'rif_nro' => $rif_nro_sp,
+                                                    'razon_social' => $razon_social, 
+                                                    'direccion' => $direccion, 
+                                                    'tlf_movil' => $tlf_movil_sp, 
+                                                    'tlf_fijo' => $tlf_fijo_sp,
+                                                    'ci_condicion_repr' => $ci_condicion_repr,
+                                                    'ci_nro_repr' => $ci_nro_repr,
+                                                    'rif_condicion_repr' => $rif_condicion_repr,
+                                                    'rif_nro_repr' => $rif_nro_repr,
+                                                    'name_repr' => $nombre_repr,
+                                                    'tlf_repr' => $tlf_movil_repr]);
 
 
         if ($update || $update_correo) {

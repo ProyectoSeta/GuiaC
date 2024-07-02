@@ -11,31 +11,17 @@
 
 @section('content')
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h3 class="mb-3 text-navy titulo">Actualización de Datos</h3>
-        </div>  
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class=" text-navy titulo me-3">Actualización de Datos</h3>
 
-        <div class="row d-flex align-items-center">
-            <div class="col-sm-8">
-                <h5 class="text-navy titulo">ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</h5>
+            <div class="text-end">
+                <h5 class="text-secondary fw-bold mb-0 titulo">ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</h5>
                 <span class="text-muted">G-200108240</span>
             </div>
-            <div class="col-sm-4 d-flex justify-content-center">
-                <table class="table w-50 text-center table-borderless table-sm">
-                    <tr>
-                        <th class="titulo text-navy fs-5 px-3">Usuario</th>
-                        <th class="titulo text-navy fs-5 px-3">Canteras</th>
-                    </tr>
-                    <tr>
-                        <td class="text-muted">Verificado</td>
-                        <td class="text-muted">1</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+        </div>  
 
         <div class="row" style="font-size:13px">
-            <div class="col-sm-8">
+            <div class="col-xl-8">
                 <form id="form_edit_data_user" method="post" onsubmit="event.preventDefault(); editUser()">
                     <!-- DATOS DEL USUARIO -->
                     <h5 class="text-navy titulo text-center fw-bold">Datos del Usuario</h5>
@@ -43,20 +29,6 @@
                         <label class="form-label" for="correo">Correo Electrónico</label><span class="text-danger">*</span>
                         <input type="email" id="correo" name="correo" class="form-control form-control-sm" value="{{ $sp->email}}" placeholder="example@gmail.com" disabled>
                         <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: ejemplo@gmail.com</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="pass">Contraseña</label><span class="text-danger">*</span>
-                                <input type="password" id="pass" name="pass" class="form-control form-control-sm" value="" disabled>
-                            </div> 
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-2">
-                                <label class="form-label" for="confirmar">Confirmar Contraseña</label><span class="text-danger">*</span>
-                                <input type="password" id="confirmar" name="confirmar" class="form-control form-control-sm" value="" disabled>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- DATOS DEL CONTRIBUYENTE -->
@@ -195,19 +167,52 @@
                     <input type="hidden" value="{{$sp->id_sujeto}}" name="id_sujeto">
 
 
-                    <div class="d-flex justify-content-center" id="div_edit_user">
+                    <div class="d-flex justify-content-center mb-4" id="div_edit_user">
                         <button type="button" class="btn btn-primary btn-sm" id="edit_data_user">Editar datos</button>
                     </div>
 
 
-                    <div class="d-flex justify-content-center d-none" id="btns_edit_user">
+                    <div class="d-flex justify-content-center d-none mb-4" id="btns_edit_user">
                         <button type="submit" class="btn btn-success btn-sm me-3">Actualizar</button>
                         <button type="button" class="btn btn-secondary btn-sm" id="cancelar_edit_user">Cancelar</button>
                     </div>
                 </form>
            </div> <!--  cierra cols-sm-8 -->
-            <div class="col-sm-4">
 
+
+            <div class="col-xl-4">
+                <!-- PARTE 1 -->
+                <div class="d-flex justify-content-center">
+                    <table class="table w-50 text-center table-borderless table-sm">
+                        <tr>
+                            <td>
+                                <div class="text-center">
+                                    <img src="{{asset('assets/icon-user.svg')}}" class="rounded-circle w-50" alt="...">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <img src="{{asset('assets/icon-cantera.svg')}}" class="rounded-circle w-50" alt="...">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="titulo text-navy fs-5 px-3">Usuario</th>
+                            <th class="titulo text-navy fs-5 px-3">Canteras</th>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fs-6">Verificado</td>
+                            <td class="text-muted fs-6">1</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mb-3">
+                    <img src="{{asset('assets/banner-micuenta.svg')}}" class="rounded" alt="...">
+                </div>
+                <div class="d-flex justify-content-center">
+                    <img src="{{asset('assets/banner-micuenta-2.svg')}}" class="rounded" alt="...">
+                </div>
             </div> <!--  cierra cols-sm-4 -->
         </div>
 
@@ -336,7 +341,7 @@
             var formData = new FormData(document.getElementById("form_edit_data_user"));
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    url:'{{route("settings_contribuyente.editar") }}',
+                    url:'{{route("actualizar_datos.editar") }}',
                     type:'POST',
                     contentType:false,
                     cache:false,
@@ -347,7 +352,7 @@
                         console.log(response);
                         if (response.success) {
                             alert('ACTUALIZACIÓN DE DATOS EXITOSO');
-                            window.location.href = "{{ route('settings_contribuyente')}}";
+                            window.location.href = "{{ route('actualizar_datos')}}";
                         } else {
                             alert('Ha ocurrido un error al Actualizar los Datos.');
                         } 

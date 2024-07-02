@@ -305,7 +305,13 @@
                             });
   
                         }else {
-                            alert('Ha ocurrido un error al aprobar la solicitud');
+                            if (response.nota != '') {
+                                alert(response.nota);
+                            }else{
+                                alert('Ha ocurrido un error al aprobar la solicitud');
+                            }
+                            window.location.href = "{{ route('aprobacion')}}";
+                            
                         }
         
                     },
