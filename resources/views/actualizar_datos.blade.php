@@ -15,12 +15,12 @@
             <h3 class=" text-navy titulo me-3">Actualización de Datos</h3>
 
             <div class="text-end">
-                <h5 class="text-secondary fw-bold mb-0 titulo">ARAGUA MINAS Y CANTERAS (ARAMICA) S.A.</h5>
-                <span class="text-muted">G-200108240</span>
+                <h5 class="text-secondary  mb-0 titulo">{{$sp->razon_social}}</h5>
+                <span class="text-muted">{{$sp->rif_condicion}}-{{$sp->rif_nro}}</span>
             </div>
         </div>  
 
-        <div class="row" style="font-size:13px">
+        <div class="row" style="font-size:12.7px">
             <div class="col-xl-8">
                 <form id="form_edit_data_user" method="post" onsubmit="event.preventDefault(); editUser()">
                     <!-- DATOS DEL USUARIO -->
@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="tlf_fijo_sp">Teléfono Fijo</label><span class="text-danger">*</span>
+                                <label class="form-label" for="tlf_fijo_sp">Teléfono Fijo</label>
                                 <input type="number" id="tlf_fijo_sp" class="form-control form-control-sm" name="tlf_fijo_sp" value="{{ $sp->tlf_fijo}}" placeholder="Ejemplo: 02432632201" disabled>
                                 <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 02432632201</p>
                             </div>
@@ -201,8 +201,8 @@
                             <th class="titulo text-navy fs-5 px-3">Canteras</th>
                         </tr>
                         <tr>
-                            <td class="text-muted fs-6">Verificado</td>
-                            <td class="text-muted fs-6">1</td>
+                            <td class="text-muted fs-6">{{$sp->estado}}</td>
+                            <td class="text-muted fs-6">{{$canteras->total}}</td>
                         </tr>
                     </table>
                 </div>

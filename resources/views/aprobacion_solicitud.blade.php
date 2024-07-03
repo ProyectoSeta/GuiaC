@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive" style="font-size:14px">
+        <div class="table-responsive" style="font-size:12.7px">
             <table id="example" class="table border-light-subtle text-center" style="font-size:12.7px">
                 <thead class="border-light-subtle">
                     <th>Cod.</th>

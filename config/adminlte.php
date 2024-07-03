@@ -442,7 +442,7 @@ return [
         ],
         [
             'text' => 'Nueva Contraseña',
-            'url'  => '/nueva_contraseña',
+            'url'  => '/new_pass',
             // 'icon' => '',
         ],
         ['header' => 'Administración'],

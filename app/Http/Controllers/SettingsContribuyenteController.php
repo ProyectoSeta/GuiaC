@@ -19,7 +19,9 @@ class SettingsContribuyenteController extends Controller
                                         ->select('sujeto_pasivos.*','users.email','users.password')
                                         ->where('id_user','=',$user)->first();
         $id_sp = $sp->id_sujeto;
-        $canteras = DB::table('canteras')->selectRaw("count(*) as total")->where('id_sujeto','=',$id_sp)->first();
+        $canteras = DB::table('canteras')->selectRaw("count(*) as total")
+                                            ->where('id_sujeto','=',$id_sp)
+                                            ->where('status','=','Verificada')->first();
 
         return view('actualizar_datos', compact('sp', 'canteras'));
     }
@@ -45,10 +47,9 @@ class SettingsContribuyenteController extends Controller
         if ($correo != '') {
             $update_correo = DB::table('users')->where('id', '=', $user)->update(['email' => $correo]);
         }
-        return response($idSujeto);
 
-        $rif_condicion_sp = $request->post('rif_condicion_sp');
-        $rif_nro_sp = $request->post('rif_nro_sp');
+
+        
         $razon_social = $request->post('razon_social');
         $direccion = $request->post('direccion');
         $tlf_movil_sp = $request->post('tlf_movil_sp');
@@ -62,9 +63,7 @@ class SettingsContribuyenteController extends Controller
         $tlf_movil_repr = $request->post('tlf_movil_repr');
 
         $update = DB::table('sujeto_pasivos')->where('id_sujeto', '=', $idSujeto)
-                                            ->update(['rif_condicion' => $rif_condicion_sp,
-                                                    'rif_nro' => $rif_nro_sp,
-                                                    'razon_social' => $razon_social, 
+                                            ->update(['razon_social' => $razon_social, 
                                                     'direccion' => $direccion, 
                                                     'tlf_movil' => $tlf_movil_sp, 
                                                     'tlf_fijo' => $tlf_fijo_sp,

@@ -135,6 +135,9 @@ Route::get('/actualizar_datos', [App\Http\Controllers\SettingsContribuyenteContr
 Route::post('/actualizar_datos/editar', [App\Http\Controllers\SettingsContribuyenteController::class, 'editar'])->name('actualizar_datos.editar');
 // Route::post('/settings_contribuyente/representante', [App\Http\Controllers\SettingsContribuyenteController::class, 'representante'])->name('settings_contribuyente.representante');
 
+//////////////////NUEVA CONTRASEÑA
+Route::get('/new_pass', [App\Http\Controllers\NewPassController::class, 'index'])->name('new_pass');
+Route::post('/new_pass/update', [App\Http\Controllers\NewPassController::class, 'update'])->name('new_pass.update');
 
 ////////////////DECLARAR GUIAS (VISTA: CONTRIBUYENTE)
 Route::get('/declarar', [App\Http\Controllers\DeclararController::class, 'index'])->name('declarar');
