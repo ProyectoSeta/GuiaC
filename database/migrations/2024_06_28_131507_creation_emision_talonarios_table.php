@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('id_solicitud')->references('id_solicitud')->on('solicituds')->onDelete('cascade');
             $table->enum('tipo_talonario',['50']);
             $table->integer('cantidad');
+            $table->integer('desde')->nullable();
+            $table->integer('hasta')->nullable();
 
             $table->integer('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');

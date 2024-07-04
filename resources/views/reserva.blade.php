@@ -24,7 +24,7 @@
         </div>
         
         
-        <div class="table-responsive" style="font-size:14px">        
+        <div class="table-responsive" style="font-size:12.7px">        
             <table id="example" class="table display border-light-subtle text-center" style="width:100%; font-size:12.7px">
                 <thead class="bg-primary border-light-subtle">
                     <tr>

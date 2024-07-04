@@ -21,7 +21,8 @@ class CorrelativoController extends Controller
             $detalle = DB::table('detalle_talonarios')
                 ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
                 ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                ->join('clasificacions', 'detalle_talonarios.asignacion_talonario', '=', 'clasificacions.id_clasificacion')
+                ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'clasificacions.nombre_clf')
                 ->where('detalle_talonarios.id_talonario','=',$q->id_talonario)
                 ->first();
 
@@ -66,6 +67,7 @@ class CorrelativoController extends Controller
                         'qr' => $detalle->qr,
                         'reportado' => $reportado,
                         'alert' => $alert,
+                        'asignacion' => $detalle->nombre_clf,
                         'estado' => $q->estado,
                         'intervalo' => $i ///sirve para saber si se ha cumplido un tiempo desde la solicitud del talonario hasta la fecha, para mandar una alerta
                     );
@@ -88,13 +90,15 @@ class CorrelativoController extends Controller
     {
         $idTalonario = $request->post('talonario');
         $columnas = [];
-        $talonarios = DB::table('talonarios')->join('canteras', 'talonarios.id_cantera', '=', 'canteras.id_cantera')
-                                            ->join('sujeto_pasivos', 'talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                                            ->select('talonarios.*', 'canteras.nombre', 'sujeto_pasivos.razon_social')
-                                            ->where('talonarios.id_talonario','=', $idTalonario)->get();
+        $talonarios = DB::table('talonarios')->where('id_talonario','=', $idTalonario)->get();
         if ($talonarios) {
             $tr = '';
             foreach ($talonarios as $talonario) {
+                $detalle = DB::table('detalle_talonarios')
+                                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                                            ->select('canteras.nombre', 'sujeto_pasivos.razon_social')
+                                            ->where('detalle_talonarios.id_talonario','=', $idTalonario)->first();
                 $desde = $talonario->desde;
                 $hasta = $talonario->hasta;
                 $count_reportada = 0; 
@@ -121,14 +125,14 @@ class CorrelativoController extends Controller
                 // PORCENTAJE REPORTADO
                 $reportado = ($count_reportada * 100)/50;
 
-                $html = '<div class="d-flex justify-content-between px-3 pb-3">
+                $html = '<div class="d-flex justify-content-between px-3 pb-3 text-muted">
                             <div>
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Talonario #'.$idTalonario.'</h1>
+                                <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel">Talonario #'.$idTalonario.'</h1>
                                 <span>Realizado en la Solicitud #'.$talonario->id_solicitud.'</span>
                             </div>
                             <div class="text-end">
-                                <h1 class="modal-title fs-5">Cantera: '.$talonario->nombre.'</h1>
-                                <span>Empresa: '.$talonario->razon_social.'</span>
+                                <h1 class="modal-title fs-5 text-navy">Cantera: '.$detalle->nombre.'</h1>
+                                <span>Empresa: '.$detalle->razon_social.'</span>
                             </div>
                         </div>
 
@@ -139,7 +143,7 @@ class CorrelativoController extends Controller
                             <p class="text-center pt-2">Se ha <span class="fw-bold">Reportado un '.$reportado.'%</span> del Talonario en el <span class="fw-bold">Libro de Control</span></p>
                         </div>
 
-                        <table id="tableGuias" class="table table-hover text-center">
+                        <table id="tableGuias" class="table table-hover text-center  border-light-subtle"  style="font-size:12.7px">
                             <thead>
                                 <tr>
                                     <th>Nro. de Guía</th>

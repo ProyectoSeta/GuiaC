@@ -164,10 +164,10 @@ class AprobacionController extends Controller
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2" style="color:#0072ff"></i>                       
+                                <i class="bx bx-help-circle fs-2 text-navy"></i>                       
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la siguiente solicitud?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$solicitud->razon_social.'</h1>
+                                    <h1 class="modal-title fs-5 text-navy" id="" >'.$solicitud->razon_social.'</h1>
                                     <h5 class="modal-title" id="" style="font-size:14px">'.$solicitud->rif_condicion.'-'.$solicitud->rif_nro.'</h5>
                                 </div>
                             </div>
@@ -278,6 +278,7 @@ class AprobacionController extends Controller
                                                                                         'tipo_talonario' => '50', 
                                                                                         'cantidad' => $talonarios_emitir, 
                                                                                         'id_user' => $user]);
+                        
                         if ($insert_emision_talonarios) {
                             /////////////////////////////////////////////////////////////////////////////////////////////
                             $count_ciclo = 0; ////////contador para los ciclos de asignación de los talonarios
@@ -290,11 +291,16 @@ class AprobacionController extends Controller
                                 if($count == 0){ //////////No hay ningun registro en la tabla Talonarios
                                     $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get(); 
                                     $c = 0; 
+
+                                    $desde_emision = '';
+                                    $hasta_emision = '';
+
+
                                     foreach ($detalles as $detalle) { ////////talonarios que el contribuyente solicito
                                         $tipo = $detalle->tipo_talonario;
                                         $cant_solicitada = $detalle->cantidad;
                                         $nro_talonarios = $nro_talonarios + $cant_solicitada;
-                                        // return response($cant); 
+                                        
                                         for ($i=0; $i < $talonarios_emitir; $i++) { 
                                             //////////////////////////////////////////////////////////////////////////////////////         
                                             $count_ciclo = $count_ciclo + 1; 
@@ -312,7 +318,8 @@ class AprobacionController extends Controller
                                             if ($c == 1) {     
                                             $desde = 1;
                                             $hasta = $tipo; 
-    
+                                            $desde_emision = 1;
+
                                             }else{
                                                 $id_max= DB::table('talonarios')->max('id_talonario');
                                                 $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
@@ -322,6 +329,11 @@ class AprobacionController extends Controller
                                                 $desde = $prev_hasta +1;
                                                 $hasta = ($desde + $tipo)-1;
                                             }
+
+                                            $ultimo_t = $talonarios_emitir - 1;
+                                            if ($i == $ultimo_t) {
+                                                $hasta_emision = $hasta;
+                                            }
                                         
                                             $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
                                                                                         'id_reserva' => NULL, 
@@ -330,7 +342,8 @@ class AprobacionController extends Controller
                                                                                         'hasta' => $hasta,
                                                                                         'clase' => 5,
                                                                                         'asignado' => $tipo,
-                                                                                        'estado' => 20]);
+                                                                                        'estado' => 20,
+                                                                                        'asignacion_talonario' => $asignacion_talonario]);
                                             if ($insert) {
                                                 $id_talonario= DB::table('talonarios')->max('id_talonario');
                                                 $detalle_talonario = DB::table('detalle_talonarios')->insert([
@@ -354,8 +367,8 @@ class AprobacionController extends Controller
                                         } ////cierra for    
                                     
                                     }/////cierra foreach
-    
-    
+                                    
+                                    $update_emision = DB::table('emision_talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['desde' => $desde_emision, 'hasta' => $hasta_emision]);
                                     $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
     
                                     $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
@@ -365,12 +378,16 @@ class AprobacionController extends Controller
                                     
                                 }else{   //////////Hay registros en la tabla Talonarios
                                     $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
+
+                                    $desde_emision = '';
+                                    $hasta_emision = '';
+
                                     foreach ($detalles as $detalle){
                                         $tipo = $detalle->tipo_talonario;
                                         $cant_solicitada = $detalle->cantidad;
                                         $nro_talonarios = $nro_talonarios + $cant_solicitada;
     
-                                        for ($i=1; $i <= $talonarios_emitir; $i++) {  
+                                        for ($i=0; $i < $talonarios_emitir; $i++) {  
                                             //////////////////////////////////////////////////////////////////////////////////////         
                                             $count_ciclo = $count_ciclo + 1; 
                                             $asignacion_talonario = '';
@@ -382,6 +399,7 @@ class AprobacionController extends Controller
                                                 $asignacion_talonario = 25;  /////En reserva
                                             }     
                                             ///////////////////////////////////////////////////////////////////////////////////////
+
     
                                             $id_max= DB::table('talonarios')->max('id_talonario');
                                             $query_hasta = DB::table('talonarios')->select('hasta')->where('id_talonario', '=' ,$id_max)->get();
@@ -390,6 +408,15 @@ class AprobacionController extends Controller
                                             }
                                             $desde = $prev_hasta +1;
                                             $hasta = ($desde + $tipo)-1;
+
+                                            if ($i == 0) {
+                                                $desde_emision = $desde;
+                                            }
+
+                                            $ultimo_t = $talonarios_emitir - 1;
+                                            if ($i == $ultimo_t) {
+                                                $hasta_emision = $hasta;
+                                            }
     
                                             $contador_guia = $desde;
                         
@@ -400,7 +427,8 @@ class AprobacionController extends Controller
                                                                                         'hasta' => $hasta,
                                                                                         'clase' => 5,
                                                                                         'asignado' => $tipo,
-                                                                                        'estado' => 20]);
+                                                                                        'estado' => 20,
+                                                                                        'asignacion_talonario' => $asignacion_talonario]);
                                             if ($insert) {
                                                 $id_talonario= DB::table('talonarios')->max('id_talonario');
                                                 $detalle_talonario = DB::table('detalle_talonarios')->insert([
@@ -423,7 +451,8 @@ class AprobacionController extends Controller
                                             }
                                         } ////cierra for                
                                     } ////cierra foreach
-    
+                                    
+                                    $update_emision = DB::table('emision_talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['desde' => $desde_emision, 'hasta' => $hasta_emision]);
                                     $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
     
                                     $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
@@ -454,7 +483,7 @@ class AprobacionController extends Controller
                             if ($c3) {
                                 $update_ids_tln = DB::table('talonarios')
                                                 ->where('id_talonario', '=', $c3->id_talonario)
-                                                ->update(['id_solicitud' => $idSolicitud]);
+                                                ->update(['id_solicitud' => $idSolicitud, 'asignacion_talonario' => 26]);
                                 if ($update_ids_tln) {
                                     $update_asignacion = DB::table('detalle_talonarios')
                                             ->where('id_talonario', '=', $c3->id_talonario)
@@ -477,7 +506,7 @@ class AprobacionController extends Controller
                         $talonarios_faltantes = $consulta_cantidad->cantidad - $consulta_reserva->total;
                         $nro_talonarios = $consulta_cantidad->cantidad;
                         $tipo = $consulta_cantidad->tipo_talonario;
-                        echo $talonarios_faltantes.'/';
+                        // echo $talonarios_faltantes.'/';
                         if ($talonarios_emitir != 0) {
                             $insert_emision_talonarios = DB::table('emision_talonarios')->insert(['id_solicitud' => $idSolicitud,
                                                                                         'tipo_talonario' => '50', 
@@ -485,7 +514,7 @@ class AprobacionController extends Controller
                                                                                         'id_user' => $user]);
                             if ($insert_emision_talonarios) {
                                 ////////////////////////PASO 1: SE ASIGNAN LOS TALONARIOS EN RESERVA 
-                                for ($i=0; $i < $consulta_reserva->total; $i++) { 
+                                for ($i=1; $i <= $consulta_reserva->total; $i++) { 
                                     $c3 = DB::table('detalle_talonarios')->select('id_talonario')
                                                         ->where('id_sujeto','=',$idSujeto)
                                                         ->where('id_cantera','=',$idCantera)
@@ -493,7 +522,7 @@ class AprobacionController extends Controller
                                     if ($c3) {
                                         $update_ids_tln = DB::table('talonarios')
                                                         ->where('id_talonario', '=', $c3->id_talonario)
-                                                        ->update(['id_solicitud' => $idSolicitud]);
+                                                        ->update(['id_solicitud' => $idSolicitud, 'asignacion_talonario' => 26]);
                                         if ($update_ids_tln) {
                                             $update_asignacion = DB::table('detalle_talonarios')
                                                     ->where('id_talonario', '=', $c3->id_talonario)
@@ -508,8 +537,11 @@ class AprobacionController extends Controller
     
                                 /////////////////////PASO 2: SE EMITEN LOS TALONARIOS NUEVOS, SEGUN LOS TALONARIOS QUE MANDO A EMITIR EL USUARIO
                                 $count_ciclo = 0; 
-                                for ($x=1; $x <= $talonarios_emitir; $x++) {  
-                                    echo $x;
+                                $desde_emision = '';
+                                $hasta_emision = '';
+
+                                for ($x=0; $x < $talonarios_emitir; $x++) {  
+                                    // echo $x;
                                     //////////////////////////////////////////////////////////////////////////////////////         
                                     $count_ciclo = $count_ciclo + 1; 
                                     $asignacion_talonario = '';
@@ -529,7 +561,16 @@ class AprobacionController extends Controller
                                     }
                                     $desde = $prev_hasta +1;
                                     $hasta = ($desde + $tipo)-1;
-    
+                                    
+                                    if ($x == 0) {
+                                        $desde_emision = $desde;
+                                    }
+
+                                    $ultimo_t = $talonarios_emitir - 1;
+                                    if ($x == $ultimo_t) {
+                                        $hasta_emision = $hasta;
+                                    }
+
                                     $contador_guia = $desde;
                 
                                     $insert = DB::table('talonarios')->insert(['id_solicitud' => $idSolicitud,
@@ -539,7 +580,8 @@ class AprobacionController extends Controller
                                                                                 'hasta' => $hasta,
                                                                                 'clase' => 5,
                                                                                 'asignado' => $tipo,
-                                                                                'estado' => 20]);
+                                                                                'estado' => 20,
+                                                                                'asignacion_talonario' => $asignacion_talonario]);
                                     if ($insert) {
                                         $id_talonario= DB::table('talonarios')->max('id_talonario');
                                         $detalle_talonario = DB::table('detalle_talonarios')->insert([
@@ -560,7 +602,8 @@ class AprobacionController extends Controller
                                         return response('Error al generar el QR');
                                     }
                                 } ////cierra for
-    
+                                
+                                $update_emision = DB::table('emision_talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['desde' => $desde_emision, 'hasta' => $hasta_emision]);
                                 $updates = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 17]);
     
                                 $accion = 'SOLICITUD NRO.'.$idSolicitud.' APROBADA, Talonarios: '.$nro_talonarios.', Contribuyente: '.$sp->razon_social;
@@ -593,7 +636,9 @@ class AprobacionController extends Controller
         // $consulta = DB::table('talonarios')->select('id_talonario')->where('id_solicitud', '=', $idSolicitud)->first();
 
         $tables = '';
-        $talonarios = DB::table('talonarios')->select('id_talonario','tipo_talonario','desde','hasta')->where('id_solicitud','=',$idSolicitud)->get();
+        $talonarios = DB::table('talonarios')->select('id_talonario','tipo_talonario','desde','hasta')
+                                            ->where('id_solicitud','=',$idSolicitud)
+                                            ->where('asignacion_talonario','=',26)->get();
 
         $razon_social = '';
         $rif = '';
@@ -618,35 +663,31 @@ class AprobacionController extends Controller
                     ->first();
 
                 if ($detalle) {
-                    $qr = $detalle->qr;
                     $razon_social = $detalle->razon_social;
                     $rif = $detalle->rif_condicion.'-'.$detalle->rif_nro;
                     $cantera = $detalle->nombre;
 
-                    $tables .= ' <span class="ms-3">Talonario Nro. '.$i.'</span>
-                            <div class="row d-flex align-items-center">
-                                <div class="col-sm-7">
-                                    <table class="table mt-2 mb-3">
-                                        <tr>
-                                            <th>Contenido:</th>
-                                            <td>'.$talonario->tipo_talonario.' Guías</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Desde:</th>
-                                            <td>'.$formato_desde.'</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Hasta:</th>
-                                            <td>'.$formato_hasta.'</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-sm-5">
-                                    <div class="title text-center">
-                                        <img width="140px" src="'.asset($qr).'" alt="">
+                    $tables .= ' <span class="ms-3 fw-bold text-navy">Talonario Nro. '.$i.'</span>
+                                <div class="d-flex justify-content-center">
+                                    <div class="row w-75 d-flex align-items-center px-3">
+                                        <div class="col-sm-12">
+                                            <table class="table mt-2 mb-3">
+                                                <tr>
+                                                    <th>Contenido:</th>
+                                                    <td>'.$talonario->tipo_talonario.' Guías</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Desde:</th>
+                                                    <td>'.$formato_desde.'</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Hasta:</th>
+                                                    <td>'.$formato_hasta.'</td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>';
+                                </div>';
                 }
 
                     

@@ -92,7 +92,7 @@ class VerificarUserController extends Controller
                                 <input type="hidden" class="form-control" name="id_sujeto" value="'.$idSujeto.'">
                                 <div class="d-flex justify-content-center my-2">
                                     <button type="submit" class="btn btn-success btn-sm me-4">Aprobar</button>
-                                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                    <a class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</a>
                                 </div>
                             </form>
  
@@ -222,7 +222,7 @@ class VerificarUserController extends Controller
 
                                 <div class="d-flex justify-content-center m-3">
                                     <button type="submit" class="btn btn-danger btn-sm me-4">Denegar</button>
-                                    <button  class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                    <a class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</a>
                                 </div>
                             </form>
  

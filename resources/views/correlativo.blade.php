@@ -18,7 +18,7 @@
         <div class="table-responsive" style="font-size:14px">
             <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
                 <thead class="border-light-subtle">
-                    <th>Cod. Talonario</th>
+                    <th>#</th>
                     <th>Cantera</th>
                     <th>Nro. Solicitud</th>
                     <th>Correlativo</th>
@@ -27,12 +27,13 @@
                     <th>R.I.F.</th>
                     <th>Empresa</th>
                     <th>Mensaje</th>
+                    <th>Asignación</th>
                     <th>Estado</th>
                 </thead>
                 <tbody> 
                 @foreach ($talonarios as $talonario)
                         <tr>
-                            <td>{{$talonario->id_talonario}}</td>
+                            <td class="text-secondary">{{$talonario->id_talonario}}</td>
                             <td>
                                 <span class="fw-bold text-navy">{{$talonario->nombre}}</span>
                             </td>
@@ -71,6 +72,14 @@
                                     <span class="text-secondary">S/M</span>
                                 @endif
 
+                            </td>
+                            <td>
+                                @if ($talonario->asignacion == 'Asignado')
+                                    <span class="text-success">{{$talonario->asignacion}}</span>
+                                @else
+                                <span class="text-secondary">{{$talonario->asignacion}}</span>
+                                @endif
+                                
                             </td>
                             <td>
                                 @switch($talonario->estado)

@@ -30,6 +30,9 @@ return new class extends Migration
 
             $table->integer('asignado');
 
+            $table->integer('asignacion_talonario')->unsigned()->nullable(); ////////EN RESERVA - ASIGNADO (SOLO PARA TALONARIOS REGULARES)
+            $table->foreign('asignacion_talonario')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
             $table->date('fecha_enviado_imprenta')->nullable();
             $table->date('fecha_recibido_imprenta')->nullable();
             $table->date('fecha_retiro')->nullable();
