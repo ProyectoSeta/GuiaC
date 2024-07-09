@@ -86,7 +86,7 @@
                     <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mt-2 mb-0 me-3"><i class='bx bx-printer fs-5 me-2'></i><span>Reporte</span></button>
                     <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center mt-2 mb-0"><i class='bx bxs-collection fs-5 me-2'></i></i><span>Lote Enviado</span></button>
                 </div>
-                <div class="table-responsive" style="font-size:14px">
+                <div class="table-responsive" style="font-size:12.7px">
                     <table id="enviados" class="table  border-light-subtle text-center" style="width:100%; font-size:13px">
                         <thead class="bg-primary border-light-subtle">
                                 <tr>
@@ -138,7 +138,7 @@
 
             <!-- CONTENIDO: USUARIOS ADMINISTRATIVO -->
             <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
-                <div class="table-responsive" style="font-size:14px">
+                <div class="table-responsive" style="font-size:12.7px">
                     <table id="" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                         <thead class="bg-primary border-light-subtle">
                                 <tr>

@@ -205,19 +205,25 @@ Route::post('/reserva/info_correlativo', [App\Http\Controllers\ReservaController
 ///////////DETALLE RESERVA  
 Route::get('/detalle_reserva/{talonario?}/', [App\Http\Controllers\DetalleReservaController::class, 'index'])->name('detalle_reserva.index');
 
+///////////ASIGNACIÓN DE GUÍAS (RESERVA - EN BLANCO)
+Route::get('/asignar', [App\Http\Controllers\AsignarController::class, 'index'])->name('asignar');
+Route::post('/asignar/search', [App\Http\Controllers\AsignarController::class, 'search'])->name('asignar.search');
 
-///////////SOLICITUD RESERVAS
-Route::get('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaController::class, 'index'])->name('solicitud_reserva');
-Route::post('/solicitud_reserva/new_solicitud', [App\Http\Controllers\SolicitudReservaController::class, 'new_solicitud'])->name('solicitud_reserva.new_solicitud');
-Route::post('/solicitud_reserva/calcular', [App\Http\Controllers\SolicitudReservaController::class, 'calcular'])->name('solicitud_reserva.calcular');
-Route::post('/solicitud_reserva/store', [App\Http\Controllers\SolicitudReservaController::class, 'store'])->name('solicitud_reserva.store');
-Route::post('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaController::class, 'destroy'])->name('solicitud_reserva.destroy');
 
-///////////SOLICITUD RESERVAS
-Route::get('/aprobacion_provicional', [App\Http\Controllers\AprobacionProvicionalController::class, 'index'])->name('aprobacion_provicional');
-Route::post('/aprobacion_provicional/aprobar', [App\Http\Controllers\AprobacionProvicionalController::class, 'aprobar'])->name('aprobacion_provicional.aprobar');
-Route::post('/aprobacion_provicional/correlativo', [App\Http\Controllers\AprobacionProvicionalController::class, 'correlativo'])->name('aprobacion_provicional.correlativo');
-Route::post('/aprobacion_provicional/info', [App\Http\Controllers\AprobacionProvicionalController::class, 'info'])->name('aprobacion_provicional.info');
+
+
+// ///////SOLICITUD RESERVAS
+// Route::get('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaController::class, 'index'])->name('solicitud_reserva');
+// Route::post('/solicitud_reserva/new_solicitud', [App\Http\Controllers\SolicitudReservaController::class, 'new_solicitud'])->name('solicitud_reserva.new_solicitud');
+// Route::post('/solicitud_reserva/calcular', [App\Http\Controllers\SolicitudReservaController::class, 'calcular'])->name('solicitud_reserva.calcular');
+// Route::post('/solicitud_reserva/store', [App\Http\Controllers\SolicitudReservaController::class, 'store'])->name('solicitud_reserva.store');
+// Route::post('/solicitud_reserva', [App\Http\Controllers\SolicitudReservaController::class, 'destroy'])->name('solicitud_reserva.destroy');
+
+// ///////////SOLICITUD RESERVAS
+// Route::get('/aprobacion_provicional', [App\Http\Controllers\AprobacionProvicionalController::class, 'index'])->name('aprobacion_provicional');
+// Route::post('/aprobacion_provicional/aprobar', [App\Http\Controllers\AprobacionProvicionalController::class, 'aprobar'])->name('aprobacion_provicional.aprobar');
+// Route::post('/aprobacion_provicional/correlativo', [App\Http\Controllers\AprobacionProvicionalController::class, 'correlativo'])->name('aprobacion_provicional.correlativo');
+// Route::post('/aprobacion_provicional/info', [App\Http\Controllers\AprobacionProvicionalController::class, 'info'])->name('aprobacion_provicional.info');
 
 //////////////QR
 Route::get('/qr/qr', [App\Http\Controllers\QrController::class, 'qr'])->name('qr.qr');

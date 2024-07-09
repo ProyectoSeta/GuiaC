@@ -11,7 +11,13 @@
     font-family: "Reddit Sans", sans-serif;
     /* font-family: "Outfit", sans-serif; */
     /* font-weight: 400; */
-    /* font-size: 14px; */
+    /* font-size: 15px; */
+}
+.sidebar{
+    font-size: 15px;
+}
+.nav-header{
+    font-weight: bold;
 }
 .titulo{
     /* font-family: "Rubik", sans-serif; */

@@ -102,6 +102,15 @@ class ClasificacionesSeeder extends Seeder
             'nombre_clf' => 'Asignado',
         ]);
 
+
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'Registrado',
+        ]);
+        
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'No Registrado',
+        ]);
+
     
     }
 }

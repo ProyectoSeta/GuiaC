@@ -34,7 +34,7 @@
                 <div class="tab-content py-3" id="nav-tabContent">
                     <!-- CONTENIDO: USUARIOS CONTRIBUYENTE -->
                     <div class="tab-pane fade show active" id="list-sp" role="tabpanel" aria-labelledby="list-sp-list">
-                        <div class="table-responsive" style="font-size:14px">
+                        <div class="table-responsive" style="font-size:12.7px">
                             <table id="contribuyente" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                                 <thead class="bg-primary border-light-subtle">
                                         <tr>
@@ -74,7 +74,7 @@
 
                     <!-- CONTENIDO: USUARIOS ADMINISTRATIVO -->
                     <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
-                    <div class="table-responsive" style="font-size:14px">
+                    <div class="table-responsive" style="font-size:12.7px">
                             <table id="administrativo" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                                 <thead class="bg-primary border-light-subtle">
                                         <tr>

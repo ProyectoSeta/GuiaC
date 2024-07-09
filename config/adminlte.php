@@ -65,7 +65,7 @@ return [
 
     'logo' => 'Principal',
     // 'logo2' => 'J-00000000-1',
-    'logo_img' => 'vendor/adminlte/dist/img/M.svg',
+    'logo_img' => 'vendor/adminlte/dist/img/M2.svg',
     'logo_img_class' => 'brand-image img-circle elevation-3 fs-6',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-lg',
@@ -87,7 +87,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/M.svg',
+            'path' => 'vendor/adminlte/dist/img/M2.svg',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -110,7 +110,7 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/M.svg',
+            'path' => 'vendor/adminlte/dist/img/M2.svg',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 100,
@@ -317,10 +317,11 @@ return [
         //     'label'       => 4,
         //     'label_color' => 'success',
         // ],
+        ['header' => 'Canteras y/o Desazolves'],
         [
-            'text'        => 'Registro de Cantera(s)',
+            'text'        => 'Registro',
             'route'         => 'cantera',
-            // 'icon'        => 'fas fa-plus pe-2',   
+            'icon'       => 'fas fa-angle-right pe-2',   
             // 'label'       => 4,
             // 'label_color' => 'success',
         ],
@@ -328,13 +329,34 @@ return [
         [
             'text' => ' Nueva Solicitud',
             'route'  => 'solicitud',
-            // 'icon' => 'fas fa-plus pe-2', 
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
-        ['header' => 'Reservas'],
+        ['header' => 'Reservas (En Blanco)'],
         [
-            'text' => ' Reserva de Talonarios',
+            'text' => 'Reserva de Talonarios',
             'url'  => '/reserva',
-            // 'icon' => '', 
+            'icon'       => 'fas fa-angle-right pe-2', 
+        ],
+        [
+            'text' => 'Asignación de Guías',
+            'icon'       => 'fas fa-angle-right pe-2', 
+            'submenu' => [
+                [
+                    'text' => 'Asignar',
+                    'icon'       => 'fas fa-angle-right ps-3 pe-2', 
+                    'url'  => '/asignar',
+                ],
+                [
+                    'text' => 'Generar QR',
+                    'icon'       => 'fas fa-angle-right ps-3 pe-2', 
+                    'url'  => '/generar',
+                ],
+                [
+                    'text' => 'Historial',
+                    'icon'       => 'fas fa-angle-right ps-3 pe-2', 
+                    'url'  => '/historial_asignacion',
+                ],
+            ],
         ],
         // [
         //     'text' => ' Solicitar Guías',
@@ -350,106 +372,106 @@ return [
         [
             'text' => 'Registro de guías',
             'url'  => '/registro_guia',
-            // 'icon' => 'fas fa-layer-group',
+           'icon'       => 'fas fa-angle-right pe-2',
         ],
         [
             'text' => 'Libros',
             'url'  => '/libros',
-            // 'icon' => 'bluetooth-outline',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         ['header' => 'Declaración'],
         [
             'text' => 'Declarar',
             'url'  => '/declarar',
-            // 'icon' => 'fas fa-layer-group',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         [
             'text' => 'Historial',
             'url'  => '/historial_declaraciones',
-            // 'icon' => 'fas fa-file-circle-plus',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         ['header' => 'Control de Solicitudes'],
         [
             'text'       => 'Aprobar Solicitudes',
-            // 'icon_color' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
             'url'        => '/aprobacion_solicitud',
         ],
         [
             'text'       => 'Actualizar Estado',
-            // 'icon_color' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
             'url'        => 'estado',
         ],
         [
             'text'       => 'Historial',
-            // 'icon_color' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
             'url'        => 'hsolicitudes',
         ],
         ['header' => 'Verificación'],
         [
             'text' => 'Nuevos Usuarios',
             'url'  => '/verificar_user',
-            // 'icon' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         [
             'text' => 'Canteras registradas',
             'url'  => '/verificar_cantera',
-            // 'icon' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         [
             'text' => 'Declaraciones',
             'url'  => '/verificar_declaracion',
-            // 'icon' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         ['header' => 'Historial'],
         [
             'text'          =>'Sujetos pasivos',
             'route'         =>'sujeto',
-            // 'icon'        => 'fas fa-fw fa-user',   
+            'icon'       => 'fas fa-angle-right pe-2',   
             'label'       => 4,
             'label_color' => 'success',
         ],
         [
             'text'       => 'Talonarios',
-            // 'icon_color' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
             'url'        => '/correlativo',
         ],
         [
             'text'       => 'Control de Canteras',
-            // 'icon_color' => 'fas fa-fw fa-user',
+            'icon'       => 'fas fa-angle-right pe-2',
             'url'        => '/control_canteras',
         ],
         // [
         //     'text'       => 'Recaudación',
-        //     // 'icon_color' => 'fas fa-fw fa-user',
+        //     'icon'       => 'fas fa-angle-right pe-2',
         //     'url'        => '/recaudacion',
         // ],
         ['header' => 'Usuarios'],
         [
             'text' => 'Usuarios',
             'url'  => '/usuarios',
-            // 'icon' => '',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         [
             'text' => 'Bitácora',
             'url'  => '/bitacora',
-            // 'icon' => '',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         ['header' => 'Mi Cuenta'],
         [
             'text' => 'Actualizar datos',
             'url'  => '/actualizar_datos',
-            // 'icon' => '',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         [
             'text' => 'Nueva Contraseña',
             'url'  => '/new_pass',
-            // 'icon' => '',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
         ['header' => 'Administración'],
         [
             'text' => 'UCD',
             'url'  => '/ucd',
-            // 'icon' => '',
+            'icon'       => 'fas fa-angle-right pe-2',
         ],
 
         // [
