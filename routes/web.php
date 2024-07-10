@@ -208,6 +208,7 @@ Route::get('/detalle_reserva/{talonario?}/', [App\Http\Controllers\DetalleReserv
 ///////////ASIGNACIÓN DE GUÍAS (RESERVA - EN BLANCO)
 Route::get('/asignar', [App\Http\Controllers\AsignarController::class, 'index'])->name('asignar');
 Route::post('/asignar/search', [App\Http\Controllers\AsignarController::class, 'search'])->name('asignar.search');
+Route::post('/asignar/modal', [App\Http\Controllers\AsignarController::class, 'modal'])->name('asignar.modal');
 
 
 

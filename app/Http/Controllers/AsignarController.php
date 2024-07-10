@@ -41,7 +41,7 @@ class AsignarController extends Controller
                                             ->where('rif_nro','=',$rif_nro)->first();
                 $html = '<div class="text-center">
                             <p class="fw-bold text-success mb-2">Contribuyente Registrado</p>
-                            <a href="#" tipo="notuser" id_sujeto="'.$consulta->id_sujeto_notuser.'" data-bs-toggle="modal" data-bs-target="#modal_asignar_sujeto_registrado">'.$consulta->razon_social.' <br> '.$consulta->rif_condicion.'-'.$consulta->rif_nro.'</a>
+                            <a href="#" class="asignar" tipo="notuser" id_sujeto="'.$consulta->id_sujeto_notuser.'" data-bs-toggle="modal" data-bs-target="#modal_asignar_sujeto_registrado">'.$consulta->razon_social.' <br> '.$consulta->rif_condicion.'-'.$consulta->rif_nro.'</a>
                         </div>';
             }
         }else{
@@ -50,12 +50,21 @@ class AsignarController extends Controller
                                             ->where('rif_nro','=',$rif_nro)->first();
             $html = '<div class="text-center">
                             <p class="fw-bold text-success mb-2">Contribuyente Registrado</p>
-                            <a href="#" tipo="user" id_sujeto="'.$consulta->id_sujeto.'" data-bs-toggle="modal" data-bs-target="#modal_asignar_sujeto_registrado">'.$consulta->razon_social.' <br> '.$consulta->rif_condicion.'-'.$consulta->rif_nro.'</a>
+                            <a href="#" class="asignar" tipo="user" id_sujeto="'.$consulta->id_sujeto.'" data-bs-toggle="modal" data-bs-target="#modal_asignar_sujeto_registrado">'.$consulta->razon_social.' <br> '.$consulta->rif_condicion.'-'.$consulta->rif_nro.'</a>
                         </div>';
         }
 
         return response($html);
     }
+
+
+    public function modal(Request $request)
+    {
+        $tipo = $request->post('tipo'); 
+        $sujeto = $request->post('sujeto');
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
