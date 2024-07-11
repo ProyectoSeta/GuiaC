@@ -103,94 +103,10 @@
     <!-- ********* ASIGNACIÓN: SUJETO REGISTRADO ******** -->
     <div class="modal fade" id="modal_asignar_sujeto_registrado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content" id="content_ver_solicitud">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel" >Asignación de Guías</h1>
-                </div>
-
-                <div class="modal-body " style="font-size:13px">
-                    <form id="form_asignar_guias" method="post" onsubmit="event.preventDefault(); asignarGuias();">
-                        <div class="row px-4">
-                            <div class="col-sm-6">
-                                <div class="text-center text-navy fw-bold mb-3">
-                                    <span class="">Datos del Contribuyente</span>
-                                </div>
-
-                                <div class="mb-0">
-                                    <span class="fw-bold">R.I.F.</span>
-                                    <p class="text-navy fw-bold mb-2">G-200108240</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">Razon Social</span>
-                                    <p class="text-navy fw-bold mb-2">ARAGUA MINAS Y CANTERAS, S.A.</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">Dirección</span>
-                                    <p class="text-muted mb-2">DIRECCION</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">Teléfono Móvil</span>
-                                    <p class="text-muted mb-2">04120000001</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">Teléfono Fijo</span>
-                                    <p class="text-muted mb-2">02440000001</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">Representante legal</span>
-                                    <p class="text-muted mb-2">LEON</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">C.I. del Representante</span>
-                                    <p class="text-muted mb-2">V-000001</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">R.I.F. del Representante</span>
-                                    <p class="text-muted mb-2">V00000001</p>
-                                </div>
-                                <div class="mb-0">
-                                    <span class="fw-bold">Teléfono del Representante</span>
-                                    <p class="text-muted mb-2">04120000001</p>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-center text-navy fw-bold mb-3">
-                                    <span class="">Correspondiente a la Asignación</span>
-                                </div>
-
-                                <div class=" mb-2">
-                                    <label class="form-label" for="cantera">Cantera y/o Desazolve</label><span class="text-danger">*</span>
-                                    <select class="form-select form-select-sm" id="cantera" aria-label="Default select example" name="cantera" required>
-                                        <option  value=""></option>
-                                    </select>
-                                </div>
-                                <div class=" mb-2">
-                                    <label class="form-label" for="cantidad">No. de Guías</label><span class="text-danger">*</span>
-                                    <input class="form-control form-control-sm" type="number" name="cantidad" required disabled>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label" for="oficio">Oficio</label><span class="text-danger">*</span>
-                                    <p class="mb-2 text-secondary text-justify"><span class="fw-bold">Nota: </span>Es importante subir el oficio de la solicitud, realizada por el contribuyente para la asignación de guías provicionales, como soporte de dicha transacción.</p>
-                                    <input class="form-control form-control-sm" id="oficio" type="file" name="oficio" required disabled>
-                                </div>
-
-                                <div class="d-flex justify-content-end align-items-center me-2 fs-6 mb-2">
-                                    <span class="fw-bold me-4">Total: </span>
-                                    <span id="total_ucd" class="fs-5">0 UCD</span>
-                                </div>
-
-                                <input type="hidden" name="id_sujeto" required>
-                                <input type="hidden" name="tipo_sujeto" required>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-center mt-3 mb-3">
-                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal" id="btn_cancelar" disabled="">Cancelar</button>
-                            <button type="submit" class="btn btn-success btn-sm" id="btn_generar_asignacion" disabled="">Asignar</button>
-                        </div>
-                    </form>
-                    
-
+            <div class="modal-content" id="content_asignar_sujeto_registrado">
+                <div class="py-4 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
                 </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -245,13 +161,6 @@
                                     <label class="form-label" for="tlf_movil">Teléfono Movil</label><span class="text-danger"> *</span>
                                     <input type="number" id="tlf_movil" class="form-control form-control-sm" name="tlf_movil" placeholder="Ejemplo: 04125231102" required >
                                     <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
-                                </div>
-
-                                <!-- tlf fijo input -->
-                                <div class="form-outline mb-2">
-                                    <label class="form-label" for="tlf_fijo">Teléfono Fijo</label>
-                                    <input type="number" id="tlf_fijo" class="form-control form-control-sm" name="tlf_fijo" placeholder="Ejemplo: 02432632201" required>
-                                    <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 02432632201</p>
                                 </div>
 
                                 <!-- rif:repr input -->
@@ -350,8 +259,6 @@
                                     <label for="direccion_cantera" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
                                     <input type="text" id="direccion_cantera" class="form-control form-control-sm" name="direccion_cantera"  required>
                                 </div>
-                                                                    
-                                
 
                                 <div class="text-center text-navy fw-bold mb-3">
                                     <span class="">Correspondiente a la Asignación</span>
@@ -389,6 +296,22 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
+
+
+
+    <!-- ********* ASIGNACIÓN EXITOSA: VER CORRELATIVO ******** -->
+    <div class="modal fade" id="modal_asignacion_correlativo"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_asignacion_correlativo">
+                <div class="modal-body">
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
 
 
 <!--************************************************-->
@@ -465,6 +388,77 @@
             // console.log(cant);
         });
 
+
+        ////////////////////////AGREGAR OTRA CANTERA O DESAZOLVE AL CONTRIBUYENTE (NOTUSER)
+        $(document).on('click','#add_cantera_notuser', function(e) {  
+            var id_sujeto = $(this).attr('id_sujeto');
+            $('#select_cantera_asignacion').html('<div class="form-outline mb-2">'+
+                                    '<label class="form-label" for="nombre_cantera">Nombre de la Cantera o Desazolve</label><span class="text-danger"> *</span>'+
+                                    '<input type="text" id="nombre_cantera" class="form-control form-control-sm" name="nombre_cantera" required/>'+
+                                '</div>'+
+                                
+                                '<div class="form-outline mb-2">'+
+                                    '<label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>'+
+                                    '<select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio" required>'+
+                                        '<option value="Bolívar">Bolívar</option>'+
+                                        '<option value="Camatagua">Camatagua</option>'+
+                                        '<option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>'+
+                                        '<option value="Girardot">Girardot</option>'+
+                                        '<option value="José Ángel Lamas">José Ángel Lamas</option>'+
+                                        '<option value="José Félix Ribas">José Félix Ribas</option>'+
+                                        '<option value="José Rafael Revenga">José Rafael Revenga</option>'+
+                                        '<option value="Libertador">Libertador</option>'+
+                                        '<option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>'+
+                                        '<option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>'+
+                                        '<option value="San Casimiro">San Casimiro</option>'+
+                                        '<option value="San Sebastián">San Sebastián</option>'+
+                                        '<option value="Santiago Mariño">Santiago Mariño</option>'+
+                                        '<option value="Santos Michelena">Santos Michelena</option>'+
+                                        '<option value="Sucre">Sucre</option>'+
+                                        '<option value="Tovar">Tovar</option>'+
+                                        '<option value="Urdaneta">Urdaneta</option>'+
+                                        '<option value="Zamora">Zamora </option>'+
+                                    '</select>'+
+
+                                '</div>'+
+                                  
+                                '<div class="form-outline mb-2">'+
+                                    '<label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>'+
+                                    '<select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia" required>'+
+                                        '<option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>'+
+                                    '</select>'+
+                                '</div>'+
+
+                                '<div class="form-outline mb-4">'+
+                                    '<label for="direccion_cantera" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>'+
+                                    '<input type="text" id="direccion_cantera" class="form-control form-control-sm" name="direccion_cantera"  required>'+
+                                '</div>'+
+                                '<input type="hidden" name="id_sujeto" value="'+id_sujeto+'">');
+
+            $('#content_btn_add').html('<a href="#" id="cancel_cantera_notuser" id_sujeto="'+id_sujeto+'">Cancelar</a>');
+            
+        });
+
+
+        ////////////////////////CANCELAR EL REGISTRO NUEVA CANTERA O DESAZOLVE - MOSTRAR CANTERAS REGISTRADAS
+        $(document).on('click','#cancel_cantera_notuser', function(e) {  
+            var sujeto = $(this).attr('id_sujeto');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.canteras") }}',
+                data: {sujeto:sujeto},
+                success: function(response) {           
+                    $('#select_cantera_asignacion').html(response);
+                    $('#content_btn_add').html('<a href="#" id="add_cantera_notuser" id_sujeto="'+sujeto+'">Agregar Cantera o Desazolve</a>');
+                },
+                error: function() {
+                }
+            });
+            
+        });
+
+
         $(document).on('click','.asignar', function(e) {  
             var tipo = $(this).attr('tipo');
             var sujeto = $(this).attr('id_sujeto');
@@ -474,21 +468,46 @@
                 type: 'POST',
                 url: '{{route("asignar.modal") }}',
                 data: {tipo:tipo,sujeto:sujeto},
-                success: function(response) {           
-                    $('#modal_asignar_sujeto_registrado').html(response);
+                success: function(response) {
+                    // console.log(response);           
+                    $('#content_asignar_sujeto_registrado').html(response);
                 },
                 error: function() {
                 }
             });
-            // console.log(cant);
+            
         });
 
 
+        //////////////////// CALCULAR TOTAL UCD
+        $(document).on('keyup','#cantidad', function(e) {  
+            var cant = $(this).val();
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.calcular") }}',
+                data: {cant:cant},
+                success: function(response) {
+                    // console.log(response);           
+                    $('#total_ucd').html(response.ucd+' UCD');
+                },
+                error: function() {
+                }
+            });
+            
+        });
 
 
-
-
-
+        //////////////////// DESHABILITAR EL BOTON "ASIGNAR" SI EL NUMERO DE GUIAS ES 0
+        $(document).on('keyup','#cantidad', function(e) {  
+            var cant = $(this).val();
+            if (cant == 0) {
+                $("#btn_generar_asignacion").attr('disabled', true);
+            }else{
+                $("#btn_generar_asignacion").attr('disabled', false);
+            }
+            // console.log(cant);
+        });
 
 
 
@@ -599,7 +618,7 @@
         var formData = new FormData(document.getElementById("form_asignar_guias"));
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("asignar") }}',
+                url:'{{route("asignar.asignar") }}',
                 type:'POST',
                 contentType:false,
                 cache:false,
@@ -607,12 +626,25 @@
                 async: true,
                 data: formData,
                 success: function(response){
-                    //alert(response);
+                    console.log(response);
                     if (response.success) {
-                        alert('EL ESTADO DE LA SOLICITUD HA SIDO ACTUALIZADO CORRECTAMENTE');
-                        window.location.href = "{{ route('estado')}}";
+                        var asignacion = response.id_asignacion;
+                        $('#modal_asignar_sujeto_registrado').modal('hide');
+                        $('#modal_asignacion_correlativo').modal('show');
+
+                        $.ajax({
+                            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                            type: 'POST',
+                            url: '{{route("asignar.correlativo") }}',
+                            data: {asignacion:asignacion},
+                            success: function(response) {           
+                                $('#content_asignacion_correlativo').html(response);
+                            },
+                            error: function() {
+                            }
+                        });
                     } else {
-                        alert('Ha ocurrido un error al Actualizar el estado de la Solicitud.');
+                        alert('Ha ocurrido un error al Asignar las Guías de Reserva.');
                     }    
 
                 },

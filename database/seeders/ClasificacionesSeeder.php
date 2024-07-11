@@ -111,6 +111,11 @@ class ClasificacionesSeeder extends Seeder
             'nombre_clf' => 'No Registrado',
         ]);
 
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'QR Listo',
+        ]);
+
+
     
     }
 }

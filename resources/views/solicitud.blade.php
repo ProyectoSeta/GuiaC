@@ -311,7 +311,7 @@
             $(document).on('click','#calcular', function(e) { 
                 e.preventDefault(e); 
                 var cant = $('#cantidad').val();
-                console.log(cant);
+                // console.log(cant);
 
                 if (cant == '' || cant == 0) {
                     $('#total_ucd').html('0 UCD');
@@ -332,7 +332,7 @@
                     $("#btn_cancelar").attr('disabled', true);
                     $("#btn_generar_solicitud").attr('disabled', true);
                 }
-                console.log(cant);
+                // console.log(cant);
             });
 
 
@@ -369,7 +369,7 @@
                         url: '{{route("solicitud.destroy") }}',
                         data: {solicitud:solicitud,cantera:cantera},
                         success: function(response) {
-                           console.log(response);
+                        //    console.log(response);
                             if (response.success){
                                 alert("SOLICITUD ELIMINADA EXITOSAMENTE");
                                 window.location.href = "{{ route('solicitud')}}";
@@ -425,7 +425,7 @@
                     processData:false,
                     async: true,
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                        if (response.success) {
                             alert('La solicitud a sido generada exitosamente!');
                             $('#form_generar_solicitud')[0].reset();

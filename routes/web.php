@@ -209,6 +209,10 @@ Route::get('/detalle_reserva/{talonario?}/', [App\Http\Controllers\DetalleReserv
 Route::get('/asignar', [App\Http\Controllers\AsignarController::class, 'index'])->name('asignar');
 Route::post('/asignar/search', [App\Http\Controllers\AsignarController::class, 'search'])->name('asignar.search');
 Route::post('/asignar/modal', [App\Http\Controllers\AsignarController::class, 'modal'])->name('asignar.modal');
+Route::post('/asignar/canteras', [App\Http\Controllers\AsignarController::class, 'canteras'])->name('asignar.canteras');
+Route::post('/asignar/calcular', [App\Http\Controllers\AsignarController::class, 'calcular'])->name('asignar.calcular');
+Route::post('/asignar/asignar', [App\Http\Controllers\AsignarController::class, 'asignar'])->name('asignar.asignar');
+Route::post('/asignar/correlativo', [App\Http\Controllers\AsignarController::class, 'correlativo'])->name('asignar.correlativo');
 
 
 

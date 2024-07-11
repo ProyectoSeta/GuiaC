@@ -179,7 +179,7 @@ class AprobacionProvicionalController extends Controller
                             $talonarios = [];
                             $url_talonarios = '';
                             // $x = 0; //////cuenta las iteraciones del bucle
-// return response('si entro');
+
                             ////////////SE HACE EL PRIMER REGISTRO DE LAS GUIAS PARA DESPUES PASAR AL BUCLE  
                             if ($c->asignado == 0) {
                                 ////// todavia no se han asignado guías del talonario

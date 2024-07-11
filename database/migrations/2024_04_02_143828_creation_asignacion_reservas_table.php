@@ -28,9 +28,14 @@ return new class extends Migration
             $table->foreign('id_cantera_notuser')->references('id_cantera_notuser')->on('canteras_notusers')->onDelete('cascade');
 
             $table->integer('cantidad_guias')->unsigned();
-            $table->dateTime('fecha');
             $table->integer('total_ucd');
-            $table->string('soporte');
+            $table->string('soporte')->nullable();
+
+            $table->integer('estado')->unsigned(); /////////EN PROCESO - QR LISTO - RETIRADO
+            $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
+            $table->dateTime('fecha_emision');
+            $table->dateTime('fecha_entrega')->nullable();
             $table->integer('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
 

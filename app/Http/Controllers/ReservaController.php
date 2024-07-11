@@ -96,8 +96,16 @@ class ReservaController extends Controller
 
                         $accion = 'EMISIÓN DE '.$cantidad.' TALONARIOS DE RESERVA (COD: '.$cod_talonarios.')';
                         $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
-                    
-                        return response()->json(['success' => true, 'id_reserva' => $id_reserva]);
+
+                        $consulta = DB::table('total_guias_reservas')->select('total')->where('correlativo','=',1)->first();
+                        $total_guias_reserva = $consulta->total + ($cantidad * $tipo_talonario);
+                        $update_total_reserva = DB::table('total_guias_reservas')->where('correlativo', '=', 1)->update(['total' => $total_guias_reserva]);
+                        if ($update_total_reserva) {
+                            return response()->json(['success' => true, 'id_reserva' => $id_reserva]);
+                        }else{
+                            return response()->json(['success' => false]);
+                        }
+                        
                         
                     }else{   //////////Hay registros en la tabla Talonarios
                         $detalles = DB::table('detalle_reservas')->where('id_reserva','=',$id_reserva)->get();
@@ -138,7 +146,15 @@ class ReservaController extends Controller
                         $accion = 'EMISIÓN DE '.$cantidad.' TALONARIOS DE RESERVA (COD: '.$cod_talonarios.')';
                         $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
 
-                        return response()->json(['success' => true, 'id_reserva' => $id_reserva]);
+                        $consulta = DB::table('total_guias_reservas')->select('total')->where('correlativo','=',1)->first();
+                        $total_guias_reserva = $consulta->total + ($cantidad * $tipo_talonario);
+                        $update_total_reserva = DB::table('total_guias_reservas')->where('correlativo', '=', 1)->update(['total' => $total_guias_reserva]);
+                        if ($update_total_reserva) {
+                            return response()->json(['success' => true, 'id_reserva' => $id_reserva]);
+                        }else{
+                            return response()->json(['success' => false]);
+                        }
+
                     }
                 
                 }else{
