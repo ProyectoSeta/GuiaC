@@ -12,7 +12,46 @@ class AsignarController extends Controller
      */
     public function index()
     {
-        return view('asignar');
+        $asignaciones = [];
+        $consulta = DB::table('asignacion_reservas')
+                                    ->join('clasificacions', 'asignacion_reservas.estado', '=', 'clasificacions.id_clasificacion')
+                                    ->select('asignacion_reservas.*','clasificacions.nombre_clf')
+                                    ->where('asignacion_reservas.estado','=',17)
+                                    ->get();
+
+        foreach($consulta as $c) {
+            $tipo_sujeto = $c->contribuyente;
+            $rif_nro = '';
+            $rif_condicion = '';
+            if ($tipo_sujeto == 27) { ///registrado
+                $sujeto = DB::table('sujeto_pasivos')->select('rif_nro','rif_condicion')->where('id_sujeto','=',$c->id_sujeto)->first();
+                $rif_nro = $sujeto->rif_nro;
+                $rif_condicion = $sujeto->rif_condicion;
+            }else{  //////no registrado
+                $sujeto = DB::table('sujeto_notusers')->select('rif_nro','rif_condicion')->where('id_sujeto_notuser','=',$c->id_sujeto)->first();
+                $rif_nro = $sujeto->rif_nro;
+                $rif_condicion = $sujeto->rif_condicion;
+            }
+
+            $array = array(
+                'id_asignacion' => $c->id_asignacion,
+                'contribuyente' => $c->contribuyente,
+                'id_sujeto' => $c->id_sujeto,
+                'id_cantera' => $c->id_cantera,
+                'rif_nro' => $rif_nro,
+                'rif_condicion' => $rif_condicion,
+                'cantidad_guias' => $c->cantidad_guias,
+                'fecha_emision' => $c->fecha_emision,
+                'total_ucd' => $c->total_ucd,
+                'soporte' => $c->soporte
+            );
+
+            $a = (object) $array;
+            array_push($asignaciones, $a);
+        }
+
+
+        return view('asignar', compact('asignaciones'));
     }
 
     /**
@@ -414,7 +453,9 @@ class AsignarController extends Controller
                             }else{
                                 ////// ya se han asignado guías del talonario
                                 $detalle = DB::table('detalle_talonarios')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
+                                
                                 if ($detalle) {
+                                    
                                     $desde = $detalle->hasta + 1;
                                     $hasta = ($desde + $cant) - 1;
                                 }else{
@@ -423,14 +464,26 @@ class AsignarController extends Controller
                             }
                             
                             ///////insert detalle
-                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                                    'id_talonario' => $c->id_talonario,
-                                                                    'id_cantera' => $id_cantera, 
-                                                                    'id_sujeto' => $id_sujeto, 
-                                                                    'desde' => $desde, 
-                                                                    'hasta' => $hasta,
-                                                                    'clase' => 6,
-                                                                    'id_solicitud_reserva' => $id_asignacion]);
+                            if ($tipo == 'notuser') {
+                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                    'id_talonario' => $c->id_talonario,
+                                    'id_cantera_notuser' => $id_cantera, 
+                                    'id_sujeto_notuser' => $id_sujeto, 
+                                    'desde' => $desde, 
+                                    'hasta' => $hasta,
+                                    'clase' => 6,
+                                    'id_solicitud_reserva' => $id_asignacion]);
+                            }else{
+                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                    'id_talonario' => $c->id_talonario,
+                                    'id_cantera' => $id_cantera, 
+                                    'id_sujeto' => $id_sujeto, 
+                                    'desde' => $desde, 
+                                    'hasta' => $hasta,
+                                    'clase' => 6,
+                                    'id_solicitud_reserva' => $id_asignacion]);
+                            }
+                            
                             if ($detalle_talonario) {
                                 $asignado = $asignado + $cant;
                                 $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
@@ -473,15 +526,27 @@ class AsignarController extends Controller
                                 ////// todavia no se han asignado guías del talonario
                                 $desde = $c->desde;
                                 $hasta = $c->hasta;
-
-                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                                                        'id_talonario' => $c->id_talonario,
-                                                                                        $campo_cantera => $id_cantera, 
-                                                                                        $campo_sujeto => $id_sujeto, 
-                                                                                        'desde' => $desde, 
-                                                                                        'hasta' => $hasta,
-                                                                                        'clase' => 6,
-                                                                                        'id_solicitud_reserva' => $id_asignacion]);
+                                
+                                if ($tipo == 'notuser') {
+                                    $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                            'id_talonario' => $c->id_talonario,
+                                            'id_cantera_notuser' => $id_cantera, 
+                                            'id_sujeto_notuser' => $id_sujeto, 
+                                            'desde' => $desde, 
+                                            'hasta' => $hasta,
+                                            'clase' => 6,
+                                            'id_solicitud_reserva' => $id_asignacion]);
+                                }else{
+                                    $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                            'id_talonario' => $c->id_talonario,
+                                            'id_cantera' => $id_cantera, 
+                                            'id_sujeto' => $id_sujeto, 
+                                            'desde' => $desde, 
+                                            'hasta' => $hasta,
+                                            'clase' => 6,
+                                            'id_solicitud_reserva' => $id_asignacion]);
+                                }
+                                
                                 if ($detalle_talonario) {
                                     $i = 50;
                                     $asignado = $c->asignado + $i;
@@ -497,14 +562,26 @@ class AsignarController extends Controller
                                     $desde = $detalle->hasta + 1;
                                     $hasta = $c->hasta;
                                     
-                                    $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                                                        'id_talonario' => $c->id_talonario,
-                                                                                        $campo_cantera => $id_cantera, 
-                                                                                        $campo_sujeto => $id_sujeto, 
-                                                                                        'desde' => $desde, 
-                                                                                        'hasta' => $hasta,
-                                                                                        'clase' => 6,
-                                                                                        'id_solicitud_reserva' => $id_asignacion]);
+                                    if ($tipo == 'notuser') {
+                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                'id_talonario' => $c->id_talonario,
+                                                'id_cantera_notuser' => $id_cantera, 
+                                                'id_sujeto_notuser' => $id_sujeto, 
+                                                'desde' => $desde, 
+                                                'hasta' => $hasta,
+                                                'clase' => 6,
+                                                'id_solicitud_reserva' => $id_asignacion]);
+                                    }else{
+                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                'id_talonario' => $c->id_talonario,
+                                                'id_cantera' => $id_cantera, 
+                                                'id_sujeto' => $id_sujeto, 
+                                                'desde' => $desde, 
+                                                'hasta' => $hasta,
+                                                'clase' => 6,
+                                                'id_solicitud_reserva' => $id_asignacion]);
+                                    }
+                                    
                                     if ($detalle_talonario) {
                                         $i = ($hasta - $desde) + 1;
                                         $asignado = $c->asignado + $i;
@@ -537,14 +614,26 @@ class AsignarController extends Controller
                                         $hasta = $c2->hasta;
                                     }
 
-                                    $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                                                    'id_talonario' => $c2->id_talonario,
-                                                                                    $campo_cantera => $id_cantera, 
-                                                                                    $campo_sujeto => $id_sujeto, 
-                                                                                    'desde' => $desde, 
-                                                                                    'hasta' => $hasta,
-                                                                                    'clase' => 6,
-                                                                                    'id_solicitud_reserva' => $id_asignacion]);
+                                    if ($tipo == 'notuser') {
+                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                'id_talonario' => $c2->id_talonario,
+                                                'id_cantera_notuser' => $id_cantera, 
+                                                'id_sujeto_notuser' => $id_sujeto, 
+                                                'desde' => $desde, 
+                                                'hasta' => $hasta,
+                                                'clase' => 6,
+                                                'id_solicitud_reserva' => $id_asignacion]);
+                                    }else{
+                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                'id_talonario' => $c2->id_talonario,
+                                                'id_cantera' => $id_cantera, 
+                                                'id_sujeto' => $id_sujeto, 
+                                                'desde' => $desde, 
+                                                'hasta' => $hasta,
+                                                'clase' => 6,
+                                                'id_solicitud_reserva' => $id_asignacion]);
+                                    }
+                                    
                                     if ($detalle_talonario) {
                                         $i = $i + (($hasta - $desde) + 1);  
                                         $asignado = $c2->asignado + $i;
@@ -611,62 +700,55 @@ class AsignarController extends Controller
     public function correlativo(Request $request)
     {
         $id_asignacion = $request->post('asignacion');
-        $tables = '';
-        return response('lo hizo');
-        // $talonarios = DB::table('talonarios')->select('id_talonario','tipo_talonario','desde','hasta')->where('id_reserva','=',$id_reserva)->get();
+       
 
-        // if ($talonarios) {
-        //     $i=0;
-        //     foreach ($talonarios as $talonario) {
-        //         $i = $i + 1;
-        //         $desde = $talonario->desde;
-        //         $hasta = $talonario->hasta;
-        //         $length = 6;
-        //         $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
-        //         $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+        $detalle = DB::table('detalle_talonarios')->select('desde','hasta')->where('id_solicitud_reserva','=',$id_asignacion)->first();
+       
+        if ($detalle) {
+            $desde = $detalle->desde;
+            $hasta = $detalle->hasta;
+            $length = 6;
+            $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+            $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
-
-            
-
-        //         $tables .= ' <span class="ms-3 text-muted">Talonario Nro. '.$i.'</span>
-        //                 <div class="row d-flex align-items-center px-5">
-        //                     <div class="col-sm-12">
-        //                         <table class="table mt-2 mb-3">
-        //                             <tr>
-        //                                 <th>Contenido:</th>
-        //                                 <td>'.$talonario->tipo_talonario.' Guías</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <th>Desde:</th>
-        //                                 <td>'.$formato_desde.'</td>
-        //                             </tr>
-        //                             <tr>
-        //                                 <th>Hasta:</th>
-        //                                 <td>'.$formato_hasta.'</td>
-        //                             </tr>
-        //                         </table>
-        //                     </div>
-        //                 </div>';
+     $asignacion = DB::table('asignacion_reservas')->select('cantidad_guias')->where('id_asignacion','=',$id_asignacion)->first();
+            $cantidad = $asignacion->cantidad_guias;
         
-                    
-        //     }
+       
 
-        //     $html = ' <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-        //                     <div class="text-center">
-        //                     <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
-        //                         <h1 class="modal-title text-navy fs-5" id="exampleModalLabel">CORRELATIVO</h1>
-        //                         <span class="fs-6 text-muted">Talonario(s) Emitidos</span>
-        //                     </div>
-        //                 </div>
-        //                 <div class="modal-body" style="font-size:14px">
-        //                     <p class="text-center" style="font-size:14px">El correlativo correspondiente a la reserva es el siguiente:</p>
-        //                         '.$tables.'
-        //                     <div class="d-flex justify-content-center">
-        //                         <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo_reserva" data-bs-dismiss="modal">Salir</button>
-        //                     </div>
-        //                 </div>';
-        //     return response($html);
-        // }
+            $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                            <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
+                                <h1 class="modal-title text-navy fs-5" id="exampleModalLabel">CORRELATIVO</h1>
+                                <span class="fs-6 text-muted">Guía(s) Asignadas</span>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="font-size:14px">
+                            <p class="text-center" style="font-size:14px">El correlativo correspondiente a la asignación de Guías es el siguiente:</p>
+                                <div class="row d-flex align-items-center px-5">
+                                    <div class="col-sm-12">
+                                        <table class="table mt-2 mb-3">
+                                            <tr>
+                                                <th>No. de Guías:</th>
+                                                <td>'.$cantidad.' Guías</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Desde:</th>
+                                                <td>'.$formato_desde.'</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Hasta:</th>
+                                                <td>'.$formato_hasta.'</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            <div class="d-flex justify-content-center">
+                                <button  class="btn btn-secondary btn-sm " id="cerrar_info_correlativo_reserva" data-bs-dismiss="modal">Salir</button>
+                            </div>
+                        </div>';
+            return response($html);
+        }
 
     }
 

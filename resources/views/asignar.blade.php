@@ -70,15 +70,30 @@
                 <thead>
                     <th>#</th>
                     <th>R.I.F.</th>
-                    <th>Contribuyente</th>
+                    <th>Detalles</th>
                     <th>Cant. Guías</th> 
                     <th>Emisión</th>
                     <th>Total UCD</th> 
                     <th>Soporte</th>
+                    <th>Estado</th>
                     <th>Opción</th> <!-- entregado?  -->
                 </thead>
                 <tbody id="list_canteras" class="border-light-subtle"> 
-                
+                    @foreach ($asignaciones as $a)
+                        <tr>
+                            <td>{{$a->id_asignacion}}</td>
+                            <td>
+                                <a class="info_sujeto" role="button" id_sujeto='{{ $a->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$a->rif_condicion}}-{{$a->rif_nro}}</a>
+                            </td>
+                            <td>
+                                <a class="detalle_asignacion" role="button" id_asignacion='{{ $a->id_asignacion }}' data-bs-toggle="modal" data-bs-target="#">Ver</a>
+                            </td>
+                            <td class="">{{$a->cantidad_guias}} Guías</td>
+                            <td class="text-secondary">{{$a->fecha_emision}}</td>
+                            <td>{{$a->total_ucd}} UCD</td>
+                            <td></td>
+                        </tr>
+                    @endforeach
                 </tbody> 
                 
             </table>
@@ -510,6 +525,11 @@
         });
 
 
+        ////////cerrar modal info correlativo
+        $(document).on('click','#cerrar_info_correlativo_reserva', function(e) { 
+            $('#modal_asignacion_correlativo').modal('hide');
+            window.location.href = "{{ route('asignar')}}";
+        });
 
 
 
@@ -628,7 +648,8 @@
                 success: function(response){
                     console.log(response);
                     if (response.success) {
-                        var asignacion = response.id_asignacion;
+                        var asignacion = response.asignacion;
+                        console.log(asignacion);
                         $('#modal_asignar_sujeto_registrado').modal('hide');
                         $('#modal_asignacion_correlativo').modal('show');
 
@@ -637,7 +658,8 @@
                             type: 'POST',
                             url: '{{route("asignar.correlativo") }}',
                             data: {asignacion:asignacion},
-                            success: function(response) {           
+                            success: function(response) {      
+                                console.log(response);     
                                 $('#content_asignacion_correlativo').html(response);
                             },
                             error: function() {
