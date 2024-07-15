@@ -60,12 +60,15 @@
         </div>
 
 
-        <div class="text-start mb-3 mt-5">
-            <h3 class="mb-0 pb-0 text-navy titulo">Guías Asignadas <span class="text-secondary fs-5">(En Proceso)</span></h3>
-            
+        <div class="text-start mb-3 mt-5 d-flex justify-content-between">
+            <h3 class="mb-0 pb-0 text-navy titulo">Guías Asignadas</h3>
+            <h5 class="text-secondary d-flex align-items-center">
+                <span>Procesando</span> 
+                <i class='bx bx-dots-horizontal-rounded bx-flashing fs-4 ms-2' ></i>
+            </h5>
         </div>
 
-        <div class="table-responsive" style="font-size:14px">
+        <div class="table-responsive" style="font-size:12.7px">
             <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
                 <thead>
                     <th>#</th>
@@ -76,22 +79,43 @@
                     <th>Total UCD</th> 
                     <th>Soporte</th>
                     <th>Estado</th>
-                    <th>Opción</th> <!-- entregado?  -->
+                    <th>¿Entregado?</th> <!-- entregado?  -->
                 </thead>
                 <tbody id="list_canteras" class="border-light-subtle"> 
                     @foreach ($asignaciones as $a)
                         <tr>
-                            <td>{{$a->id_asignacion}}</td>
+                            <td class="text-secondary">{{$a->id_asignacion}}</td>
                             <td>
-                                <a class="info_sujeto" role="button" id_sujeto='{{ $a->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$a->rif_condicion}}-{{$a->rif_nro}}</a>
+                                <a class="info_sujeto" role="button" id_sujeto='{{ $a->id_sujeto }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$a->rif_condicion}}-{{$a->rif_nro}}</a>
                             </td>
                             <td>
-                                <a class="detalle_asignacion" role="button" id_asignacion='{{ $a->id_asignacion }}' data-bs-toggle="modal" data-bs-target="#">Ver</a>
+                                <a class="detalle_asignacion" role="button" id_asignacion='{{ $a->id_asignacion }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_detalle_asignacion">Ver</a>
                             </td>
-                            <td class="">{{$a->cantidad_guias}} Guías</td>
+                            <td  class="table-primary fw-bold">{{$a->cantidad_guias}} Guías</td>
                             <td class="text-secondary">{{$a->fecha_emision}}</td>
-                            <td>{{$a->total_ucd}} UCD</td>
-                            <td></td>
+                            <td class="text-navy fw-bold">{{$a->total_ucd}} UCD</td>
+                            <td>
+                                <a target="_blank" class="ver_pago" href="{{asset($a->soporte)}}">Ver</a>
+                            </td>
+                            <td>
+                               @switch($a->estado)
+                                    @case('17')  
+                                        <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                    @break
+                                    @case('29')  
+                                        <span class="badge text-bg-warning p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>QR Listo</span>
+                                    @break
+                                    @case('19')  
+                                        <span class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Entregado</span>
+                                    @break
+                                   @default
+                                       
+                               @endswitch
+                            </td>
+                            <td>
+                                <i class='bx bx-check-circle fs-4 text-success mb-0 pb-0' id_asignacion="{{$a->id_asignacion}}" role="button"></i>
+                                <!-- <button class="btn btn-primary btn-sm rounded-3 d-flex align-items-center" type="submit" style="font-size:12.5px"><i class='bx bx-check-circle me-2 '></i> Entregado</button> -->
+                            </td>
                         </tr>
                     @endforeach
                 </tbody> 
@@ -114,7 +138,18 @@
     
     
 <!--****************** MODALES **************************-->
-        
+    <!-- ********* INFO SUJETO ******** -->
+    <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_info_sujeto">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
     <!-- ********* ASIGNACIÓN: SUJETO REGISTRADO ******** -->
     <div class="modal fade" id="modal_asignar_sujeto_registrado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -328,6 +363,20 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
+    <!-- ********* DETALLES ASIGNACIÓN ******** -->
+    <div class="modal fade" id="modal_detalle_asignacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_detalle_asignacion">
+                <div class="modal-body">
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
 
 <!--************************************************-->
 
@@ -385,6 +434,25 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        ///////MODAL: INFO SUJETO PASIVO
+        $(document).on('click','.info_sujeto', function(e) { 
+            e.preventDefault(e); 
+            var sujeto = $(this).attr('id_sujeto');
+            var tipo = $(this).attr('tipo');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.sujeto") }}',
+                data: {sujeto:sujeto,tipo:tipo},
+                success: function(response) {              
+                    $('#html_info_sujeto').html(response);
+                },
+                error: function() {
+                }
+            });
+        });
+
+
         $(document).on('click','#search_sujeto_asignar', function(e) {  
             var rif_nro = $('#rif').val();
             var rif_condicion = $('#rif_condicion').val();
@@ -531,6 +599,23 @@
             window.location.href = "{{ route('asignar')}}";
         });
 
+        ///////MODAL: DETALLE ASIGNACION
+        $(document).on('click','.detalle_asignacion', function(e) { 
+            e.preventDefault(e); 
+            var asignacion = $(this).attr('id_asignacion');
+            var tipo = $(this).attr('tipo');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.detalle") }}',
+                data: {asignacion:asignacion,tipo:tipo},
+                success: function(response) {              
+                    $('#content_detalle_asignacion').html(response);
+                },
+                error: function() {
+                }
+            });
+        });
 
 
         /////////////PARROQUIAS

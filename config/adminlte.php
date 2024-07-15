@@ -349,7 +349,7 @@ return [
                 [
                     'text' => 'Generar QR',
                     'icon'       => 'fas fa-angle-right ps-3 pe-2', 
-                    'url'  => '/generar',
+                    'url'  => '/asignar_qr',
                 ],
                 [
                     'text' => 'Historial',
@@ -358,16 +358,6 @@ return [
                 ],
             ],
         ],
-        // [
-        //     'text' => ' Solicitar Guías',
-        //     'url'  => '/solicitud_reserva',
-        //     // 'icon' => 'fas fa-plus pe-2', 
-        // ],
-        // [
-        //     'text' => ' Aprobar Solicitudes',
-        //     'url'  => '/aprobacion_provicional',
-        //     // 'icon' => 'fas fa-plus pe-2', 
-        // ],
         ['header' => 'Libro de Control'],
         [
             'text' => 'Registro de guías',

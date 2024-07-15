@@ -43,7 +43,8 @@ class AsignarController extends Controller
                 'cantidad_guias' => $c->cantidad_guias,
                 'fecha_emision' => $c->fecha_emision,
                 'total_ucd' => $c->total_ucd,
-                'soporte' => $c->soporte
+                'soporte' => $c->soporte,
+                'estado' => $c->estado
             );
 
             $a = (object) $array;
@@ -52,6 +53,136 @@ class AsignarController extends Controller
 
 
         return view('asignar', compact('asignaciones'));
+    }
+
+    public function sujeto(Request $request)
+    {
+        $idSujeto = $request->post('sujeto');
+        $tipo = $request->post('tipo');
+        if ($tipo == 27) { 
+            /////REGISTRADO
+            $sujeto = DB::table('sujeto_pasivos')->where('id_sujeto','=',$idSujeto)->first();
+            $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                        <div class="text-center">
+                            <i class="bx bx-user-circle fs-1 text-navy" ></i>
+                            <h1 class="modal-title fs-5 text-navy" id="" >'.$sujeto->razon_social.'</h1>
+                            <h5 class="modal-title" id="" style="font-size:14px">Contribuyente</h5>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="font-size:15px;">
+                        <h6 class="text-muted text-center" style="font-size:14px;">Datos del Sujeto pasivo</h6>
+                        <table class="table" style="font-size:14px">
+                            <tr>
+                                <th>R.I.F.</th>
+                                <td>'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</td>
+                            </tr>
+                            <tr>
+                                <th>Razon Social</th>
+                                <td>'.$sujeto->razon_social.'</td>
+                            </tr>
+                            <tr>
+                                <th>¿Empresa Artesanal?</th>
+                                <td>'.$sujeto->artesanal.'</td>
+                            </tr>
+                            <tr>
+                                <th>Dirección</th>
+                                <td>'.$sujeto->direccion.'</td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono móvil</th>
+                                <td>'.$sujeto->tlf_movil.'</td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono fijo</th>
+                                <td>'.$sujeto->tlf_fijo.'</td>
+                            </tr>
+                        </table>
+
+                        <h6 class="text-muted text-center" style="font-size:14px;">Datos del Representante</h6>
+                        <table class="table"  style="font-size:14px">
+                            <tr>
+                                <th>C.I. del representante</th>
+                                <td>'.$sujeto->ci_condicion_repr.'-'.$sujeto->ci_nro_repr.'</td>
+                            </tr>
+                            <tr>
+                                <th>R.I.F. del representante</th>
+                                <td>'.$sujeto->rif_condicion_repr.'-'.$sujeto->rif_nro_repr.'</td>
+                            </tr>
+                            <tr>
+                                <th>Nombre y Apellido</th>
+                                <td>'.$sujeto->name_repr.'</td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono movil</th>
+                                <td>'.$sujeto->tlf_repr.'</td>
+                            </tr>
+                        </table>
+                    </div>';
+
+            return response($html);
+
+        }else{
+            ///// NO REGISTRADO
+            $sujeto = DB::table('sujeto_notusers')->where('id_sujeto_notuser','=',$idSujeto)->first();
+            $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                        <div class="text-center">
+                            <i class="bx bx-user-circle fs-1 text-navy" ></i>
+                            <h1 class="modal-title fs-5 text-navy" id="" >'.$sujeto->razon_social.'</h1>
+                            <h5 class="modal-title" id="" style="font-size:14px">Contribuyente</h5>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="font-size:15px;">
+                        <h6 class="text-muted text-center" style="font-size:14px;">Datos del Sujeto pasivo</h6>
+                        <table class="table" style="font-size:14px">
+                            <tr>
+                                <th>R.I.F.</th>
+                                <td>'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</td>
+                            </tr>
+                            <tr>
+                                <th>Razon Social</th>
+                                <td>'.$sujeto->razon_social.'</td>
+                            </tr>
+                            <tr>
+                                <th>¿Empresa Artesanal?</th>
+                                <td>'.$sujeto->artesanal.'</td>
+                            </tr>
+                            <tr>
+                                <th>Dirección</th>
+                                <td>'.$sujeto->direccion.'</td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono móvil</th>
+                                <td>'.$sujeto->tlf_movil.'</td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono fijo</th>
+                                <td>'.$sujeto->tlf_fijo.'</td>
+                            </tr>
+                        </table>
+
+                        <h6 class="text-muted text-center" style="font-size:14px;">Datos del Representante</h6>
+                        <table class="table"  style="font-size:14px">
+                            <tr>
+                                <th>C.I. del representante</th>
+                                <td>'.$sujeto->ci_condicion_repr.'-'.$sujeto->ci_nro_repr.'</td>
+                            </tr>
+                            <tr>
+                                <th>R.I.F. del representante</th>
+                                <td>'.$sujeto->rif_condicion_repr.'-'.$sujeto->rif_nro_repr.'</td>
+                            </tr>
+                            <tr>
+                                <th>Nombre y Apellido</th>
+                                <td>'.$sujeto->name_repr.'</td>
+                            </tr>
+                            <tr>
+                                <th>Teléfono movil</th>
+                                <td>'.$sujeto->tlf_repr.'</td>
+                            </tr>
+                        </table>
+                    </div>';
+
+            return response($html);
+        }
     }
 
     /**
@@ -427,10 +558,6 @@ class AsignarController extends Controller
             }
         }
 
-    //    return response($id_asignacion);
-        // $cant = $query->cantidad_guias;
-        // $id_cantera = $query->id_cantera; 
-        // $id_sujeto = $query->id_sujeto;
 
         /////////////////ASIGNACIÓN DE GUÍAS: CORRELATIVO Y QR
         $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->where('clase','=',6)->first(); 
@@ -755,9 +882,122 @@ class AsignarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function detalle(Request $request)
     {
-        //
+        $id_asignacion = $request->post('asignacion');
+        $tipo = $request->post('tipo');
+
+        $razon_social = '';
+        $rif = '';
+        $nombre_cantera = '';
+        $direccion_cantera = '';
+        $registro = '';
+        
+        $query = DB::table('asignacion_reservas')->where('id_asignacion','=',$id_asignacion)->first();
+        if ($query) {
+            $emision = $query->fecha_emision;
+            $guias = $query->cantidad_guias;
+            $ucd = $query->total_ucd;
+            $soporte = $query->soporte;
+            $entrega = $query->fecha_entrega;
+            $tr_entrega = '';
+
+            if ($entrega == null) {
+                $tr_entrega = '';
+            }else{
+               $tr_entrega = '<tr>
+                                <th>Fecha de entrega</th>
+                                <td></td>
+                            </tr>';
+            }
+
+            if ($tipo == 27) {
+                ///REGISTRADO
+                $sujeto = DB::table('sujeto_pasivos')->select('razon_social','rif_condicion','rif_nro')->where('id_sujeto','=',$query->id_sujeto)->first();
+                $razon_social = $sujeto->razon_social;
+                $rif = $sujeto->rif_condicion.'-'.$sujeto->rif_nro;
+
+                $cantera = DB::table('canteras')->select('nombre','lugar_aprovechamiento')->where('id_cantera','=',$query->id_cantera)->first();
+                $nombre_cantera = $cantera->nombre;
+                $direccion_cantera = $cantera->lugar_aprovechamiento;
+                $registro = '<span class="badge bg-primary-subtle text-primary-emphasis ms-2">Registrado</span>';
+            }else{
+                /// NO REGISTRADO
+                $sujeto = DB::table('sujeto_notusers')->select('razon_social','rif_condicion','rif_nro')->where('id_sujeto_notuser','=',$query->id_sujeto_notuser)->first();
+                $razon_social = $sujeto->razon_social;
+                $rif = $sujeto->rif_condicion.'-'.$sujeto->rif_nro;
+
+                $cantera = DB::table('canteras_notusers')->select('nombre','lugar_aprovechamiento')->where('id_cantera_notuser','=',$query->id_cantera_notuser)->first();
+                $nombre_cantera = $cantera->nombre;
+                $direccion_cantera = $cantera->lugar_aprovechamiento;
+                $registro = '<span class="badge bg-secondary-subtle text-secondary-emphasis ms-2">No Registrado</span>';
+            }
+
+            $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                        <div class="text-center">
+                            <i class="bx bx-detail fs-1 text-navy"></i>
+                            <h1 class="modal-title fs-5 text-navy" id="" >Detalles de la Asignación</h1>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="font-size:13px;">
+                        <div class="d-flex justify-content-center mt-2">
+                            <table class="table w-75 ">
+                                <tr>
+                                    <th>ID</th>
+                                    <td class="text-secondary">'.$query->id_asignacion.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Emisión</th>
+                                    <td>'.$emision.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Contribuyente</th>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-navy fw-bold">'.$razon_social.'
+                                                '.$registro.'
+                                            </span>
+                                            <span class="text-secondary">'.$rif.'</span>  
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Cantera o Desazolve</th>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-navy fw-bold">'.$nombre_cantera.'</span>
+                                            <span>'.$direccion_cantera.'</span>  
+                                        </div> 
+                                    </td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <th>Guías solicitadas</th>
+                                    <td class="text-navy fw-bold">'.$guias.' Guías</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <th>Total UCD</th>
+                                    <td class="text-navy fw-bold">'.$ucd.' UCD</td>
+                                </tr>
+                                <tr>
+                                    <th>Oficio</th>
+                                    <td>
+                                        <a target="_blank" class="ver_pago" href="'.asset($soporte).'">Ver</a>
+                                    </td>
+                                </tr>
+                                '.$tr_entrega.'
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-center my-2">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Salir</button>
+                        </div>
+                    </div>';
+
+            return response($html);
+        }
+
+        
+
     }
 
     /**

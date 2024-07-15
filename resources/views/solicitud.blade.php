@@ -51,7 +51,7 @@
                                 <span>{{$solicitud->total_ucd}} UCD</span>
                             <td>
                                 @switch($solicitud->estado)
-                                @case('4') <!-- verificando -->
+                                    @case('4') <!-- verificando -->
                                         <span class="badge text-bg-secondary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
                                     @break
                                     @case('6')  <!-- negada -->
