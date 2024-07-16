@@ -218,6 +218,7 @@ Route::post('/asignar/detalle', [App\Http\Controllers\AsignarController::class, 
 
 ///////////ASIGNAR QR (RESERVA - EN BLANCO)
 Route::get('/asignar_qr', [App\Http\Controllers\AsignarQrController::class, 'index'])->name('asignar_qr');
+Route::post('/asignar_qr/qr_listo', [App\Http\Controllers\AsignarQrController::class, 'qr_listo'])->name('asignar_qr.qr_listo');
 
 
 // ///////SOLICITUD RESERVAS

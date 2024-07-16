@@ -17,6 +17,7 @@ class AsignarController extends Controller
                                     ->join('clasificacions', 'asignacion_reservas.estado', '=', 'clasificacions.id_clasificacion')
                                     ->select('asignacion_reservas.*','clasificacions.nombre_clf')
                                     ->where('asignacion_reservas.estado','=',17)
+                                    ->orWhere('asignacion_reservas.estado','=',29)
                                     ->get();
 
         foreach($consulta as $c) {
@@ -64,9 +65,9 @@ class AsignarController extends Controller
             $sujeto = DB::table('sujeto_pasivos')->where('id_sujeto','=',$idSujeto)->first();
             $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                         <div class="text-center">
-                            <i class="bx bx-user-circle fs-1 text-navy" ></i>
-                            <h1 class="modal-title fs-5 text-navy" id="" >'.$sujeto->razon_social.'</h1>
-                            <h5 class="modal-title" id="" style="font-size:14px">Contribuyente</h5>
+                            <i class="bx bx-user-circle fs-1 text-secondary" ></i>
+                            <h1 class="modal-title fs-5 text-navy fw-bold" id="" >'.$sujeto->razon_social.'</h1>
+                            <h5 class="modal-title text-muted" id="" style="font-size:14px">Contribuyente</h5>
                         </div>
                     </div>
                     <div class="modal-body" style="font-size:15px;">
@@ -911,6 +912,13 @@ class AsignarController extends Controller
                             </tr>';
             }
 
+            $correlativo = DB::table('detalle_talonarios')->select('desde','hasta')->where('id_solicitud_reserva','=',$id_asignacion)->first();
+            $desde = $correlativo->desde;
+            $hasta = $correlativo->hasta;
+            $length = 6;
+            $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+            $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
             if ($tipo == 27) {
                 ///REGISTRADO
                 $sujeto = DB::table('sujeto_pasivos')->select('razon_social','rif_condicion','rif_nro')->where('id_sujeto','=',$query->id_sujeto)->first();
@@ -935,8 +943,8 @@ class AsignarController extends Controller
 
             $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                         <div class="text-center">
-                            <i class="bx bx-detail fs-1 text-navy"></i>
-                            <h1 class="modal-title fs-5 text-navy" id="" >Detalles de la Asignación</h1>
+                            <i class="bx bx-detail fs-1 text-secondary"></i>
+                            <h1 class="modal-title fs-5 fw-bold text-navy" id="" >Detalles de la Asignación</h1>
                         </div>
                     </div>
                     <div class="modal-body" style="font-size:13px;">
@@ -973,6 +981,10 @@ class AsignarController extends Controller
                                 <tr class="table-primary">
                                     <th>Guías solicitadas</th>
                                     <td class="text-navy fw-bold">'.$guias.' Guías</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <th>Correlativo</th>
+                                    <td class="text-navy fw-bold">'.$formato_desde.' - '.$formato_hasta.'</td>
                                 </tr>
                                 <tr class="table-primary">
                                     <th>Total UCD</th>

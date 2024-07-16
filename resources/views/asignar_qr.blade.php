@@ -48,16 +48,25 @@
                             </td>
                             <td  class="table-primary fw-bold">{{$a->cantidad_guias}} Guías</td>
                             <td>
-
+                                @php
+                                    $desde = $a->desde;
+                                    $hasta = $a->hasta;
+                                    $length = 6;
+                                    $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                    $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+                                @endphp
+                                <span class="text-secondary">{{$formato_desde}} - {{$formato_hasta}}</span>
                             </td>
                             <td>
                                 <a target="_blank" class="ver_pago" href="{{asset($a->soporte)}}">Ver</a>
                             </td>
                             <td>
-                                
+                                <a href="#" class="qr" role="button" ruta='{{ $a->qr }}' data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
                             </td>
                             <td>
-                                <i class='bx bx-check-circle fs-4 text-success mb-0 pb-0' id_asignacion="{{$a->id_asignacion}}" role="button"></i>
+                                <i class='bx bx-chevron-right-circle fs-4 text-primary mb-0 pb-0 qr_listo' id_asignacion="{{$a->id_asignacion}}" role="button" data-bs-toggle="modal" data-bs-target="#modal_qr_listo"></i>
+                                <!-- <i class='bx bx-chevrons-right fs-4 text-primary mb-0 pb-0' id_asignacion="{{$a->id_asignacion}}" role="button"></i> -->
+                                <!-- <i class='bx bx-check-circle fs-4 text-muted mb-0 pb-0' id_asignacion="{{$a->id_asignacion}}" role="button"></i> -->
                             </td>
                         </tr>
                     @endforeach
@@ -81,8 +90,62 @@
     
     
 <!--****************** MODALES **************************-->
-    
+    <!-- ********* INFO SUJETO ******** -->
+    <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_info_sujeto">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
 
+    <!-- ********* DETALLES ASIGNACIÓN ******** -->
+    <div class="modal fade" id="modal_detalle_asignacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="content_detalle_asignacion">
+                <div class="modal-body">
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* VER QR ******** -->
+    <div class="modal" id="modal_ver_qr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" >
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class='bx bx-qr fs-1 text-muted'></i>
+                        <h1 class="modal-title fs-5 fw-bold text-navy" id="exampleModalLabel">Código QR</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:14px" id="content_ver_qr">
+                    <div class="my-5 py-5 d-flex flex-column text-center">
+                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                        <span class="text-muted">Cargando, por favor espere un momento...</span>
+                    </div>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <div class="modal" id="modal_qr_listo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content"  id="content_qr_listo">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <!--************************************************-->
 
@@ -140,8 +203,80 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+       
         ///////MODAL: INFO SUJETO PASIVO
-         
+        $(document).on('click','.info_sujeto', function(e) { 
+            e.preventDefault(e); 
+            var sujeto = $(this).attr('id_sujeto');
+            var tipo = $(this).attr('tipo');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.sujeto") }}',
+                data: {sujeto:sujeto,tipo:tipo},
+                success: function(response) {              
+                    $('#html_info_sujeto').html(response);
+                },
+                error: function() {
+                }
+            });
+        });
+
+        ///////MODAL: DETALLE ASIGNACION
+        $(document).on('click','.detalle_asignacion', function(e) { 
+            e.preventDefault(e); 
+            var asignacion = $(this).attr('id_asignacion');
+            var tipo = $(this).attr('tipo');
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.detalle") }}',
+                data: {asignacion:asignacion,tipo:tipo},
+                success: function(response) {              
+                    $('#content_detalle_asignacion').html(response);
+                },
+                error: function() {
+                }
+            });
+        });
+
+
+        ///////MODAL: QR
+        $(document).on('click','.qr', function(e) { 
+                e.preventDefault(e); 
+                var ruta = $(this).attr('ruta');
+                var talonario = 'resreva';
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("correlativo.qr") }}',
+                    data: {ruta:ruta,talonario:talonario},
+                    success: function(response) {   
+                        $('#content_ver_qr').html(response);
+                       
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+        // ///////MODAL: QR LISTO
+        // $(document).on('click','.qr_listo', function(e) { 
+        //         e.preventDefault(e); 
+        //         var asignacion = $(this).attr('id_asignacion');
+        //         $.ajax({
+        //             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        //             type: 'POST',
+        //             url: '',
+        //             data: {asignacion:asignacion},
+        //             success: function(response) {    
+        //                 $('#content_qr_listo').html(response);
+                       
+        //             },
+        //             error: function() {
+        //             }
+        //         });
+        //     });
          
 
     });

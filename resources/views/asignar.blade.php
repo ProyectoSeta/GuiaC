@@ -15,127 +15,126 @@
 @section('content')
     
     <div class="container rounded-4 p-3" style="background-color:#ffff;">
-        <div class="text-center mb-2">
-            <h3 class="mb-1 text-navy titulo">Asignación de Guías</h3>
-            <span class="text-secondary">Talonarios de Reserva</span>
-        </div>
+        <section id="html_asignar_guias">
+            <div class="text-center mb-2">
+                <h3 class="mb-1 text-navy titulo">Asignación de Guías</h3>
+                <span class="text-secondary">Talonarios de Reserva</span>
+            </div>
 
-        <div style="font-size:12.7px">
-            <p class="text-secondary text-justify my-4" style="font-size:12.7px">
-                <span class="fw-bold">*Recordatorio:</span> Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                Officiis non totam repellendus sunt delectus, doloremque vero officia deleniti, distinctio rerum, atque inventore neque. 
-                Omnis, debitis voluptatem excepturi vitae obcaecati facilis.
-            </p>
+            <div style="font-size:12.7px">
+                <p class="text-secondary text-justify my-4" style="font-size:12.7px">
+                    <span class="fw-bold">*Recordatorio:</span> Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    Officiis non totam repellendus sunt delectus, doloremque vero officia deleniti, distinctio rerum, atque inventore neque. 
+                    Omnis, debitis voluptatem excepturi vitae obcaecati facilis.
+                </p>
 
-            <div class="d-flex justify-content-center">
-                <div class="w-50">
-                    <label class="form-label mb-3" for="rif">
-                        <span style="color:red">*</span> Ingrese el R.I.F del contribuyente al que va dirigida la asignación: 
-                    </label>
+                <div class="d-flex justify-content-center">
+                    <div class="w-50">
+                        <label class="form-label mb-3" for="rif">
+                            <span style="color:red">*</span> Ingrese el R.I.F del contribuyente al que va dirigida la asignación: 
+                        </label>
 
-                    <div class="row mb-4">
-                        <div class="col-3">
-                            <select class="form-select form-select-sm" id="rif_condicion" aria-label="Default select example" name="rif_condicion">
-                                <option value="G" id="rif_gubernamental">G</option>
-                                <option value="J" id="rif_juridico">J</option>
-                            </select>
+                        <div class="row mb-4">
+                            <div class="col-3">
+                                <select class="form-select form-select-sm" id="rif_condicion" aria-label="Default select example" name="rif_condicion">
+                                    <option value="G" id="rif_gubernamental">G</option>
+                                    <option value="J" id="rif_juridico">J</option>
+                                </select>
+                            </div>
+                            <div class="col-1">-</div>
+                            <div class="col-6">
+                                <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro" placeholder="Ejemplo: 30563223" autofocus value="{{ old('rif_nro') }}"/>
+                                <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-secondary btn-sm pb-0" id="search_sujeto_asignar">
+                                    <i class='bx bx-search-alt-2 fs-5'></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-1">-</div>
-                        <div class="col-6">
-                            <input type="number" id="rif" class="form-control form-control-sm" name="rif_nro" placeholder="Ejemplo: 30563223" autofocus value="{{ old('rif_nro') }}"/>
-                            <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
-                        </div>
-                        <div class="col-2">
-                            <button type="button" class="btn btn-secondary btn-sm pb-0" id="search_sujeto_asignar">
-                                <i class='bx bx-search-alt-2 fs-5'></i>
-                            </button>
-                        </div>
-                    </div>
 
-                    <div id="content-search-sujeto">
-                        
+                        <div id="content-search-sujeto">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
+        <section id="html_table_asignaciones">
+            <div class="text-start mb-3 mt-5 d-flex justify-content-between">
+                <h3 class="mb-0 pb-0 text-navy titulo">Guías Asignadas</h3>
+                <h5 class="text-secondary d-flex align-items-center">
+                    <span>Procesando</span> 
+                    <i class='bx bx-dots-horizontal-rounded bx-flashing fs-4 ms-2' ></i>
+                </h5>
+            </div>
 
-        <div class="text-start mb-3 mt-5 d-flex justify-content-between">
-            <h3 class="mb-0 pb-0 text-navy titulo">Guías Asignadas</h3>
-            <h5 class="text-secondary d-flex align-items-center">
-                <span>Procesando</span> 
-                <i class='bx bx-dots-horizontal-rounded bx-flashing fs-4 ms-2' ></i>
-            </h5>
-        </div>
-
-        <div class="table-responsive" style="font-size:12.7px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
-                <thead>
-                    <th>#</th>
-                    <th>R.I.F.</th>
-                    <th>Detalles</th>
-                    <th>Cant. Guías</th> 
-                    <th>Emisión</th>
-                    <th>Total UCD</th> 
-                    <th>Soporte</th>
-                    <th>Estado</th>
-                    <th>¿Entregado?</th> <!-- entregado?  -->
-                </thead>
-                <tbody id="list_canteras" class="border-light-subtle"> 
-                    @foreach ($asignaciones as $a)
-                        <tr>
-                            <td class="text-secondary">{{$a->id_asignacion}}</td>
-                            <td>
-                                <a class="info_sujeto" role="button" id_sujeto='{{ $a->id_sujeto }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$a->rif_condicion}}-{{$a->rif_nro}}</a>
-                            </td>
-                            <td>
-                                <a class="detalle_asignacion" role="button" id_asignacion='{{ $a->id_asignacion }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_detalle_asignacion">Ver</a>
-                            </td>
-                            <td  class="table-primary fw-bold">{{$a->cantidad_guias}} Guías</td>
-                            <td class="text-secondary">{{$a->fecha_emision}}</td>
-                            <td class="text-navy fw-bold">{{$a->total_ucd}} UCD</td>
-                            <td>
-                                <a target="_blank" class="ver_pago" href="{{asset($a->soporte)}}">Ver</a>
-                            </td>
-                            <td>
-                               @switch($a->estado)
-                                    @case('17')  
-                                        <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
-                                    @break
-                                    @case('29')  
-                                        <span class="badge text-bg-warning p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>QR Listo</span>
-                                    @break
-                                    @case('19')  
-                                        <span class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Entregado</span>
-                                    @break
-                                   @default
-                                       
-                               @endswitch
-                            </td>
-                            <td>
-                                <i class='bx bx-check-circle fs-4 text-success mb-0 pb-0' id_asignacion="{{$a->id_asignacion}}" role="button"></i>
-                                <!-- <button class="btn btn-primary btn-sm rounded-3 d-flex align-items-center" type="submit" style="font-size:12.5px"><i class='bx bx-check-circle me-2 '></i> Entregado</button> -->
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody> 
+            <div class="table-responsive" style="font-size:12.7px">
+                <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
+                    <thead>
+                        <th>#</th>
+                        <th>R.I.F.</th>
+                        <th>Detalles</th>
+                        <th>Cant. Guías</th> 
+                        <th>Emisión</th>
+                        <th>Total UCD</th> 
+                        <th>Soporte</th>
+                        <th>Estado</th>
+                        <th>¿Entregado?</th> <!-- entregado?  -->
+                    </thead>
+                    <tbody id="list_canteras" class="border-light-subtle"> 
+                        @foreach ($asignaciones as $a)
+                            <tr>
+                                <td class="text-secondary">{{$a->id_asignacion}}</td>
+                                <td>
+                                    <a class="info_sujeto" role="button" id_sujeto='{{ $a->id_sujeto }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$a->rif_condicion}}-{{$a->rif_nro}}</a>
+                                </td>
+                                <td>
+                                    <a class="detalle_asignacion" role="button" id_asignacion='{{ $a->id_asignacion }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_detalle_asignacion">Ver</a>
+                                </td>
+                                <td  class="table-primary fw-bold">{{$a->cantidad_guias}} Guías</td>
+                                <td class="text-secondary">{{$a->fecha_emision}}</td>
+                                <td class="text-navy fw-bold">{{$a->total_ucd}} UCD</td>
+                                <td>
+                                    <a target="_blank" class="ver_pago" href="{{asset($a->soporte)}}">Ver</a>
+                                </td>
+                                <td>
+                                @switch($a->estado)
+                                        @case('17')  
+                                            <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                        @break
+                                        @case('29')  
+                                            <span class="badge text-bg-warning p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>QR Listo</span>
+                                        @break
+                                        @case('19')  
+                                            <span class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Entregado</span>
+                                        @break
+                                    @default
+                                        
+                                @endswitch
+                                </td>
+                                <td>
+                                    @if ($a->estado == 17)
+                                        <i class='bx bx-check-circle fs-4 text-secondary mb-0 pb-0'></i>
+                                    @else
+                                        <i class='bx bx-check-circle fs-4 text-success mb-0 pb-0' id_asignacion="{{$a->id_asignacion}}" role="button"></i>
+                                    @endif
+                                    
+                                    <!-- <button class="btn btn-primary btn-sm rounded-3 d-flex align-items-center" type="submit" style="font-size:12.5px"><i class='bx bx-check-circle me-2 '></i> Entregado</button> -->
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody> 
+                    
+                </table>
                 
-            </table>
-            
-        </div>
-
-        
-
-        
-
-        
+            </div>
+        </section>        
     </div>
     
     
 
-      
-
-    
     
 <!--****************** MODALES **************************-->
     <!-- ********* INFO SUJETO ******** -->

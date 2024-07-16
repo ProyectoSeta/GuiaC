@@ -156,8 +156,8 @@
             <div class="modal-content" >
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <i class="bx bx-barcode-reader fs-1" style="color:#0c82ff"  ></i>           
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Código QR</h1>
+                        <i class='bx bx-qr fs-1 text-muted'></i>
+                        <h1 class="modal-title fs-5 fw-bold text-navy" id="exampleModalLabel">Código QR</h1>
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:14px" id="content_ver_qr">
