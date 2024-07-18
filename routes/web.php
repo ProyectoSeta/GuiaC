@@ -88,6 +88,8 @@ Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->
 Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
 Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
 Route::post('/estado/actualizar', [App\Http\Controllers\EstadoController::class, 'actualizar'])->name('estado.actualizar');
+Route::post('/estado/modal_enviados', [App\Http\Controllers\EstadoController::class, 'modal_enviados'])->name('estado.modal_enviados');
+Route::post('/estado/enviados', [App\Http\Controllers\EstadoController::class, 'enviados'])->name('estado.enviados');
 Route::post('/estado/update', [App\Http\Controllers\EstadoController::class, 'update'])->name('estado.update');
 
 

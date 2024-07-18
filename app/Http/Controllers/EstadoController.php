@@ -21,31 +21,54 @@ class EstadoController extends Controller
         //////////////TALONARIOS POR ENVIAR
         $consulta_enviar = DB::table('talonarios')->where('estado','=',20)->get();
         foreach ($consulta_enviar as $c) {
-            $detalle = DB::table('detalle_talonarios')
-                        ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                        ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                        ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-                        ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
-            if ($detalle) {
+            if ($c->clase == 6) { 
+                /////reserva
                 $array = array(
-                    'id_talonario' => $c->id_talonario,
-                    'id_solicitud' => $c->id_solicitud,
-                    'id_cantera' => $detalle->id_cantera,
-                    'id_sujeto' => $detalle->id_sujeto,
-                    'nombre_cantera' => $detalle->nombre,
-                    'razon_social' => $detalle->razon_social,
-                    'rif_condicion' => $detalle->rif_condicion,
-                    'rif_nro' => $detalle->rif_nro,
-                    'tipo' => $c->tipo_talonario,
-                    'desde' => $c->desde,
-                    'hasta' => $c->hasta,
+                        'id_talonario' => $c->id_talonario,
+                        'id_solicitud' => 'No aplica',
+                        'id_cantera' => 'No aplica',
+                        'id_sujeto' => 'No aplica',
+                        'nombre_cantera' => 'No aplica',
+                        'razon_social' => 'No aplica',
+                        'rif_condicion' => 'No aplica',
+                        'rif_nro' => 'No aplica',
+                        'tipo' => $c->tipo_talonario,
+                        'desde' => $c->desde,
+                        'hasta' => $c->hasta,
+                        'clase' => $c->clase
                     );
 
                 $a = (object) $array;
                 array_push($t_enviar, $a);
-            }
-        }
+            }else{
+                //////regular
+                $detalle = DB::table('detalle_talonarios')
+                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('detalle_talonarios.id_sujeto','detalle_talonarios.clase', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
+                if ($detalle) {
+                    $array = array(
+                            'id_talonario' => $c->id_talonario,
+                            'id_solicitud' => $c->id_solicitud,
+                            'id_cantera' => $detalle->id_cantera,
+                            'id_sujeto' => $detalle->id_sujeto,
+                            'nombre_cantera' => $detalle->nombre,
+                            'razon_social' => $detalle->razon_social,
+                            'rif_condicion' => $detalle->rif_condicion,
+                            'rif_nro' => $detalle->rif_nro,
+                            'tipo' => $c->tipo_talonario,
+                            'desde' => $c->desde,
+                            'hasta' => $c->hasta,
+                            'clase' => $c->clase
+                        );
 
+                    $a = (object) $array;
+                    array_push($t_enviar, $a);
+                }
+            }
+            
+        }
 
         //////////////TALONARIOS ENVIADOS
         $consulta_enviados = DB::table('talonarios')->where('estado','=',21)->get();
@@ -142,8 +165,8 @@ class EstadoController extends Controller
        if ($solicitud) {
             $html = '<div class="modal-header  p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bxs-layer fs-1 text-navy"  ></i>                    
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Detalles de la Solicitud</h1>
+                                <i class="bx bxs-layer fs-1 text-secondary"  ></i>                    
+                                <h1 class="modal-title fs-5 text-navy fw-bold" id="exampleModalLabel">Detalles de la Solicitud</h1>
                             </div>
                     </div>
                     <div class="modal-body" style="font-size:14px;">
@@ -185,15 +208,79 @@ class EstadoController extends Controller
                     </div>';
             return response($html);
        }
-        
+    }
 
-        
 
-                
+    public function modal_enviados(Request $request){
+        $talonarios = $request->post('talonarios'); 
+        $tr = '';
+        foreach ($talonarios as $talonario) {
+            if ($talonario != '') {
+                $query = DB::table('talonarios')->select('desde','hasta')->where('id_talonario','=',$talonario)->first();
+                $desde = $query->desde;
+                $hasta = $query->hasta;
+                // return response($query->desde);
+                $length = 6;
+                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+                $tr .= '<tr>
+                            <td>'.$talonario.'</td>
+                            <td>'.$formato_desde.' - '.$formato_hasta.'</td>
+                        </tr>';
+            }
+           
+           
             
+        }
 
-        
+        $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <!-- <i class="bx bx-user-circle fs-1 text-secondary" ></i> -->
+                        <i class="bx bxl-telegram fs-1 text-secondary" ></i>
+                        <h1 class="modal-title fs-5 text-navy fw-bold">Talonarios Enviados a Imprenta</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:13px">
+                    <div class="d-flex justify-content-center">
+                        <table class="table w-75 text-center">
+                            <thead>
+                                <th>Talonario</th>
+                                <th>Correlativo</th>
+                            </thead>
+                            <tbody>
+                                '.$tr.'
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success btn-sm" id="btn_aceptar_enviados">Aceptar</button>
+                    </div>
+                </div>';
+        return response($html);
 
+    }
+
+    public function enviados(Request $request){
+        $talonarios = $request->post('talonarios');
+        $ids_talonarios = '';
+        foreach ($talonarios as $talonario) {
+            $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 21]);
+            if ($update) {
+                $ids_talonarios .= $talonario.'-';
+            }else{
+                return response()->json(['success' => false]);
+            }
+        } 
+        $user = auth()->id();
+        $accion = 'ACTUALIZACION DE ESTADO (ENVIADOS), ID TALONARIOS: '.$ids_talonarios;
+        $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
+
+        if ($bitacora) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
     }
 
 

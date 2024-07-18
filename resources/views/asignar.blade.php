@@ -86,7 +86,7 @@
                     <tbody id="list_canteras" class="border-light-subtle"> 
                         @foreach ($asignaciones as $a)
                             <tr>
-                                <td class="text-secondary">{{$a->id_asignacion}}</td>
+                                <td class="text-secondary fw-bold">{{$a->id_asignacion}}</td>
                                 <td>
                                     <a class="info_sujeto" role="button" id_sujeto='{{ $a->id_sujeto }}' tipo="{{ $a->contribuyente }}" data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$a->rif_condicion}}-{{$a->rif_nro}}</a>
                                 </td>

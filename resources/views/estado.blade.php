@@ -10,12 +10,12 @@
 @stop
 
 @section('content')
-    <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff;">
+    <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff; font-size:14px">
         <div class="d-flex justify-content-between mt-2">
             <div class="">
                 <h3 class="mb-1 mt-3 text-navy titulo">Actualización de Estado</h3>
                 <span class="text-muted" style="font-size:15px">Talonarios a generar - Correlativos asignados - Talonarios Recibidos</span><br>
-                <span class="text-navy" style="font-size:15px">Procesando un Total de: {{$count->total}} Solicitude(s)</span>
+                <span class="text-muted fw-bold" style="font-size:15px">No. Total de Solicitudes en Proceso: <span class="text-navy">{{$count->total}} Solicitud(es)</span></span>
             </div>
 
             <div class="row w-50">
@@ -82,15 +82,23 @@
         <div class="tab-content py-3" id="nav-tabContent">
             <!-- CONTENIDO: USUARIOS CONTRIBUYENTE -->
             <div class="tab-pane fade show active" id="list-enviar" role="tabpanel" aria-labelledby="list-enviar-list">
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-outline-secondary btn-sm d-flex align-items-center mt-2 mb-0 me-3"><i class='bx bx-printer fs-5 me-2'></i><span>Reporte</span></button>
-                    <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center mt-2 mb-0"><i class='bx bxs-collection fs-5 me-2'></i></i><span>Lote Enviado</span></button>
+                <div class="d-flex justify-content-center mb-1 d-none" id="btn_enviar_all">
+                    <button class="btn  btn-outline-primary btn-sm d-flex align-items-center" type="button" id="btn_talonarios_enviados" data-bs-toggle="modal" data-bs-target="#modal_talonarios_enviados">
+                        <span>Talonarios enviados </span>
+                        <i class='bx bxs-chevron-right ms-1'></i>
+                    </button>
                 </div>
                 <div class="table-responsive" style="font-size:12.7px">
-                    <table id="enviados" class="table  border-light-subtle text-center" style="width:100%; font-size:13px">
+                    <table id="enviar" class="table border-light-subtle text-center" style="width:100%; font-size:12.7px">
                         <thead class="bg-primary border-light-subtle">
                                 <tr>
-                                    <th scope="col">Cod. Talonario</th>
+                                    <th scope="col">
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_enviar">
+                                        </div>
+                                    </th>
+                                    <th scope="col">Talonario</th>
+                                    <th scope="col">Clase</th>
                                     <th scope="col">Cantera</th>
                                     <th scope="col">Contribuyente</th>
                                     <th scope="col">R.I.F</th>
@@ -101,8 +109,36 @@
                         </thead>
                         <tbody>
                             @foreach ($t_enviar as $enviar)
-                                <tr>
-                                    <td>{{$enviar->id_talonario}}</td>
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input fs-6 check_enviar" type="checkbox" value="{{$enviar->id_talonario}}">
+                                    </div>
+                                </td>
+                                <td class="text-secondary fw-bold">{{$enviar->id_talonario}}</td>
+
+                                @if ($enviar->clase == 6)
+                                    <td class="fw-bold text-navy">Reserva</td>
+                                    <td class="text-secondary fst-italic">No aplica</td>
+                                    <td class="text-secondary fst-italic">No aplica</td>
+                                    <td class="text-secondary fst-italic">No aplica</td>
+                                    <td class="text-secondary fst-italic">No aplica</td>
+                                    @php
+                                            $desde = $enviar->desde;
+                                            $hasta = $enviar->hasta;
+                                            $length = 6;
+                                            $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                            $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                                        @endphp
+                                    <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button">
+                                            <i class='bx bxs-chevron-right'></i>
+                                        </button>
+                                    </td>
+                                @else <!-- **************************************************** -->
+                                    <td class="fw-bold text-navy">Regular</td>
                                     <td>{{$enviar->nombre_cantera}}</td>
                                     <td>{{$enviar->razon_social}}</td>
                                     <td>
@@ -111,27 +147,24 @@
                                     <td>
                                         <a class="detalle_solicitud" id_solicitud="{{$enviar->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_detalles_solicitud">Ver</a>
                                     </td>
-                                    @php
-                                        $desde = $enviar->desde;
-                                        $hasta = $enviar->hasta;
-                                        $length = 6;
-                                        $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
-                                        $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+                                        @php
+                                            $desde = $enviar->desde;
+                                            $hasta = $enviar->hasta;
+                                            $length = 6;
+                                            $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                            $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
-                                    @endphp
-                                    <td>{{$formato_desde}} - {{$formato_hasta}}</td>
+                                        @endphp
+                                    <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button">
-                                            Enviado
-                                            <!-- <i class='bx bxs-chevron-right'></i> -->
-                                            <i class='bx bx-chevron-right ms-2'></i>
-                                            <!-- <i class='bx bx-chevron-right-circle ms-2'></i> -->
+                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button" data-bs-toggle="tooltip" data-bs-title="Disabled tooltip">
+                                            <i class='bx bxs-chevron-right'></i>
                                         </button>
                                     </td>
-                                </tr>
+                                @endif                                    
+                            </tr>
                             @endforeach
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -169,8 +202,8 @@
     
     
 <!--****************** MODALES **************************-->
-   <!-- ********* INFO SUJETO ******** -->
-   <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- ********* INFO SUJETO ******** -->
+    <div class="modal" id="modal_info_sujeto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" id="html_info_sujeto">
                 <div class="my-5 py-5 d-flex flex-column text-center">
@@ -180,7 +213,6 @@
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
-
 
     <!-- ********* DETALLES SOLICITUD ******** -->
     <div class="modal fade" id="modal_detalles_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -193,29 +225,6 @@
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
-
-
-
-
-
-    <!-- ********* APROBAR SOLICITUD ******** -->
-    <!-- <div class="modal fade" id="modal_ver_solicitud" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" id="content_ver_solicitud">
-                <div class="my-5 py-5 d-flex flex-column text-center">
-                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
-                    <span class="text-muted">Cargando, por favor espere un momento...</span>
-                </div>
-            </div>
-        </div>  
-    </div> -->
-
-
-
-
-
-
-    
 
     <!-- *********INFO SOLICITUD DENEGADA ******** -->
     <div class="modal" id="modal_info_denegada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -252,6 +261,18 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
     
+    <!-- ********* TALONARIOS ENVIADOS ******** -->
+    <div class="modal" id="modal_talonarios_enviados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_talonarios_enviados">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
 
 <!--************************************************-->
 
@@ -274,6 +295,7 @@
     <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
         const myModal = document.getElementById('myModal');
         const myInput = document.getElementById('myInput');
 
@@ -288,24 +310,22 @@
    
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#enviados').DataTable(
-                {   paging: false,
-                    searching: false,
-                    "order": [[ 0, "desc" ]],
-                    "language": {
-                        "lengthMenu": " Mostrar  _MENU_  Registros por página",
-                        "zeroRecords": "No se encontraron registros",
-                        "info": "Mostrando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "No se encuentran Registros",
-                        "infoFiltered": "(filtered from _MAX_ total records)",
-                        'search':"Buscar",
-                        'paginate':{
-                            'next':'Siguiente',
-                            'previous':'Anterior'
-                        }
+            $('#enviar').DataTable({   
+                ordering: false,  
+                "order": [[ 0, "asc" ]],
+                "language": {
+                    "lengthMenu": " Mostrar  _MENU_  Registros por página",
+                    "zeroRecords": "No se encontraron registros",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No se encuentran Registros",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    'search':"Buscar",
+                    'paginate':{
+                        'next':'Siguiente',
+                        'previous':'Anterior'
                     }
                 }
-            );
+            });
 
             $('#recibidos').DataTable(
                 {
@@ -352,7 +372,7 @@
             ///////MODAL: INFO SUJETO PASIVO
             $(document).on('click','.info_sujeto', function(e) { 
                 e.preventDefault(e); 
-                var talonario = $(this).attr('id_talonario');
+                var sujeto = $(this).attr('id_sujeto');
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
@@ -387,6 +407,7 @@
                 });
             });
 
+
             ///////BTN: TALONARIO ENVIADO 
             $(document).on('click','.talonario_enviado', function(e) { 
                 e.preventDefault(e); 
@@ -408,15 +429,6 @@
             });
 
 
-
-
-
-
-
-
-
-
-
             ///////MODAL: INFO SOLICITUD DENEGADA
             $(document).on('click','.solicitud_denegada', function(e) { 
                 e.preventDefault(e); 
@@ -435,9 +447,10 @@
                     }
                 });
             });
+        
 
-             ///////MODAL: ACTUALIZAR ESTADO
-             $(document).on('click','.actualizar_estado', function(e) { 
+            ///////MODAL: ACTUALIZAR ESTADO
+            $(document).on('click','.actualizar_estado', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
 
@@ -449,6 +462,89 @@
                     success: function(response) {
                         console.log(response);               
                         $('#content_actualizar_estado').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+            $i = 0;
+            ////////SELECCIONAR TODOS LOS CHECKBOX
+            $('#check_all_enviar').change(function() {
+                var checkboxes = $('input:checkbox').length;
+                if ($(this).is(':checked')) {
+                    $('#btn_enviar_all').removeClass('d-none');
+                    $(".talonario_enviado").attr('disabled', true);
+                    $i = checkboxes - 1;
+                }else{
+                    $('#btn_enviar_all').addClass('d-none');
+                    $(".talonario_enviado").attr('disabled', false);
+                    $i = 0;
+                }
+                $('.check_enviar').prop('checked', $(this).is(':checked'));
+            });
+
+
+            /////////SELECCIONAR CHECKBOX
+            $('.check_enviar').change(function() {
+                if ($(this).is(':checked')) {
+                   $i++;
+                }else{
+                    $i--;
+                }
+                // /////////////////////////
+                if ($i <= 1) {
+                    $('#btn_enviar_all').addClass('d-none');
+                    $(".talonario_enviado").attr('disabled', false);
+                }else{
+                    $('#btn_enviar_all').removeClass('d-none');
+                    $(".talonario_enviado").attr('disabled', true);
+                }
+            });
+
+
+            ///////MODAL: TALONARIOS ENVIADOS
+            $(document).on('click','#btn_talonarios_enviados', function(e) { 
+                e.preventDefault(e); 
+                var talonarios = [];
+
+                $("input[type=checkbox]:checked").each(function() {
+                    talonarios.push($(this).val());
+                });
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.modal_enviados") }}',
+                    data: {talonarios:talonarios},
+                    success: function(response) {        
+
+                        $('#html_talonarios_enviados').html(response);
+
+                        //////////////////////////////////////////////////////////////
+                        $(document).on('click','#btn_aceptar_enviados', function(e) {
+                            // console.log(talonarios);
+                            $("#btn_aceptar_enviados").attr('disabled', true);                            
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("estado.enviados") }}',
+                                data: {talonarios:talonarios},
+                                success: function(response) {  
+                                    if (response.success) {
+                                        alert("ACTUALIZACIÓN DE ESTADO EXITOSO");
+                                        window.location.href = "{{ route('estado')}}";
+                                    }else{
+                                        alert("ERROR AL ACTUALIZAR EL ESTADO");
+                                    }     
+                                    
+                                },
+                                error: function() {
+                                }
+                            });
+                        }); 
+                        //////////////////////////////////////////////////////////////
                     },
                     error: function() {
                     }
