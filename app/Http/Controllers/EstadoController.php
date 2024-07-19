@@ -18,11 +18,11 @@ class EstadoController extends Controller
         $t_recibidos = [];
 
 
-        //////////////TALONARIOS POR ENVIAR
+        ////////////////////////////////////////////////////////////////////////TALONARIOS POR ENVIAR
         $consulta_enviar = DB::table('talonarios')->where('estado','=',20)->get();
         foreach ($consulta_enviar as $c) {
             if ($c->clase == 6) { 
-                /////reserva
+                /////////////////reserva
                 $array = array(
                         'id_talonario' => $c->id_talonario,
                         'id_solicitud' => 'No aplica',
@@ -41,7 +41,7 @@ class EstadoController extends Controller
                 $a = (object) $array;
                 array_push($t_enviar, $a);
             }else{
-                //////regular
+                //////////////////regular
                 $detalle = DB::table('detalle_talonarios')
                             ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
                             ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
@@ -70,63 +70,114 @@ class EstadoController extends Controller
             
         }
 
-        //////////////TALONARIOS ENVIADOS
+
+        ////////////////////////////////////////////////////////////////////////////TALONARIOS ENVIADOS
         $consulta_enviados = DB::table('talonarios')->where('estado','=',21)->get();
         foreach ($consulta_enviados as $c) {
-            $detalle = DB::table('detalle_talonarios')
-                        ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                        ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                        ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-                        ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
-            if ($detalle) {
+            if ($c->clase == 6){
+                /////////////////reserva
                 $array = array(
-                    'id_talonario' => $c->id_talonario,
-                    'id_solicitud' => $c->id_solicitud,
-                    'id_cantera' => $detalle->id_cantera,
-                    'id_sujeto' => $detalle->id_sujeto,
-                    'nombre_cantera' => $detalle->nombre,
-                    'razon_social' => $detalle->razon_social,
-                    'rif_condicion' => $detalle->rif_condicion,
-                    'rif_nro' => $detalle->rif_nro,
-                    'tipo' => $c->tipo_talonario,
-                    'desde' => $c->desde,
-                    'hasta' => $c->hasta,
+                        'id_talonario' => $c->id_talonario,
+                        'id_solicitud' => 'No aplica',
+                        'id_cantera' => 'No aplica',
+                        'id_sujeto' => 'No aplica',
+                        'nombre_cantera' => 'No aplica',
+                        'razon_social' => 'No aplica',
+                        'rif_condicion' => 'No aplica',
+                        'rif_nro' => 'No aplica',
+                        'tipo' => $c->tipo_talonario,
+                        'desde' => $c->desde,
+                        'hasta' => $c->hasta,
+                        'clase' => $c->clase,
+                        'fecha_enviado_imprenta' => $c->fecha_enviado_imprenta,
                     );
 
                 $a = (object) $array;
                 array_push($t_enviados, $a);
+            }else{
+                $detalle = DB::table('detalle_talonarios')
+                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
+                if ($detalle) {
+                    $array = array(
+                        'id_talonario' => $c->id_talonario,
+                        'id_solicitud' => $c->id_solicitud,
+                        'id_cantera' => $detalle->id_cantera,
+                        'id_sujeto' => $detalle->id_sujeto,
+                        'nombre_cantera' => $detalle->nombre,
+                        'razon_social' => $detalle->razon_social,
+                        'rif_condicion' => $detalle->rif_condicion,
+                        'rif_nro' => $detalle->rif_nro,
+                        'tipo' => $c->tipo_talonario,
+                        'desde' => $c->desde,
+                        'hasta' => $c->hasta,
+                        'clase' => $c->clase,
+                        'fecha_enviado_imprenta' => $c->fecha_enviado_imprenta,
+                        );
+
+                    $a = (object) $array;
+                    array_push($t_enviados, $a);
+                }
             }
         }
 
 
-
-        //////////////TALONARIOS RECIBIDOS
+        ///////////////////////////////////////////////////////////////////////TALONARIOS RECIBIDOS
         $consulta_recibidos = DB::table('talonarios')->where('estado','=',22)->get();
         foreach ($consulta_recibidos as $c) {
-             $detalle = DB::table('detalle_talonarios')
-                         ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                         ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                         ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-                         ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
-             if ($detalle) {
-                 $array = array(
-                     'id_talonario' => $c->id_talonario,
-                     'id_solicitud' => $c->id_solicitud,
-                     'id_cantera' => $detalle->id_cantera,
-                     'id_sujeto' => $detalle->id_sujeto,
-                     'nombre_cantera' => $detalle->nombre,
-                     'razon_social' => $detalle->razon_social,
-                     'rif_condicion' => $detalle->rif_condicion,
-                     'rif_nro' => $detalle->rif_nro,
-                     'tipo' => $c->tipo_talonario,
-                     'desde' => $c->desde,
-                     'hasta' => $c->hasta,
-                     );
- 
-                 $a = (object) $array;
-                 array_push($t_recibidos, $a);
-             }
-         }
+            if ($c->clase == 6){
+                /////////////////reserva
+                $array = array(
+                        'id_talonario' => $c->id_talonario,
+                        'id_solicitud' => 'No aplica',
+                        'id_cantera' => 'No aplica',
+                        'id_sujeto' => 'No aplica',
+                        'nombre_cantera' => 'No aplica',
+                        'razon_social' => 'No aplica',
+                        'rif_condicion' => 'No aplica',
+                        'rif_nro' => 'No aplica',
+                        'tipo' => $c->tipo_talonario,
+                        'desde' => $c->desde,
+                        'hasta' => $c->hasta,
+                        'clase' => $c->clase,
+                        'fecha_enviado_imprenta' => $c->fecha_enviado_imprenta,
+                        'fecha_recibido_imprenta' => $c->fecha_recibido_imprenta,
+                    );
+
+                $a = (object) $array;
+                array_push($t_recibidos, $a);
+            }else{
+                $detalle = DB::table('detalle_talonarios')
+                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
+                if ($detalle) {
+                    $array = array(
+                        'id_talonario' => $c->id_talonario,
+                        'id_solicitud' => $c->id_solicitud,
+                        'id_cantera' => $detalle->id_cantera,
+                        'id_sujeto' => $detalle->id_sujeto,
+                        'nombre_cantera' => $detalle->nombre,
+                        'razon_social' => $detalle->razon_social,
+                        'rif_condicion' => $detalle->rif_condicion,
+                        'rif_nro' => $detalle->rif_nro,
+                        'tipo' => $c->tipo_talonario,
+                        'desde' => $c->desde,
+                        'hasta' => $c->hasta,
+                        'clase' => $c->clase,
+                        'fecha_enviado_imprenta' => $c->fecha_enviado_imprenta,
+                        'fecha_recibido_imprenta' => $c->fecha_recibido_imprenta,
+                        );
+
+                    $a = (object) $array;
+                    array_push($t_recibidos, $a);
+                }
+            }
+            
+        }
 
             
         $count_proceso = DB::table('solicituds')->selectRaw("count(*) as total")->where('estado','=',17)->first();
@@ -264,13 +315,17 @@ class EstadoController extends Controller
     public function enviados(Request $request){
         $talonarios = $request->post('talonarios');
         $ids_talonarios = '';
+        $hoy = date('Y-m-d');
         foreach ($talonarios as $talonario) {
-            $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 21]);
-            if ($update) {
-                $ids_talonarios .= $talonario.'-';
-            }else{
-                return response()->json(['success' => false]);
+            if ($talonario != '') {
+                $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 21, 'fecha_enviado_imprenta' => $hoy]);
+                if ($update) {
+                    $ids_talonarios .= $talonario.'-';
+                }else{
+                    return response()->json(['success' => false]);
+                }
             }
+           
         } 
         $user = auth()->id();
         $accion = 'ACTUALIZACION DE ESTADO (ENVIADOS), ID TALONARIOS: '.$ids_talonarios;
@@ -322,150 +377,7 @@ class EstadoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function actualizar(Request $request)
-    {
-        $idSolicitud = $request->post('solicitud');
-        $solicitudes = DB::table('solicituds')
-        ->join('sujeto_pasivos', 'solicituds.id_sujeto','=', 'sujeto_pasivos.id_sujeto')
-        ->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
-        ->select('solicituds.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-        ->where('id_solicitud','=',$idSolicitud)
-        ->get();
-       
-        $tr = '';
-        $tr_historial = '';
-
-        $cantera = '';
-        $contribuyente = '';
-        $select = '';
-
-        if ($solicitudes) {
-            foreach ($solicitudes as $solicitud) {
-                $cantera = $solicitud->nombre;
-                $contribuyente = $solicitud->razon_social;
-
-                switch ($solicitud->estado) {
-                    case 'En proceso':
-                        $select = ' <option value="En proceso">En proceso</option>
-                                    <option value="Retirar">Por Retirar</option>';
-                        break;
-                    case 'Retirar':
-                        $select = ' <option value="Retirar">Por Retirar</option>
-                                    <option value="Retirado">Retirado</option>
-                                    <option value="En proceso">En proceso</option>';
-                        break;
-                    case 'Retirado':
-                        $select = ' <option value="Retirado">Retirado</option>
-                                    <option value="Retirar">Por Retirar</option>';
-                        break;
-
-                }
-
-                $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->get();
-                if($detalles){ 
-                    $contador = 0;
-                    foreach ($detalles as $i) {
-                        $tr .= '<tr>
-                                    <td>'.$i->tipo_talonario.' Guías</td>
-                                    <td>'.$i->cantidad.' und.</td>
-                                </tr>';
-
-                        $contador = $contador + ($i->tipo_talonario * $i->cantidad);
-
-                    }
-                }else{
-                    return response('ERROR AL ACTUALIZAR ESTADO');
-                }
-            }
-
-            $talonarios = DB::table('talonarios')->select('fecha_emision','fecha_recibido','fecha_retiro')->where('id_solicitud','=',$idSolicitud)->get(); 
-            if ($talonarios) {
-
-                foreach ($talonarios as $talonario) {
-                    $fecha_recibido = '';
-                    if ($talonario->fecha_recibido != '') {
-                        $fecha_recibido = $talonario->fecha_recibido;
-                    }else{
-                        $fecha_recibido = '----------';
-                    }
-
-                    $fecha_retiro = '';
-                    if ($talonario->fecha_retiro != '') {
-                        $fecha_retiro = $talonario->fecha_retiro;
-                    }else{
-                        $fecha_retiro = '----------';
-                    }
-
-                    $tr_historial = '<tr>
-                                        <th>Emisión</th>
-                                        <td class="text-success fw-bold">'.$talonario->fecha_emision.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Recepción</th>
-                                        <td class="text-success fw-bold">'.$fecha_recibido.'</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Entrega</th>
-                                        <td class="text-success fw-bold">'.$fecha_retiro.'</td>
-                                    </tr>';
-                }
-            }else{
-                return response('ERROR AL ACTUALIZAR ESTADO');
-            }
-            // return response($select);
-            $html = '<div class="d-flex justify-content-end">
-                        <table class="table table-borderless table-sm">
-                            <tr>
-                                <th>Cantera:</th>
-                                <td class="text-navy fw-bold fs-6">'.$cantera.'</td>
-                            </tr>
-                            <tr>
-                                <th>Contribuyente:</th>
-                                <td>'.$contribuyente.'</td>
-                            </tr>
-                        </table>  
-                    </div>
-
-                    <h6 class="text-center mb-3 text-navy fw-bold">Datos de la Solicitud</h6>
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Contenido del Talonario</th>
-                                <th scope="col">Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            '.$tr.'
-                        </tbody>
-                    </table>
-                    <h6 class="text-center mb-3  text-navy fw-bold">Historial de Estados</h6>
-                    <div class="d-flex justify-content-end">
-                        <table class="table text-center mx-5 px-5">
-                            '.$tr_historial.'
-                        </table>
-                    </div>
-                    <form id="form_actualizar_estado" method="post" onsubmit="event.preventDefault(); actualizarEstado()">
-                        <div class="row px-5 my-3">
-                            <div class="col-sm-4">
-                                <label for="estado" class="fw-bold fs-6">Estado Actual</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <select class="form-select form-select-sm" id="estado" aria-label="Small select" name="estado_actual" required >
-                                    '.$select.'
-                                </select>
-                            </div>
-                        </div>
-                        <input type="hidden" name="id_solicitud" value="'.$idSolicitud.'">
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-success btn-sm" data-bs-dismiss="modal">Actualizar</button>
-                        </div>
-                    </form>';
-            return response($html);
-
-        }else{
-            return response('ERROR AL ACTUALIZAR ESTADO');
-        }
-    }
+   
 
     /**
      * Store a newly created resource in storage.

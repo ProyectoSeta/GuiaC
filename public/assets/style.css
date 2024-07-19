@@ -55,7 +55,7 @@
     background-attachment: fixed;
     z-index: 1; */
 }
-/*
+/* 
 #body_sesion:before{
     content: '';
     background-color: #f3ffd33d;
@@ -92,11 +92,3 @@
 }
 
 
-/* ******* ASIGNAR RESERVAS******** */
-/* #html_asignar_guias{
-    background-image: url('background-asignar.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    background-attachment: fixed;
-} */

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Estado - Solicitudes')
+@section('title', 'Estado | Solicitudes')
 
 @section('content_header')
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
@@ -68,19 +68,52 @@
         <!-- nav - option -->
         <ul class="nav nav-tabs d-flex justify-content-center">
             <li class="nav-item">
-                <a class="nav-link active" id="list-enviar-list" data-bs-toggle="list" href="#list-enviar" role="tab" aria-controls="list-enviar">Enviar a Imprenta</a>
+                <a class="nav-link active" id="list-enviar-list" data-bs-toggle="list" href="#list-enviar" role="tab" aria-controls="list-enviar">
+                    <div class="d-flex gap-1 py-1 pe-3">
+                        <div class="d-flex align-items-end flex-between-center">
+                            <i class='bx bxl-telegram fs-2'></i>
+                        </div>
+                        <div class="ms-2">
+                            <h6 class="mb-1 text-700 text-nowrap text-secondary" style="font-size:13px">Imprenta</h6>
+                            <h6 class="mb-0 lh-1 fw-bold text-secondary-emphasis">Por Enviar</h6>
+                        </div>
+                    </div>
+                </a>
+                <!-- <a class="nav-link active" id="list-enviar-list" data-bs-toggle="list" href="#list-enviar" role="tab" aria-controls="list-enviar">Enviar a Imprenta</a> -->
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Enviados</a>
+                <a class="nav-link" id="list-enviados-list" data-bs-toggle="list" href="#list-enviados" role="tab" aria-controls="list-enviados">
+                    <div class="d-flex gap-1 py-1 pe-3">
+                        <div class="d-flex align-items-end flex-between-center">
+                            <i class='bx bx-loader fs-2'></i>
+                        </div>
+                        <div class="ms-2">
+                            <h6 class="mb-1 text-700 text-nowrap text-secondary" style="font-size:13px">Imprenta</h6>
+                            <h6 class="mb-0 lh-1 fw-bold text-secondary-emphasis">Enviados</h6>
+                        </div>
+                    </div>
+                </a>
+                <!-- <a class="nav-link" id="list-enviados-list" data-bs-toggle="list" href="#list-enviados" role="tab" aria-controls="list-enviados">Enviados</a> -->
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Recibidos</a>
+                <a class="nav-link" id="list-recibidos-list" data-bs-toggle="list" href="#list-recibidos" role="tab" aria-controls="list-recibidos">
+                    <div class="d-flex gap-1 py-1 pe-3">
+                        <div class="d-flex align-items-end flex-between-center">
+                            <i class='bx bx-package fs-2'></i>
+                        </div>
+                        <div class="ms-2">
+                            <h6 class="mb-1 text-700 text-nowrap text-secondary" style="font-size:13px">Imprenta</h6>
+                            <h6 class="mb-0 lh-1 fw-bold text-secondary-emphasis">Recibidos</h6>
+                        </div>
+                    </div>
+                </a>
+                <!-- <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Recibidos</a> -->
             </li>
         </ul>
 
         <!-- contenido - nav - option -->
         <div class="tab-content py-3" id="nav-tabContent">
-            <!-- CONTENIDO: USUARIOS CONTRIBUYENTE -->
+            <!-- CONTENIDO: TALONARIOS POR ENVIAR  -->
             <div class="tab-pane fade show active" id="list-enviar" role="tabpanel" aria-labelledby="list-enviar-list">
                 <div class="d-flex justify-content-center mb-1 d-none" id="btn_enviar_all">
                     <button class="btn  btn-outline-primary btn-sm d-flex align-items-center" type="button" id="btn_talonarios_enviados" data-bs-toggle="modal" data-bs-target="#modal_talonarios_enviados">
@@ -112,7 +145,7 @@
                             <tr>
                                 <td>
                                     <div class="form-check">
-                                        <input class="form-check-input fs-6 check_enviar" type="checkbox" value="{{$enviar->id_talonario}}">
+                                        <input class="form-check-input fs-6 check_enviar check_{{$enviar->id_talonario}}" type="checkbox" value="{{$enviar->id_talonario}}">
                                     </div>
                                 </td>
                                 <td class="text-secondary fw-bold">{{$enviar->id_talonario}}</td>
@@ -157,7 +190,7 @@
                                         @endphp
                                     <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button" data-bs-toggle="tooltip" data-bs-title="Disabled tooltip">
+                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button" data-bs-toggle="modal" data-bs-target="#modal_talonarios_enviados">
                                             <i class='bx bxs-chevron-right'></i>
                                         </button>
                                     </td>
@@ -169,23 +202,175 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO: USUARIOS ADMINISTRATIVO -->
-            <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
+
+            <!-- CONTENIDO: TALONARIOS ENVIADOS -->
+            <div class="tab-pane fade" id="list-enviados" role="tabpanel" aria-labelledby="list-enviados-list">
                 <div class="table-responsive" style="font-size:12.7px">
-                    <table id="" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+                    <table id="enviados" class="table display border-light-subtle text-center" style="width:100%; font-size:12.7px">
                         <thead class="bg-primary border-light-subtle">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Correo</th>
-                                    <th scope="col">Creado</th>
-                                    <th scope="col">Opciones</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_recibido">
+                                    </div>
+                                </th>
+                                <th scope="col">Talonario</th>
+                                <th scope="col">Clase</th>
+                                <th scope="col">Cantera</th>
+                                <th scope="col">Contribuyente</th>
+                                <th scope="col">R.I.F</th>
+                                <th scope="col">Solicitud</th>
+                                <th scope="col">Correlativo</th>
+                                <th scope="col">Enviado</th>
+                                <th scope="col">Opcion</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            
-                        </tbody>
+                            @foreach ($t_enviados as $enviados)
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-6 check_recibido" type="checkbox" value="{{$enviados->id_talonario}}">
+                                        </div>
+                                    </td>
+                                    <td class="text-secondary fw-bold">{{$enviados->id_talonario}}</td>
+                                    @if ($enviados->clase == 6)
+                                        <td class="fw-bold text-navy">Reserva</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                            @php
+                                                $desde = $enviados->desde;
+                                                $hasta = $enviados->hasta;
+                                                $length = 6;
+                                                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
+                                            @endphp
+                                        <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
+                                        <td class="fw-bold text-secondary-emphasis table-light">{{$enviados->fecha_enviado_imprenta}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviados->id_talonario}}" type="button">
+                                                <i class='bx bxs-chevron-right'></i>
+                                            </button>
+                                        </td>
+                                    @else <!-- *************************** -->
+                                        <td class="fw-bold text-navy">Regular</td>
+                                        <td>{{$enviados->nombre_cantera}}</td>
+                                        <td>{{$enviados->razon_social}}</td>
+                                        <td>
+                                            <a class="info_sujeto" role="button" id_sujeto='{{ $enviados->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$enviados->rif_condicion}}-{{$enviados->rif_nro}}</a>
+                                        </td>
+                                        <td>
+                                            <a class="detalle_solicitud" id_solicitud="{{$enviados->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_detalles_solicitud">Ver</a>
+                                        </td>
+                                            @php
+                                                $desde = $enviados->desde;
+                                                $hasta = $enviados->hasta;
+                                                $length = 6;
+                                                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                                            @endphp
+                                        <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
+                                        <td class="fw-bold text-secondary-emphasis table-light">{{$enviados->fecha_enviado_imprenta}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviados->id_talonario}}" type="button" data-bs-toggle="tooltip" data-bs-title="Disabled tooltip">
+                                                <i class='bx bxs-chevron-right'></i>
+                                            </button>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- CONTENIDO: TALONARIOS RECIBIDOS -->
+            <div class="tab-pane fade" id="list-recibidos" role="tabpanel" aria-labelledby="list-recibidos-list">
+                <div class="table-responsive" style="font-size:12.7px">
+                    <table id="recibidos" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
+                    <thead class="bg-primary border-light-subtle">
+                            <tr>
+                                <th scope="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_recibido">
+                                    </div>
+                                </th>
+                                <th scope="col">Talonario</th>
+                                <th scope="col">Clase</th>
+                                <th scope="col">Cantera</th>
+                                <th scope="col">Contribuyente</th>
+                                <th scope="col">R.I.F</th>
+                                <th scope="col">Solicitud</th>
+                                <th scope="col">Correlativo</th>
+                                <th scope="col">Enviado</th>
+                                <th scope="col">Recibido</th>
+                                <th scope="col">Opcion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($t_recibidos as $recibidos)
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input fs-6 check_recibido" type="checkbox" value="{{$recibidos->id_talonario}}">
+                                        </div>
+                                    </td>
+                                    <td class="text-secondary fw-bold">{{$recibidos->id_talonario}}</td>
+                                    @if ($recibidos->clase == 6)
+                                        <td class="fw-bold text-navy">Reserva</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                        <td class="text-secondary fst-italic">No aplica</td>
+                                            @php
+                                                $desde = $recibidos->desde;
+                                                $hasta = $recibidos->hasta;
+                                                $length = 6;
+                                                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                                            @endphp
+                                        <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
+                                        <td class="fw-bold text-secondary-emphasis table-light">{{$recibidos->fecha_enviado_imprenta}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$recibidos->id_talonario}}" type="button">
+                                                <i class='bx bxs-chevron-right'></i>
+                                            </button>
+                                        </td>
+                                    @else <!-- *************************** -->
+                                        <td class="fw-bold text-navy">Regular</td>
+                                        <td>{{$recibidos->nombre_cantera}}</td>
+                                        <td>{{$recibidos->razon_social}}</td>
+                                        <td>
+                                            <a class="info_sujeto" role="button" id_sujeto='{{ $recibidos->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$recibidos->rif_condicion}}-{{$recibidos->rif_nro}}</a>
+                                        </td>
+                                        <td>
+                                            <a class="detalle_solicitud" id_solicitud="{{$recibidos->id_solicitud}}" data-bs-toggle="modal" data-bs-target="#modal_detalles_solicitud">Ver</a>
+                                        </td>
+                                            @php
+                                                $desde = $recibidos->desde;
+                                                $hasta = $recibidos->hasta;
+                                                $length = 6;
+                                                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                                            @endphp
+                                        <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
+                                        <td class="fw-bold text-secondary-emphasis table-light">{{$recibidos->fecha_enviado_imprenta}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$recibidos->id_talonario}}" type="button" data-bs-toggle="tooltip" data-bs-title="Disabled tooltip">
+                                                <i class='bx bxs-chevron-right'></i>
+                                            </button>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -327,7 +512,7 @@
                 }
             });
 
-            $('#recibidos').DataTable(
+            $('#enviados').DataTable(
                 {
                     "order": [[ 0, "desc" ]],
                     "language": {
@@ -346,7 +531,7 @@
             );
 
 
-            $('#enviados_x').DataTable(
+            $('#recibidos').DataTable(
                 {
                     "order": [[ 0, "desc" ]],
                     "language": {
@@ -429,44 +614,25 @@
             });
 
 
-            ///////MODAL: INFO SOLICITUD DENEGADA
-            $(document).on('click','.solicitud_denegada', function(e) { 
-                e.preventDefault(e); 
-                var solicitud = $(this).attr('id_solicitud');
-                // alert(cantera);
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("estado.info_denegada") }}',
-                    data: {solicitud:solicitud},
-                    success: function(response) {
-                        // console.log(response);               
-                        $('#content_info_denegada').html(response);
-                    },
-                    error: function() {
-                    }
-                });
-            });
+            // ///////MODAL: INFO SOLICITUD DENEGADA
+            // $(document).on('click','.solicitud_denegada', function(e) { 
+            //     e.preventDefault(e); 
+            //     var solicitud = $(this).attr('id_solicitud');
+            //     // alert(cantera);
+            //     $.ajax({
+            //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            //         type: 'POST',
+            //         url: '{{route("estado.info_denegada") }}',
+            //         data: {solicitud:solicitud},
+            //         success: function(response) {
+            //             // console.log(response);               
+            //             $('#content_info_denegada').html(response);
+            //         },
+            //         error: function() {
+            //         }
+            //     });
+            // });
         
-
-            ///////MODAL: ACTUALIZAR ESTADO
-            $(document).on('click','.actualizar_estado', function(e) { 
-                e.preventDefault(e); 
-                var solicitud = $(this).attr('id_solicitud');
-
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("estado.actualizar") }}',
-                    data: {solicitud:solicitud},
-                    success: function(response) {
-                        console.log(response);               
-                        $('#content_actualizar_estado').html(response);
-                    },
-                    error: function() {
-                    }
-                });
-            });
 
 
             $i = 0;
@@ -501,6 +667,58 @@
                     $('#btn_enviar_all').removeClass('d-none');
                     $(".talonario_enviado").attr('disabled', true);
                 }
+            });
+
+
+            ///////SELECCIONAR UN TALONARIO PARA ENVIAR
+            $(document).on('click','.talonario_enviado', function(e) { 
+                e.preventDefault(e); 
+                var talonarios = [];
+                var id_talonario = $(this).attr('id_talonario');
+
+                talonarios.push(id_talonario);
+                $i++;
+
+                $(".check_"+id_talonario).prop("checked", true);
+                $('input[type="checkbox"]').not(".check_"+id_talonario).prop('checked', false);
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.modal_enviados") }}',
+                    data: {talonarios:talonarios},
+                    success: function(response) {        
+
+                        $('#html_talonarios_enviados').html(response);
+
+                        //////////////////////////////////////////////////////////////
+                        $(document).on('click','#btn_aceptar_enviados', function(e) {
+                            // console.log(talonarios);
+                            $("#btn_aceptar_enviados").attr('disabled', true);                            
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("estado.enviados") }}',
+                                data: {talonarios:talonarios},
+                                success: function(response) {  
+                                    if (response.success) {
+                                        alert("ACTUALIZACIÓN DE ESTADO EXITOSO");
+                                        window.location.href = "{{ route('estado')}}";
+                                    }else{
+                                        alert("ERROR AL ACTUALIZAR EL ESTADO");
+                                    }     
+                                    
+                                },
+                                error: function() {
+                                }
+                            });
+                        }); 
+                        //////////////////////////////////////////////////////////////
+                    },
+                    error: function() {
+                    }
+                });
+                
             });
 
 
