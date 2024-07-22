@@ -83,13 +83,18 @@ Route::get('/control_canteras', [App\Http\Controllers\ControlCanterasController:
 Route::post('/control_canteras/update_limite', [App\Http\Controllers\ControlCanterasController::class, 'update_limite'])->name('control_canteras.update_limite');
 Route::post('/control_canteras/update', [App\Http\Controllers\ControlCanterasController::class, 'update'])->name('control_canteras.update');
 
-///////////ESTADO DE SOLICITUDES
+
+///////////ESTADO DE TALONARIOS
 Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->name('estado');
-Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
-Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
 Route::post('/estado/modal_enviados', [App\Http\Controllers\EstadoController::class, 'modal_enviados'])->name('estado.modal_enviados');
 Route::post('/estado/enviados', [App\Http\Controllers\EstadoController::class, 'enviados'])->name('estado.enviados');
-Route::post('/estado/update', [App\Http\Controllers\EstadoController::class, 'update'])->name('estado.update');
+Route::post('/estado/modal_recibidos', [App\Http\Controllers\EstadoController::class, 'modal_recibidos'])->name('estado.modal_recibidos');
+
+
+///////////ESTADO DE SOLICITUDES
+// Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
+// Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
+// Route::post('/estado/update', [App\Http\Controllers\EstadoController::class, 'update'])->name('estado.update');
 
 
 //////////////CORRELATIVO

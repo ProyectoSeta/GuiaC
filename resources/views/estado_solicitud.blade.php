@@ -11,12 +11,57 @@
 
 @section('content')
     <div class="container rounded-4 p-3 pt-0" style="background-color:#ffff; font-size:14px">
-        <div class="d-flex justify-content-center my-2 mb-4">
-            <div class="text-center">
-                <h3 class="mb-1 text-navy titulo">Actualización de Estado</h3>
-                <span class="text-muted fs-6 fw-bold">Talonarios</span>
+        <div class="d-flex justify-content-between mt-2">
+            <div class="">
+                <h3 class="mb-1 mt-3 text-navy titulo">Actualización de Estado</h3>
+                <span class="text-muted" style="font-size:15px">Talonarios a generar - Correlativos asignados - Talonarios Recibidos</span><br>
+                <span class="text-muted fw-bold" style="font-size:15px">No. Total de Solicitudes en Proceso: <span class="text-navy">{{$count->total}} Solicitud(es)</span></span>
             </div>
 
+            <div class="row w-50">
+                <div class="col-sm-6">
+                    <div class="card shadow-none border-light-subtle">
+                        <div class="card-body px-3 py-2">
+                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
+                                <div class="p-2 border border-primary grd-primary-light rounded-5 d-flex">
+                                    <i class='bx bx-refresh bx-spin fs-3 text-primary' ></i>
+                                </div>
+                                <div class="d-flex flex-column text-center">
+                                    <span class="fs-6 pb-1">En Proceso</span>
+                                    <span class="text-primary">{{$count_proceso->total}}</span> 
+                                </div>
+                            </h3>
+
+                            <div class="d-flex align-items-center justify-content-between" style="font-size:13px">
+                                <span class="text-muted">Solicitudes en proceso</span>
+                                <span class="badge bg-primary text-primary bg-opacity-10 ">{{$porcentaje_proceso}}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="card shadow-none border-light-subtle">
+                        <div class="card-body px-3 py-2">
+                            <h3 class="d-flex align-items-center justify-content-between mb-0 pb-1">
+                                <div class="p-2 border border-warning-subtle grd-warning-light rounded-5 d-flex">
+                                    <i class='bx bx-error-circle bx-tada fs-3' style="color:#ff8f00"></i>
+                                </div>
+                                <div class="d-flex flex-column text-center">
+                                    <span class="fs-6 pb-1">Por Retirar</span>
+                                    <span class="" style="color:#ff8f00">{{$count_retirar->total}}</span> 
+                                </div>
+                            </h3>
+
+                            <div class="d-flex align-items-center justify-content-between" style="font-size:13px">
+                                <span class="text-muted">Talonarios por retirar</span>
+                                <span class="badge bg-opacity-10" style="color:#ff8f00; background:#fff2e2">{{$porcentaje_retirar}}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- contenido -->
@@ -70,7 +115,7 @@
         <div class="tab-content py-3" id="nav-tabContent">
             <!-- CONTENIDO: TALONARIOS POR ENVIAR  -->
             <div class="tab-pane fade show active" id="list-enviar" role="tabpanel" aria-labelledby="list-enviar-list">
-                <div class="d-flex justify-content-center mb-1 mt-2 d-none" id="btn_enviar_all">
+                <div class="d-flex justify-content-center mb-1 d-none" id="btn_enviar_all">
                     <button class="btn  btn-outline-primary btn-sm d-flex align-items-center" type="button" id="btn_talonarios_enviados" data-bs-toggle="modal" data-bs-target="#modal_talonarios_enviados">
                         <span>Talonarios enviados </span>
                         <i class='bx bxs-chevron-right ms-1'></i>
@@ -121,7 +166,7 @@
                                         @endphp
                                     <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button" data-bs-toggle="modal" data-bs-target="#modal_talonarios_enviados">
+                                        <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviar->id_talonario}}" type="button">
                                             <i class='bx bxs-chevron-right'></i>
                                         </button>
                                     </td>
@@ -160,19 +205,13 @@
 
             <!-- CONTENIDO: TALONARIOS ENVIADOS -->
             <div class="tab-pane fade" id="list-enviados" role="tabpanel" aria-labelledby="list-enviados-list">
-                <div class="d-flex justify-content-center mb-1 mt-2 d-none" id="btn_recibidos_all">
-                    <button class="btn  btn-outline-primary btn-sm d-flex align-items-center" type="button" id="btn_talonarios_recibidos" data-bs-toggle="modal" data-bs-target="#modal_talonarios_recibidos">
-                        <span>Talonarios Recibidos </span>
-                        <i class='bx bxs-chevron-right ms-1'></i>
-                    </button>
-                </div>
                 <div class="table-responsive" style="font-size:12.7px">
                     <table id="enviados" class="table display border-light-subtle text-center" style="width:100%; font-size:12.7px">
                         <thead class="bg-primary border-light-subtle">
                             <tr>
                                 <th scope="col">
                                     <div class="form-check">
-                                        <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_enviados">
+                                        <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_recibido">
                                     </div>
                                 </th>
                                 <th scope="col">Talonario</th>
@@ -191,7 +230,7 @@
                                 <tr>
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input fs-6 check_enviado" type="checkbox" value="{{$enviados->id_talonario}}">
+                                            <input class="form-check-input fs-6 check_recibido" type="checkbox" value="{{$enviados->id_talonario}}">
                                         </div>
                                     </td>
                                     <td class="text-secondary fw-bold">{{$enviados->id_talonario}}</td>
@@ -212,7 +251,7 @@
                                         <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
                                         <td class="fw-bold text-secondary-emphasis table-light">{{$enviados->fecha_enviado_imprenta}}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary talonario_recibido d-inline-flex align-items-center" id_talonario="{{$enviados->id_talonario}}" type="button" data-bs-toggle="modal" data-bs-target="#modal_talonarios_recibidos">
+                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviados->id_talonario}}" type="button">
                                                 <i class='bx bxs-chevron-right'></i>
                                             </button>
                                         </td>
@@ -237,7 +276,7 @@
                                         <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
                                         <td class="fw-bold text-secondary-emphasis table-light">{{$enviados->fecha_enviado_imprenta}}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary talonario_recibido d-inline-flex align-items-center" id_talonario="{{$enviados->id_talonario}}" type="button" data-bs-toggle="modal" data-bs-target="#modal_talonarios_recibidos">
+                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$enviados->id_talonario}}" type="button" data-bs-toggle="tooltip" data-bs-title="Disabled tooltip">
                                                 <i class='bx bxs-chevron-right'></i>
                                             </button>
                                         </td>
@@ -419,18 +458,6 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    <!-- ********* TALONARIOS RECIBIDOS ******** -->
-    <div class="modal" id="modal_talonarios_recibidos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" id="html_talonarios_recibidos">
-                <div class="my-5 py-5 d-flex flex-column text-center">
-                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
-                    <span class="text-muted">Cargando, por favor espere un momento...</span>
-                </div>
-            </div>  <!-- cierra modal-content -->
-        </div>  <!-- cierra modal-dialog -->
-    </div>
-
 
 <!--************************************************-->
 
@@ -566,7 +593,48 @@
             });
 
 
-            //////////////////////////////////////////////////////ENVIAR/////////////////////////////////////////////////////////
+            ///////BTN: TALONARIO ENVIADO 
+            $(document).on('click','.talonario_enviado', function(e) { 
+                e.preventDefault(e); 
+                var solicitud = $(this).attr('id_solicitud');
+                // alert(solicitud);
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.solicitud") }}',
+                    data: {solicitud:solicitud},
+                    success: function(response) {           
+                        // alert(response);
+                        // console.log(response);
+                        $('#content_ver_solicitud').html(response);
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+            // ///////MODAL: INFO SOLICITUD DENEGADA
+            // $(document).on('click','.solicitud_denegada', function(e) { 
+            //     e.preventDefault(e); 
+            //     var solicitud = $(this).attr('id_solicitud');
+            //     // alert(cantera);
+            //     $.ajax({
+            //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            //         type: 'POST',
+            //         url: '{{route("estado.info_denegada") }}',
+            //         data: {solicitud:solicitud},
+            //         success: function(response) {
+            //             // console.log(response);               
+            //             $('#content_info_denegada').html(response);
+            //         },
+            //         error: function() {
+            //         }
+            //     });
+            // });
+        
+
+
             $i = 0;
             ////////SELECCIONAR TODOS LOS CHECKBOX
             $('#check_all_enviar').change(function() {
@@ -700,94 +768,6 @@
                     }
                 });
             });
-
-
-
-            ////////////////////////////////////////////////////ENVIADOS////////////////////////////////////////////////////////////
-            $v = 0;
-            ////////SELECCIONAR TODOS LOS CHECKBOX
-            $('#check_all_enviados').change(function() {
-                var checkboxes = $('input:checkbox').length;
-                if ($(this).is(':checked')) {
-                    $('#btn_recibidos_all').removeClass('d-none');
-                    $(".talonario_recibido").attr('disabled', true);
-                    $v = checkboxes - 1;
-                }else{
-                    $('#btn_recibidos_all').addClass('d-none');
-                    $(".talonario_recibido").attr('disabled', false);
-                    $v = 0;
-                }
-                $('.check_enviado').prop('checked', $(this).is(':checked'));
-            });
-
-             /////////SELECCIONAR CHECKBOX
-             $('.check_enviado').change(function() {
-                if ($(this).is(':checked')) {
-                   $i++;
-                }else{
-                    $i--;
-                }
-                // /////////////////////////
-                if ($i <= 1) {
-                    $('#btn_recibidos_all').addClass('d-none');
-                    $(".talonario_recibido").attr('disabled', false);
-                }else{
-                    $('#btn_recibidos_all').removeClass('d-none');
-                    $(".talonario_recibido").attr('disabled', true);
-                }
-            });
-
-            ///////SELECCIONAR UN TALONARIO PARA ENVIAR
-            $(document).on('click','.talonario_recibido', function(e) { 
-                e.preventDefault(e); 
-                var talonarios = [];
-                var id_talonario = $(this).attr('id_talonario');
-
-                talonarios.push(id_talonario);
-                $i++;
-
-                $(".check_"+id_talonario).prop("checked", true);
-                $('input[type="checkbox"]').not(".check_"+id_talonario).prop('checked', false);
-
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("estado.modal_recibidos") }}',
-                    data: {talonarios:talonarios},
-                    success: function(response) {        
-
-                        $('#html_talonarios_recibidos').html(response);
-
-                        //////////////////////////////////////////////////////////////
-                        $(document).on('click','#btn_aceptar_recibidos', function(e) {
-                            // console.log(talonarios);
-                            $("#btn_aceptar_recibidos").attr('disabled', true);                            
-                            $.ajax({
-                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                                type: 'POST',
-                                url: '{{route("estado.enviados") }}',
-                                data: {talonarios:talonarios},
-                                success: function(response) {  
-                                    if (response.success) {
-                                        alert("ACTUALIZACIÓN DE ESTADO EXITOSO");
-                                        window.location.href = "{{ route('estado')}}";
-                                    }else{
-                                        alert("ERROR AL ACTUALIZAR EL ESTADO");
-                                    }     
-                                    
-                                },
-                                error: function() {
-                                }
-                            });
-                        }); 
-                        //////////////////////////////////////////////////////////////
-                    },
-                    error: function() {
-                    }
-                });
-                
-            });
-
 
         });
 

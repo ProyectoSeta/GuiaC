@@ -387,6 +387,17 @@ return [
             'url'        => '/aprobacion_solicitud',
         ],
         [
+            'text'       => 'Ver Estado',
+            'icon'       => 'fas fa-angle-right pe-2',
+            'url'        => '',
+        ],
+        [
+            'text'       => 'Historial',
+            'icon'       => 'fas fa-angle-right pe-2',
+            'url'        => 'hsolicitudes',
+        ],
+        ['header' => 'Talonarios'],
+        [
             'text'       => 'Actualizar Estado',
             'icon'       => 'fas fa-angle-right pe-2',
             'url'        => 'estado',
@@ -394,7 +405,7 @@ return [
         [
             'text'       => 'Historial',
             'icon'       => 'fas fa-angle-right pe-2',
-            'url'        => 'hsolicitudes',
+            'url'        => '/correlativo',
         ],
         ['header' => 'Verificación'],
         [
@@ -417,13 +428,8 @@ return [
             'text'          =>'Sujetos pasivos',
             'route'         =>'sujeto',
             'icon'       => 'fas fa-angle-right pe-2',   
-            'label'       => 4,
+            // 'label'       => 4,
             'label_color' => 'success',
-        ],
-        [
-            'text'       => 'Talonarios',
-            'icon'       => 'fas fa-angle-right pe-2',
-            'url'        => '/correlativo',
         ],
         [
             'text'       => 'Control de Canteras',

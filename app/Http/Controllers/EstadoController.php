@@ -262,6 +262,86 @@ class EstadoController extends Controller
     }
 
 
+    public function info_denegada(Request $request){
+        $idSolicitud = $request->post('solicitud');
+        $query = DB::table('solicituds')->select('observaciones')->where('id_solicitud','=',$idSolicitud)->get();
+
+        if ($query) {
+            $html='';
+            foreach ($query as $c) {
+                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                            <div class="text-center">
+                                <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
+                                <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Información</h1>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted text-center">OBSERVACIONES DE LA DENEGACIÓN</p>
+                            <p class="mx-3 mt-1">'.$c->observaciones.'</p>
+
+                            <div class="mt-3 mb-2">
+                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
+                                    </span>Las <span class="fw-bold">Observaciones </span>
+                                    realizadas cumplen con el objetivo de notificarle
+                                    del porque la Cantera no fue verificada. Para que así, pueda rectificar y cumplir con el deber formal.
+                                </p>
+                            </div>
+                        </div>';
+
+            }
+
+            return response($html);
+        }
+
+
+    }
+
+
+    // public function update(Request $request)
+    // {
+    //     $idSolicitud = $request->post('id_solicitud');
+    //     $estado = $request->post('estado_actual');
+    //     $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => $estado]);
+    //     $fecha = date('Y-m-d');
+
+    //     if ($update_solicitud) {
+    //         switch ($estado) {
+    //             case 'En proceso':
+    //                 $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_recibido' => NULL, 'fecha_retiro' => NULL]);
+    //                 break;
+    //             case 'Retirar':
+    //                 $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_recibido' => $fecha]);
+    //                 break;
+    //             case 'Retirado':
+    //                 $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_retiro' => $fecha]);
+    //                 break;
+                
+    //             default:
+    //                 # code...
+    //                 break;
+    //         }
+    //         if ($update_talonario) {
+    //             $user = auth()->id();
+    //             $accion = 'ESTADO DE LA SOLICITUD NRO.'.$idSolicitud.' ACTUALIZADO A: '.$estado;
+    //             $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
+
+    //             return response()->json(['success' => true]);
+    //         }else{
+    //             return response()->json(['success' => false]);
+    //         }
+           
+    //     }else{
+    //         return response()->json(['success' => false]);
+    //     }
+    // }
+
+
+
+
+
+
+
+    /////////////////////////////////// ENVIADOS A IMPRENTA //////////////////////////////////////
     public function modal_enviados(Request $request){
         $talonarios = $request->post('talonarios'); 
         $tr = '';
@@ -312,6 +392,7 @@ class EstadoController extends Controller
 
     }
 
+
     public function enviados(Request $request){
         $talonarios = $request->post('talonarios');
         $ids_talonarios = '';
@@ -339,86 +420,62 @@ class EstadoController extends Controller
     }
 
 
-
-    public function info_denegada(Request $request){
-        $idSolicitud = $request->post('solicitud');
-        $query = DB::table('solicituds')->select('observaciones')->where('id_solicitud','=',$idSolicitud)->get();
-
-        if ($query) {
-            $html='';
-            foreach ($query as $c) {
-                $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                            <div class="text-center">
-                                <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
-                                <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Información</h1>
-                            </div>
-                        </div>
-                        <div class="modal-body">
-                            <p class="text-muted text-center">OBSERVACIONES DE LA DENEGACIÓN</p>
-                            <p class="mx-3 mt-1">'.$c->observaciones.'</p>
-
-                            <div class="mt-3 mb-2">
-                                <p class="text-muted me-3 ms-3" style="font-size:13px"><span class="fw-bold">Nota:
-                                    </span>Las <span class="fw-bold">Observaciones </span>
-                                    realizadas cumplen con el objetivo de notificarle
-                                    del porque la Cantera no fue verificada. Para que así, pueda rectificar y cumplir con el deber formal.
-                                </p>
-                            </div>
-                        </div>';
-
-            }
-
-            return response($html);
-        }
-
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-   
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function update(Request $request)
-    {
-        $idSolicitud = $request->post('id_solicitud');
-        $estado = $request->post('estado_actual');
-        $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => $estado]);
-        $fecha = date('Y-m-d');
-
-        if ($update_solicitud) {
-            switch ($estado) {
-                case 'En proceso':
-                    $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_recibido' => NULL, 'fecha_retiro' => NULL]);
-                    break;
-                case 'Retirar':
-                    $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_recibido' => $fecha]);
-                    break;
-                case 'Retirado':
-                    $update_talonario = DB::table('talonarios')->where('id_solicitud', '=', $idSolicitud)->update(['fecha_retiro' => $fecha]);
-                    break;
-                
-                default:
-                    # code...
-                    break;
-            }
-            if ($update_talonario) {
-                $user = auth()->id();
-                $accion = 'ESTADO DE LA SOLICITUD NRO.'.$idSolicitud.' ACTUALIZADO A: '.$estado;
-                $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
-
-                return response()->json(['success' => true]);
-            }else{
-                return response()->json(['success' => false]);
+    /////////////////////////////////// RECIBIDOS DE LA IMPRENTA //////////////////////////////////////
+    public function modal_recibidos(Request $request){
+        $talonarios = $request->post('talonarios'); 
+        $tr = '';
+        foreach ($talonarios as $talonario) {
+            if ($talonario != '') {
+                $query = DB::table('talonarios')->select('desde','hasta')->where('id_talonario','=',$talonario)->first();
+                $desde = $query->desde;
+                $hasta = $query->hasta;
+                // return response($query->desde);
+                $length = 6;
+                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+                $tr .= '<tr>
+                            <td>'.$talonario.'</td>
+                            <td>'.$formato_desde.' - '.$formato_hasta.'</td>
+                        </tr>';
             }
            
-        }else{
-            return response()->json(['success' => false]);
+           
+            
         }
+
+        $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <!-- <i class="bx bx-user-circle fs-1 text-secondary" ></i> -->
+                        <i class="bx bxl-telegram fs-1 text-secondary" ></i>
+                        <h1 class="modal-title fs-5 text-navy fw-bold">Talonarios Recibidos de la Imprenta</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:13px">
+                    <div class="d-flex justify-content-center">
+                        <table class="table w-75 text-center">
+                            <thead>
+                                <th>Talonario</th>
+                                <th>Correlativo</th>
+                            </thead>
+                            <tbody>
+                                '.$tr.'
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success btn-sm" id="btn_aceptar_recibidos">Aceptar</button>
+                    </div>
+                </div>';
+        return response($html);
+
     }
+
+
+
+
+
+
 
     /**
      * Display the specified resource.
