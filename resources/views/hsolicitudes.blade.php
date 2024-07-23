@@ -147,6 +147,7 @@
 
 <!--************************************************-->
 
+
   
 
 @stop
@@ -225,12 +226,13 @@
             $(document).on('click','.ver_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
+                var seccion = 'historial';
                 // alert(solicitud);
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("estado.solicitud") }}',
-                    data: {solicitud:solicitud},
+                    data: {solicitud:solicitud,seccion:seccion},
                     success: function(response) {           
                         // alert(response);
                         // console.log(response);
@@ -260,24 +262,6 @@
                 });
             });
 
-             ///////MODAL: ACTUALIZAR ESTADO
-             $(document).on('click','.actualizar_estado', function(e) { 
-                e.preventDefault(e); 
-                var solicitud = $(this).attr('id_solicitud');
-
-                $.ajax({
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    type: 'POST',
-                    url: '{{route("estado.actualizar") }}',
-                    data: {solicitud:solicitud},
-                    success: function(response) {
-                        console.log(response);               
-                        $('#content_actualizar_estado').html(response);
-                    },
-                    error: function() {
-                    }
-                });
-            });
 
         });
 

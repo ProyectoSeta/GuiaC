@@ -208,19 +208,98 @@ class EstadoController extends Controller
     public function solicitud(Request $request)
     {
         $idSolicitud = $request->post('solicitud'); 
+        $seccion = $request->post('seccion'); 
+
         $solicitud = DB::table('solicituds')
                         ->join('detalle_solicituds', 'solicituds.id_solicitud','=', 'detalle_solicituds.id_solicitud')
                         ->select('solicituds.*', 'detalle_solicituds.cantidad')
                         ->where('solicituds.id_solicitud','=',$idSolicitud)
-                        ->first();
-       if ($solicitud) {
+                        ->first();   
+                                          
+        if ($solicitud) {
+            $consulta = DB::table('emision_talonarios')->where('id_solicitud','=',$idSolicitud)->first();
+            if ($consulta) {
+                $emision = '<td>50 Guías</td>
+                            <td>'.$consulta->cantidad.'</td>';
+            }else{
+                $emision = '<td colspan="2" class="fst-italic">No se emitieron talonarios con la imprenta para esta Solicitud, ya que la asignación se realizó a través de la reserva de Talonarios del Contribuyente.</td>';
+            }
+
+            $detalle = '';
+            $tr_detalle = '';
+
+            if ($seccion == 'talonarios') {
+                $html = '';
+            }else{
+                $query = DB::table('talonarios')->select('id_talonario', 'desde', 'hasta', 'fecha_enviado_imprenta','fecha_recibido_imprenta','fecha_retiro')
+                        ->where('id_solicitud','=',$idSolicitud)
+                        ->get(); 
+
+                foreach ($query as $t) {
+                    $desde = $t->desde;
+                    $hasta = $t->hasta;
+                    $length = 6;
+                    $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                    $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                    $enviado_imprenta = '';
+                    $recibido_imprenta = '';
+                    $retiro = '';
+
+                    if ($t->fecha_enviado_imprenta == '') {
+                        $enviado_imprenta = '<td class="text-secondary fst-italic">Sin enviar</td>';
+                    }else{
+                        $enviado_imprenta = '<td class="text-secondary">'.$t->fecha_enviado_imprenta.'</td>';
+                    }
+
+                    if ($t->fecha_recibido_imprenta == '') {
+                        $recibido_imprenta = '<td class="text-secondary fst-italic">Sin recibir</td>';
+                    }else{
+                        $recibido_imprenta = '<td class="text-secondary">'.$t->fecha_recibido_imprenta.'</td>';
+                    }
+
+                    if ($t->fecha_retiro == '') {
+                        $retiro = '<td class="text-secondary fst-italic">Sin entregar</td>';
+                    }else{
+                        $retiro = '<td class="text-muted fw-bold">'.$t->fecha_retiro.'</td>';
+                    }
+
+                    $tr_detalle .= '<tr>
+                                        <td class="text-muted">'.$t->id_talonario.'</td>
+                                        <td class="text-navy fst-italic">'.$formato_desde.' - '.$formato_hasta.'</td>
+                                        '.$enviado_imprenta.'
+                                        '.$recibido_imprenta.'
+                                        '.$retiro.'
+                                    </tr>';
+                }
+
+                $detalle = '<p class="text-navy text-center mt-2 mb-2 fw-bold">TALONARIO(S)</p>
+                            <div class="d-flex justify-content-center">
+                                <table class="table mx-3 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Correlativo</th>
+                                            <th>Enviado</th>
+                                            <th>Recibido</th>
+                                            <th>Entregado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        '.$tr_detalle.'
+                                    </tbody>
+                                </table>
+                            </div>';
+            }
+
+
             $html = '<div class="modal-header  p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                                 <i class="bx bxs-layer fs-1 text-secondary"  ></i>                    
                                 <h1 class="modal-title fs-5 text-navy fw-bold" id="exampleModalLabel">Detalles de la Solicitud</h1>
                             </div>
                     </div>
-                    <div class="modal-body" style="font-size:14px;">
+                    <div class="modal-body" style="font-size:13px;">
                         <div class="row mx-3">
                             <div class="col-sm-6">
                                 <span class="fw-bold">Nro. Solicitud: </span>
@@ -232,13 +311,13 @@ class EstadoController extends Controller
                             </div>
                         </div>
 
-                        <p class="text-navy text-center mt-2 mb-3 fw-bold">TALONARIO(S)</p>
+                        <p class="text-navy text-center mt-2 mb-2 fw-bold">SOLICITUD</p>
 
                         <div class="d-flex justify-content-center">
                             <table class="table w-75 text-center">
                                 <tr>
                                     <th>Tipo Talonario</th>
-                                    <th>Cant.</th>
+                                    <th>Cantidad</th>
                                 </tr>
                                 <tr class="table-warning">
                                     <td>50 Guías</td>
@@ -246,6 +325,23 @@ class EstadoController extends Controller
                                 </tr>
                             </table>
                         </div>
+
+                        <p class="text-navy text-center mt-2 mb-0 fw-bold">Talonarios Emitidos</p>
+                        <p class="text-muted text-center mb-2">A través de la Solicitud</p>
+
+                        <div class="d-flex justify-content-center">
+                            <table class="table w-75 text-center">
+                                <tr>
+                                    <th>Tipo Talonario</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                                <tr class="table-warning">
+                                    '.$emision.'
+                                </tr>
+                            </table>
+                        </div>
+
+                        '.$detalle.'
 
                         <div class="text-end fs-6 mx-4 mb-3">
                             <span class="fw-bold">TOTAL UCD </span>
@@ -392,7 +488,6 @@ class EstadoController extends Controller
 
     }
 
-
     public function enviados(Request $request){
         $talonarios = $request->post('talonarios');
         $ids_talonarios = '';
@@ -405,6 +500,8 @@ class EstadoController extends Controller
                 }else{
                     return response()->json(['success' => false]);
                 }
+            }else{
+                
             }
            
         } 
@@ -445,8 +542,7 @@ class EstadoController extends Controller
 
         $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <!-- <i class="bx bx-user-circle fs-1 text-secondary" ></i> -->
-                        <i class="bx bxl-telegram fs-1 text-secondary" ></i>
+                        <i class="bx bxs-collection fs-1 text-secondary"></i>
                         <h1 class="modal-title fs-5 text-navy fw-bold">Talonarios Recibidos de la Imprenta</h1>
                     </div>
                 </div>
@@ -471,7 +567,113 @@ class EstadoController extends Controller
 
     }
 
+    public function recibidos(Request $request){
+        $talonarios = $request->post('talonarios');
+        $ids_talonarios = '';
+        $hoy = date('Y-m-d');
+        foreach ($talonarios as $talonario) {
+            if ($talonario != '') {
+                $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 22, 'fecha_recibido_imprenta' => $hoy]);
+                if ($update) {
+                    $ids_talonarios .= $talonario.'-';
+                }else{
+                    return response()->json(['success' => false]);
+                }
+            }else{
 
+            }
+           
+        } 
+        $user = auth()->id();
+        $accion = 'ACTUALIZACION DE ESTADO (RECIBIDOS), ID TALONARIOS: '.$ids_talonarios;
+        $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
+
+        if ($bitacora) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
+
+
+    /////////////////////////////////// ENTREGADOS AL CONTRIBUYENTE //////////////////////////////////////
+    public function modal_entregados(Request $request){
+        $talonarios = $request->post('talonarios'); 
+        $tr = '';
+        foreach ($talonarios as $talonario) {
+            if ($talonario != '') {
+                $query = DB::table('talonarios')->select('desde','hasta')->where('id_talonario','=',$talonario)->first();
+                $desde = $query->desde;
+                $hasta = $query->hasta;
+                // return response($query->desde);
+                $length = 6;
+                $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+                $tr .= '<tr>
+                            <td>'.$talonario.'</td>
+                            <td>'.$formato_desde.' - '.$formato_hasta.'</td>
+                        </tr>';
+            }
+           
+           
+            
+        }
+
+        $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class="bx bx-package fs-1 text-secondary"></i>
+                        <h1 class="modal-title fs-5 text-navy fw-bold">Talonario(s) Entregados</h1>
+                    </div>
+                </div>
+                <div class="modal-body" style="font-size:13px">
+                    <div class="d-flex justify-content-center">
+                        <table class="table w-75 text-center">
+                            <thead>
+                                <th>Talonario</th>
+                                <th>Correlativo</th>
+                            </thead>
+                            <tbody>
+                                '.$tr.'
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success btn-sm" id="btn_aceptar_entregados">Aceptar</button>
+                    </div>
+                </div>';
+        return response($html);
+
+    }
+
+    public function entregados(Request $request){
+        $talonarios = $request->post('talonarios');
+        $ids_talonarios = '';
+        $hoy = date('Y-m-d');
+        foreach ($talonarios as $talonario) {
+            if ($talonario != '') {
+                // echo($talonario);
+                $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 23, 'fecha_retiro' => $hoy]);
+                if ($update) {
+                    $ids_talonarios .= $talonario.'-';
+                }else{
+                    return response()->json(['success' => false]);
+                }
+            }else{
+
+            }
+           
+        } 
+        $user = auth()->id();
+        $accion = 'ACTUALIZACION DE ESTADO (ENTREGADO), ID TALONARIOS: '.$ids_talonarios;
+        $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
+
+        if ($bitacora) {
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
 
 
 

@@ -20,12 +20,12 @@
             </div>
         </div>
 
-        <ul class="nav nav-tabs d-flex justify-content-center">
+        <ul class="nav nav-tabs d-flex justify-content-center" style="font-size:14px">
             <li class="nav-item">
-                <a class="nav-link active" id="list-sp-list" data-bs-toggle="list" href="#list-sp" role="tab" aria-controls="list-sp">Contribuyentes</a>
+                <a class="nav-link active" id="list-sp-list" data-bs-toggle="list" href="#list-sp" role="tab" aria-controls="list-sp">Regulares</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Administrativo</a>
+                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Reservas (En Blanco)</a>
             </li>
         </ul>
 
@@ -74,7 +74,7 @@
 
                     <!-- CONTENIDO: USUARIOS ADMINISTRATIVO -->
                     <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
-                    <div class="table-responsive" style="font-size:12.7px">
+                        <div class="table-responsive" style="font-size:12.7px">
                             <table id="administrativo" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
                                 <thead class="bg-primary border-light-subtle">
                                         <tr>

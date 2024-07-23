@@ -89,12 +89,15 @@ Route::get('/estado', [App\Http\Controllers\EstadoController::class, 'index'])->
 Route::post('/estado/modal_enviados', [App\Http\Controllers\EstadoController::class, 'modal_enviados'])->name('estado.modal_enviados');
 Route::post('/estado/enviados', [App\Http\Controllers\EstadoController::class, 'enviados'])->name('estado.enviados');
 Route::post('/estado/modal_recibidos', [App\Http\Controllers\EstadoController::class, 'modal_recibidos'])->name('estado.modal_recibidos');
+Route::post('/estado/recibidos', [App\Http\Controllers\EstadoController::class, 'recibidos'])->name('estado.recibidos');
+Route::post('/estado/modal_entregados', [App\Http\Controllers\EstadoController::class, 'modal_entregados'])->name('estado.modal_entregados');
+Route::post('/estado/entregados', [App\Http\Controllers\EstadoController::class, 'entregados'])->name('estado.entregados');
 
 
 ///////////ESTADO DE SOLICITUDES
-// Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
-// Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
-// Route::post('/estado/update', [App\Http\Controllers\EstadoController::class, 'update'])->name('estado.update');
+Route::post('/estado/solicitud', [App\Http\Controllers\EstadoController::class, 'solicitud'])->name('estado.solicitud');
+Route::post('/estado/info_denegada', [App\Http\Controllers\EstadoController::class, 'info_denegada'])->name('estado.info_denegada');
+Route::post('/estado/update', [App\Http\Controllers\EstadoController::class, 'update'])->name('estado.update');
 
 
 //////////////CORRELATIVO

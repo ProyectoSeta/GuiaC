@@ -191,7 +191,7 @@
                                 <tr>
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input fs-6 check_enviado" type="checkbox" value="{{$enviados->id_talonario}}">
+                                            <input class="form-check-input fs-6 check_enviado check_{{$enviados->id_talonario}}" type="checkbox" value="{{$enviados->id_talonario}}">
                                         </div>
                                     </td>
                                     <td class="text-secondary fw-bold">{{$enviados->id_talonario}}</td>
@@ -252,13 +252,19 @@
 
             <!-- CONTENIDO: TALONARIOS RECIBIDOS -->
             <div class="tab-pane fade" id="list-recibidos" role="tabpanel" aria-labelledby="list-recibidos-list">
+                <div class="d-flex justify-content-center mb-1 mt-2 d-none" id="btn_entregados_all">
+                    <button class="btn  btn-outline-success btn-sm d-flex align-items-center" type="button" id="btn_talonarios_entregados" data-bs-toggle="modal" data-bs-target="#modal_talonarios_entregados">
+                        <span>Talonarios Entregados </span>
+                        <i class='bx bx-check ms-1'></i>
+                    </button>
+                </div>
                 <div class="table-responsive" style="font-size:12.7px">
-                    <table id="recibidos" class="table display border-light-subtle text-center" style="width:100%; font-size:13px">
-                    <thead class="bg-primary border-light-subtle">
+                    <table id="recibidos" class="table display border-light-subtle text-center">
+                        <thead class="bg-primary border-light-subtle">
                             <tr>
                                 <th scope="col">
                                     <div class="form-check">
-                                        <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_recibido">
+                                        <input class="form-check-input fs-6" type="checkbox" value="" id="check_all_entregados">
                                     </div>
                                 </th>
                                 <th scope="col">Talonario</th>
@@ -278,7 +284,7 @@
                                 <tr>
                                     <td>
                                         <div class="form-check">
-                                            <input class="form-check-input fs-6 check_recibido" type="checkbox" value="{{$recibidos->id_talonario}}">
+                                            <input class="form-check-input fs-6 check_entregado check_{{$recibidos->id_talonario}}" type="checkbox" value="{{$recibidos->id_talonario}}">
                                         </div>
                                     </td>
                                     <td class="text-secondary fw-bold">{{$recibidos->id_talonario}}</td>
@@ -297,10 +303,12 @@
 
                                             @endphp
                                         <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
-                                        <td class="fw-bold text-secondary-emphasis table-light">{{$recibidos->fecha_enviado_imprenta}}</td>
+                                        <td class="fw-bold text-secondary-emphasis table-light">{{$recibidos->fecha_recibido_imprenta}}</td>
+                                        <td class="fw-bold text-primary-emphasis table-primary">{{$recibidos->fecha_recibido_imprenta}}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$recibidos->id_talonario}}" type="button">
-                                                <i class='bx bxs-chevron-right'></i>
+                                            <button class="btn btn-sm btn-success talonario_entregado d-inline-flex align-items-center" id_talonario="{{$recibidos->id_talonario}}" type="button" data-bs-toggle="modal" data-bs-target="#modal_talonarios_entregados">
+                                                <!-- <i class='bx bx-check-circle'></i> -->
+                                                <i class='bx bx-check'></i>
                                             </button>
                                         </td>
                                     @else <!-- *************************** -->
@@ -322,10 +330,11 @@
 
                                             @endphp
                                         <td class="text-muted">{{$formato_desde}} - {{$formato_hasta}}</td>
-                                        <td class="fw-bold text-secondary-emphasis table-light">{{$recibidos->fecha_enviado_imprenta}}</td>
+                                        <td class="fw-bold text-secondary-emphasis table-light">{{$recibidos->fecha_recibido_imprenta}}</td>
+                                        <td class="fw-bold text-primary-emphasis table-primary">{{$recibidos->fecha_recibido_imprenta}}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary talonario_enviado d-inline-flex align-items-center" id_talonario="{{$recibidos->id_talonario}}" type="button" data-bs-toggle="tooltip" data-bs-title="Disabled tooltip">
-                                                <i class='bx bxs-chevron-right'></i>
+                                            <button class="btn btn-sm btn-success talonario_entregado d-inline-flex align-items-center" id_talonario="{{$recibidos->id_talonario}}" type="button" data-bs-toggle="modal" data-bs-target="#modal_talonarios_entregados">
+                                                <i class='bx bx-check'></i>
                                             </button>
                                         </td>
                                     @endif
@@ -427,6 +436,18 @@
                     <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
                     <span class="text-muted">Cargando, por favor espere un momento...</span>
                 </div>
+            </div>  <!-- cierra modal-content -->
+        </div>  <!-- cierra modal-dialog -->
+    </div>
+
+    <!-- ********* TALONARIOS ENTREGADOS ******** -->
+    <div class="modal" id="modal_talonarios_entregados" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" id="html_talonarios_entregados">
+                <!-- <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
+                </div> -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>
@@ -549,12 +570,13 @@
             $(document).on('click','.detalle_solicitud', function(e) { 
                 e.preventDefault(e); 
                 var solicitud = $(this).attr('id_solicitud');
+                var seccion = 'talonarios';
                 // alert(solicitud);
                 $.ajax({
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     type: 'POST',
                     url: '{{route("estado.solicitud") }}',
-                    data: {solicitud:solicitud},
+                    data: {solicitud:solicitud,seccion:seccion},
                     success: function(response) {           
                         // alert(response);
                         // console.log(response);
@@ -723,12 +745,12 @@
              /////////SELECCIONAR CHECKBOX
              $('.check_enviado').change(function() {
                 if ($(this).is(':checked')) {
-                   $i++;
+                   $v++;
                 }else{
-                    $i--;
+                    $v--;
                 }
                 // /////////////////////////
-                if ($i <= 1) {
+                if ($v <= 1) {
                     $('#btn_recibidos_all').addClass('d-none');
                     $(".talonario_recibido").attr('disabled', false);
                 }else{
@@ -745,7 +767,7 @@
 
                 talonarios.push(id_talonario);
                 $i++;
-
+            
                 $(".check_"+id_talonario).prop("checked", true);
                 $('input[type="checkbox"]').not(".check_"+id_talonario).prop('checked', false);
 
@@ -765,7 +787,7 @@
                             $.ajax({
                                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                                 type: 'POST',
-                                url: '{{route("estado.enviados") }}',
+                                url: '{{route("estado.recibidos") }}',
                                 data: {talonarios:talonarios},
                                 success: function(response) {  
                                     if (response.success) {
@@ -787,6 +809,190 @@
                 });
                 
             });
+
+            ///////MODAL: TALONARIOS ENVIADOS
+            $(document).on('click','#btn_talonarios_recibidos', function(e) { 
+                e.preventDefault(e); 
+                var talonarios = [];
+
+                $("input[type=checkbox]:checked").each(function() {
+                    talonarios.push($(this).val());
+                });
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.modal_recibidos") }}',
+                    data: {talonarios:talonarios},
+                    success: function(response) {        
+
+                        $('#html_talonarios_recibidos').html(response);
+
+                        //////////////////////////////////////////////////////////////
+                        $(document).on('click','#btn_aceptar_recibidos', function(e) {
+                            // console.log(talonarios);
+                            $("#btn_aceptar_recibidos").attr('disabled', true);                            
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("estado.recibidos") }}',
+                                data: {talonarios:talonarios},
+                                success: function(response) {  
+                                    if (response.success) {
+                                        alert("ACTUALIZACIÓN DE ESTADO EXITOSO");
+                                        window.location.href = "{{ route('estado')}}";
+                                    }else{
+                                        alert("ERROR AL ACTUALIZAR EL ESTADO");
+                                    }     
+                                    
+                                },
+                                error: function() {
+                                }
+                            });
+                        }); 
+                        //////////////////////////////////////////////////////////////
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
+
+
+
+            ////////////////////////////////////////////////////ENVIADOS////////////////////////////////////////////////////////////
+            $o = 0;
+            ////////SELECCIONAR TODOS LOS CHECKBOX
+            $('#check_all_entregados').change(function() {
+                var checkboxes = $('input:checkbox').length;
+                if ($(this).is(':checked')) {
+                    $('#btn_entregados_all').removeClass('d-none');
+                    $(".talonario_entregado").attr('disabled', true);
+                    $o = checkboxes - 1;
+                }else{
+                    $('#btn_entregados_all').addClass('d-none');
+                    $(".talonario_entregado").attr('disabled', false);
+                    $o = 0;
+                }
+                $('.check_entregado').prop('checked', $(this).is(':checked'));
+            });
+
+            /////////SELECCIONAR CHECKBOX
+            $('.check_entregado').change(function() {
+                if ($(this).is(':checked')) {
+                   $o++;
+                }else{
+                    $o--;
+                }
+                // /////////////////////////
+                if ($o <= 1) {
+                    $('#btn_entregados_all').addClass('d-none');
+                    $(".talonario_entregado").attr('disabled', false);
+                }else{
+                    $('#btn_entregados_all').removeClass('d-none');
+                    $(".talonario_entregado").attr('disabled', true);
+                }
+            });
+
+            ///////SELECCIONAR UN TALONARIO PARA ENVIAR
+            $(document).on('click','.talonario_entregado', function(e) { 
+                e.preventDefault(e); 
+                var talonarios = [];
+                var id_talonario = $(this).attr('id_talonario');
+
+                talonarios.push(id_talonario);
+                $i++;
+            
+                $(".check_"+id_talonario).prop("checked", true);
+                $('input[type="checkbox"]').not(".check_"+id_talonario).prop('checked', false);
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.modal_entregados") }}',
+                    data: {talonarios:talonarios},
+                    success: function(response) {        
+
+                        $('#html_talonarios_entregados').html(response);
+
+                        //////////////////////////////////////////////////////////////
+                        $(document).on('click','#btn_aceptar_entregados', function(e) {
+                            // console.log(talonarios);
+                            $("#btn_aceptar_entregados").attr('disabled', true);                            
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("estado.entregados") }}',
+                                data: {talonarios:talonarios},
+                                success: function(response) {  
+                                    if (response.success) {
+                                        alert("ACTUALIZACIÓN DE ESTADO EXITOSO");
+                                        window.location.href = "{{ route('estado')}}";
+                                    }else{
+                                        alert("ERROR AL ACTUALIZAR EL ESTADO");
+                                    }     
+                                    
+                                },
+                                error: function() {
+                                }
+                            });
+                        }); 
+                        //////////////////////////////////////////////////////////////
+                    },
+                    error: function() {
+                    }
+                });
+                
+            });
+
+             ///////MODAL: TALONARIOS ENVIADOS
+             $(document).on('click','#btn_talonarios_entregados', function(e) { 
+                e.preventDefault(e); 
+                var talonarios = [];
+
+                $("input[type=checkbox]:checked").each(function() {
+                    talonarios.push($(this).val());
+                });
+
+                $.ajax({
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    type: 'POST',
+                    url: '{{route("estado.modal_entregados") }}',
+                    data: {talonarios:talonarios},
+                    success: function(response) {        
+
+                        $('#html_talonarios_entregados').html(response);
+
+                        //////////////////////////////////////////////////////////////
+                        $(document).on('click','#btn_aceptar_entregados', function(e) {
+                            // console.log(talonarios);
+                            $("#btn_aceptar_entregados").attr('disabled', true);                            
+                            $.ajax({
+                                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                                type: 'POST',
+                                url: '{{route("estado.entregados") }}',
+                                data: {talonarios:talonarios},
+                                success: function(response) {  
+                                    console.log(response);
+                                    if (response.success) {
+                                        alert("ACTUALIZACIÓN DE ESTADO EXITOSO");
+                                        window.location.href = "{{ route('estado')}}";
+                                    }else{
+                                        alert("ERROR AL ACTUALIZAR EL ESTADO");
+                                    }     
+                                    
+                                },
+                                error: function() {
+                                }
+                            });
+                        }); 
+                        //////////////////////////////////////////////////////////////
+                    },
+                    error: function() {
+                    }
+                });
+            });
+
 
 
         });

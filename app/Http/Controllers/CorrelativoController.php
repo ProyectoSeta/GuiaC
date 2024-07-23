@@ -13,66 +13,68 @@ class CorrelativoController extends Controller
      */
     public function index()
     {
-        $query = DB::table('talonarios')->get();
+        $query = DB::table('talonarios')->where('clase','=',5)->get();
 
         $talonarios = [];
 
         foreach ($query as $q) {
-            $detalle = DB::table('detalle_talonarios')
-                ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                ->join('clasificacions', 'detalle_talonarios.asignacion_talonario', '=', 'clasificacions.id_clasificacion')
-                ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'clasificacions.nombre_clf')
-                ->where('detalle_talonarios.id_talonario','=',$q->id_talonario)
-                ->first();
+            
+                $detalle = DB::table('detalle_talonarios')
+                        ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                        ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
+                        ->join('clasificacions', 'detalle_talonarios.asignacion_talonario', '=', 'clasificacions.id_clasificacion')
+                        ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'clasificacions.nombre_clf')
+                        ->where('detalle_talonarios.id_talonario','=',$q->id_talonario)
+                        ->first();
 
-            $desde = $q->desde;
-            $hasta = $q->hasta;
-            $count_reportada = 0; 
+                $desde = $q->desde;
+                $hasta = $q->hasta;
+                $count_reportada = 0; 
 
-            for ($i=$desde; $i <= $hasta; $i++) {                 
-                $consulta_guia = DB::table('control_guias')->where('nro_guia','=', $i)->count();
-                if ($consulta_guia != 0) {
-                    $count_reportada = $count_reportada + 1; 
+                for ($i=$desde; $i <= $hasta; $i++) {                 
+                    $consulta_guia = DB::table('control_guias')->where('nro_guia','=', $i)->count();
+                    if ($consulta_guia != 0) {
+                        $count_reportada = $count_reportada + 1; 
+                    }
+                }/////cierra for
+
+                // PORCENTAJE REPORTADO
+                $reportado = ($count_reportada * 100)/50;
+
+
+                $datetime1 = date_create($q->fecha_retiro);
+                $datetime2 = date_create(date("Y-m-d"));
+                $interval = $datetime1->diff($datetime2);
+                $i = $interval->format('%a');
+                $alert = 0;
+
+                if ($i > 60 && $reportado == 0) {
+                    $alert = 1;
                 }
-            }/////cierra for
 
-            // PORCENTAJE REPORTADO
-            $reportado = ($count_reportada * 100)/50;
-
-
-            $datetime1 = date_create($q->fecha_retiro);
-            $datetime2 = date_create(date("Y-m-d"));
-            $interval = $datetime1->diff($datetime2);
-            $i = $interval->format('%a');
-            $alert = 0;
-
-            if ($i > 60 && $reportado == 0) {
-                $alert = 1;
-            }
-
-            $array = array(
-                        'id_talonario' => $q->id_talonario,
-                        'id_solicitud' => $q->id_solicitud,
-                        'id_cantera' => $detalle->id_cantera,
-                        'id_sujeto' => $detalle->id_sujeto,
-                        'tipo_talonario' => $q->tipo_talonario,
-                        'desde' => $q->desde,
-                        'hasta' => $q->hasta,
-                        'razon_social' => $detalle->razon_social,
-                        'rif_condicion' => $detalle->rif_condicion,
-                        'rif_nro' => $detalle->rif_nro,
-                        'nombre' => $detalle->nombre,
-                        'fecha_retiro' => $q->fecha_retiro,
-                        'qr' => $detalle->qr,
-                        'reportado' => $reportado,
-                        'alert' => $alert,
-                        'asignacion' => $detalle->nombre_clf,
-                        'estado' => $q->estado,
-                        'intervalo' => $i ///sirve para saber si se ha cumplido un tiempo desde la solicitud del talonario hasta la fecha, para mandar una alerta
-                    );
-            $a = (object) $array;
-            array_push($talonarios,$a);
+                $array = array(
+                            'id_talonario' => $q->id_talonario,
+                            'id_solicitud' => $q->id_solicitud,
+                            'id_cantera' => $detalle->id_cantera,
+                            'id_sujeto' => $detalle->id_sujeto,
+                            'tipo_talonario' => $q->tipo_talonario,
+                            'desde' => $q->desde,
+                            'hasta' => $q->hasta,
+                            'razon_social' => $detalle->razon_social ,
+                            'rif_condicion' => $detalle->rif_condicion,
+                            'rif_nro' => $detalle->rif_nro,
+                            'nombre' => $detalle->nombre,
+                            'fecha_retiro' => $q->fecha_retiro,
+                            'qr' => $detalle->qr,
+                            'reportado' => $reportado,
+                            'alert' => $alert,
+                            'asignacion' => $detalle->nombre_clf,
+                            'estado' => $q->estado,
+                            'intervalo' => $i ///sirve para saber si se ha cumplido un tiempo desde la solicitud del talonario hasta la fecha, para mandar una alerta
+                        );
+                $a = (object) $array;
+                array_push($talonarios,$a);
+            
         }
     
         return view('correlativo', compact('talonarios'));

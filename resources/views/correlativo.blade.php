@@ -15,99 +15,133 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-3 text-navy titulo">Talonarios</h3>
         </div>
-        <div class="table-responsive" style="font-size:14px">
-            <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
-                <thead class="border-light-subtle">
-                    <th>#</th>
-                    <th>Cantera</th>
-                    <th>Nro. Solicitud</th>
-                    <th>Correlativo</th>
-                    <th>Reportado</th>
-                    <th>QR</th>
-                    <th>R.I.F.</th>
-                    <th>Empresa</th>
-                    <th>Mensaje</th>
-                    <th>Asignación</th>
-                    <th>Estado</th>
-                </thead>
-                <tbody> 
-                @foreach ($talonarios as $talonario)
-                        <tr>
-                            <td class="text-secondary">{{$talonario->id_talonario}}</td>
-                            <td>
-                                <span class="fw-bold text-navy">{{$talonario->nombre}}</span>
-                            </td>
-                            <td>{{$talonario->id_solicitud}}</td>
-                            <td>
-                                @php
-                                    $desde = $talonario->desde;
-                                    $hasta = $talonario->hasta;
-                                    $length = 6;
-                                    $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
-                                    $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
-                                @endphp
-                                <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
-                            </td>
-                            <td>
-                                <!-- <span>{{$talonario->reportado}}%</span> -->
-                                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{$talonario->reportado}}" aria-valuemin="0" aria-valuemax="100">
-                                    <div class="progress-bar" style="width: {{$talonario->reportado}}%"></div>
-                                </div>
-                            </td>
-                            <td>
-                                <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' talonario="{{$talonario->id_talonario}}" data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
-                            </td>
-                            <td>
-                                <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
-                            </td>
-                            <td class="text-muted">{{$talonario->razon_social}}</td>
-                            <td class="align-middle">
-                                @if ($talonario->alert == '1')
-                                    <span class="alert_talonario" role="button" intervalo="{{ $talonario->intervalo }}" data-bs-toggle="modal" data-bs-target="#modal_alert_talonario">
-                                        <i class='bx bx-error-circle fs-4 text-danger'></i>
-                                    </span>
-                                    
-                                @else
-                                    <span class="text-secondary">S/M</span>
-                                @endif
+        
+        <ul class="nav nav-tabs d-flex justify-content-center" style="font-size:14px">
+            <li class="nav-item">
+                <a class="nav-link active" id="list-sp-list" data-bs-toggle="list" href="#list-sp" role="tab" aria-controls="list-sp">Contribuyentes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Administrativo</a>
+            </li>
+        </ul>
 
-                            </td>
-                            <td>
-                                @if ($talonario->asignacion == 'Asignado')
-                                    <span class="text-success">{{$talonario->asignacion}}</span>
-                                @else
-                                <span class="text-secondary">{{$talonario->asignacion}}</span>
-                                @endif
-                                
-                            </td>
-                            <td>
-                                @switch($talonario->estado)
-                                    @case('20') <!-- Por Enviar warning -->
-                                        <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill" style="font-size:12px">Por Enviar</span>
-                                        @break
-                                    @case('21') <!-- Enviado primary -->
-                                        <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill" style="font-size:12px">Enviado</span>
-                                        @break
-                                    @case('22') <!-- Recibido success-->
-                                        <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" style="font-size:12px">Recibido</span>
-                                        @break
-                                    @case('23') <!-- Retirado secondary-->
-                                        <span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill" style="font-size:12px">Retirado</span>
-                                        @break
-                                
-                                    @default
+  
+        <div class="tab-content py-3" id="nav-tabContent">
+            <!-- CONTENIDO: TALONARIOS REGULARES -->
+            <div class="tab-pane fade show active" id="list-sp" role="tabpanel" aria-labelledby="list-sp-list">
+                <div class="table-responsive" style="font-size:12.7px">
+                    <table id="example" class="table text-center border-light-subtle" style="font-size:12.7px">
+                        <thead class="border-light-subtle">
+                            <th>#</th>
+                            <th>Cantera</th>
+                            <th>Nro. Solicitud</th>
+                            <th>Correlativo</th>
+                            <th>Reportado</th>
+                            <th>QR</th>
+                            <th>R.I.F.</th>
+                            <th>Empresa</th>
+                            <th>Mensaje</th>
+                            <th>Asignación</th>
+                            <th>Estado</th>
+                        </thead>
+                        <tbody> 
+                        @foreach ($talonarios as $talonario)
+                                <tr>
+                                    <td class="text-secondary">{{$talonario->id_talonario}}</td>
+                                    <td>
+                                        <span class="fw-bold text-navy">{{$talonario->nombre}}</span>
+                                    </td>
+                                    <td>{{$talonario->id_solicitud}}</td>
+                                    <td>
+                                        @php
+                                            $desde = $talonario->desde;
+                                            $hasta = $talonario->hasta;
+                                            $length = 6;
+                                            $formato_desde = substr(str_repeat(0, $length).$desde, - $length);
+                                            $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
+
+                                        @endphp
+                                        <a href="#" class="info_talonario" role="button" id_talonario='{{ $talonario->id_talonario }}' data-bs-toggle="modal" data-bs-target="#modal_ver_talonario">{{$formato_desde}} - {{$formato_hasta}}</a>
+                                    </td>
+                                    <td>
+                                        <!-- <span>{{$talonario->reportado}}%</span> -->
+                                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{$talonario->reportado}}" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar" style="width: {{$talonario->reportado}}%"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' talonario="{{$talonario->id_talonario}}" data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
+                                    </td>
+                                    <td>
+                                        <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
+                                    </td>
+                                    <td class="text-muted">{{$talonario->razon_social}}</td>
+                                    <td class="align-middle">
+                                        @if ($talonario->alert == '1')
+                                            <span class="alert_talonario" role="button" intervalo="{{ $talonario->intervalo }}" data-bs-toggle="modal" data-bs-target="#modal_alert_talonario">
+                                                <i class='bx bx-error-circle fs-4 text-danger'></i>
+                                            </span>
+                                            
+                                        @else
+                                            <span class="text-secondary">S/M</span>
+                                        @endif
+
+                                    </td>
+                                    <td>
+                                        @if ($talonario->asignacion == 'Asignado')
+                                            <span class="text-success">{{$talonario->asignacion}}</span>
+                                        @else
+                                        <span class="text-secondary">{{$talonario->asignacion}}</span>
+                                        @endif
                                         
-                                @endswitch
-                            </td>
-                        </tr>
-                @endforeach
+                                    </td>
+                                    <td>
+                                        @switch($talonario->estado)
+                                            @case('20') <!-- Por Enviar warning -->
+                                                <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill" style="font-size:12px">Por Enviar</span>
+                                                @break
+                                            @case('21') <!-- Enviado primary -->
+                                                <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill" style="font-size:12px">Enviado</span>
+                                                @break
+                                            @case('22') <!-- Recibido success-->
+                                                <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" style="font-size:12px">Recibido</span>
+                                                @break
+                                            @case('23') <!-- Retirado secondary-->
+                                                <span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill" style="font-size:12px">Retirado</span>
+                                                @break
+                                        
+                                            @default
+                                                
+                                        @endswitch
+                                    </td>
+                                </tr>
+                        @endforeach
+                            
+                        </tbody> 
+                        
+                    </table>
                     
-                </tbody> 
-                
-            </table>
-            
+                </div>
+            </div>
+
+            <!-- CONTENIDO: TALONARIOS DE RESERVA -->
+            <div class="tab-pane fade" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
+                5
+            </div>
         </div>
+
+
+
+        
+            
+                
+           
+            
+            
+
+
+        
     </div>
     
     
@@ -135,8 +169,8 @@
             <div class="modal-content" >
                 <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                     <div class="text-center">
-                        <i class="bx bxs-layer fs-1 text-navy" ></i>                    
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Datos del talonario</h1>
+                        <i class="bx bxs-layer fs-1 text-muted" ></i>                    
+                        <h1 class="modal-title text-navy fw-bold fs-5" id="exampleModalLabel">Datos del talonario</h1>
                     </div>
                 </div>
                 <div class="modal-body" style="font-size:14px" id="content_ver_talonario">
