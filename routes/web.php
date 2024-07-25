@@ -219,7 +219,7 @@ Route::get('/asignar', [App\Http\Controllers\AsignarController::class, 'index'])
 Route::post('/asignar/search', [App\Http\Controllers\AsignarController::class, 'search'])->name('asignar.search');
 Route::post('/asignar/modal', [App\Http\Controllers\AsignarController::class, 'modal'])->name('asignar.modal');
 Route::post('/asignar/canteras', [App\Http\Controllers\AsignarController::class, 'canteras'])->name('asignar.canteras');
-Route::post('/asignar/calcular', [App\Http\Controllers\AsignarController::class, 'calcular'])->name('asignar.calcular');
+// Route::post('/asignar/calcular', [App\Http\Controllers\AsignarController::class, 'calcular'])->name('asignar.calcular');
 Route::post('/asignar/asignar', [App\Http\Controllers\AsignarController::class, 'asignar'])->name('asignar.asignar');
 Route::post('/asignar/correlativo', [App\Http\Controllers\AsignarController::class, 'correlativo'])->name('asignar.correlativo');
 Route::post('/asignar/sujeto', [App\Http\Controllers\AsignarController::class, 'sujeto'])->name('asignar.sujeto');

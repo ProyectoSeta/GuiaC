@@ -115,6 +115,14 @@ class ClasificacionesSeeder extends Seeder
             'nombre_clf' => 'QR Listo',
         ]);
 
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'A',
+        ]);
+
+        DB::table('clasificacions')->insert([
+            'nombre_clf' => 'B',
+        ]);
+
 
     
     }

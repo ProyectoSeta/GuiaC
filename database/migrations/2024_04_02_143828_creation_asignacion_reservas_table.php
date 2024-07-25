@@ -19,35 +19,19 @@ return new class extends Migration
 
             $table->integer('id_sujeto')->unsigned()->nullable();
             $table->foreign('id_sujeto')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
-            $table->integer('id_cantera')->unsigned()->nullable();
-            $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
-
             $table->integer('id_sujeto_notuser')->unsigned()->nullable();
             $table->foreign('id_sujeto_notuser')->references('id_sujeto_notuser')->on('sujeto_notusers')->onDelete('cascade');
-            $table->integer('id_cantera_notuser')->unsigned()->nullable();
-            $table->foreign('id_cantera_notuser')->references('id_cantera_notuser')->on('canteras_notusers')->onDelete('cascade');
+           
 
-            $table->integer('cantidad_guias')->unsigned();
-            $table->integer('total_ucd');
+            $table->integer('cantidad_guias');
+            $table->string('motivo');
             $table->string('soporte')->nullable();
-
             $table->integer('estado')->unsigned(); /////////EN PROCESO - QR LISTO - RETIRADO
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
-
             $table->dateTime('fecha_emision');
             $table->dateTime('fecha_entrega')->nullable();
             $table->integer('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
-
-            // $table->string('banco_emisor');
-            // $table->integer('nro_referencia');
-            // $table->string('banco_receptor');
-            // $table->date('fecha_emision_pago');
-            // $table->float('monto_transferido');
-            // $table->string('referencia')->nullable();
-            // $table->float('monto_total');
-
-            
 
             $table->timestamps();
         });

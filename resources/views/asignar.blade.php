@@ -167,11 +167,11 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="content_ver_solicitud">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel" >Asignación de Guías</h1>
+                    <h1 class="modal-title fs-5 text-navy fw-bold d-flex align-items-center" id="exampleModalLabel" ><i class='bx bx-customize me-2 text-muted fs-2'></i>Asignación de Guías</h1>
                 </div>
 
-                <div class="modal-body " style="font-size:13px">
-                    <form id="form_asignar_guias_noregister" method="post" onsubmit="event.preventDefault(); asignarGuiasNoregister();">
+                <div class="modal-body " style="font-size:12.7px">
+                    <form id="form_asignar_guias_notregister" method="post" onsubmit="event.preventDefault(); asignarGuiasNotregister();">
                         <div class="row px-4">
                             <div class="col-sm-6">  <!-- ********************************************************************* -->
                                 <div class="text-center text-navy fw-bold mb-3">
@@ -212,22 +212,6 @@
                                     <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
                                 </div>
 
-                                <!-- rif:repr input -->
-                                <label class="form-label" for="rif_repr">R.I.F. del Representante</label><span class="text-danger"> *</span>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <select class="form-select form-select-sm" id="rif_condicion_repr" aria-label="Default select example" name="rif_condicion_repr" required>
-                                            <option value="V">V</option>
-                                            <option value="E">E</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-1">-</div>
-                                    <div class="col-8">
-                                        <input type="number" id="rif_nro_repr" class="form-control form-control-sm" name="rif_nro_repr" placeholder="Ejemplo: 084561221" required>
-                                        <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 084561221</p>
-                                    </div>
-                                </div>
-
                                 <!-- ci:repr input -->
                                 <label class="form-label" for="ci_repr">Cédula del Representante</label><span class="text-danger"> *</span>
                                 <div class="row mb-2">
@@ -256,90 +240,35 @@
                                     <input type="number" id="tlf_repr" class="form-control form-control-sm" name="tlf_repr" placeholder="Ejemplo: 04125231102" required>
                                     <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 04125231102</p>
                                 </div>
-
-                                
-                            </div>
-                            <div class="col-sm-6"> <!-- ********************************************************************** -->
-                                <div class="text-center text-navy fw-bold mb-3">
-                                    <span class="">Datos de la Cantera (o Desazolve)</span>
-                                </div>
-
-                                <!-- razon social input -->
-                                <div class="form-outline mb-2">
-                                    <label class="form-label" for="nombre_cantera">Nombre de la Cantera o Desazolve</label><span class="text-danger"> *</span>
-                                    <input type="text" id="nombre_cantera" class="form-control form-control-sm" name="nombre_cantera" required/>
-                                </div>
-
-                                <!-- municipio y parroqui cantera -->
-                                
-                                <div class="form-outline mb-2">
-                                    <label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>
-                                    <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio" required>
-                                        <option value="Bolívar">Bolívar</option>
-                                        <option value="Camatagua">Camatagua</option>
-                                        <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
-                                        <option value="Girardot">Girardot</option>
-                                        <option value="José Ángel Lamas">José Ángel Lamas</option>
-                                        <option value="José Félix Ribas">José Félix Ribas</option>
-                                        <option value="José Rafael Revenga">José Rafael Revenga</option>
-                                        <option value="Libertador">Libertador</option>
-                                        <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
-                                        <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
-                                        <option value="San Casimiro">San Casimiro</option>
-                                        <option value="San Sebastián">San Sebastián</option>
-                                        <option value="Santiago Mariño">Santiago Mariño</option>
-                                        <option value="Santos Michelena">Santos Michelena</option>
-                                        <option value="Sucre">Sucre</option>
-                                        <option value="Tovar">Tovar</option>
-                                        <option value="Urdaneta">Urdaneta</option>
-                                        <option value="Zamora">Zamora </option>
-                                    </select>
-
-                                </div>
-                                  
-                                <div class="form-outline mb-2">
-                                    <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
-                                    <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia" required>
-                                        <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-outline mb-4">
-                                    <label for="direccion_cantera" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>
-                                    <input type="text" id="direccion_cantera" class="form-control form-control-sm" name="direccion_cantera"  required>
-                                </div>
-
+                            </div><!-- cierra col-sm-6 -->
+                            <div class="col-sm-6">
                                 <div class="text-center text-navy fw-bold mb-3">
                                     <span class="">Correspondiente a la Asignación</span>
                                 </div>
 
                                 <div class=" mb-2">
                                     <label class="form-label" for="cantidad">No. de Guías</label><span class="text-danger">*</span>
-                                    <input class="form-control form-control-sm" type="number" name="cantidad" required disabled>
+                                    <input class="form-control form-control-sm" type="number" name="cantidad" required >
                                 </div>
+                                <div class="mb-2">
+                                            <label class="form-label" for="motivo">Motivo</label><span class="text-danger">*</span>
+                                            <input class="form-control form-control-sm" type="text" id="motivo" name="motivo" required>
+                                        </div>
                                 <div class="mb-4">
                                     <label class="form-label" for="oficio">Oficio</label><span class="text-danger">*</span>
                                     <p class="mb-2 text-secondary text-justify"><span class="fw-bold">Nota: </span>Es importante subir el oficio de la solicitud, realizada por el contribuyente para la asignación de guías provicionales, como soporte de dicha transacción.</p>
-                                    <input class="form-control form-control-sm" id="oficio" type="file" name="oficio" required disabled>
+                                    <input class="form-control form-control-sm" id="oficio" type="file" name="oficio" required >
                                 </div>
+                            </div> <!-- cierra col-sm-6 -->
+                        </div> <!-- cierra row -->
 
-                                <div class="d-flex justify-content-end align-items-center me-2 fs-6 mb-2">
-                                    <span class="fw-bold me-4">Total: </span>
-                                    <span id="total_ucd" class="fs-5">0 UCD</span>
-                                </div>
+                        <input type="hidden" name="tipo_sujeto" value="sin_registrar" required>
 
-                                <input type="hidden" name="id_sujeto" required>
-                                <input type="hidden" name="tipo_sujeto" required>
-                            </div>
-                        </div>
-                        
                         <div class="d-flex justify-content-center mt-3 mb-3">
                             <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal" id="btn_cancelar" disabled="">Cancelar</button>
                             <button type="submit" class="btn btn-success btn-sm" id="btn_generar_asignacion" disabled="">Asignar</button>
                         </div>
                     </form>
-                    
-
                 </div>
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
@@ -471,6 +400,10 @@
         });
 
 
+
+
+
+
         ////////////////////////AGREGAR OTRA CANTERA O DESAZOLVE AL CONTRIBUYENTE (NOTUSER)
         $(document).on('click','#add_cantera_notuser', function(e) {  
             var id_sujeto = $(this).attr('id_sujeto');
@@ -560,24 +493,6 @@
             
         });
 
-
-        //////////////////// CALCULAR TOTAL UCD
-        $(document).on('keyup','#cantidad', function(e) {  
-            var cant = $(this).val();
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                type: 'POST',
-                url: '{{route("asignar.calcular") }}',
-                data: {cant:cant},
-                success: function(response) {
-                    // console.log(response);           
-                    $('#total_ucd').html(response.ucd+' UCD');
-                },
-                error: function() {
-                }
-            });
-            
-        });
 
 
         //////////////////// DESHABILITAR EL BOTON "ASIGNAR" SI EL NUMERO DE GUIAS ES 0
@@ -731,27 +646,29 @@
                 data: formData,
                 success: function(response){
                     console.log(response);
-                    if (response.success) {
-                        var asignacion = response.asignacion;
-                        console.log(asignacion);
-                        $('#modal_asignar_sujeto_registrado').modal('hide');
-                        $('#modal_asignacion_correlativo').modal('show');
+                    $('#content_asignar_sujeto_registrado').html(response);
+                    
+                    // if (response.success) {
+                    //     var asignacion = response.asignacion;
+                    //     console.log(asignacion);
+                    //     $('#modal_asignar_sujeto_registrado').modal('hide');
+                    //     $('#modal_asignacion_correlativo').modal('show');
 
-                        $.ajax({
-                            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                            type: 'POST',
-                            url: '{{route("asignar.correlativo") }}',
-                            data: {asignacion:asignacion},
-                            success: function(response) {      
-                                console.log(response);     
-                                $('#content_asignacion_correlativo').html(response);
-                            },
-                            error: function() {
-                            }
-                        });
-                    } else {
-                        alert('Ha ocurrido un error al Asignar las Guías de Reserva.');
-                    }    
+                    //     $.ajax({
+                    //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    //         type: 'POST',
+                    //         url: '{{route("asignar.correlativo") }}',
+                    //         data: {asignacion:asignacion},
+                    //         success: function(response) {      
+                    //             console.log(response);     
+                    //             $('#content_asignacion_correlativo').html(response);
+                    //         },
+                    //         error: function() {
+                    //         }
+                    //     });
+                    // } else {
+                    //     alert('Ha ocurrido un error al Asignar las Guías de Reserva.');
+                    // }    
 
                 },
                 error: function(error){
@@ -760,6 +677,28 @@
             });
     }
 
+
+    function asignarGuiasNotregister(){
+        var formData = new FormData(document.getElementById("form_asignar_guias_notregister"));
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("asignar.asignar") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    
+
+                },
+                error: function(error){
+                    
+                }
+            });
+    }
     
 
 

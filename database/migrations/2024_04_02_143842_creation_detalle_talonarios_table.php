@@ -40,6 +40,9 @@ return new class extends Migration
             $table->integer('id_solicitud_reserva')->unsigned()->nullable();
             $table->foreign('id_solicitud_reserva')->references('id_asignacion')->on('asignacion_reservas')->onDelete('cascade');
 
+            $table->integer('grupo')->unsigned()->nullable(); ////////A (ANTES) - B (DESPUES)
+            $table->foreign('grupo')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
