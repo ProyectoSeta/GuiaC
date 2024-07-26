@@ -5,6 +5,8 @@ use App\Models\SujetoPasivo;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DB;
+
+
 class AsignarController extends Controller
 {
     /**
@@ -444,24 +446,9 @@ class AsignarController extends Controller
     public function asignar(Request $request)
     {   
 
-
-        $string = "Hola mundo!";
-
-        // tamaño de la imagen
-        // $im = imagecreate(100, 30);
-
-        // // fondo blanco y texto azul
-        // $bg = imagecolorallocate($im, 255, 255, 255);
-        // $textcolor = imagecolorallocate($im, 0, 0, 255);
-
-        // // escribimos el texto en la parte superior-izquierda
-        // imagestring($im, 5, 0, 0, $string, $textcolor);
-
-        // // mostrar la imagen
-        // header("Content-type: image/png");
-        // imagepng($im);
-
-        return response($string);
+        
+                                
+       
 
 
         // $user = auth()->id();

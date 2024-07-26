@@ -650,12 +650,27 @@ class EstadoController extends Controller
         $talonarios = $request->post('talonarios');
         $ids_talonarios = '';
         $hoy = date('Y-m-d');
+
+        $consulta = DB::table('talonarios')->select('id_solicitud')->where('id_talonario', '=', $talonario)->first();
+        $idSolicitud = $consulta->id_solicitud;
+
         foreach ($talonarios as $talonario) {
             if ($talonario != '') {
                 // echo($talonario);
                 $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 23, 'fecha_retiro' => $hoy]);
                 if ($update) {
                     $ids_talonarios .= $talonario.'-';
+
+                    $comp = true;
+                    $comprobar = DB::table('talonarios')->select('estado')->where('id_solicitud', '=', $idSolicitud)->get();
+                    foreach ($comprobar as $c) {
+                        if ($c->estado != 23) {
+                            $comp = false;
+                        }
+                    }
+                    if ($comp ==  true) {
+                        $update_sol = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 19]);
+                    }
                 }else{
                     return response()->json(['success' => false]);
                 }

@@ -45,20 +45,20 @@
                             </td>
                             <td>
                                 @switch($solicitud->estado)
-                                    @case('Verificando')
-                                        <span class="badge text-bg-secondary bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
+                                    @case(4)
+                                        <span class="badge text-bg-secondary bg-opacity-75 px-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-error-circle fs-6 me-2'></i>Verificando solicitud</span>
                                     @break
-                                    @case('Negada')
-                                        <span role="button" class="badge text-bg-danger bg-opacity-75 p-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
+                                    @case(6)
+                                        <span role="button" class="badge text-bg-danger bg-opacity-75 px-2 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
                                     @break
-                                    @case('En proceso')
-                                        <span class="badge text-bg-primary bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                    @case(17)
+                                        <span class="badge text-bg-primary bg-opacity-75 px-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
-                                    @case('Retirar') 
-                                        <span class="badge text-bg-warning bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
+                                    @case(18) 
+                                        <span class="badge text-bg-warning bg-opacity-75 px-2 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
                                     @break
-                                    @case('Retirado')
-                                        <span class="badge text-bg-success bg-opacity-75 p-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
+                                    @case(19)
+                                        <span class="badge text-bg-success bg-opacity-75 px-2 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
                                     @break
                     
                                 @endswitch                    
