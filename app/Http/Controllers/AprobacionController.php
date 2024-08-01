@@ -363,7 +363,9 @@ class AprobacionController extends Controller
                                                         $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
                                                     
                                                         for ($g=$desde; $g <= $hasta; $g++) { 
-                                                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
+                                                            // $url = route('qr.qr', ['id' => $id_talonario]);
+                                                            $url = route('qr.qr', ['id' => $g, 'grupo' => 'B']);
+                                                            // $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
                                                             
                                                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
                                                             $insert_qr = DB::table('qr_guias')->insert([

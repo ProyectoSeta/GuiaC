@@ -22,19 +22,28 @@
                     <span>GOBIERNO BOLIVARIANO DEL ESTADO ARAGUA <br>SERVICIO TRIBUTARIO DE ARAGUA (SETA)</span>
                 </div>
                 <div class="col-sm-3 d-flex justify-content-center">
-                    <img src="{{asset('assets/logo-seta-2.png')}}" alt="" class="mt-3 ms-2" width="110px">
+                    <img src="{{asset('assets/logo_seta.png')}}" alt="" class="mt-3 ms-2" width="130px">
                 </div>
             </div>
             <div class="mb-4 mx-4" style="font-size:14px" id="content_info_guia">
                 <div class="row d-flex justify-content-end mb-4">
                     <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
-                        @php
-                            $length = 6;
-                            $formato_desde = substr(str_repeat(0, $length).$talonario->desde, - $length);
-                            $formato_hasta = substr(str_repeat(0, $length).$talonario->hasta, - $length);
-                        @endphp
-                        Desde: <span class="text-danger" id="nro_guia_view">{{$formato_desde}}</span><br>
-                        Hasta: <span class="text-danger" id="nro_guia_view">{{$formato_hasta}}</span>
+                        @if ($grupo == 'A')
+                            @php
+                                $length = 6;
+                                $formato_desde = substr(str_repeat(0, $length).$talonario->desde, - $length);
+                                $formato_hasta = substr(str_repeat(0, $length).$talonario->hasta, - $length);
+                            @endphp
+                            Desde: <span class="text-danger" id="nro_guia_view">{{$formato_desde}}</span><br>
+                            Hasta: <span class="text-danger" id="nro_guia_view">{{$formato_hasta}}</span>
+                        @else
+                            @php
+                                $length = 6;
+                                $guia = substr(str_repeat(0, $length).$nro_guia, - $length);
+                            @endphp
+                            Nro. Guía: <span class="text-danger" id="nro_guia_view">{{$guia}}</span><br> 
+                        @endif
+                        
                     </div>
                 </div>
 
