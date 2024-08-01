@@ -354,11 +354,30 @@ class AprobacionController extends Controller
                                                                                         'hasta' => $hasta,
                                                                                         'clase' => 5,
                                                                                         'asignacion_talonario' => $asignacion_talonario,
-                                                                                        'id_solicitud_reserva' => null]);
+                                                                                        'id_solicitud_reserva' => null,
+                                                                                        'grupo' => 31
+                                                                                    ]);
+
+                                                if ($detalle_talonario) {
+                                                    if ($count_ciclo <= $cant_solicitada) {
+                                                        $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
+                                                    
+                                                        for ($g=$desde; $g <= $hasta; $g++) { 
+                                                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
+                                                            
+                                                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
+                                                            $insert_qr = DB::table('qr_guias')->insert([
+                                                                                            'key_correlativo_detalle' => $id_detalle,
+                                                                                            'nro_guia'=> $g, 
+                                                                                            'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
+                                                                                            ]);
+                                                        }
+                                                    }
+                                                }
     
-                                                $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
-                                                QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                                                $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                                                // $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
+                                                // QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                                                // $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
                         
                                             }else{
                                                 return response('Error al generar el QR');
@@ -439,12 +458,32 @@ class AprobacionController extends Controller
                                                                                         'hasta' => $hasta,
                                                                                         'clase' => 5,
                                                                                         'asignacion_talonario' => $asignacion_talonario,
-                                                                                        'id_solicitud_reserva' => null]);
+                                                                                        'id_solicitud_reserva' => null,
+                                                                                        'grupo' => 31]);
+
+                                                if ($detalle_talonario) {
+                                                    if ($count_ciclo <= $cant_solicitada) {
+                                                        $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
+                                                    
+                                                        for ($g=$desde; $g <= $hasta; $g++) { 
+                                                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
+                                                            
+                                                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
+                                                            $insert_qr = DB::table('qr_guias')->insert([
+                                                                                            'key_correlativo_detalle' => $id_detalle,
+                                                                                            'nro_guia'=> $g, 
+                                                                                            'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
+                                                                                            ]);
+                                                        }
+                                                    }
+                                                }else{
+                                                    return response()->json(['success' => false]);
+                                                }
                                                                                         
-                                                // $url = route('qr.qr', ['id' => $id_talonario]);
-                                                $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
-                                                QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                                                $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                                                
+                                                // $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
+                                                // QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                                                // $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
                                 
                                             }else{
                                                 return response('Error al generar el QR');
@@ -476,7 +515,7 @@ class AprobacionController extends Controller
                         ////////////hay suficientes talonarios de reserva para atender la solicitud / NO SE VAN A EMITIR TALONARIOS CON LA IMPRENTA
                         $nro_talonarios = $consulta_cantidad->cantidad;
                         for ($i=0; $i < $consulta_cantidad->cantidad; $i++) { 
-                            $c3 = DB::table('detalle_talonarios')->select('id_talonario')
+                            $c3 = DB::table('detalle_talonarios')->select('correlativo','id_talonario','desde','hasta')
                                                 ->where('id_sujeto','=',$idSujeto)
                                                 ->where('id_cantera','=',$idCantera)
                                                 ->where('asignacion_talonario','=',25)->first(); 
@@ -488,6 +527,27 @@ class AprobacionController extends Controller
                                     $update_asignacion = DB::table('detalle_talonarios')
                                             ->where('id_talonario', '=', $c3->id_talonario)
                                             ->update(['asignacion_talonario' => 26]);
+
+                                    if ($update_asignacion) {
+                                        $desde = $c3->desde;
+                                        $hasta = $c3->hasta;
+                                        $id_detalle = $c3->correlativo;
+
+                                        for ($g=$desde; $g <= $hasta; $g++) { 
+                                            $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
+                                            
+                                            QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
+                                            $insert_qr = DB::table('qr_guias')->insert([
+                                                                            'key_correlativo_detalle' => $id_detalle,
+                                                                            'nro_guia'=> $g, 
+                                                                            'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
+                                                                            ]);
+                                        } ////cierra for ($g=$desde; $g <= $hasta; $g++)
+
+                                    }else{
+                                        return response()->json(['success' => false]);
+                                    } 
+
                                 }else{
                                     return response()->json(['success' => false]);
                                 }
@@ -515,7 +575,7 @@ class AprobacionController extends Controller
                             if ($insert_emision_talonarios) {
                                 ////////////////////////PASO 1: SE ASIGNAN LOS TALONARIOS EN RESERVA 
                                 for ($i=1; $i <= $consulta_reserva->total; $i++) { 
-                                    $c3 = DB::table('detalle_talonarios')->select('id_talonario')
+                                    $c3 = DB::table('detalle_talonarios')->select('correlativo','id_talonario','desde','hasta')
                                                         ->where('id_sujeto','=',$idSujeto)
                                                         ->where('id_cantera','=',$idCantera)
                                                         ->where('asignacion_talonario','=',25)->first(); 
@@ -527,6 +587,26 @@ class AprobacionController extends Controller
                                             $update_asignacion = DB::table('detalle_talonarios')
                                                     ->where('id_talonario', '=', $c3->id_talonario)
                                                     ->update(['asignacion_talonario' => 26]);
+
+                                            if ($update_asignacion) {
+                                                $desde = $c3->desde;
+                                                $hasta = $c3->hasta;
+                                                $id_detalle = $c3->correlativo;
+        
+                                                for ($g=$desde; $g <= $hasta; $g++) { 
+                                                    $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
+                                                    
+                                                    QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
+                                                    $insert_qr = DB::table('qr_guias')->insert([
+                                                                                    'key_correlativo_detalle' => $id_detalle,
+                                                                                    'nro_guia'=> $g, 
+                                                                                    'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
+                                                                                    ]);
+                                                } ////cierra for ($g=$desde; $g <= $hasta; $g++)
+        
+                                            }else{
+                                                return response()->json(['success' => false]);
+                                            } 
                                         }else{
                                             return response()->json(['success' => false]);
                                         }
@@ -592,14 +672,35 @@ class AprobacionController extends Controller
                                                                                 'hasta' => $hasta,
                                                                                 'clase' => 5,
                                                                                 'asignacion_talonario' => $asignacion_talonario,
-                                                                                'id_solicitud_reserva' => null]);
+                                                                                'id_solicitud_reserva' => null,
+                                                                                'grupo' => 31]);
+
+                                        if ($detalle_talonario) {
+                                            if ($count_ciclo <= $talonarios_faltantes) {
+                                                $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
+                                            
+                                                for ($g=$desde; $g <= $hasta; $g++) { 
+                                                    $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
+                                                    
+                                                    QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
+                                                    $insert_qr = DB::table('qr_guias')->insert([
+                                                                                    'key_correlativo_detalle' => $id_detalle,
+                                                                                    'nro_guia'=> $g, 
+                                                                                    'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
+                                                                                    ]);
+                                                }
+                                            }
+                                        }else{
+                                            return response()->json(['success' => false]);
+                                        }
+
                                                                                 
-                                        $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
-                                        QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
-                                        $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
+                                        // $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$id_talonario;
+                                        // QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_T'.$id_talonario.'.svg'));
+                                        // $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $id_talonario)->update(['qr' => 'assets/qr/qrcode_T'.$id_talonario.'.svg']);
                         
                                     }else{
-                                        return response('Error al generar el QR');
+                                        return response()->json(['success' => false]);
                                     }
                                 } ////cierra for
                                 

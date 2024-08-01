@@ -16,6 +16,7 @@ class SolicitudController extends Controller
     {
         $user = auth()->id();
         $sp = DB::table('sujeto_pasivos')->select('id_sujeto')->where('id_user','=',$user)->first();
+        // var_dump($sp);
         $id_sp = $sp->id_sujeto;
 
         $solicitudes = DB::table('solicituds')->join('canteras', 'solicituds.id_cantera', '=', 'canteras.id_cantera')
@@ -282,14 +283,14 @@ class SolicitudController extends Controller
         $cantidad = $request->post('cant');
         $ucd = (50 * $cantidad) * 5;
 
-        $actual =  DB::table('ucds')->select('id', 'valor')->orderBy('id', 'desc')->first();
-        $precio_ucd = $actual->valor;
-        $id_ucd = $actual->id;
+        // $actual =  DB::table('ucds')->select('id', 'valor')->orderBy('id', 'desc')->first();
+        // $precio_ucd = $actual->valor;
+        // $id_ucd = $actual->id;
 
-        $total = $ucd * $precio_ucd;
-        $total = number_format($total, 2, ',', '.');
+        // $total = $ucd * $precio_ucd;
+        // $total = number_format($total, 2, ',', '.');
 
-        return response()->json(['ucd' => $ucd, 'precio_ucd' => $precio_ucd, 'total' => $total, 'id_ucd' => $id_ucd]);
+        return response()->json(['ucd' => $ucd]);
     }
 
     /**
