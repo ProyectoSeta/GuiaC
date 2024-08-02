@@ -22,10 +22,10 @@ return new class extends Migration
             $table->integer('id_sujeto_notuser')->unsigned()->nullable();
             $table->foreign('id_sujeto_notuser')->references('id_sujeto_notuser')->on('sujeto_notusers')->onDelete('cascade');
            
-
             $table->integer('cantidad_guias');
             $table->string('motivo');
             $table->string('soporte')->nullable();
+
             $table->integer('estado')->unsigned(); /////////EN PROCESO - QR LISTO - RETIRADO
             $table->foreign('estado')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
             $table->dateTime('fecha_emision');

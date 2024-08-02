@@ -15,13 +15,15 @@ return new class extends Migration
             $table->increments('id_detalle_asignacion');
             $table->integer('id_asignacion')->unsigned();
             $table->foreign('id_asignacion')->references('id_asignacion')->on('asignacion_reservas')->onDelete('cascade');
+
+            $table->string('nro_guia')->unique();
+            $table->string('qr');
             
             $table->integer('id_cantera')->unsigned()->nullable();
             $table->foreign('id_cantera')->references('id_cantera')->on('canteras')->onDelete('cascade');
             $table->integer('id_cantera_notuser')->unsigned()->nullable();
             $table->foreign('id_cantera_notuser')->references('id_cantera_notuser')->on('canteras_notusers')->onDelete('cascade');
 
-            $table->string('nro_guia')->unique();
             $table->string('razon_destinatario')->nullable();
             $table->string('rif_destinatario',15)->nullable();
             $table->string('tlf_destinatario',15)->nullable();

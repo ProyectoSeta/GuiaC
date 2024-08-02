@@ -47,7 +47,7 @@
                                 <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
                             </div>
                             <div class="col-2">
-                                <button type="button" class="btn btn-secondary btn-sm pb-0" id="search_sujeto_asigna" data-bs-toggle="modal" data-bs-target="#modal_guia_asignacion">
+                                <button type="button" class="btn btn-secondary btn-sm pb-0" id="search_sujeto_asignar">
                                     <i class='bx bx-search-alt-2 fs-5'></i>
                                 </button>
                             </div>
@@ -149,7 +149,7 @@
         </div>  <!-- cierra modal-dialog -->
     </div>
 
-    <!-- ********* ASIGNACIÓN: SUJETO REGISTRADO ******** -->
+    <!-- ********* ASIGNACIÓN: SUJETO REGISTRADO (USER O NOTUSER)******** -->
     <div class="modal fade" id="modal_asignar_sujeto_registrado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="content_asignar_sujeto_registrado">
@@ -265,7 +265,7 @@
                         <input type="hidden" name="tipo_sujeto" value="sin_registrar" required>
 
                         <div class="d-flex justify-content-center mt-3 mb-3">
-                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal" id="btn_cancelar" disabled="">Cancelar</button>
+                            <button type="button" class="btn btn-secondary btn-sm me-3" data-bs-dismiss="modal" id="btn_cancelar">Cancelar</button>
                             <button type="submit" class="btn btn-success btn-sm" id="btn_generar_asignacion" disabled="">Asignar</button>
                         </div>
                     </form>
@@ -391,7 +391,7 @@
                                         <!-- razon social -->
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="razon" class="col-form-label">Razon social: <span style="color:red">*</span></label>
+                                                <label for="razon" class="col-form-label">Razon social: </label>
                                             </div>
                                             <div class="col-8">
                                                 <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
@@ -402,7 +402,7 @@
                                         <!-- ci del destinatario -->
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-3">
-                                                <label for="ci" class="col-form-label">R.I.F: <span style="color:red">*</span></label>
+                                                <label for="ci" class="col-form-label">R.I.F: </label>
                                             </div>
                                             <div class="col-9">
                                                 <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000"  required>
@@ -413,7 +413,7 @@
                                         <!-- telefono destinatario -->
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="tlf_dest" class="col-form-label">Telefono: <span style="color:red">*</span></label>
+                                                <label for="tlf_dest" class="col-form-label">Telefono: </label>
                                             </div>
                                             <div class="col-8">
                                                 <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000"  required>
@@ -427,7 +427,7 @@
                                         <!-- destino -->
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="municipio" class="col-form-label">Municipio: <span style="color:red">*</span></label>
+                                                <label for="municipio" class="col-form-label">Municipio: </label>
                                             </div>
                                             <div class="col-8">
                                                 <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio_destino" required >
@@ -456,7 +456,7 @@
                                     <div class="col-sm-4 px-4">
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>
+                                                <label for="parroquia" class="col-form-label">Parroquia:</label>
                                             </div>
                                             <div class="col-8">
                                                 <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia_destino" required>
@@ -468,7 +468,7 @@
                                     <div class="col-sm-4 px-4">
                                         <div class="row align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="destino" class="col-form-label">Lugar de destino: <span style="color:red">*</span></label>
+                                                <label for="destino" class="col-form-label">Lugar de destino: </label>
                                             </div>
                                             <div class="col-8">
                                                 <input type="text" id="destino" class="form-control form-control-sm" name="destino" required>
@@ -484,7 +484,7 @@
                                         <!-- mineral no metalico -->
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="mineral" class="col-form-label">Mineral: </label>
+                                                <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
                                             </div>
                                             <div class="col-8">
                                                 <select class="form-select form-select-sm " aria-label="Small select example" name="mineral" id="select_minerales">
@@ -498,7 +498,7 @@
                                         <!-- cantidad -->
                                         <div class="row g-3 align-items-center mb-2">
                                             <div class="col-4">
-                                                <label for="cantidad" class="col-form-label">Cantidad Facturada: </label>
+                                                <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
                                             </div>
                                             <div class="col-4">
                                                 <select class="form-select form-select-sm" aria-label="Small select example" name="unidad_medida" id="unidad_medida">
@@ -670,11 +670,11 @@
                             </div> <!-- cierra tab-pane -->
 
                             <div class="tab-pane fade" id="2-tab-pane" role="tabpanel" aria-labelledby="2-tab" tabindex="0">
-                                b
+                                
                             </div> <!-- cierra tab-pane -->
                             
                             <div class="tab-pane fade" id="3-tab-pane" role="tabpanel" aria-labelledby="3-tab" tabindex="0">
-                                v
+                                
                             </div> <!-- cierra tab-pane -->
                             
                         </div>
@@ -764,7 +764,7 @@
             });
         });
 
-
+        //////////////////BUSCAR RIF INGRESADO
         $(document).on('click','#search_sujeto_asignar', function(e) {  
             var rif_nro = $('#rif').val();
             var rif_condicion = $('#rif_condicion').val();
@@ -783,81 +783,7 @@
             // console.log(cant);
         });
 
-
-
-
-
-
-        ////////////////////////AGREGAR OTRA CANTERA O DESAZOLVE AL CONTRIBUYENTE (NOTUSER)
-        $(document).on('click','#add_cantera_notuser', function(e) {  
-            var id_sujeto = $(this).attr('id_sujeto');
-            $('#select_cantera_asignacion').html('<div class="form-outline mb-2">'+
-                                    '<label class="form-label" for="nombre_cantera">Nombre de la Cantera o Desazolve</label><span class="text-danger"> *</span>'+
-                                    '<input type="text" id="nombre_cantera" class="form-control form-control-sm" name="nombre_cantera" required/>'+
-                                '</div>'+
-                                
-                                '<div class="form-outline mb-2">'+
-                                    '<label for="municipio" class="col-form-label">Municipio<span style="color:red">*</span></label>'+
-                                    '<select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio" required>'+
-                                        '<option value="Bolívar">Bolívar</option>'+
-                                        '<option value="Camatagua">Camatagua</option>'+
-                                        '<option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>'+
-                                        '<option value="Girardot">Girardot</option>'+
-                                        '<option value="José Ángel Lamas">José Ángel Lamas</option>'+
-                                        '<option value="José Félix Ribas">José Félix Ribas</option>'+
-                                        '<option value="José Rafael Revenga">José Rafael Revenga</option>'+
-                                        '<option value="Libertador">Libertador</option>'+
-                                        '<option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>'+
-                                        '<option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>'+
-                                        '<option value="San Casimiro">San Casimiro</option>'+
-                                        '<option value="San Sebastián">San Sebastián</option>'+
-                                        '<option value="Santiago Mariño">Santiago Mariño</option>'+
-                                        '<option value="Santos Michelena">Santos Michelena</option>'+
-                                        '<option value="Sucre">Sucre</option>'+
-                                        '<option value="Tovar">Tovar</option>'+
-                                        '<option value="Urdaneta">Urdaneta</option>'+
-                                        '<option value="Zamora">Zamora </option>'+
-                                    '</select>'+
-
-                                '</div>'+
-                                  
-                                '<div class="form-outline mb-2">'+
-                                    '<label for="parroquia" class="col-form-label">Parroquia<span style="color:red">*</span></label>'+
-                                    '<select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia" required>'+
-                                        '<option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>'+
-                                    '</select>'+
-                                '</div>'+
-
-                                '<div class="form-outline mb-4">'+
-                                    '<label for="direccion_cantera" class="col-form-label">Lugar de Aprovechamiento<span style="color:red">*</span></label>'+
-                                    '<input type="text" id="direccion_cantera" class="form-control form-control-sm" name="direccion_cantera"  required>'+
-                                '</div>'+
-                                '<input type="hidden" name="id_sujeto" value="'+id_sujeto+'">');
-
-            $('#content_btn_add').html('<a href="#" id="cancel_cantera_notuser" id_sujeto="'+id_sujeto+'">Cancelar</a>');
-            
-        });
-
-
-        ////////////////////////CANCELAR EL REGISTRO NUEVA CANTERA O DESAZOLVE - MOSTRAR CANTERAS REGISTRADAS
-        $(document).on('click','#cancel_cantera_notuser', function(e) {  
-            var sujeto = $(this).attr('id_sujeto');
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                type: 'POST',
-                url: '{{route("asignar.canteras") }}',
-                data: {sujeto:sujeto},
-                success: function(response) {           
-                    $('#select_cantera_asignacion').html(response);
-                    $('#content_btn_add').html('<a href="#" id="add_cantera_notuser" id_sujeto="'+sujeto+'">Agregar Cantera o Desazolve</a>');
-                },
-                error: function() {
-                }
-            });
-            
-        });
-
-
+        //////////////////ABRIR MODAL SUJETO REGISTRADO (USER O NOT USER)
         $(document).on('click','.asignar', function(e) {  
             var tipo = $(this).attr('tipo');
             var sujeto = $(this).attr('id_sujeto');
@@ -878,7 +804,6 @@
         });
 
 
-
         //////////////////// DESHABILITAR EL BOTON "ASIGNAR" SI EL NUMERO DE GUIAS ES 0
         $(document).on('keyup','#cantidad', function(e) {  
             var cant = $(this).val();
@@ -897,25 +822,7 @@
             window.location.href = "{{ route('asignar')}}";
         });
 
-        ///////MODAL: DETALLE ASIGNACION
-        $(document).on('click','.detalle_asignacion', function(e) { 
-            e.preventDefault(e); 
-            var asignacion = $(this).attr('id_asignacion');
-            var tipo = $(this).attr('tipo');
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                type: 'POST',
-                url: '{{route("asignar.detalle") }}',
-                data: {asignacion:asignacion,tipo:tipo},
-                success: function(response) {              
-                    $('#content_detalle_asignacion').html(response);
-                },
-                error: function() {
-                }
-            });
-        });
-
-
+    
         /////////////PARROQUIAS
         $(document).on('change','#municipio', function(e) {
             var municipio = $(this).val();
@@ -1017,56 +924,14 @@
 
     });
 
-    function asignarGuias(){
-        var formData = new FormData(document.getElementById("form_asignar_guias"));
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("asignar.asignar") }}',
-                type:'POST',
-                contentType:false,
-                cache:false,
-                processData:false,
-                async: true,
-                data: formData,
-                success: function(response){
-                    console.log(response);
-                    $('#content_asignar_sujeto_registrado').html(response);
-                    
-                    // if (response.success) {
-                    //     var asignacion = response.asignacion;
-                    //     console.log(asignacion);
-                    //     $('#modal_asignar_sujeto_registrado').modal('hide');
-                    //     $('#modal_asignacion_correlativo').modal('show');
-
-                    //     $.ajax({
-                    //         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    //         type: 'POST',
-                    //         url: '{{route("asignar.correlativo") }}',
-                    //         data: {asignacion:asignacion},
-                    //         success: function(response) {      
-                    //             console.log(response);     
-                    //             $('#content_asignacion_correlativo').html(response);
-                    //         },
-                    //         error: function() {
-                    //         }
-                    //     });
-                    // } else {
-                    //     alert('Ha ocurrido un error al Asignar las Guías de Reserva.');
-                    // }    
-
-                },
-                error: function(error){
-                    
-                }
-            });
-    }
+   
 
 
     function asignarGuiasNotregister(){
         var formData = new FormData(document.getElementById("form_asignar_guias_notregister"));
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url:'{{route("asignar.asignar") }}',
+                url:'{{route("asignar.asignar_notuser") }}',
                 type:'POST',
                 contentType:false,
                 cache:false,

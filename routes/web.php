@@ -218,12 +218,20 @@ Route::get('/detalle_reserva/{talonario?}/', [App\Http\Controllers\DetalleReserv
 Route::get('/asignar', [App\Http\Controllers\AsignarController::class, 'index'])->name('asignar');
 Route::post('/asignar/search', [App\Http\Controllers\AsignarController::class, 'search'])->name('asignar.search');
 Route::post('/asignar/modal', [App\Http\Controllers\AsignarController::class, 'modal'])->name('asignar.modal');
-Route::post('/asignar/canteras', [App\Http\Controllers\AsignarController::class, 'canteras'])->name('asignar.canteras');
-// Route::post('/asignar/calcular', [App\Http\Controllers\AsignarController::class, 'calcular'])->name('asignar.calcular');
-Route::post('/asignar/asignar', [App\Http\Controllers\AsignarController::class, 'asignar'])->name('asignar.asignar');
-Route::post('/asignar/correlativo', [App\Http\Controllers\AsignarController::class, 'correlativo'])->name('asignar.correlativo');
 Route::post('/asignar/sujeto', [App\Http\Controllers\AsignarController::class, 'sujeto'])->name('asignar.sujeto');
-Route::post('/asignar/detalle', [App\Http\Controllers\AsignarController::class, 'detalle'])->name('asignar.detalle');
+Route::post('/asignar/asignar_notuser', [App\Http\Controllers\AsignarController::class, 'asignar_notuser'])->name('asignar.asignar_notuser');
+
+
+// Route::post('/asignar/canteras', [App\Http\Controllers\AsignarController::class, 'canteras'])->name('asignar.canteras');
+// Route::post('/asignar/calcular', [App\Http\Controllers\AsignarController::class, 'calcular'])->name('asignar.calcular');
+// Route::post('/asignar/asignar', [App\Http\Controllers\AsignarController::class, 'asignar'])->name('asignar.asignar');
+// Route::post('/asignar/correlativo', [App\Http\Controllers\AsignarController::class, 'correlativo'])->name('asignar.correlativo');
+// Route::post('/asignar/detalle', [App\Http\Controllers\AsignarController::class, 'detalle'])->name('asignar.detalle');
+
+
+
+
+
 
 ///////////ASIGNAR QR (RESERVA - EN BLANCO)
 Route::get('/asignar_qr', [App\Http\Controllers\AsignarQrController::class, 'index'])->name('asignar_qr');
