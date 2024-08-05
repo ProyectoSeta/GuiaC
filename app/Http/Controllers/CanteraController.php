@@ -48,9 +48,9 @@ class CanteraController extends Controller
             }
 
             $html = '<div class="modal-header">
-                        <h1 class="modal-title fs-5 text-navy d-flex align-items-center" id="exampleModalLabel">
-                            <i class="bx bx-plus fw-bold fs-4 pe-2"></i>
-                            <span>Registro de Cantera o Desazolve</span>
+                        <h1 class="modal-title fs-5 d-flex align-items-center" id="exampleModalLabel">
+                            <i class="bx bx-plus fw-bold fs-3 pe-2 text-muted "></i>
+                            <span class="text-navy fw-bold">Registro de Cantera o Desazolve</span>
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -269,8 +269,8 @@ class CanteraController extends Controller
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                                 <div class="text-center">
                                     <i class="bx bxs-hard-hat fs-2" style="color:#ff8f00"></i>
-                                    <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Producción de la Cantera</h1>
-                                    <h1 class="modal-title fs-6 px-2" id="exampleModalLabel">'.$name->nombre.'</h1>
+                                    <h1 class="modal-title fs-5 text-navy fw-bold" id="exampleModalLabel"> Producción de la Cantera</h1>
+                                    <h1 class="modal-title fs-6 px-2 fw-bold" id="exampleModalLabel">'.$name->nombre.'</h1>
                                 </div>
                                 
                                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
@@ -298,7 +298,7 @@ class CanteraController extends Controller
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                                 <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>
-                                <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel"> Información</h1>
+                                <h1 class="modal-title fs-5 text-navy fw-bold" id="exampleModalLabel"> Información</h1>
                             </div>
                         </div>
                         <div class="modal-body">
@@ -329,15 +329,15 @@ class CanteraController extends Controller
 
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-show-alt fs-1 text-navy mb-0 pb-0"></i>
-                                <h1 class="modal-title fs-5 text-navy mt-0 pt-0" id="exampleModalLabel"> Información</h1>
+                                <i class="bx bx-show-alt fs-1 text-muted mb-0 pb-0"></i>
+                                <h1 class="modal-title fs-5 text-navy fw-bold mt-0 pt-0" id="exampleModalLabel"> Información</h1>
                             </div>
                         </div>
                         <div class="modal-body">
-                            <p class=" text-center mb-0 pb-0 text-muted">LÍMITE DE GUÍAS A SOLICITAR CADA TRES (3) MESES</p>
+                            <p class=" text-center mb-0 pb-0 fw-bold fs-6">LÍMITE DE GUÍAS A SOLICITAR CADA TRES (3) MESES</p>
                             <p class="mx-3 text-center text-navy fw-bold">'.$query->total_guias_periodo.' Guías</p>
 
-                            <p class=" text-center text-muted mb-0 pb-0">PERÍODO ACTUAL</p>
+                            <p class=" text-center fw-bold fs-6 mb-0 pb-0">PERÍODO ACTUAL</p>
                             <div class="row text-center">
                                 <div class="col-sm-6">
                                     <span>Inicio: </span>
@@ -408,8 +408,8 @@ class CanteraController extends Controller
                 $html = '<div class="modal-header">
                             <h1 class="modal-title fs-5 text-navy d-flex align-items-center" id="exampleModalLabel">
                                 
-                                <i class="bx bx-pencil fw-bold fs-4 pe-2"></i>
-                                <span>Editar Cantera</span>
+                                <i class="bx bx-pencil fw-bold text-muted fs-3 pe-2"></i>
+                                <span class="text-navy fw-bold">Editar Cantera</span>
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>

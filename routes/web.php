@@ -220,6 +220,8 @@ Route::post('/asignar/search', [App\Http\Controllers\AsignarController::class, '
 Route::post('/asignar/modal', [App\Http\Controllers\AsignarController::class, 'modal'])->name('asignar.modal');
 Route::post('/asignar/sujeto', [App\Http\Controllers\AsignarController::class, 'sujeto'])->name('asignar.sujeto');
 Route::post('/asignar/asignar_notuser', [App\Http\Controllers\AsignarController::class, 'asignar_notuser'])->name('asignar.asignar_notuser');
+Route::post('/asignar/asignar_user', [App\Http\Controllers\AsignarController::class, 'asignar_user'])->name('asignar.asignar_user');
+Route::post('/asignar/guias', [App\Http\Controllers\AsignarController::class, 'guias'])->name('asignar.guias');
 
 
 // Route::post('/asignar/canteras', [App\Http\Controllers\AsignarController::class, 'canteras'])->name('asignar.canteras');

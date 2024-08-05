@@ -26,12 +26,13 @@ class AsignarController extends Controller
             $tipo_sujeto = $c->contribuyente;
             $rif_nro = '';
             $rif_condicion = '';
+
             if ($tipo_sujeto == 27) { ///registrado
                 $sujeto = DB::table('sujeto_pasivos')->select('rif_nro','rif_condicion')->where('id_sujeto','=',$c->id_sujeto)->first();
                 $rif_nro = $sujeto->rif_nro;
                 $rif_condicion = $sujeto->rif_condicion;
             }else{  //////no registrado
-                $sujeto = DB::table('sujeto_notusers')->select('rif_nro','rif_condicion')->where('id_sujeto_notuser','=',$c->id_sujeto)->first();
+                $sujeto = DB::table('sujeto_notusers')->select('rif_nro','rif_condicion')->where('id_sujeto_notuser','=',$c->id_sujeto_notuser)->first();
                 $rif_nro = $sujeto->rif_nro;
                 $rif_condicion = $sujeto->rif_condicion;
             }
@@ -40,12 +41,10 @@ class AsignarController extends Controller
                 'id_asignacion' => $c->id_asignacion,
                 'contribuyente' => $c->contribuyente,
                 'id_sujeto' => $c->id_sujeto,
-                'id_cantera' => $c->id_cantera,
                 'rif_nro' => $rif_nro,
                 'rif_condicion' => $rif_condicion,
                 'cantidad_guias' => $c->cantidad_guias,
                 'fecha_emision' => $c->fecha_emision,
-                'total_ucd' => $c->total_ucd,
                 'soporte' => $c->soporte,
                 'estado' => $c->estado
             );
@@ -245,7 +244,7 @@ class AsignarController extends Controller
                          <h1 class="modal-title fs-5 text-navy fw-bold d-flex align-items-center" id="exampleModalLabel" ><i class="bx bx-customize me-2 text-muted fs-2"></i>Asignación de Guías</h1>
                     </div>
                     <div class="modal-body " style="font-size:13px">
-                        <form id="form_asignar_guias" method="post" onsubmit="event.preventDefault(); asignarGuias();">
+                        <form id="form_asignar_guias_register" method="post" onsubmit="event.preventDefault(); asignarGuiasRegister();">
                             <div class="row px-4">
                                 <div class="col-sm-6">
                                     <div class="text-center text-navy fw-bold mb-3">
@@ -339,7 +338,7 @@ class AsignarController extends Controller
                              <h1 class="modal-title fs-5 text-navy fw-bold d-flex align-items-center" id="exampleModalLabel" ><i class="bx bx-customize me-2 text-muted fs-2"></i>Asignación de Guías</h1>
                         </div>
                         <div class="modal-body " style="font-size:13px">
-                            <form id="form_asignar_guias" method="post" onsubmit="event.preventDefault(); asignarGuias();">
+                            <form id="form_asignar_guias_register" method="post" onsubmit="event.preventDefault(); asignarGuiasRegister();">
                                 <div class="row px-4">
                                     <div class="col-sm-6">
                                         <div class="text-center text-navy fw-bold mb-3">
@@ -511,7 +510,7 @@ class AsignarController extends Controller
                                     $hasta = ($c->desde + $cantidad)-1;
                                 }else{
                                     ////// ya se han asignado guías del talonario
-                                    $detalle = DB::table('detalle_talonarios')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
+                                    $detalle = DB::table('detalle_talonario_reservas')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
                                     
                                     if ($detalle) {
                                         
@@ -523,28 +522,25 @@ class AsignarController extends Controller
                                 }
                                 
                                 
-                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
                                                                 'id_talonario' => $c->id_talonario,
-                                                                'id_sujeto_notuser' => $id_sujeto, 
+                                                                'id_asignacion_reserva' => $id_asignacion,
                                                                 'desde' => $desde, 
-                                                                'hasta' => $hasta,
-                                                                'clase' => 6,
-                                                                'id_solicitud_reserva' => $id_asignacion,
-                                                                'grupo' => 31]);
+                                                                'hasta' => $hasta]);
                                 
                                 
                                 if ($detalle_talonario) {
                                     $asignado = $asignado + $cantidad;
                                     $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
     
-                                    $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qrReserva/?id='.$id_asignacion; 
+                                    // $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qrReserva/?id='.$id_asignacion; 
                                     
-                                    QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_A'.$id_asignacion.'.svg'));
-                                    $update_qr = DB::table('detalle_talonarios')->where('id_talonario','=', $c->id_talonario)->where('id_solicitud_reserva', '=', $id_asignacion)->update(['qr' => 'assets/qr/qrcode_A'.$id_asignacion.'.svg']);
-                                    if ($update_qr) {
+                                    // QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_A'.$id_asignacion.'.svg'));
+                                    // $update_qr = DB::table('detalle_talonario_reserva')->where('id_talonario','=', $c->id_talonario)->where('id_solicitud_reserva', '=', $id_asignacion)->update(['qr' => 'assets/qr/qrcode_A'.$id_asignacion.'.svg']);
+                                    if ($update_asignado) {
                                     
                                         $user = auth()->id();
-                                        $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$id_sujeto)->first(); 
+                                        $sp =  DB::table('sujeto_notusers')->select('razon_social')->where('id_sujeto_notuser','=',$id_sujeto)->first(); 
                                         $accion = 'ASIGNACIÓN DE GUÍAS PROVICIONALES NRO.'.$id_asignacion.', ID TALONARIO: '.$c->id_talonario.', Contribuyente: '.$sp->razon_social;
                                         $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
                                         
@@ -556,8 +552,6 @@ class AsignarController extends Controller
                                         }else{
                                             return response()->json(['success' => false]);
                                         }
-    
-    
                                     }
                                 }else{
                                     return response()->json(['success' => false]);
@@ -576,26 +570,14 @@ class AsignarController extends Controller
                                     $desde = $c->desde;
                                     $hasta = $c->hasta;
                                     
-                                    if ($tipo == 'notuser') {
-                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                'id_talonario' => $c->id_talonario,
-                                                'id_cantera_notuser' => $id_cantera, 
-                                                'id_sujeto_notuser' => $id_sujeto, 
-                                                'desde' => $desde, 
-                                                'hasta' => $hasta,
-                                                'clase' => 6,
-                                                'id_solicitud_reserva' => $id_asignacion]);
-                                    }else{
-                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                'id_talonario' => $c->id_talonario,
-                                                'id_cantera' => $id_cantera, 
-                                                'id_sujeto' => $id_sujeto, 
-                                                'desde' => $desde, 
-                                                'hasta' => $hasta,
-                                                'clase' => 6,
-                                                'id_solicitud_reserva' => $id_asignacion]);
-                                    }
                                     
+                                    $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                                    'id_talonario' => $c->id_talonario,
+                                                                    'id_asignacion_reserva' => $id_asignacion,
+                                                                    'desde' => $desde, 
+                                                                    'hasta' => $hasta]);
+                                    
+
                                     if ($detalle_talonario) {
                                         $i = 50;
                                         $asignado = $c->asignado + $i;
@@ -606,30 +588,16 @@ class AsignarController extends Controller
                                     
                                 }else{
                                     ////// ya se han asignado guías del talonario
-                                    $detalle = DB::table('detalle_talonarios')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
+                                    $detalle = DB::table('detalle_talonario_reservas')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
                                     if ($detalle) {
                                         $desde = $detalle->hasta + 1;
                                         $hasta = $c->hasta;
                                         
-                                        if ($tipo == 'notuser') {
-                                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                    'id_talonario' => $c->id_talonario,
-                                                    'id_cantera_notuser' => $id_cantera, 
-                                                    'id_sujeto_notuser' => $id_sujeto, 
-                                                    'desde' => $desde, 
-                                                    'hasta' => $hasta,
-                                                    'clase' => 6,
-                                                    'id_solicitud_reserva' => $id_asignacion]);
-                                        }else{
-                                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                    'id_talonario' => $c->id_talonario,
-                                                    'id_cantera' => $id_cantera, 
-                                                    'id_sujeto' => $id_sujeto, 
-                                                    'desde' => $desde, 
-                                                    'hasta' => $hasta,
-                                                    'clase' => 6,
-                                                    'id_solicitud_reserva' => $id_asignacion]);
-                                        }
+                                        $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                                    'id_talonario' => $c->id_talonario,
+                                                                    'id_asignacion_reserva' => $id_asignacion,
+                                                                    'desde' => $desde, 
+                                                                    'hasta' => $hasta]);
                                         
                                         if ($detalle_talonario) {
                                             $i = ($hasta - $desde) + 1;
@@ -644,7 +612,7 @@ class AsignarController extends Controller
                                 }
     
                                 array_push($talonarios,$c->id_talonario);
-                                $url_talonarios = 'T'.$c->id_talonario;
+                                // $url_talonarios = 'T'.$c->id_talonario;
     
     
                                 do {
@@ -663,31 +631,17 @@ class AsignarController extends Controller
                                             $hasta = $c2->hasta;
                                         }
     
-                                        if ($tipo == 'notuser') {
-                                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                    'id_talonario' => $c2->id_talonario,
-                                                    'id_cantera_notuser' => $id_cantera, 
-                                                    'id_sujeto_notuser' => $id_sujeto, 
-                                                    'desde' => $desde, 
-                                                    'hasta' => $hasta,
-                                                    'clase' => 6,
-                                                    'id_solicitud_reserva' => $id_asignacion]);
-                                        }else{
-                                            $detalle_talonario = DB::table('detalle_talonarios')->insert([
-                                                    'id_talonario' => $c2->id_talonario,
-                                                    'id_cantera' => $id_cantera, 
-                                                    'id_sujeto' => $id_sujeto, 
-                                                    'desde' => $desde, 
-                                                    'hasta' => $hasta,
-                                                    'clase' => 6,
-                                                    'id_solicitud_reserva' => $id_asignacion]);
-                                        }
+                                        $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                            'id_talonario' => $c->id_talonario,
+                                                            'id_asignacion_reserva' => $id_asignacion,
+                                                            'desde' => $desde, 
+                                                            'hasta' => $hasta]);
                                         
                                         if ($detalle_talonario) {
                                             $i = $i + (($hasta - $desde) + 1);  
                                             $asignado = $c2->asignado + $i;
                                             array_push($talonarios,$c2->id_talonario);
-                                            $url_talonarios .= '-'.$c2->id_talonario;
+                                            // $url_talonarios .= '-'.$c2->id_talonario;
                                             $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c2->id_talonario)->update(['asignado' => $asignado]);
                                         }else{
                                             return response()->json(['success' => false]); 
@@ -699,19 +653,19 @@ class AsignarController extends Controller
                                 } while ($i == $cantidad);
     
                                 //////GENERAR QR PARA EL(LOS) TALONARIO(S)
-                                $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qrReserva/?id='.$id_asignacion; 
-                                QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_A'.$id_asignacion.'.svg'));
+                                // $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qrReserva/?id='.$id_asignacion; 
+                                // QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_A'.$id_asignacion.'.svg'));
     
                                 // $url = route('qr.qrReserva', ['idTalonario' => $talonarios ,'idSujeto' => $id_sujeto,'idSolicitud' => $idSolicitud]);
                                 // QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_'.$url_talonarios.'_SR'.$idSolicitud.'.svg'));
                                 
-                                foreach ($talonarios as $key => $v) {
-                                    $update_qr = DB::table('detalle_talonarios')->where('id_talonario', '=', $v)->where('id_solicitud_reserva', '=', $id_asignacion)->update(['qr' => 'assets/qr/qrcode_A'.$id_asignacion.'.svg']);
-                                }
+                                // foreach ($talonarios as $key => $v) {
+                                //     $update_qr = DB::table('detalle_talonario_reserva')->where('id_talonario', '=', $v)->where('id_solicitud_reserva', '=', $id_asignacion)->update(['qr' => 'assets/qr/qrcode_A'.$id_asignacion.'.svg']);
+                                // }
     
                                     
                                 $user = auth()->id();
-                                $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$id_sujeto)->first(); 
+                                $sp =  DB::table('sujeto_notusers')->select('razon_social')->where('id_sujeto_notuser','=',$id_sujeto)->first(); 
                                 $accion = 'SOLICITUD DE GUÍAS PROVICIONALES NRO.'.$id_asignacion.' APROBADA, ID Talonario(s): '.$talonarios.', Contribuyente: '.$sp->razon_social;
                                 $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
     
@@ -742,26 +696,329 @@ class AsignarController extends Controller
             }
             
 
+        }else{
+            return response()->json(['success' => false]);
+        } 
+      
+    }
 
+    public function asignar_user(Request $request){
+        $id_sujeto = $request->post('id_sujeto');
+        $tipo_sujeto = $request->post('tipo_sujeto');
 
+        $cantidad = $request->post('cantidad');
+        $motivo = $request->post('motivo');
+        $oficio = $request->file('oficio');
 
+        $user = auth()->id();
+        $year = date("Y");
 
+        ///////////CREAR CARPETA PARA LOS OFICIOS SI NO EXISTE
+        if (!is_dir('../public/assets/oficiosReservas/'.$year)){   ////no existe la carpeta del año
+            mkdir('../public/assets/oficiosReservas/'.$year, 0777);
+        }
 
+        if ($tipo_sujeto == 'user') {
+            /////////////////////////////////// (1) REGISTRAR LA ASIGNACIÓN
+            $insert_asignacion = DB::table('asignacion_reservas')->insert(['contribuyente' => 27,
+                                                                'id_sujeto' => $id_sujeto, 
+                                                                'cantidad_guias'=>$cantidad,
+                                                                'motivo'=>$motivo,
+                                                                'estado' => 17,
+                                                                'id_user' => $user]);
             
-            
+        }else{
+            /////////////////////////////////// (1) REGISTRAR LA ASIGNACIÓN
+            $insert_asignacion = DB::table('asignacion_reservas')->insert(['contribuyente' => 28,
+                                                                'id_sujeto_notuser' => $id_sujeto, 
+                                                                'cantidad_guias'=>$cantidad,
+                                                                'motivo'=>$motivo,
+                                                                'estado' => 17,
+                                                                'id_user' => $user]);
+        }
 
+        if ($insert_asignacion) {
+            $id_asignacion = DB::table('asignacion_reservas')->max('id_asignacion');
+            $nombreimagen  = 'OFICIO_A'.$id_asignacion.'.'.$oficio->getClientOriginalExtension();
+            $ruta          = public_path('assets/oficiosReservas/'.$year.'/'.$nombreimagen);
+            $ruta_n        = 'assets/oficiosReservas/'.$year.'/'.$nombreimagen;
 
-
-
-
-
-
+            if(copy($oficio->getRealPath(),$ruta)){
+                $update_oficio = DB::table('asignacion_reservas')->where('id_asignacion', '=', $id_asignacion)->update(['soporte' => $ruta_n]);
+                if ($update_oficio) {
+                    //////////////////////////// TRUE RESPONSE
+                }else{
+                    return response()->json(['success' => false]);
+                }
+            }else{
+                return response()->json(['success' => false]);
+            }
         }else{
             return response()->json(['success' => false]);
         }
+
+
+
+        /////////////////////////////////// (3) ASIGNACION DE GUÍAS
+        $query_count =  DB::table('talonarios')->selectRaw("count(*) as total")->where('clase','=',6)->first(); 
+        if ($query_count) {
+            if ($query_count->total != 0) {
+                $consulta =  DB::table('total_guias_reservas')->select('total')->first(); 
+                if ($cantidad <= $consulta->total){
+                    ////// SI HAY GUÍAS SUFICIENTES PARA LA SOLICITUD
+                    $c = DB::table('talonarios')->where('clase','=',6)->where('asignado','!=',50)->first();
+                    if ($c){
+                        $asignado = $c->asignado;
+                        $guias_restantes = 50 - $asignado;
+
+                        if ($cantidad <= $guias_restantes) {
+                            /////hay guías suficientes en el talonario para la solicitud
+                            if ($c->asignado == 0) {
+                                ////// todavia no se han asignado guías del talonario
+                                $desde = $c->desde;
+                                $hasta = ($c->desde + $cantidad)-1;
+                            }else{
+                                ////// ya se han asignado guías del talonario
+                                $detalle = DB::table('detalle_talonario_reservas')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
+                                
+                                if ($detalle) {
+                                    
+                                    $desde = $detalle->hasta + 1;
+                                    $hasta = ($desde + $cantidad) - 1;
+                                }else{
+                                    return response()->json(['success' => false]);
+                                }
+                            }
+                            
+                            
+                            $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                            'id_talonario' => $c->id_talonario,
+                                                            'id_asignacion_reserva' => $id_asignacion,
+                                                            'desde' => $desde, 
+                                                            'hasta' => $hasta]);
+                            
+                            
+                            if ($detalle_talonario) {
+                                $asignado = $asignado + $cantidad;
+                                $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
+
+                                if ($update_asignado) {
+                                
+                                    $user = auth()->id();
+                                    if ($tipo_sujeto == 'user') {
+                                        $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$id_sujeto)->first(); 
+                                    }else{
+                                        $sp =  DB::table('sujeto_notusers')->select('razon_social')->where('id_sujeto_notuser','=',$id_sujeto)->first(); 
+                                    }
+                                    
+                                    $accion = 'ASIGNACIÓN DE GUÍAS PROVICIONALES NRO.'.$id_asignacion.', ID TALONARIO: '.$c->id_talonario.', Contribuyente: '.$sp->razon_social;
+                                    $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
+                                    
+                                    
+                                    $total_guias_reserva = $consulta->total - $cantidad;
+                                    $update_total_reserva = DB::table('total_guias_reservas')->where('correlativo', '=', 1)->update(['total' => $total_guias_reserva]);
+                                    if ($update_total_reserva) {
+                                        return response()->json(['success' => true, 'asignacion' => $id_asignacion]);
+                                    }else{
+                                        return response()->json(['success' => false]);
+                                    }
+                                }
+                            }else{
+                                return response()->json(['success' => false]);
+                            }
+
+                        }else{
+                            /////no hay guias suficientes en el talonario para la solicitud
+                            $i = 0; //////cuenta las guías asignadas 
+                            $talonarios = [];
+                            $url_talonarios = '';
+                            // $x = 0; //////cuenta las iteraciones del bucle
+
+                            ////////////SE HACE EL PRIMER REGISTRO DE LAS GUIAS PARA DESPUES PASAR AL BUCLE  
+                            if ($c->asignado == 0) {
+                                ////// todavia no se han asignado guías del talonario
+                                $desde = $c->desde;
+                                $hasta = $c->hasta;
+                                
+                                
+                                $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                                'id_talonario' => $c->id_talonario,
+                                                                'id_asignacion_reserva' => $id_asignacion,
+                                                                'desde' => $desde, 
+                                                                'hasta' => $hasta]);
+                                
+
+                                if ($detalle_talonario) {
+                                    $i = 50;
+                                    $asignado = $c->asignado + $i;
+                                    $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
+                                }else{
+                                    return response()->json(['success' => false]);
+                                }
+                                
+                            }else{
+                                ////// ya se han asignado guías del talonario
+                                $detalle = DB::table('detalle_talonario_reservas')->select('hasta')->where('id_talonario','=',$c->id_talonario)->orderBy('correlativo', 'desc')->first();
+                                if ($detalle) {
+                                    $desde = $detalle->hasta + 1;
+                                    $hasta = $c->hasta;
+                                    
+                                    $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                                'id_talonario' => $c->id_talonario,
+                                                                'id_asignacion_reserva' => $id_asignacion,
+                                                                'desde' => $desde, 
+                                                                'hasta' => $hasta]);
+                                    
+                                    if ($detalle_talonario) {
+                                        $i = ($hasta - $desde) + 1;
+                                        $asignado = $c->asignado + $i;
+                                        $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c->id_talonario)->update(['asignado' => $asignado]);
+                                    }else{
+                                        return response()->json(['success' => false]);
+                                    }
+                                }else{
+                                    return response()->json(['success' => false]);
+                                }
+                            }
+
+                            array_push($talonarios,$c->id_talonario);
+                            // $url_talonarios = 'T'.$c->id_talonario;
+
+
+                            do {
+                                // $cant -> cantidad de guías solicitadas
+                                // $guias_faltantes -> cantidad de guías solicitadas que faltan por asignarle correlattivo
+
+                                $guias_faltantes = $cantidad - $i;
+                                $c2 = DB::table('talonarios')->where('clase','=',6)->where('asignado','!=',50)->first(); 
+                                if ($c2) {
+                                    ////// todavia no se han asignado guías del talonario
+                                    $desde = $c2->desde;
+                                    $hasta = 0;
+                                    if ($guias_faltantes <= 50) {
+                                        $hasta = ($desde + $guias_faltantes) - 1;
+                                    }else{
+                                        $hasta = $c2->hasta;
+                                    }
+
+                                    $detalle_talonario = DB::table('detalle_talonario_reservas')->insert([
+                                                        'id_talonario' => $c->id_talonario,
+                                                        'id_asignacion_reserva' => $id_asignacion,
+                                                        'desde' => $desde, 
+                                                        'hasta' => $hasta]);
+                                    
+                                    if ($detalle_talonario) {
+                                        $i = $i + (($hasta - $desde) + 1);  
+                                        $asignado = $c2->asignado + $i;
+                                        array_push($talonarios,$c2->id_talonario);
+                                        // $url_talonarios .= '-'.$c2->id_talonario;
+                                        $update_asignado = DB::table('talonarios')->where('id_talonario', '=', $c2->id_talonario)->update(['asignado' => $asignado]);
+                                    }else{
+                                        return response()->json(['success' => false]); 
+                                    }                             
+                                }else{
+                                    return response()->json(['success' => false]); 
+                                }
+                                // $x++;
+                            } while ($i == $cantidad);
+
+
+                                
+                            $user = auth()->id();
+                            if ($tipo_sujeto == 'user') {
+                                $sp =  DB::table('sujeto_pasivos')->select('razon_social')->where('id_sujeto','=',$id_sujeto)->first(); 
+                            }else{
+                                $sp =  DB::table('sujeto_notusers')->select('razon_social')->where('id_sujeto_notuser','=',$id_sujeto)->first(); 
+                            }
+                            $accion = 'SOLICITUD DE GUÍAS PROVICIONALES NRO.'.$id_asignacion.' APROBADA, ID Talonario(s): '.$talonarios.', Contribuyente: '.$sp->razon_social;
+                            $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 24, 'accion'=> $accion]);
+
+                            $total_guias_reserva = $consulta->total - $cantidad;
+                            $update_total_reserva = DB::table('total_guias_reservas')->where('correlativo', '=', 1)->update(['total' => $total_guias_reserva]);
+                            if ($update_total_reserva) {
+                                return response()->json(['success' => true, 'asignacion' => $id_asignacion]);
+                            }else{
+                                return response()->json(['success' => false]);
+                            }
         
-      
+
+                        }
+                    }else{
+                        return response()->json(['success' => false]);
+                    }
+
+                }else{
+                    ////// NO HAY GUIAS SUFICIENTES PARA LA SOLICITUD
+                    return response()->json(['success' => false, 'nota' => 'Disculpe, no hay Guías de Reserva disponible.']);
+                }
+            }else{
+                ////// NO HAY TALONARIOS DE RESERVA
+                return response()->json(['success' => false, 'nota' => 'Disculpe, no ha emitido todavia talonarios de reserva para la asignación de guías provicionales.']);
+            }
+        }else{
+            return response()->json(['success' => false]);
+        }
+
+
     }
+
+
+    
+
+
+    public function guias(Request $request) {
+        $id_asignacion = $request->post('asignacion');
+        $li = '';
+        $tab_pane = '';
+
+        $consulta = DB::table('asignacion_reservas')->select('cantidad_guias')->where('id_asignacion','=',$id_asignacion)->first();
+        if ($consulta) {
+            $cantidad = $consulta->cantidad_guias;
+
+            // for ($i=1; $i <= $cantidad ; $i++) { 
+            //     $ul;
+            // }
+        }else{
+            return response()->json(['success' => false]);
+        }
+
+        $correlativo = DB::table('detalle_talonario_reservas')->where('id_asignacion_reserva','=',$id_asignacion)->get();
+        if ($correlativo) {
+            $contador = 0;
+            foreach ($correlativo as $c) {
+                $desde = $c->desde;
+                $hasta = $c->hasta;
+
+                for ($i=$desde; $i <= $hasta ; $i++) { 
+                    $contador++;
+
+                    $li .= '<li class="nav-item" role="presentation">
+                                <button class="nav-link active d-flex align-items-center" id="'.$i.'-tab" data-bs-toggle="pill" data-bs-target="#g'.$i.'-tab-pane" type="button" role="tab" aria-controls="'.$i.'-tab-pane" aria-selected="true">
+                                    <i class="bx bx-tag bx-flip-horizontal me-2 fs-6" ></i>
+                                    Guía '.$contador.'
+                                </button>
+                            </li>';
+                    
+                }
+            }
+        }else{
+            return response()->json(['success' => false]);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // public function canteras(Request $request)  

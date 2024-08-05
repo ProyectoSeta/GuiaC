@@ -218,8 +218,8 @@ class ReservaController extends Controller
             $html = ' <div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                             <i class="bx bx-check-circle bx-tada fs-1" style="color:#076b0c" ></i>                   
-                                <h1 class="modal-title text-navy fs-5" id="exampleModalLabel">CORRELATIVO</h1>
-                                <span class="fs-6 text-muted">Talonario(s) Emitidos</span>
+                                <h1 class="modal-title text-navy fw-bold fs-5" id="exampleModalLabel">CORRELATIVO</h1>
+                                <span class="fs-6 text-muted">Talonarios Emitidos</span>
                             </div>
                         </div>
                         <div class="modal-body" style="font-size:14px">

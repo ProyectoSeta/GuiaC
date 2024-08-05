@@ -30,11 +30,11 @@ class VerificarUserController extends Controller
                 }
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
-                                <i class="bx bx-help-circle fs-2 text-navy" ></i>                       
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Aprobar la verificación del siguente Sujeto Pasivo?</h1>
+                                <i class="bx bx-help-circle fs-2 text-muted" ></i>                       
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea aprobar la Verificación del Contribuyente?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5 text-navy" id="">'.$sujeto->razon_social.'</h1>
-                                    <h5 class="modal-title" id="" style="font-size:14px">'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</h5>
+                                    <h1 class="modal-title fs-5 text-navy fw-bold" id="">'.$sujeto->razon_social.'</h1>
+                                    <h5 class="modal-title text-muted" id="" style="font-size:14px">'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>
@@ -145,10 +145,10 @@ class VerificarUserController extends Controller
                 $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center">
                             <div class="text-center">
                                 <i class="bx bx-error-circle bx-tada fs-2" style="color:#e40307" ></i>                      
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea Denegar la verificación del siguente Sujeto Pasivo?</h1>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea rechazar la Verificación del Contribuyente?</h1>
                                 <div class="">
-                                    <h1 class="modal-title fs-5" id="" style="color: #0072ff">'.$sujeto->razon_social.'</h1>
-                                    <h5 class="modal-title" id="" style="font-size:14px">'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</h5>
+                                    <h1 class="modal-title fs-5 text-navy fw-bold">'.$sujeto->razon_social.'</h1>
+                                    <h5 class="modal-title text-muted" style="font-size:14px">'.$sujeto->rif_condicion.'-'.$sujeto->rif_nro.'</h5>
                                 </div>
                             </div>
                         </div>

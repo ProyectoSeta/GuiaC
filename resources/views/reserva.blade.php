@@ -75,12 +75,14 @@
     <div class="modal fade" id="modal_emision_reserva" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-navy" id="exampleModalLabel">
-                        <!-- <i class='bx bxs-file-plus'></i> -->
-                        Emitir Talonario(s) de Reserva
-                    </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
+                    <div class="text-center">
+                        <i class='bx bx-plus-circle text-muted fs-3 me-2'></i>
+                        <h1 class="modal-title fs-5 text-navy fw-bold" id="exampleModalLabel">Emición</h1>
+                        <span class="">Talonarios de Reserva</span>
+                    </div>
+                    
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
                 <div class="modal-body mx-2" style="font-size:14px;" id="content_info_new">
                     <form id="form_emitir_reserva" method="post" onsubmit="event.preventDefault(); emitirReserva()">

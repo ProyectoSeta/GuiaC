@@ -6,7 +6,7 @@
     
     <script src="{{ asset('jss/bundle.js') }}" defer></script>
     <link href="{{asset('css/datatable.min.css') }}" rel="stylesheet">
-    <script src="{{asset('vendor/sweetalert.js') }}"></script>
+    <!-- <script src="{{asset('vendor/sweetalert.js') }}"></script> -->
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
     
     
@@ -47,7 +47,7 @@
                                 <p class="text-end text-muted mb-0" style="font-size:12px;">Ejemplo: 30563223</p>
                             </div>
                             <div class="col-2">
-                                <button type="button" class="btn btn-secondary btn-sm pb-0" id="search_sujeto_asignar">
+                                <button type="button" class="btn btn-secondary btn-sm pb-0" id="search_sujeto_asigna" data-bs-toggle="modal" data-bs-target="#modal_guia_asignacion">
                                     <i class='bx bx-search-alt-2 fs-5'></i>
                                 </button>
                             </div>
@@ -78,7 +78,6 @@
                         <th>Detalles</th>
                         <th>Cant. Guías</th> 
                         <th>Emisión</th>
-                        <th>Total UCD</th> 
                         <th>Soporte</th>
                         <th>Estado</th>
                         <th>¿Entregado?</th> <!-- entregado?  -->
@@ -95,7 +94,6 @@
                                 </td>
                                 <td  class="table-primary fw-bold">{{$a->cantidad_guias}} Guías</td>
                                 <td class="text-secondary">{{$a->fecha_emision}}</td>
-                                <td class="text-navy fw-bold">{{$a->total_ucd}} UCD</td>
                                 <td>
                                     <a target="_blank" class="ver_pago" href="{{asset($a->soporte)}}">Ver</a>
                                 </td>
@@ -248,7 +246,7 @@
 
                                 <div class=" mb-2">
                                     <label class="form-label" for="cantidad">No. de Guías</label><span class="text-danger">*</span>
-                                    <input class="form-control form-control-sm" type="number" name="cantidad" required >
+                                    <input class="form-control form-control-sm" type="number" name="cantidad" id="cantidad" required >
                                 </div>
                                 <div class="mb-2">
                                             <label class="form-label" for="motivo">Motivo</label><span class="text-danger">*</span>
@@ -328,21 +326,21 @@
                         </p>
                         
                         <!-- TABS GUIAS ASIGNADAS -->
-                        <ul class="nav nav-pills d-flex justify-content-center" id="myTab" role="tablist" style="font-size:14px;">
+                        <ul class="nav nav-pills d-flex justify-content-center scrollspy-example" data-bs-spy="scroll" data-bs-smooth-scroll="true" id="myTab" role="tablist" style="font-size:14px;">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active d-flex align-items-center" id="1-tab" data-bs-toggle="pill" data-bs-target="#1-tab-pane" type="button" role="tab" aria-controls="1-tab-pane" aria-selected="true">
+                                <button class="nav-link active d-flex align-items-center" id="1-tab" data-bs-toggle="pill" data-bs-target="#g1-tab-pane" type="button" role="tab" aria-controls="1-tab-pane" aria-selected="true">
                                     <i class='bx bx-tag bx-flip-horizontal me-2 fs-6' ></i>
                                     Guía 1
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link d-flex align-items-center" id="2-tab" data-bs-toggle="pill" data-bs-target="#2-tab-pane" type="button" role="tab" aria-controls="2-tab-pane" aria-selected="false">
+                                <button class="nav-link d-flex align-items-center" id="2-tab" data-bs-toggle="pill" data-bs-target="#g2-tab-pane" type="button" role="tab" aria-controls="2-tab-pane" aria-selected="false">
                                     <i class='bx bx-tag bx-flip-horizontal me-2 fs-6' ></i>
                                     Guía 2
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link  d-flex align-items-center" id="3-tab" data-bs-toggle="pill" data-bs-target="#3-tab-pane" type="button" role="tab" aria-controls="3-tab-pane" aria-selected="false">
+                                <button class="nav-link  d-flex align-items-center" id="3-tab" data-bs-toggle="pill" data-bs-target="#g3-tab-pane" type="button" role="tab" aria-controls="3-tab-pane" aria-selected="false">
                                     <i class='bx bx-tag bx-flip-horizontal me-2  fs-6' ></i>
                                     Guía 3
                                 </button>
@@ -351,7 +349,7 @@
 
                         <!-- CONTENT TABS: GUIAS ASIGNADAS -->
                         <div class="tab-content border rounded px-2 py-3 my-3 mt-4" id="myTabContent">
-                            <div class="tab-pane fade show active" id="1-tab-pane" role="tabpanel" aria-labelledby="1-tab" tabindex="0">
+                            <div class="tab-pane fade show active" id="g1-tab-pane" role="tabpanel" aria-labelledby="1-tab" tabindex="0">
                                 <!-- <p class="px-3 fw-semibold fs-6 text-body-secondary">IMPORTANTE: Debe seleccionar la Cantera de la cual proviene la Guía y el Talonario, para así poder ingresar los demás datos.</p> -->
                                 <div class="row d-flex justify-content-between  px-3">
                                     <div class="col-sm-5">
@@ -362,11 +360,10 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" id="mes_declarado" name="mes_declarado" value="'.$mes_declarado.'" required>
-                                <input type="hidden" id="year_declarado" name="year_declarado" value="'.$year_declarado.'" required>
+                               
 
-                                <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
-                                <input type="hidden" id="nro_guia" name="nro_guia" value="" required>
+                                <!-- <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
+                                <input type="hidden" id="nro_guia" name="nro_guia" value="" required>  -->
 
                                 <div class="row pt-4 px-3 d-flex">
                                     <div class="col-lg-6">
@@ -669,11 +666,11 @@
                                 <p class="text-muted text-end me-4"><span style="color:red">*</span> Campos requeridos.</p>
                             </div> <!-- cierra tab-pane -->
 
-                            <div class="tab-pane fade" id="2-tab-pane" role="tabpanel" aria-labelledby="2-tab" tabindex="0">
+                            <div class="tab-pane fade" id="g2-tab-pane" role="tabpanel" aria-labelledby="2-tab" tabindex="0">
                                 
                             </div> <!-- cierra tab-pane -->
                             
-                            <div class="tab-pane fade" id="3-tab-pane" role="tabpanel" aria-labelledby="3-tab" tabindex="0">
+                            <div class="tab-pane fade" id="g3-tab-pane" role="tabpanel" aria-labelledby="3-tab" tabindex="0">
                                 
                             </div> <!-- cierra tab-pane -->
                             
@@ -710,16 +707,16 @@
     <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-        const myModal = document.getElementById('myModal');
-        const myInput = document.getElementById('myInput');
+        // const myModal = document.getElementById('myModal');
+        // const myInput = document.getElementById('myInput');
 
-        myModal.addEventListener('shown.bs.modal', () => {
-            myInput.focus();
-        });
+        // myModal.addEventListener('shown.bs.modal', () => {
+        //     myInput.focus();
+        // });
     </script>
     <script src="{{ asset('jss/jquery-3.5.1.js') }}" ></script>
-    <script src="{{ asset('jss/datatable.min.js') }}" defer ></script>
     <script src="{{ asset('jss/datatable.bootstrap.js') }}" ></script>
+    <script src="{{ asset('jss/datatable.min.js') }}" defer ></script>
     <script src="{{ asset('jss/toastr.js') }}" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" ></script>
    
     <script type="text/javascript">
@@ -924,9 +921,48 @@
 
     });
 
-   
+    ////////////////////ASIGNACIÓN CONTRIBUYENTE REGISTRADO 
+    function asignarGuiasRegister(){
+        var formData = new FormData(document.getElementById("form_asignar_guias_register"));
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url:'{{route("asignar.asignar_user") }}',
+                type:'POST',
+                contentType:false,
+                cache:false,
+                processData:false,
+                async: true,
+                data: formData,
+                success: function(response){
+                    // console.log(response);
+                    var asignacion = response.asignacion;
+                    $('#modal_asignar_sujeto_registrado').modal('hide');
+                    $('#modal_guia_asignacion').modal('show');
 
+                    //////////////////Registro de guías asignadas
+                    $.ajax({
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        type: 'POST',
+                        url: '{{route("asignar.sujeto") }}',
+                        data: {asignacion:asignacion},
+                        success: function(response){
+                            console.log(response);
+                            
 
+                        },
+                        error: function(error){
+                            
+                        }
+                    });
+
+                },
+                error: function(error){
+                    
+                }
+            });
+    }
+
+    ////////////////////ASIGNACIÓN CONTRIBUYENTE NO REGISTRADO
     function asignarGuiasNotregister(){
         var formData = new FormData(document.getElementById("form_asignar_guias_notregister"));
             $.ajax({
