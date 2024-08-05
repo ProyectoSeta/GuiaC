@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detalle_talonarios', function (Blueprint $table) {
+        Schema::create('detalle_talonario_regulares', function (Blueprint $table) {
             $table->increments('correlativo');
             $table->integer('id_talonario')->unsigned();
             $table->foreign('id_talonario')->references('id_talonario')->on('talonarios')->onDelete('cascade');
@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('qr')->nullable();
             $table->integer('grupo')->unsigned()->nullable(); ////////A (ANTES) - B (DESPUES)
             $table->foreign('grupo')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
+
+            $table->integer('asignacion_talonario')->unsigned()->nullable(); ////////EN RESERVA - ASIGNADO (SOLO PARA TALONARIOS REGULARES)
+            $table->foreign('asignacion_talonario')->references('id_clasificacion')->on('clasificacions')->onDelete('cascade');
 
             
             // $table->integer('id_sujeto_notuser')->unsigned()->nullable();

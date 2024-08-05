@@ -116,7 +116,7 @@ class AprobacionController extends Controller
             foreach ($solicitudes as $solicitud) {
                 $detalles = DB::table('detalle_solicituds')->where('id_solicitud','=',$idSolicitud)->first();
                 if($detalles){ 
-                    $reserva = DB::table('detalle_talonarios')->selectRaw("count(*) as total")
+                    $reserva = DB::table('detalle_talonario_regulares')->selectRaw("count(*) as total")
                                                 ->where('id_sujeto','=',$solicitud->id_sujeto)
                                                 ->where('id_cantera','=',$solicitud->id_cantera)
                                                 ->where('asignacion_talonario','=',25)
@@ -262,7 +262,7 @@ class AprobacionController extends Controller
         $nro_talonarios = 0;
 
         $consulta_cantidad = DB::table('detalle_solicituds')->select('cantidad','tipo_talonario')->where('id_solicitud','=',$idSolicitud)->first(); 
-        $consulta_reserva = DB::table('detalle_talonarios')->selectRaw("count(*) as total")
+        $consulta_reserva = DB::table('detalle_talonario_regulares')->selectRaw("count(*) as total")
                                                             ->where('id_sujeto','=',$idSujeto)
                                                             ->where('id_cantera','=',$idCantera)
                                                             ->where('asignacion_talonario','=',25)->first();
@@ -346,21 +346,19 @@ class AprobacionController extends Controller
                                                                                         'asignacion_talonario' => $asignacion_talonario]);
                                             if ($insert) {
                                                 $id_talonario= DB::table('talonarios')->max('id_talonario');
-                                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                $detalle_talonario = DB::table('detalle_talonario_regulares')->insert([
                                                                                         'id_talonario' => $id_talonario,
                                                                                         'id_cantera'=>$idCantera, 
                                                                                         'id_sujeto'=>$idSujeto, 
                                                                                         'desde' => $desde, 
                                                                                         'hasta' => $hasta,
-                                                                                        'clase' => 5,
                                                                                         'asignacion_talonario' => $asignacion_talonario,
-                                                                                        'id_solicitud_reserva' => null,
                                                                                         'grupo' => 31
                                                                                     ]);
 
                                                 if ($detalle_talonario) {
                                                     if ($count_ciclo <= $cant_solicitada) {
-                                                        $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
+                                                        $id_detalle= DB::table('detalle_talonario_regulares')->max('correlativo');
                                                     
                                                         for ($g=$desde; $g <= $hasta; $g++) { 
                                                             // $url = route('qr.qr', ['id' => $id_talonario]);
@@ -369,7 +367,7 @@ class AprobacionController extends Controller
                                                             
                                                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
                                                             $insert_qr = DB::table('qr_guias')->insert([
-                                                                                            'key_correlativo_detalle' => $id_detalle,
+                                                                                            'key_detalle' => $id_detalle,
                                                                                             'nro_guia'=> $g, 
                                                                                             'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
                                                                                             ]);
@@ -452,27 +450,25 @@ class AprobacionController extends Controller
                                                                                         'asignacion_talonario' => $asignacion_talonario]);
                                             if ($insert) {
                                                 $id_talonario= DB::table('talonarios')->max('id_talonario');
-                                                $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                                $detalle_talonario = DB::table('detalle_talonario_regulares')->insert([
                                                                                         'id_talonario' => $id_talonario,
                                                                                         'id_cantera'=>$idCantera, 
                                                                                         'id_sujeto'=>$idSujeto, 
                                                                                         'desde' => $desde, 
                                                                                         'hasta' => $hasta,
-                                                                                        'clase' => 5,
                                                                                         'asignacion_talonario' => $asignacion_talonario,
-                                                                                        'id_solicitud_reserva' => null,
                                                                                         'grupo' => 31]);
 
                                                 if ($detalle_talonario) {
                                                     if ($count_ciclo <= $cant_solicitada) {
-                                                        $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
+                                                        $id_detalle= DB::table('detalle_talonario_regulares')->max('correlativo');
                                                     
                                                         for ($g=$desde; $g <= $hasta; $g++) { 
                                                             $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
                                                             
                                                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
                                                             $insert_qr = DB::table('qr_guias')->insert([
-                                                                                            'key_correlativo_detalle' => $id_detalle,
+                                                                                            'key_detalle' => $id_detalle,
                                                                                             'nro_guia'=> $g, 
                                                                                             'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
                                                                                             ]);
@@ -517,7 +513,7 @@ class AprobacionController extends Controller
                         ////////////hay suficientes talonarios de reserva para atender la solicitud / NO SE VAN A EMITIR TALONARIOS CON LA IMPRENTA
                         $nro_talonarios = $consulta_cantidad->cantidad;
                         for ($i=0; $i < $consulta_cantidad->cantidad; $i++) { 
-                            $c3 = DB::table('detalle_talonarios')->select('correlativo','id_talonario','desde','hasta')
+                            $c3 = DB::table('detalle_talonario_regulares')->select('correlativo','id_talonario','desde','hasta')
                                                 ->where('id_sujeto','=',$idSujeto)
                                                 ->where('id_cantera','=',$idCantera)
                                                 ->where('asignacion_talonario','=',25)->first(); 
@@ -526,7 +522,7 @@ class AprobacionController extends Controller
                                                 ->where('id_talonario', '=', $c3->id_talonario)
                                                 ->update(['id_solicitud' => $idSolicitud, 'asignacion_talonario' => 26]);
                                 if ($update_ids_tln) {
-                                    $update_asignacion = DB::table('detalle_talonarios')
+                                    $update_asignacion = DB::table('detalle_talonario_regulares')
                                             ->where('id_talonario', '=', $c3->id_talonario)
                                             ->update(['asignacion_talonario' => 26]);
 
@@ -540,7 +536,7 @@ class AprobacionController extends Controller
                                             
                                             QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
                                             $insert_qr = DB::table('qr_guias')->insert([
-                                                                            'key_correlativo_detalle' => $id_detalle,
+                                                                            'key_detalle' => $id_detalle,
                                                                             'nro_guia'=> $g, 
                                                                             'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
                                                                             ]);
@@ -577,7 +573,7 @@ class AprobacionController extends Controller
                             if ($insert_emision_talonarios) {
                                 ////////////////////////PASO 1: SE ASIGNAN LOS TALONARIOS EN RESERVA 
                                 for ($i=1; $i <= $consulta_reserva->total; $i++) { 
-                                    $c3 = DB::table('detalle_talonarios')->select('correlativo','id_talonario','desde','hasta')
+                                    $c3 = DB::table('detalle_talonario_regulares')->select('correlativo','id_talonario','desde','hasta')
                                                         ->where('id_sujeto','=',$idSujeto)
                                                         ->where('id_cantera','=',$idCantera)
                                                         ->where('asignacion_talonario','=',25)->first(); 
@@ -586,7 +582,7 @@ class AprobacionController extends Controller
                                                         ->where('id_talonario', '=', $c3->id_talonario)
                                                         ->update(['id_solicitud' => $idSolicitud, 'asignacion_talonario' => 26]);
                                         if ($update_ids_tln) {
-                                            $update_asignacion = DB::table('detalle_talonarios')
+                                            $update_asignacion = DB::table('detalle_talonario_regulares')
                                                     ->where('id_talonario', '=', $c3->id_talonario)
                                                     ->update(['asignacion_talonario' => 26]);
 
@@ -600,7 +596,7 @@ class AprobacionController extends Controller
                                                     
                                                     QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
                                                     $insert_qr = DB::table('qr_guias')->insert([
-                                                                                    'key_correlativo_detalle' => $id_detalle,
+                                                                                    'key_detalle' => $id_detalle,
                                                                                     'nro_guia'=> $g, 
                                                                                     'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
                                                                                     ]);
@@ -666,27 +662,25 @@ class AprobacionController extends Controller
                                                                                 'asignacion_talonario' => $asignacion_talonario]);
                                     if ($insert) {
                                         $id_talonario= DB::table('talonarios')->max('id_talonario');
-                                        $detalle_talonario = DB::table('detalle_talonarios')->insert([
+                                        $detalle_talonario = DB::table('detalle_talonario_regulares')->insert([
                                                                                 'id_talonario' => $id_talonario,
                                                                                 'id_cantera'=>$idCantera, 
                                                                                 'id_sujeto'=>$idSujeto, 
                                                                                 'desde' => $desde, 
                                                                                 'hasta' => $hasta,
-                                                                                'clase' => 5,
                                                                                 'asignacion_talonario' => $asignacion_talonario,
-                                                                                'id_solicitud_reserva' => null,
                                                                                 'grupo' => 31]);
 
                                         if ($detalle_talonario) {
                                             if ($count_ciclo <= $talonarios_faltantes) {
-                                                $id_detalle= DB::table('detalle_talonarios')->max('correlativo');
+                                                $id_detalle= DB::table('detalle_talonario_regulares')->max('correlativo');
                                             
                                                 for ($g=$desde; $g <= $hasta; $g++) { 
                                                     $url = 'https://mineralesnometalicos.tributosaragua.com.ve/qr/?id='.$g.'?grupo=B';
                                                     
                                                     QrCode::size(180)->eye('circle')->generate($url, public_path('assets/qr/qrcode_G'.$g.'.svg'));
                                                     $insert_qr = DB::table('qr_guias')->insert([
-                                                                                    'key_correlativo_detalle' => $id_detalle,
+                                                                                    'key_detalle' => $id_detalle,
                                                                                     'nro_guia'=> $g, 
                                                                                     'qr'=> 'assets/qr/qrcode_G'.$g.'.svg', 
                                                                                     ]);
@@ -758,10 +752,10 @@ class AprobacionController extends Controller
                 $formato_hasta = substr(str_repeat(0, $length).$hasta, - $length);
 
 
-                $detalle = DB::table('detalle_talonarios')
-                    ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                    ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                    ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
+                $detalle = DB::table('detalle_talonario_regulares')
+                    ->join('canteras', 'detalle_talonario_regulares.id_cantera', '=', 'canteras.id_cantera')
+                    ->join('sujeto_pasivos', 'detalle_talonario_regulares.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                    ->select('detalle_talonario_regulares.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion','sujeto_pasivos.rif_nro','canteras.nombre')
                     ->where('id_talonario','=', $talonario->id_talonario)
                     ->first();
 

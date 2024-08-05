@@ -15,12 +15,13 @@ return new class extends Migration
             $table->increments('correlativo');
             $table->integer('id_talonario')->unsigned();
             $table->foreign('id_talonario')->references('id_talonario')->on('talonarios')->onDelete('cascade');
+            $table->integer('id_asignacion_reserva')->unsigned()->nullable();
+            $table->foreign('id_asignacion_reserva')->references('id_asignacion')->on('asignacion_reservas')->onDelete('cascade');
 
-            $table->integer('id_asignacion')->unsigned();
-            $table->foreign('id_asignacion')->references('id_asignacion')->on('asignacion_reservas')->onDelete('cascade');
-            
             $table->integer('desde');
             $table->integer('hasta');
+            
+
             
 
             $table->timestamps();

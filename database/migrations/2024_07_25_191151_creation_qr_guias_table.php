@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('qr_guias', function (Blueprint $table) {
             $table->increments('id_qr');
-            $table->integer('key_correlativo_detalle')->unsigned();
-            $table->foreign('key_correlativo_detalle')->references('correlativo')->on('detalle_talonarios')->onDelete('cascade');
+            $table->integer('key_detalle')->unsigned();
+            $table->foreign('key_detalle')->references('correlativo')->on('detalle_talonario_regulares')->onDelete('cascade');
             $table->integer('nro_guia')->unique();
             $table->string('qr');
 
