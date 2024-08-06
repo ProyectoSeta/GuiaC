@@ -365,21 +365,112 @@
                                 <!-- <input type="hidden" id="id_talonario" name="id_talonario" value="" required>
                                 <input type="hidden" id="nro_guia" name="nro_guia" value="" required>  -->
 
-                                <div class="row pt-4 px-3 d-flex">
-                                    <div class="col-lg-6">
+                                <!-- SUJETO REGISTRADO -->
+                                <div class="pt-4 px-3 d-flex ">
+                                    <!-- <div class="col-lg-6"> -->
                                         <!-- cantera -->
-                                        <div class="row g-3 align-items-center mb-2">
-                                            <div class="col-2">
+                                        <div class="row g-3 align-items-center mb-2 w-50">
+                                            <div class="col-3">
                                                 <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
                                             </div>
-                                            <div class="col-10">
+                                            <div class="col-9">
                                                 <select class="form-select form-select-sm" id="select_cantera" name="cantera" required>
-                                                    
+                                                    <option sujeto="1" value="1">1</option>
+                                                    <option id="otro" sujeto="5" value="otro">Otro</option>
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
+
+
+                                <div class="d-flex justify-content-center mx-5 px-5 py-3 my-4 flex-column bg-light rounded d-none" id="content_add_cantera">
+                                    <p class="fw-bold text-navy text-center mb-2 fs-6">Regitro de Cantera o Desazolve</p>
+                                    <p class=""><span style="color:red">*</span>NOTA: Es necesario llenar el registro de la nueva Cantera o Desazolve para continuar con el proceso.</p>
+                                    
+                                    <!-- <form id="form_new_catera_notuser" class="" method="post" onsubmit="event.preventDefault(); newCanteraNotuser()"> -->
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row g-3 mb-2">
+                                                    <div class="col-4">
+                                                        <label for="nombre_nc" class="col-form-label">Nombre: <span style="color:red">*</span></label>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <input type="text" id="nombre_nc" class="form-control form-control-sm" name="nombre" >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row g-3 mb-2">
+                                                    <div class="col-4">
+                                                        <label for="direccion_nc" class="col-form-label">Lugar de aprovechamiento: <span style="color:red">*</span></label>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <input type="text" id="direccion_nc" class="form-control form-control-sm" name="direccion" >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row g-3 align-items-center mb-2">
+                                                    <div class="col-4">
+                                                        <label for="municipio_cn" class="col-form-label">Municipio: <span style="color:red">*</span></label>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <select class="form-select form-select-sm municipio" aria-label="Default select example" id="municipio_cn" name="municipio">
+                                                            <option value="Bolívar">Bolívar</option>
+                                                            <option value="Camatagua">Camatagua</option>
+                                                            <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                                            <option value="Girardot">Girardot</option>
+                                                            <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                                            <option value="José Félix Ribas">José Félix Ribas</option>
+                                                            <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                                            <option value="Libertador">Libertador</option>
+                                                            <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                                            <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                                            <option value="San Casimiro">San Casimiro</option>
+                                                            <option value="San Sebastián">San Sebastián</option>
+                                                            <option value="Santiago Mariño">Santiago Mariño</option>
+                                                            <option value="Santos Michelena">Santos Michelena</option>
+                                                            <option value="Sucre">Sucre</option>
+                                                            <option value="Tovar">Tovar</option>
+                                                            <option value="Urdaneta">Urdaneta</option>
+                                                            <option value="Zamora">Zamora </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row g-3 align-items-center mb-2">
+                                                    <div class="col-4">
+                                                        <label for="parroquia_nc" class="col-form-label">Parroquia: <span style="color:red">*</span></label>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <select class="form-select form-select-sm parroquia" aria-label="Default select example" id="parroquia_nc" name="parroquia">
+                                                            <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" id="id_sujeto_cantera" name="id_sujeto_cantera" value="" required>
+
+                                        <div class="d-flex justify-content-center mt-3 mb-3">
+                                            <button type="button" id="btn_cancel_add_cantera" class="btn btn-secondary btn-sm me-3">Cancelar</button>
+                                            <button type="button" id="add_cantera" class="btn btn-success btn-sm">Guardar</button>
+                                        </div>
+                                    <!-- </form> -->
+                                </div>
+
+                                
+
+                                
+
+
+
 
                                 <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
 
@@ -391,7 +482,7 @@
                                                 <label for="razon" class="col-form-label">Razon social: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="razon" class="form-control form-control-sm" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
+                                                <input type="text" id="razon" class="form-control form-control-sm razon_dest" name="razon_dest" placeholder="Ejemplo: Razon Social, C.A." required>
                                             </div>
                                         </div>
                                     </div>
@@ -402,7 +493,7 @@
                                                 <label for="ci" class="col-form-label">R.I.F: </label>
                                             </div>
                                             <div class="col-9">
-                                                <input type="text" id="ci" class="form-control form-control-sm" name="ci_dest" placeholder="Ejemplo: J00000000"  required>
+                                                <input type="text" id="ci" class="form-control form-control-sm ci_dest" name="ci_dest" placeholder="Ejemplo: J00000000"  required>
                                             </div>
                                         </div>
                                     </div>
@@ -413,7 +504,7 @@
                                                 <label for="tlf_dest" class="col-form-label">Telefono: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="tlf_dest" class="form-control form-control-sm" name="tlf_dest" placeholder="Ejemplo: 0414-0000000"  required>
+                                                <input type="text" id="tlf_dest" class="form-control form-control-sm tlf_dest" name="tlf_dest" placeholder="Ejemplo: 0414-0000000"  required>
                                             </div>
                                         </div>
                                     </div>
@@ -427,7 +518,7 @@
                                                 <label for="municipio" class="col-form-label">Municipio: </label>
                                             </div>
                                             <div class="col-8">
-                                                <select class="form-select form-select-sm" aria-label="Default select example" id="municipio" name="municipio_destino" required >
+                                                <select class="form-select form-select-sm municipio_dest" aria-label="Default select example" id="municipio" name="municipio_destino" required >
                                                     <option value="Bolívar">Bolívar</option>
                                                     <option value="Camatagua">Camatagua</option>
                                                     <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
@@ -456,7 +547,7 @@
                                                 <label for="parroquia" class="col-form-label">Parroquia:</label>
                                             </div>
                                             <div class="col-8">
-                                                <select class="form-select form-select-sm" aria-label="Default select example" id="parroquia" name="parroquia_destino" required>
+                                                <select class="form-select form-select-sm parroquia_dest" aria-label="Default select example" id="parroquia" name="parroquia_destino" required>
                                                     <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
                                                 </select>
                                             </div>
@@ -468,7 +559,7 @@
                                                 <label for="destino" class="col-form-label">Lugar de destino: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="destino" class="form-control form-control-sm" name="destino" required>
+                                                <input type="text" id="destino" class="form-control form-control-sm destino" name="destino" required>
                                             </div>
                                         </div>
                                     </div>
@@ -484,7 +575,7 @@
                                                 <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
                                             </div>
                                             <div class="col-8">
-                                                <select class="form-select form-select-sm " aria-label="Small select example" name="mineral" id="select_minerales">
+                                                <select class="form-select form-select-sm mineral" aria-label="Small select example" name="mineral" id="select_minerales">
                                                     <option selected>...</option>
                                                     
                                                 </select>
@@ -498,13 +589,13 @@
                                                 <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
                                             </div>
                                             <div class="col-4">
-                                                <select class="form-select form-select-sm" aria-label="Small select example" name="unidad_medida" id="unidad_medida">
+                                                <select class="form-select form-select-sm unidad_medida" aria-label="Small select example" name="unidad_medida" id="unidad_medida">
                                                     <option value="Toneladas">Toneladas</option>
                                                     <option value="Metros cúbicos">Metros Cúbicos</option>
                                                 </select>
                                             </div>
                                             <div class="col-4">
-                                                <input type="number" step="0.01" id="cantidad" class="form-control form-control-sm" name="cantidad_facturada" placeholder="Cantidad" >
+                                                <input type="number" step="0.01" id="cantidad" class="form-control form-control-sm cantidad" name="cantidad_facturada" placeholder="Cantidad" >
                                             </div> 
                                         </div>
                                     </div>                    
@@ -517,7 +608,7 @@
                                                 <label for="saldo_anterior" class="col-form-label">Saldo anterior: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="number" step="0.01" id="saldo_anterior" class="form-control form-control-sm" name="saldo_anterior" placeholder="">
+                                                <input type="number" step="0.01" id="saldo_anterior" class="form-control form-control-sm saldo_anterior" name="saldo_anterior" placeholder="">
                                             </div>
                                         </div>
                                     </div>
@@ -529,7 +620,7 @@
                                                 <label for="cantidad_despachada" class="col-form-label">Cantidad Despachada: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="number" step="0.01" id="cantidad_despachada" class="form-control form-control-sm" name="cantidad_despachada" placeholder="">
+                                                <input type="number" step="0.01" id="cantidad_despachada" class="form-control form-control-sm cantidad_despachada" name="cantidad_despachada" placeholder="">
                                             </div>
                                         </div>
                                     </div>
@@ -541,7 +632,7 @@
                                                 <label for="saldo_restante" class="col-form-label">Saldo Restante: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="number" step="0.01" id="saldo_restante" class="form-control form-control-sm" name="saldo_restante" placeholder="">
+                                                <input type="number" step="0.01" id="saldo_restante" class="form-control form-control-sm saldo_restante" name="saldo_restante" placeholder="">
                                             </div>
                                         </div>
                                     </div>
@@ -557,7 +648,7 @@
                                                 <label for="modelo" class="col-form-label">Modelo Vehículo: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="modelo" class="form-control form-control-sm" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350">
+                                                <input type="text" id="modelo" class="form-control form-control-sm modelo" name="modelo" placeholder="Ejemplo: Camion Plataforma Ford F-350">
                                             </div>
                                         </div>
 
@@ -567,7 +658,7 @@
                                                 <label for="nombre_conductor" class="col-form-label">Nombre Conductor: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="nombre_conductor" class="form-control form-control-sm" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo">
+                                                <input type="text" id="nombre_conductor" class="form-control form-control-sm nombre_conductor" name="nombre_conductor" placeholder="Ejemplo: Juan Castillo">
                                             </div>
                                         </div>
 
@@ -577,7 +668,7 @@
                                                 <label for="tlf_conductor" class="col-form-label">Teléfono Conductor: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="tlf_conductor" class="form-control form-control-sm" name="tlf_conductor" placeholder="Ejemplo: 04140000000">
+                                                <input type="text" id="tlf_conductor" class="form-control form-control-sm tlf_conductor" name="tlf_conductor" placeholder="Ejemplo: 04140000000">
                                             </div>
                                         </div>
                                     </div>
@@ -588,7 +679,7 @@
                                                 <label for="placa" class="col-form-label">Placa: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="placa" class="form-control form-control-sm" name="placa" placeholder="Ejemplo: AB123CD">
+                                                <input type="text" id="placa" class="form-control form-control-sm placa" name="placa" placeholder="Ejemplo: AB123CD">
                                             </div>
                                         </div>
 
@@ -598,7 +689,7 @@
                                                 <label for="ci_conductor" class="col-form-label">C.I.: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="ci_conductor" class="form-control form-control-sm" name="ci_conductor" placeholder="Ejemplo: V0000000">
+                                                <input type="text" id="ci_conductor" class="form-control form-control-sm ci_conductor" name="ci_conductor" placeholder="Ejemplo: V0000000">
                                             </div>
                                         </div>
 
@@ -608,7 +699,7 @@
                                                 <label for="capacidad_vehiculo" class="col-form-label">Capacidad del Vehículo: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="capacidad_vehiculo" class="form-control form-control-sm" name="capacidad_vehiculo" placeholder="">
+                                                <input type="text" id="capacidad_vehiculo" class="form-control form-control-sm capacidad_vehiculo" name="capacidad_vehiculo" placeholder="">
                                             </div>
                                         </div>
                                     </div>
@@ -624,7 +715,7 @@
                                                 <label for="hora_salida" class="col-form-label">Hora de Salida: </label>
                                             </div>
                                             <div class="col-8">
-                                                <input type="text" id="hora_salida" class="form-control form-control-sm" name="hora_salida" placeholder="Ejemplo: 5:30 AM">
+                                                <input type="text" id="hora_salida" class="form-control form-control-sm hora_salida" name="hora_salida" placeholder="Ejemplo: 5:30 AM">
                                             </div>
                                         </div>
                                     </div>
@@ -636,13 +727,13 @@
                                             </div>
                                             <div class="col-7">
                                                 <div class="form-check form-check-inline ">
-                                                    <input class="form-check-input" type="radio" name="anulada" id="anulado_si" value="Si">
+                                                    <input class="form-check-input anulada" type="radio" name="anulada" id="anulado_si" value="Si">
                                                     <label class="form-check-label" for="anulado_si">
                                                         Si
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="anulada" id="anulado_no" value="No" >
+                                                    <input class="form-check-input anulada" type="radio" name="anulada" id="anulado_no" value="No" >
                                                     <label class="form-check-label" for="anulado_no">
                                                         No
                                                     </label>
@@ -657,7 +748,7 @@
                                                 <label for="motivo_anulada" class="col-form-label">Motivo de la Anulación: </label>
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="text" id="motivo_anulada" class="form-control form-control-sm" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
+                                                <input type="text" id="motivo_anulada" class="form-control form-control-sm motivo_anulada" name="motivo" placeholder="Elemplo: Por tachaduras" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -821,24 +912,24 @@
 
     
         /////////////PARROQUIAS
-        $(document).on('change','#municipio', function(e) {
+        $(document).on('change','.municipio', function(e) {
             var municipio = $(this).val();
 
             switch (municipio) {
                 case 'Bolívar':
-                    $('#parroquia').html('<option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>');
+                    $('.parroquia').html('<option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>');
                     break;
                 case 'Camatagua':
-                    $('#parroquia').html('<option value="Camatagua">Camatagua</option>'+
+                    $('.parroquia').html('<option value="Camatagua">Camatagua</option>'+
                                         '<option value="Carmen de Cura">Carmen de Cura</option>');
                     break;
                 case 'Francisco Linares Alcántara':
-                    $('#parroquia').html('<option value="Santa Rita">Santa Rita</option>'+
+                    $('.parroquia').html('<option value="Santa Rita">Santa Rita</option>'+
                                         '<option value="Francisco de Miranda">Francisco de Miranda</option>'+
                                         '<option value="Moseñor Feliciano González">Moseñor Feliciano González</option>');
                     break;
                 case 'Girardot':
-                    $('#parroquia').html('<option value="Pedro José Ovalles">Pedro José Ovalles</option>'+
+                    $('.parroquia').html('<option value="Pedro José Ovalles">Pedro José Ovalles</option>'+
                                         '<option value="Joaquín Crespo">Joaquín Crespo</option>'+
                                         '<option value="José Casanova Godoy">José Casanova Godoy</option>'+
                                         '<option value="Madre María de San José">Madre María de San José</option>'+
@@ -849,37 +940,37 @@
 
                 break;
                 case 'José Ángel Lamas':
-                    $('#parroquia').html('<option value="Santa Cruz">Santa Cruz</option>');
+                    $('.parroquia').html('<option value="Santa Cruz">Santa Cruz</option>');
                     break;
                 case 'José Félix Ribas':
-                    $('#parroquia').html('<option value="José Félix Ribas">José Félix Ribas</option>'+
+                    $('.parroquia').html('<option value="José Félix Ribas">José Félix Ribas</option>'+
                                         '<option value="Castor Nieves Ríos">Castor Nieves Ríos</option>'+
                                         '<option value="Las Guacamayas">Las Guacamayas</option>'+
                                         '<option value="Pao de Zárate">Pao de Zárate</option>'+
                                         '<option value="Zuata">Zuata</option>');
                 break;
                 case 'José Rafael Revenga':
-                    $('#parroquia').html('<option value="José Rafael Revenga">José Rafael Revenga</option>');
+                    $('.parroquia').html('<option value="José Rafael Revenga">José Rafael Revenga</option>');
                     break;
                 case 'Libertador':
-                    $('#parroquia').html('<option value="Palo Negro">Palo Negro</option>'+
+                    $('.parroquia').html('<option value="Palo Negro">Palo Negro</option>'+
                                         '<option value="San Martín de Porres">San Martín de Porres</option>');
                     break;
                 case 'Mario Briceño Iragorry':
-                    $('#parroquia').html('<option value="El Limón">El Limón</option>'+
+                    $('.parroquia').html('<option value="El Limón">El Limón</option>'+
                                         '<option value="Caña de Azúcar">Caña de Azúcar</option>');
                 break;
                 case 'Ocumare de la Costa de Oro':
-                    $('#parroquia').html('<option value="Ocumare de la Costa">Ocumare de la Costa</option>');
+                    $('.parroquia').html('<option value="Ocumare de la Costa">Ocumare de la Costa</option>');
                     break;
                 case 'San Casimiro':
-                    $('#parroquia').html('<option value="San Casimiro">San Casimiro</option>'+
+                    $('.parroquia').html('<option value="San Casimiro">San Casimiro</option>'+
                                         '<option value="Güiripa">Güiripa</option>'+
                                         '<option value="Ollas de Caramacate">Ollas de Caramacate</option>'+
                                         '<option value="Valle Morín">Valle Morín</option>');
                     break;
                 case 'San Sebastián':
-                    $('#parroquia').html('<option value="San Sebastián">San Sebastián</option>');
+                    $('.parroquia').html('<option value="San Sebastián">San Sebastián</option>');
                     break;
                 case 'Santiago Mariño':
                     $('#parroquia').html('<option value="Turmero">Turmero</option>'+
@@ -889,24 +980,24 @@
                                         '<option value="Alfredo Pacheco Miranda">Alfredo Pacheco Miranda</option>');
                     break;
                 case 'Santos Michelena':
-                    $('#parroquia').html('<option value="Santos Michelena">Santos Michelena</option>'+
+                    $('.parroquia').html('<option value="Santos Michelena">Santos Michelena</option>'+
                                         '<option value="Tiara">Tiara</option>');
                     break;
                 case 'Sucre':
-                    $('#parroquia').html('<option value="Cagua">Cagua</option>'+
+                    $('.parroquia').html('<option value="Cagua">Cagua</option>'+
                                         '<option value="Bella Vista">Bella Vista</option>');
                 break;
                 case 'Tovar':
-                    $('#parroquia').html('<option value="Tovar">Tovar</option>');
+                    $('.parroquia').html('<option value="Tovar">Tovar</option>');
                     break;
                 case 'Urdaneta':
-                    $('#parroquia').html('<option value="Urdaneta">Urdaneta</option>'+
+                    $('.parroquia').html('<option value="Urdaneta">Urdaneta</option>'+
                                         '<option value="Las Peñitas">Las Peñitas</option>'+
                                         '<option value="San Francisco de Cara">San Francisco de Cara</option>'+
                                         '<option value="Taguay">Taguay</option>');
                     break;
                 case 'Zamora':
-                    $('#parroquia').html('<option value="Zamora">Zamora</option>'+
+                    $('.parroquia').html('<option value="Zamora">Zamora</option>'+
                                         '<option value="Magdaleno">Magdaleno</option>'+
                                         '<option value="San Francisco de Asís">San Francisco de Asís</option>'+
                                         '<option value="Valles de Tucutunemo">Valles de Tucutunemo</option>'+
@@ -917,9 +1008,98 @@
             }
 
         });  
+
+        //////////////CONTENT: REGISTRO DE CANTERA
+        $(document).on('change','#select_cantera', function(e) {
+            var select = $(this).val();
+
+            if (select == 'otro') {
+                var sujeto = $('#otro').attr('sujeto');
+                $('#id_sujeto_cantera').val(sujeto);
+
+                $('#content_add_cantera').removeClass('d-none');
+
+                $(".razon_dest").attr('disabled', true);
+                $(".ci_dest").attr('disabled', true);
+                $(".tlf_dest").attr('disabled', true);
+                $(".municipio_dest").attr('disabled', true);
+                $(".parroquia_dest").attr('disabled', true);
+                $(".destino").attr('disabled', true);
+                $(".mineral").attr('disabled', true);
+                $(".unidad_medida").attr('disabled', true);
+                $(".cantidad").attr('disabled', true);
+                $(".saldo_anterior").attr('disabled', true);
+                $(".cantidad_despachada").attr('disabled', true);
+                $(".saldo_restante").attr('disabled', true);
+                $(".modelo").attr('disabled', true);
+                $(".nombre_conductor").attr('disabled', true);
+                $(".tlf_conductor").attr('disabled', true);
+                $(".placa").attr('disabled', true);
+                $(".ci_conductor").attr('disabled', true);
+                $(".capacidad_vehiculo").attr('disabled', true);
+                $(".hora_salida").attr('disabled', true);
+                $(".anulada").attr('disabled', true);
+                $(".motivo_anulada").attr('disabled', true);
+
+            }else{
+                $('#content_add_cantera').addClass('d-none');
+
+                $(".razon_dest").attr('disabled', false);
+                $(".ci_dest").attr('disabled', false);
+                $(".tlf_dest").attr('disabled', false);
+                $(".municipio_dest").attr('disabled', false);
+                $(".parroquia_dest").attr('disabled', false);
+                $(".destino").attr('disabled', false);
+                $(".mineral").attr('disabled', false);
+                $(".unidad_medida").attr('disabled', false);
+                $(".cantidad").attr('disabled', false);
+                $(".saldo_anterior").attr('disabled', false);
+                $(".cantidad_despachada").attr('disabled', false);
+                $(".saldo_restante").attr('disabled', false);
+                $(".modelo").attr('disabled', false);
+                $(".nombre_conductor").attr('disabled', false);
+                $(".tlf_conductor").attr('disabled', false);
+                $(".placa").attr('disabled', false);
+                $(".ci_conductor").attr('disabled', false);
+                $(".capacidad_vehiculo").attr('disabled', false);
+                $(".hora_salida").attr('disabled', false);
+                $(".anulada").attr('disabled', false);
+                $(".motivo_anulada").attr('disabled', false);
+            }
+        });
+
+        $(document).on('click','#add_cantera', function(e) { 
+            e.preventDefault(e); 
+            var sujeto = $('#id_sujeto_cantera').val('');
+            var nombre = $('#nombre_nc').val('');
+            var direccion = $('#direccion_nc').val('');
+            var municipio = $('#municipio_nc').val('');
+            var parroquia = $('#parroquia_nc').val('');
+
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                type: 'POST',
+                url: '{{route("asignar.add_cantera") }}',
+                data: {sujeto:sujeto,nombre:nombre,direccion:direccion,municipio:municipio,parroquia:parroquia},
+                success: function(response) {              
+                    console.log(response);
+                    if (response.success) {
+                        $("#select_cantera").prepend("<option value='"+response.cantera+"'>"+response.nombre+"</option>");
+                    }else{
+                        alert("ERROR AL GENERAR EL REGISTRO");
+                    }
+                },
+                error: function() {
+                }
+            });
+        });
+
          
 
     });
+
+    
+
 
     ////////////////////ASIGNACIÓN CONTRIBUYENTE REGISTRADO 
     function asignarGuiasRegister(){
@@ -936,6 +1116,9 @@
                 success: function(response){
                     // console.log(response);
                     var asignacion = response.asignacion;
+                    var sujeto = response.sujeto;
+                    var tipo = response.tipo_sujeto;
+
                     $('#modal_asignar_sujeto_registrado').modal('hide');
                     $('#modal_guia_asignacion').modal('show');
 
@@ -944,7 +1127,7 @@
                         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         type: 'POST',
                         url: '{{route("asignar.sujeto") }}',
-                        data: {asignacion:asignacion},
+                        data: {asignacion:asignacion,sujeto:sujeto,tipo:tipo},
                         success: function(response){
                             console.log(response);
                             

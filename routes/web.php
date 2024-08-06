@@ -222,6 +222,7 @@ Route::post('/asignar/sujeto', [App\Http\Controllers\AsignarController::class, '
 Route::post('/asignar/asignar_notuser', [App\Http\Controllers\AsignarController::class, 'asignar_notuser'])->name('asignar.asignar_notuser');
 Route::post('/asignar/asignar_user', [App\Http\Controllers\AsignarController::class, 'asignar_user'])->name('asignar.asignar_user');
 Route::post('/asignar/guias', [App\Http\Controllers\AsignarController::class, 'guias'])->name('asignar.guias');
+Route::post('/asignar/add_cantera', [App\Http\Controllers\AsignarController::class, 'add_cantera'])->name('asignar.add_cantera');
 
 
 // Route::post('/asignar/canteras', [App\Http\Controllers\AsignarController::class, 'canteras'])->name('asignar.canteras');
