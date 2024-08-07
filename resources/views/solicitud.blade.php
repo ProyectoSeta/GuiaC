@@ -57,18 +57,16 @@
                                     @case('6')  <!-- negada -->
                                         <span role="button" class="badge text-bg-danger p-2 py-1 d-flex justify-content-center align-items-center solicitud_denegada" style="font-size: 12px;" data-bs-toggle="modal" data-bs-target="#modal_info_denegada" id_solicitud='{{ $solicitud->id_solicitud }}'><i class='bx bx-x-circle fs-6 me-2'></i>Negada</span>
                                     @break
-                                    @case('17')  <!-- por enviar a imprenta -->
+                                    @case('17')  <!-- en proceso -->
                                         <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
                                     @break
-                                    @case('18')  <!-- en imprenta -->
-                                        <span class="badge text-bg-primary p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-history fs-6 me-2'></i>En proceso</span>
+                                    @case('18')  <!-- por retirar -->
+                                    <span class="badge text-bg-warning p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
                                     @break
-                                    @case('19') <!-- por retirar -->
-                                        <span class="badge text-bg-warning p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;background-color: #ef7f00;"><i class='bx bx-error-circle fs-6 me-2'></i>Retirar Talonario(s)</span>
+                                    @case('19') <!-- entregado -->
+                                    <span class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
                                     @break
-                                    @case('20') <!-- retirado -->
-                                        <span class="badge text-bg-success p-2 py-1 d-flex justify-content-center align-items-center" style="font-size: 12px;"><i class='bx bx-check-circle fs-6 me-2'></i>Retirado</span>
-                                    @break
+                                    
                     
                                 @endswitch                    
                             </td>

@@ -1016,24 +1016,29 @@ class AsignarController extends Controller
 
 
     public function add_cantera(Request $request){
-        $id_sujeto = $request->post('id_sujeto_cantera');
+        $id_sujeto = $request->post('sujeto');
         $nombre = $request->post('nombre');
         $direccion = $request->post('direccion');
         $municipio = $request->post('municipio');
         $parroquia = $request->post('parroquia');
-
-        $insert = DB::table('canteras_notusers')->insert([
-                        'id_sujeto_notuser' => $id_sujeto,
-                        'nombre' => $nombre,
-                        'municipio_cantera' => $municipio, 
-                        'parroquia_cantera' => $parroquia,
-                        'lugar_aprovechamiento' => $direccion]);
         
-        if ($insert) {
-            $id_cantera = DB::table('canteras_notusers')->max('id_cantera_notuser');
-            return response()->json(['success' => true, 'cantera' => $id_cantera, 'nombre' => $nombre]);
+        if (empty($nombre) || empty($direccion) || empty($municipio) || empty($parroquia)) {
+            return response()->json(['success' => false,'i' => 'empty']);
         }else{
-            return response()->json(['success' => false]);
+            $insert = DB::table('canteras_notusers')->insert(['id_sujeto_notuser' => $id_sujeto,
+                                                            'nombre' => $nombre, 
+                                                            'municipio_cantera' => $municipio,
+                                                            'parroquia_cantera' => $parroquia,
+                                                            'lugar_aprovechamiento' => $direccion
+                                                        ]);
+
+            
+            if ($insert) {
+                $id_cantera = DB::table('canteras_notusers')->max('id_cantera_notuser');
+                return response()->json(['success' => true, 'cantera' => $id_cantera, 'nombre' => $nombre]);
+            }else{
+                return response()->json(['success' => false, 'i' => 'error']);
+            }
         }
 
     }

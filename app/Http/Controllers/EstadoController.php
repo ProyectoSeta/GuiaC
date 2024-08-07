@@ -42,11 +42,11 @@ class EstadoController extends Controller
                 array_push($t_enviar, $a);
             }else{
                 //////////////////regular
-                $detalle = DB::table('detalle_talonarios')
-                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                            ->select('detalle_talonarios.id_sujeto','detalle_talonarios.clase', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-                            ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
+                $detalle = DB::table('detalle_talonario_regulares')
+                            ->join('sujeto_pasivos', 'detalle_talonario_regulares.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'detalle_talonario_regulares.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('detalle_talonario_regulares.id_sujeto', 'detalle_talonario_regulares.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('detalle_talonario_regulares.id_talonario','=',$c->id_talonario)->first();
                 if ($detalle) {
                     $array = array(
                             'id_talonario' => $c->id_talonario,
@@ -95,11 +95,11 @@ class EstadoController extends Controller
                 $a = (object) $array;
                 array_push($t_enviados, $a);
             }else{
-                $detalle = DB::table('detalle_talonarios')
-                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                            ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-                            ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
+                $detalle = DB::table('detalle_talonario_regulares')
+                            ->join('sujeto_pasivos', 'detalle_talonario_regulares.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'detalle_talonario_regulares.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('detalle_talonario_regulares.id_sujeto', 'detalle_talonario_regulares.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('detalle_talonario_regulares.id_talonario','=',$c->id_talonario)->first();
                 if ($detalle) {
                     $array = array(
                         'id_talonario' => $c->id_talonario,
@@ -125,7 +125,7 @@ class EstadoController extends Controller
 
 
         ///////////////////////////////////////////////////////////////////////TALONARIOS RECIBIDOS
-        $consulta_recibidos = DB::table('talonarios')->where('estado','=',22)->get();
+        $consulta_recibidos = DB::table('talonarios')->where('estado','=',22)->where('asignacion_talonario','=',26)->get();
         foreach ($consulta_recibidos as $c) {
             if ($c->clase == 6){
                 /////////////////reserva
@@ -149,11 +149,11 @@ class EstadoController extends Controller
                 $a = (object) $array;
                 array_push($t_recibidos, $a);
             }else{
-                $detalle = DB::table('detalle_talonarios')
-                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                            ->select('detalle_talonarios.id_sujeto', 'detalle_talonarios.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
-                            ->where('detalle_talonarios.id_talonario','=',$c->id_talonario)->first();
+                $detalle = DB::table('detalle_talonario_regulares')
+                            ->join('sujeto_pasivos', 'detalle_talonario_regulares.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                            ->join('canteras', 'detalle_talonario_regulares.id_cantera', '=', 'canteras.id_cantera')
+                            ->select('detalle_talonario_regulares.id_sujeto', 'detalle_talonario_regulares.id_cantera','sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre')
+                            ->where('detalle_talonario_regulares.id_talonario','=',$c->id_talonario)->first();
                 if ($detalle) {
                     $array = array(
                         'id_talonario' => $c->id_talonario,
@@ -576,6 +576,19 @@ class EstadoController extends Controller
                 $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 22, 'fecha_recibido_imprenta' => $hoy]);
                 if ($update) {
                     $ids_talonarios .= $talonario.'-';
+
+                    $solicitud = DB::table('talonarios')->select('id_solicitud')->where('id_talonario','=',$talonario)->first();
+                    $id_solicitud = $solicitud->id_solicitud;
+
+                    $consulta_solicitud = DB::table('detalle_solicituds')->select('cantidad')->where('id_solicitud','=',$id_solicitud)->first();
+                    $cantidad_solicitada = $consulta_solicitud->cantidad;
+
+                    $consulta_talonarios = DB::table('talonarios')->selectRaw("count(*) as total")->where('estado','=',22)->where('id_solicitud','=',$id_solicitud)->first();
+                    $talonarios_recibidos = $consulta_talonarios->total;
+
+                    if ($talonarios_recibidos >= $cantidad_solicitada) {
+                        $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $id_solicitud)->update(['estado' => 18]);
+                    }
                 }else{
                     return response()->json(['success' => false]);
                 }
@@ -584,6 +597,8 @@ class EstadoController extends Controller
             }
            
         } 
+
+
         $user = auth()->id();
         $accion = 'ACTUALIZACION DE ESTADO (RECIBIDOS), ID TALONARIOS: '.$ids_talonarios;
         $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);
@@ -661,16 +676,31 @@ class EstadoController extends Controller
                 if ($update) {
                     $ids_talonarios .= $talonario.'-';
 
-                    $comp = true;
-                    $comprobar = DB::table('talonarios')->select('estado')->where('id_solicitud', '=', $idSolicitud)->get();
-                    foreach ($comprobar as $c) {
-                        if ($c->estado != 23) {
-                            $comp = false;
-                        }
+
+                    $solicitud = DB::table('talonarios')->select('id_solicitud')->where('id_talonario','=',$talonario)->first();
+                    $id_solicitud = $solicitud->id_solicitud;
+
+                    $consulta_solicitud = DB::table('detalle_solicituds')->select('cantidad')->where('id_solicitud','=',$id_solicitud)->first();
+                    $cantidad_solicitada = $consulta_solicitud->cantidad;
+
+                    $consulta_talonarios = DB::table('talonarios')->selectRaw("count(*) as total")->where('estado','=',22)->where('id_solicitud','=',$id_solicitud)->first();
+                    $talonarios_recibidos = $consulta_talonarios->total;
+
+                    if ($talonarios_recibidos >= $cantidad_solicitada) {
+                        $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $id_solicitud)->update(['estado' => 18]);
                     }
-                    if ($comp ==  true) {
-                        $update_sol = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 19]);
-                    }
+                    
+
+                    // $comp = true;
+                    // $comprobar = DB::table('talonarios')->select('estado')->where('id_solicitud', '=', $idSolicitud)->get();
+                    // foreach ($comprobar as $c) {
+                    //     if ($c->estado != 23) {
+                    //         $comp = false;
+                    //     }
+                    // }
+                    // if ($comp ==  true) {
+                    //     $update_sol = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 19]);
+                    // }
                 }else{
                     return response()->json(['success' => false]);
                 }

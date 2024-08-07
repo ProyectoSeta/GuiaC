@@ -376,7 +376,7 @@
                                             <div class="col-9">
                                                 <select class="form-select form-select-sm" id="select_cantera" name="cantera" required>
                                                     <option sujeto="1" value="1">1</option>
-                                                    <option id="otro" sujeto="5" value="otro">Otro</option>
+                                                    <option id="otro" sujeto="1" value="otro">Otro</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -419,7 +419,7 @@
                                                         <label for="municipio_cn" class="col-form-label">Municipio: <span style="color:red">*</span></label>
                                                     </div>
                                                     <div class="col-8">
-                                                        <select class="form-select form-select-sm municipio" aria-label="Default select example" id="municipio_cn" name="municipio">
+                                                        <select class="form-select form-select-sm municipio" aria-label="Default select example" id="municipio_nc" name="municipio">
                                                             <option value="Bolívar">Bolívar</option>
                                                             <option value="Camatagua">Camatagua</option>
                                                             <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
@@ -457,10 +457,11 @@
                                         </div>
 
                                         <input type="hidden" id="id_sujeto_cantera" name="id_sujeto_cantera" value="" required>
+                                        <p class="text-muted text-end me-4"><span style="color:red">*</span> Campos requeridos.</p> 
 
                                         <div class="d-flex justify-content-center mt-3 mb-3">
                                             <button type="button" id="btn_cancel_add_cantera" class="btn btn-secondary btn-sm me-3">Cancelar</button>
-                                            <button type="button" id="add_cantera" class="btn btn-success btn-sm">Guardar</button>
+                                            <a id="add_cantera" class="btn btn-success btn-sm">Guardar</a>
                                         </div>
                                     <!-- </form> -->
                                 </div>
@@ -1068,13 +1069,23 @@
             }
         });
 
+        ////////////////////CANCELAR REGISTRO NUEVA CANTERA (NOTUSER)
+        $(document).on('click','#btn_cancel_add_cantera', function(e) { 
+            $('#content_add_cantera').addClass('d-none');
+            var first = $("#select_cantera").first().val();
+            console.log(first);
+            $("#select_cantera").first().attr("selected");
+
+        });
+
+        ////////////////////REGISTRAR NUEVA CANTERA (NOTUSER)
         $(document).on('click','#add_cantera', function(e) { 
             e.preventDefault(e); 
-            var sujeto = $('#id_sujeto_cantera').val('');
-            var nombre = $('#nombre_nc').val('');
-            var direccion = $('#direccion_nc').val('');
-            var municipio = $('#municipio_nc').val('');
-            var parroquia = $('#parroquia_nc').val('');
+            var sujeto = $('#id_sujeto_cantera').val();
+            var nombre = $('#nombre_nc').val();
+            var direccion = $('#direccion_nc').val();
+            var municipio = $('#municipio_nc').val();
+            var parroquia = $('#parroquia_nc').val();
 
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
@@ -1084,9 +1095,40 @@
                 success: function(response) {              
                     console.log(response);
                     if (response.success) {
-                        $("#select_cantera").prepend("<option value='"+response.cantera+"'>"+response.nombre+"</option>");
+                        $("#select_cantera").prepend("<option value='"+response.cantera+"' selected>"+response.nombre+"</option>");
+
+                        alert('¡Registro Exitoso!');
+
+                        $('#content_add_cantera').addClass('d-none');
+
+                        $(".razon_dest").attr('disabled', false);
+                        $(".ci_dest").attr('disabled', false);
+                        $(".tlf_dest").attr('disabled', false);
+                        $(".municipio_dest").attr('disabled', false);
+                        $(".parroquia_dest").attr('disabled', false);
+                        $(".destino").attr('disabled', false);
+                        $(".mineral").attr('disabled', false);
+                        $(".unidad_medida").attr('disabled', false);
+                        $(".cantidad").attr('disabled', false);
+                        $(".saldo_anterior").attr('disabled', false);
+                        $(".cantidad_despachada").attr('disabled', false);
+                        $(".saldo_restante").attr('disabled', false);
+                        $(".modelo").attr('disabled', false);
+                        $(".nombre_conductor").attr('disabled', false);
+                        $(".tlf_conductor").attr('disabled', false);
+                        $(".placa").attr('disabled', false);
+                        $(".ci_conductor").attr('disabled', false);
+                        $(".capacidad_vehiculo").attr('disabled', false);
+                        $(".hora_salida").attr('disabled', false);
+                        $(".anulada").attr('disabled', false);
+                        $(".motivo_anulada").attr('disabled', false);
+
                     }else{
-                        alert("ERROR AL GENERAR EL REGISTRO");
+                        if (response.i == 'empty') {
+                            alert("Debe llenar todos los campos requeridos.");
+                        }else{
+                            alert("ERROR AL GENERAR EL REGISTRO");
+                        }
                     }
                 },
                 error: function() {

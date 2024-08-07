@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('canteras_notusers', function (Blueprint $table) {
             $table->increments('id_cantera_notuser');
             $table->integer('id_sujeto_notuser')->unsigned();
-            $table->foreign('id_sujeto_notuser')->references('id_sujeto')->on('sujeto_pasivos')->onDelete('cascade');
+            $table->foreign('id_sujeto_notuser')->references('id_sujeto_notuser')->on('sujeto_notusers')->onDelete('cascade');
             $table->string('nombre');
             $table->string('municipio_cantera');
             $table->string('parroquia_cantera');
