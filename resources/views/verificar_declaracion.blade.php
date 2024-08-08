@@ -90,17 +90,11 @@
     <!-- ********* VERIFICACIÓN DE DECLARACIONES******** -->
     <div class="modal" id="modal_verificar_declaracion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header p-2 pt-3 d-flex justify-content-center">
-                    <!-- <i class='bx bx-error-circle bx-tada fs-2' style='color:#e40307' ></i> -->
-                    <h1 class="modal-title fs-5" style="color: #0072ff">Verificar Declaración</h1>
+            <div class="modal-content" id="content_verificar_declaracion">
+                <div class="my-5 py-5 d-flex flex-column text-center">
+                    <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
+                    <span class="text-muted">Cargando, por favor espere un momento...</span>
                 </div>
-                <div class="modal-body" style="font-size:15px;" id="content_verificar_declaracion">
-                    <div class="my-5 py-5 d-flex flex-column text-center">
-                        <i class='bx bx-loader-alt bx-spin fs-1 mb-3' style='color:#0077e2'  ></i>
-                        <span class="text-muted">Cargando, por favor espere un momento...</span>
-                    </div>
-                </div>  <!-- cierra modal-body -->
             </div>  <!-- cierra modal-content -->
         </div>  <!-- cierra modal-dialog -->
     </div>

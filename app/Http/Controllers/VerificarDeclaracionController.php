@@ -50,58 +50,64 @@ class VerificarDeclaracionController extends Controller
                 $referencia = '<a target="_blank" class="ver_pago" href="'.asset($declaracion->referencia).'">Ver</a>';
             }
 
-            $html = '<h6 class="text-muted text-center" style="font-size:14px;">Datos de la Declaración</h6>
-            <div class="d-flex justify-content-center px-5 mx-5">
-                <table class="table">
-                    <tr>
-                        <th>Contribuyente</th>
-                        <td class="d-flex flex-column">
-                            <span class="fw-bold">'.$declaracion->razon_social.'</span>
-                            <span class="text-muted">'.$declaracion->rif_condicion.'-'.$declaracion->rif_nro.'</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Período</th>
-                        <td class="fw-bold text-success">'.$mes_libro.' '.$declaracion->year_declarado.'</td>
-                    </tr>
-                    <tr>
-                        <th>Tipo de Declaración</th>
-                        <td class="fst-italic text-secondary">'.$declaracion->nombre_tipo.'</td>
-                    </tr>
-                    <tr>
-                        <th>Fecha de emisión</th>
-                        <td>'.$declaracion->fecha.'</td>
-                    </tr>
-                    <tr>
-                        <th>Total de Guías Emitidas</th>
-                        <td class="fw-bold">'.$declaracion->nro_guias_declaradas.' und.</td>
-                    </tr>
-                    <tr>
-                        <th>UCD del día</th>
-                        <td>'.$declaracion->valor.' ('.$declaracion->moneda.')</td>
-                    </tr>
-                    <tr>
-                        <th>Total UCD</th>
-                        <td>'.$declaracion->total_ucd.' UCD</td>
-                    </tr>
-                    <tr class="table-warning">
-                        <th>Monto Total</th>
-                        <td class="fw-bold">'.$format_monto.' Bs.</td>
-                    </tr>
-                    <tr>
-                        <th>Referencia</th>
-                        <td>
-                            '.$referencia.'
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            $html = '<div class="modal-header p-2 pt-3 d-flex justify-content-center flex-column">
+                        <i class="bx bx-help-circle fs-2 text-muted"></i>
+                        <h1 class="modal-title fs-5 fw-bold text-navy">Verificar Declaración</h1>
+                    </div>
+                    <div class="modal-body" style="font-size:15px;">
+                        <h6 class="text-muted text-center" style="font-size:14px;">Datos de la Declaración</h6>
+                        <div class="d-flex justify-content-center px-5 mx-5">
+                            <table class="table">
+                                <tr>
+                                    <th>Contribuyente</th>
+                                    <td class="d-flex flex-column">
+                                        <span class="fw-bold">'.$declaracion->razon_social.'</span>
+                                        <span class="text-muted">'.$declaracion->rif_condicion.'-'.$declaracion->rif_nro.'</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Período</th>
+                                    <td class="fw-bold text-success">'.$mes_libro.' '.$declaracion->year_declarado.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Tipo de Declaración</th>
+                                    <td class="fst-italic text-secondary">'.$declaracion->nombre_tipo.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de emisión</th>
+                                    <td>'.$declaracion->fecha.'</td>
+                                </tr>
+                                <tr>
+                                    <th>Total de Guías Emitidas</th>
+                                    <td class="fw-bold">'.$declaracion->nro_guias_declaradas.' und.</td>
+                                </tr>
+                                <tr>
+                                    <th>UCD del día</th>
+                                    <td>'.$declaracion->valor.' ('.$declaracion->moneda.')</td>
+                                </tr>
+                                <tr>
+                                    <th>Total UCD</th>
+                                    <td>'.$declaracion->total_ucd.' UCD</td>
+                                </tr>
+                                <tr class="table-warning">
+                                    <th>Monto Total</th>
+                                    <td class="fw-bold">'.$format_monto.' Bs.</td>
+                                </tr>
+                                <tr>
+                                    <th>Referencia</th>
+                                    <td>
+                                        '.$referencia.'
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
-            <div class="d-flex justify-content-center my-3">
-                <button type="button" class="btn btn-success verificar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Aprobar</button>
-                <button type="button" class="btn btn-danger denegar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Denegar</button>
-                <button type="button" class="btn btn-secondary btn-sm " data-bs-dismiss="modal">Cancelar</button>
-            </div>';
+                        <div class="d-flex justify-content-center my-3">
+                            <button type="button" class="btn btn-success verificar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Aprobar</button>
+                            <button type="button" class="btn btn-danger denegar_declaracion btn-sm me-3" id_declaracion="'.$declaracion->id_declaracion.'">Denegar</button>
+                            <button type="button" class="btn btn-secondary btn-sm " data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div> ';
 
             return response($html);
         }else{

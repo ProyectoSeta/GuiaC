@@ -19,10 +19,10 @@
         
         <ul class="nav nav-tabs d-flex justify-content-center" style="font-size:14px">
             <li class="nav-item">
-                <a class="nav-link active" id="list-sp-list" data-bs-toggle="list" href="#list-sp" role="tab" aria-controls="list-sp">Contribuyentes</a>
+                <a class="nav-link active" id="list-sp-list" data-bs-toggle="list" href="#list-sp" role="tab" aria-controls="list-sp">Solicitados</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Administrativo</a>
+                <a class="nav-link" id="list-admin-list" data-bs-toggle="list" href="#list-admin" role="tab" aria-controls="list-admin">Reserva</a>
             </li>
         </ul>
 
@@ -38,7 +38,7 @@
                             <th>Nro. Solicitud</th>
                             <th>Correlativo</th>
                             <th>Reportado</th>
-                            <th>QR</th>
+                            <!-- <th>QR</th> -->
                             <th>R.I.F.</th>
                             <th>Empresa</th>
                             <th>Mensaje</th>
@@ -70,9 +70,9 @@
                                             <div class="progress-bar" style="width: {{$talonario->reportado}}%"></div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <a href="#" class="qr" role="button" ruta='{{ $talonario->qr }}' talonario="{{$talonario->id_talonario}}" data-bs-toggle="modal" data-bs-target="#modal_ver_qr">Ver</a>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <a class="info_sujeto" role="button" id_sujeto='{{ $talonario->id_sujeto }}' data-bs-toggle="modal" data-bs-target="#modal_info_sujeto">{{$talonario->rif_condicion}}-{{$talonario->rif_nro}}</a>
                                     </td>

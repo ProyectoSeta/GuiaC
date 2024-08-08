@@ -977,16 +977,8 @@ class AsignarController extends Controller
         $li = '';
         $tab_pane = '';
 
-        $consulta = DB::table('asignacion_reservas')->select('cantidad_guias')->where('id_asignacion','=',$id_asignacion)->first();
-        if ($consulta) {
-            $cantidad = $consulta->cantidad_guias;
 
-            // for ($i=1; $i <= $cantidad ; $i++) { 
-            //     $ul;
-            // }
-        }else{
-            return response()->json(['success' => false]);
-        }
+
 
         $correlativo = DB::table('detalle_talonario_reservas')->where('id_asignacion_reserva','=',$id_asignacion)->get();
         if ($correlativo) {
@@ -998,14 +990,539 @@ class AsignarController extends Controller
                 for ($i=$desde; $i <= $hasta ; $i++) { 
                     $contador++;
 
+                    /////////////////////////////////////////// CANTERAS
+                    $opction_canteras = '';
+                    if ($tipo_sujeto == 'user') {
+                        $consulta_canteras =  DB::table('canteras')->select('id_cantera','nombre')
+                                                                    ->where('id_sujeto','=',$id_sujeto)
+                                                                    ->where('status','=','Verificada')->get();
+                        foreach ($canteras as $cantera) {
+                            $opction_canteras .= '<option  value="'.$cantera->id_cantera.'">'.$cantera->nombre.'</option>';
+                        };
+                        $html_canteras = '<div class="pt-4 px-3 d-flex ">
+                                            <!-- cantera -->
+                                            <div class="row g-3 align-items-center mb-2 w-50">
+                                                <div class="col-3">
+                                                    <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <select class="form-select form-select-sm select_cantera" id="select_cantera_'.$i.'" name="cantera_'.$i.'" required>
+                                                        '.$opction_canteras.'
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>';
+
+                    }else{
+                        $count_canteras =  DB::table('canteras_notusers')->selectRaw("count(*) as total")->where('id_sujeto_notuser','=',$id_sujeto)->first();
+                        if ($count_canteras->total != 0) {
+                            $consulta_canteras =  DB::table('canteras_notusers')->select('id_cantera_notuser','nombre')
+                                                                    ->where('id_sujeto_notuser','=',$id_sujeto)->get();
+
+                            $opction_canteras .= '<option  value="'.$cantera->id_cantera_notuser.'">'.$cantera->nombre.'</option>';
+                            $html_canteras = '<div class="pt-4 px-3 d-flex ">
+                                                <!-- cantera -->
+                                                <div class="row g-3 align-items-center mb-2 w-50">
+                                                    <div class="col-3">
+                                                        <label for="" class="col-form-label">Cantera: <span style="color:red">*</span></label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <select class="form-select form-select-sm select_cantera" id="select_cantera_'.$i.'" name="cantera_'.$i.'" required>
+                                                            '.$opction_canteras.'
+                                                            <option id="otro" sujeto="1" value="otro">Otro</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-center mx-5 px-5 py-3 my-4 flex-column bg-light rounded d-none" id="content_add_cantera">
+                                                <p class="fw-bold text-navy text-center mb-2 fs-6">Regitro de Cantera o Desazolve</p>
+                                                <p class=""><span style="color:red">*</span>NOTA: Es necesario llenar el registro de la nueva Cantera o Desazolve para continuar con el proceso.</p>
+                                                
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="row g-3 mb-2">
+                                                                <div class="col-4">
+                                                                    <label for="nombre_nc" class="col-form-label">Nombre: <span style="color:red">*</span></label>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <input type="text" id="nombre_nc" class="form-control form-control-sm" name="nombre" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row g-3 mb-2">
+                                                                <div class="col-4">
+                                                                    <label for="direccion_nc" class="col-form-label">Lugar de aprovechamiento: <span style="color:red">*</span></label>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <input type="text" id="direccion_nc" class="form-control form-control-sm" name="direccion" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="row g-3 align-items-center mb-2">
+                                                                <div class="col-4">
+                                                                    <label for="municipio_nc" class="col-form-label">Municipio: <span style="color:red">*</span></label>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <select class="form-select form-select-sm municipio" aria-label="Default select example" id="municipio_nc" name="municipio">
+                                                                        <option value="Bolívar">Bolívar</option>
+                                                                        <option value="Camatagua">Camatagua</option>
+                                                                        <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                                                        <option value="Girardot">Girardot</option>
+                                                                        <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                                                        <option value="José Félix Ribas">José Félix Ribas</option>
+                                                                        <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                                                        <option value="Libertador">Libertador</option>
+                                                                        <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                                                        <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                                                        <option value="San Casimiro">San Casimiro</option>
+                                                                        <option value="San Sebastián">San Sebastián</option>
+                                                                        <option value="Santiago Mariño">Santiago Mariño</option>
+                                                                        <option value="Santos Michelena">Santos Michelena</option>
+                                                                        <option value="Sucre">Sucre</option>
+                                                                        <option value="Tovar">Tovar</option>
+                                                                        <option value="Urdaneta">Urdaneta</option>
+                                                                        <option value="Zamora">Zamora </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="row g-3 align-items-center mb-2">
+                                                                <div class="col-4">
+                                                                    <label for="parroquia_nc" class="col-form-label">Parroquia: <span style="color:red">*</span></label>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <select class="form-select form-select-sm parroquia" aria-label="Default select example" id="parroquia_nc" name="parroquia">
+                                                                        <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <input type="hidden" id="id_sujeto_cantera" name="id_sujeto_cantera" value="" required>
+                                                    <p class="text-muted text-end me-4"><span style="color:red">*</span> Campos requeridos.</p> 
+
+                                                    <div class="d-flex justify-content-center mt-3 mb-3">
+                                                        <button type="button" id="btn_cancel_add_cantera" class="btn btn-secondary btn-sm me-3">Cancelar</button>
+                                                        <a id="add_cantera" class="btn btn-success btn-sm" guia="'.$i.'">Guardar</a>
+                                                    </div>
+                                                
+                                            </div>';
+                        }else{
+                            $html_canteras = '<p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Cantero o Desazolve</p>
+                                    <div class="row">
+                                        <div class="col-lg-6 px-4">
+                                            <div class="row g-3 mb-2">
+                                                <div class="col-4">
+                                                    <label for="nombre_nc" class="col-form-label">Nombre: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="nombre_nc" class="form-control form-control-sm" name="nombre_nc" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 px-4">
+                                            <div class="row g-3 mb-2">
+                                                <div class="col-4">
+                                                    <label for="direccion_nc" class="col-form-label">Lugar de aprovechamiento: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="direccion_nc" class="form-control form-control-sm" name="direccion_nc" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6 px-4">
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="municipio_nc" class="col-form-label">Municipio: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select class="form-select form-select-sm municipio" aria-label="Default select example" id="municipio_nc" name="municipio_nc">
+                                                        <option value="Bolívar">Bolívar</option>
+                                                        <option value="Camatagua">Camatagua</option>
+                                                        <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                                        <option value="Girardot">Girardot</option>
+                                                        <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                                        <option value="José Félix Ribas">José Félix Ribas</option>
+                                                        <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                                        <option value="Libertador">Libertador</option>
+                                                        <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                                        <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                                        <option value="San Casimiro">San Casimiro</option>
+                                                        <option value="San Sebastián">San Sebastián</option>
+                                                        <option value="Santiago Mariño">Santiago Mariño</option>
+                                                        <option value="Santos Michelena">Santos Michelena</option>
+                                                        <option value="Sucre">Sucre</option>
+                                                        <option value="Tovar">Tovar</option>
+                                                        <option value="Urdaneta">Urdaneta</option>
+                                                        <option value="Zamora">Zamora </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 px-4">
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="parroquia_nc" class="col-form-label">Parroquia: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select class="form-select form-select-sm parroquia" aria-label="Default select example" id="parroquia_nc" name="parroquia_nc">
+                                                        <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>';
+                        }
+                        
+                    }
+                    
+                    ///////////////////////////////////////////////////
+
+                    
+
                     $li .= '<li class="nav-item" role="presentation">
                                 <button class="nav-link active d-flex align-items-center" id="'.$i.'-tab" data-bs-toggle="pill" data-bs-target="#g'.$i.'-tab-pane" type="button" role="tab" aria-controls="'.$i.'-tab-pane" aria-selected="true">
                                     <i class="bx bx-tag bx-flip-horizontal me-2 fs-6" ></i>
                                     Guía '.$contador.'
                                 </button>
                             </li>';
+
+                    $tab_pane .= '<div class="tab-pane fade show active" id="g'.$i.'-tab-pane" role="tabpanel" aria-labelledby="'.$i.'-tab" tabindex="0">
+                                    <div class="row d-flex justify-content-between  px-3">
+                                        <div class="col-sm-5">
+                                        </div>
+
+                                        <div class="col-sm-4 text-end fs-5 fw-bold text-muted">
+                                            <span class="text-danger">Nro° Guía </span><span id="nro_guia_view">'.$i.'</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <input type="hidden" id="nro_guia_'.$i.'" name="nro_guia_'.$i.'" value="'.$i.'" required> 
+
+                                    '.$html_canteras.'
+
+                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Destinatario</p>
+
+                                    <div class="row">
+                                        <div class="col-sm-4 px-4">
+                                            <!-- razon social -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="razon" class="col-form-label">Razon social: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="razon" class="form-control form-control-sm razon_dest" name="razon_dest_'.$i.'" placeholder="Ejemplo: Razon Social, C.A." required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 px-4">
+                                            <!-- ci del destinatario -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-3">
+                                                    <label for="ci" class="col-form-label">R.I.F: </label>
+                                                </div>
+                                                <div class="col-9">
+                                                    <input type="text" id="ci" class="form-control form-control-sm ci_dest" name="ci_dest_'.$i.'" placeholder="Ejemplo: J00000000"  required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 px-4">
+                                            <!-- telefono destinatario -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="tlf_dest" class="col-form-label">Telefono: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="tlf_dest" class="form-control form-control-sm tlf_dest" name="tlf_dest_'.$i.'" placeholder="Ejemplo: 0414-0000000"  required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-4 px-4">
+                                            <!-- destino -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="municipio" class="col-form-label">Municipio: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select class="form-select form-select-sm municipio_dest" aria-label="Default select example" id="municipio" name="municipio_destino_'.$i.'" required >
+                                                        <option value="Bolívar">Bolívar</option>
+                                                        <option value="Camatagua">Camatagua</option>
+                                                        <option value="Francisco Linares Alcántara">Francisco Linares Alcántara</option>
+                                                        <option value="Girardot">Girardot</option>
+                                                        <option value="José Ángel Lamas">José Ángel Lamas</option>
+                                                        <option value="José Félix Ribas">José Félix Ribas</option>
+                                                        <option value="José Rafael Revenga">José Rafael Revenga</option>
+                                                        <option value="Libertador">Libertador</option>
+                                                        <option value="Mario Briceño Iragorry">Mario Briceño Iragorry</option>
+                                                        <option value="Ocumare de la Costa de Oro">Ocumare de la Costa de Oro</option>
+                                                        <option value="San Casimiro">San Casimiro</option>
+                                                        <option value="San Sebastián">San Sebastián</option>
+                                                        <option value="Santiago Mariño">Santiago Mariño</option>
+                                                        <option value="Santos Michelena">Santos Michelena</option>
+                                                        <option value="Sucre">Sucre</option>
+                                                        <option value="Tovar">Tovar</option>
+                                                        <option value="Urdaneta">Urdaneta</option>
+                                                        <option value="Zamora">Zamora </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 px-4">
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="parroquia" class="col-form-label">Parroquia:</label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select class="form-select form-select-sm parroquia_dest" aria-label="Default select example" id="parroquia" name="parroquia_destino_'.$i.'" required>
+                                                        <option value="Bolívar (San Mateo)">Bolívar (San Mateo)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 px-4">
+                                            <div class="row align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="destino" class="col-form-label">Lugar de destino: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="destino" class="form-control form-control-sm destino" name="destino_'.$i.'" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de la Carga</p>
+
+                                    <div class="row px-3 d-flex align-items-center">
+                                        <div class="col-sm-6">
+                                            <!-- mineral no metalico -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="mineral" class="col-form-label">Mineral: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="mineral" class="form-control form-control-sm mineral" name="mineral_'.$i.'" required>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!-- cantidad -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="cantidad" class="col-form-label">Cantidad: <span style="color:red">*</span></label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <select class="form-select form-select-sm unidad_medida" aria-label="Small select example" name="unidad_medida_'.$i.'" id="unidad_medida">
+                                                        <option value="Toneladas">Toneladas</option>
+                                                        <option value="Metros cúbicos">Metros Cúbicos</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input type="number" step="0.01" id="cantidad" class="form-control form-control-sm cantidad" name="cantidad_facturada_'.$i.'" placeholder="Cantidad" >
+                                                </div> 
+                                            </div>
+                                        </div>                    
+                                    </div>
+                                    <div class="row px-3 d-flex align-items-center">
+                                        <!-- saldo anterior -->
+                                        <div class="col-sm-4">
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="saldo_anterior" class="col-form-label">Saldo anterior: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="number" step="0.01" id="saldo_anterior" class="form-control form-control-sm saldo_anterior" name="saldo_anterior_'.$i.'" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cantidad Despachada -->
+                                        <div class="col-sm-4">
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="cantidad_despachada" class="col-form-label">Cantidad Despachada: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="number" step="0.01" id="cantidad_despachada" class="form-control form-control-sm cantidad_despachada" name="cantidad_despachada_'.$i.'" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Saldo Restante -->
+                                        <div class="col-sm-4">
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="saldo_restante" class="col-form-label">Saldo Restante: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="number" step="0.01" id="saldo_restante" class="form-control form-control-sm saldo_restante" name="saldo_restante_'.$i.'" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos del Transporte</p>
+
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-sm-6 px-4">
+                                            <!-- modelo del vehiculo -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="modelo" class="col-form-label">Modelo Vehículo: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="modelo" class="form-control form-control-sm modelo" name="modelo_'.$i.'" placeholder="Ejemplo: Camion Plataforma Ford F-350">
+                                                </div>
+                                            </div>
+
+                                            <!-- Nombre del conductor  -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="nombre_conductor" class="col-form-label">Nombre Conductor: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="nombre_conductor" class="form-control form-control-sm nombre_conductor" name="nombre_conductor_'.$i.'" placeholder="Ejemplo: Juan Castillo">
+                                                </div>
+                                            </div>
+
+                                            <!-- telefono del conductor  -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="tlf_conductor" class="col-form-label">Teléfono Conductor: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="tlf_conductor" class="form-control form-control-sm tlf_conductor" name="tlf_conductor_'.$i.'" placeholder="Ejemplo: 04140000000">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 px-4">
+                                            <!-- placa -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="placa" class="col-form-label">Placa: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="placa" class="form-control form-control-sm placa" name="placa_'.$i.'" placeholder="Ejemplo: AB123CD">
+                                                </div>
+                                            </div>
+
+                                            <!-- ci conductor -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="ci_conductor" class="col-form-label">C.I.: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="ci_conductor" class="form-control form-control-sm ci_conductor" name="ci_conductor_'.$i.'" placeholder="Ejemplo: V0000000">
+                                                </div>
+                                            </div>
+
+                                            <!-- capacidad del vehiculo -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="capacidad_vehiculo" class="col-form-label">Capacidad del Vehículo: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="capacidad_vehiculo" class="form-control form-control-sm capacidad_vehiculo" name="capacidad_vehiculo_'.$i.'" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-center fw-bold py-2" style="font-size: 16px;color: #959595;">Datos de Circulación</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-3 px-4">
+                                            <!-- hora de Salida -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-4">
+                                                    <label for="hora_salida" class="col-form-label">Hora de Salida: </label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="text" id="hora_salida" class="form-control form-control-sm hora_salida" name="hora_salida_'.$i.'" placeholder="Ejemplo: 5:30 AM">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 px-4">
+                                            <!-- anulada -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-5">
+                                                    <label for="" class="col-form-label">¿Anulada?: </label>
+                                                </div>
+                                                <div class="col-7">
+                                                    <div class="form-check form-check-inline ">
+                                                        <input class="form-check-input anulada" type="radio" name="anulada_'.$i.'" id="anulado_si" value="Si">
+                                                        <label class="form-check-label" for="anulado_si">
+                                                            Si
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input anulada" type="radio" name="anulada_'.$i.'" id="anulado_no" value="No" >
+                                                        <label class="form-check-label" for="anulado_no">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 px-4">
+                                            <!-- motivo de anulacion -->
+                                            <div class="row g-3 align-items-center mb-2">
+                                                <div class="col-sm-4">
+                                                    <label for="motivo_anulada" class="col-form-label">Motivo de la Anulación: </label>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <input type="text" id="motivo_anulada" class="form-control form-control-sm motivo_anulada" name="motivo_'.$i.'" placeholder="Elemplo: Por tachaduras" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-muted text-end me-4"><span style="color:red">*</span> Campos requeridos.</p>
+                                </div>';
                     
                 }
+
+                $html = '<div class="modal-header fs-5 text-navy fw-bold d-flex justify-content-between align-items-center px-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bx bxs-collection me-2 text-muted fs-3"></i>
+                                <span>Detalles de la Asignación</span>
+                            </div>
+                            <button type="button" class="btn-close fs-6" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body px-4" style="font-size:12.7px;">
+                            <form id="form_registrar_guia" class="" method="post" onsubmit="event.preventDefault(); registrarGuia()">
+                                <p class="text-center" style="font-size:14px;">
+                                    <span class="fw-bold">
+                                        <i class="bx bx-error-circle me-2"></i> 
+                                        IMPORTANTE:
+                                    </span> Para culminar la Asignacion de las Guías de Reserva deberá llenar los datos mínimos requeridos de las guías a asignar.
+                                </p>
+                                <!-- TABS GUIAS ASIGNADAS -->
+                                <ul class="nav nav-pills d-flex justify-content-center scrollspy-example" data-bs-spy="scroll" data-bs-smooth-scroll="true" id="myTab" role="tablist" style="font-size:14px;">
+                                    '.$li.'
+                                </ul>
+                                <!-- CONTENT TABS: GUIAS ASIGNADAS -->
+                                <div class="tab-content border rounded px-2 py-3 my-3 mt-4" id="myTabContent">
+                                    '.$tab_pane.'
+                                </div>
+                            </form>
+                        </div>';
+
+                return response()->json(['success' => true, 'html' => $html]);
             }
         }else{
             return response()->json(['success' => false]);

@@ -512,9 +512,9 @@ class RegistroGuiaController extends Controller
             foreach ($conteo as $c){
                 if ($c->total == 0){
                     ///////EL USUARIO TODAVIA NO HA REGISTRADO NINGUNA GUÍA DE ESTA CANTERA
-                    $talonario = DB::table('detalle_talonarios')
-                                    ->join('talonarios', 'detalle_talonarios.id_talonario', '=', 'talonarios.id_talonario')
-                                    ->select('detalle_talonarios.*','talonarios.fecha_retiro')
+                    $talonario = DB::table('detalle_talonario_regulares')
+                                    ->join('talonarios', 'detalle_talonario_regulares.id_talonario', '=', 'talonarios.id_talonario')
+                                    ->select('detalle_talonario_regulares.*','talonarios.fecha_retiro')
                                     ->where('id_cantera','=',$idCantera)->first(); 
                     
                     if ($talonario) {
@@ -540,7 +540,7 @@ class RegistroGuiaController extends Controller
                         $ultimo_id_talonario = $consulta->id_talonario;
                         
                         ////////////comprobar si el ultimo numero de guia registrado es la ultima guia del talonario
-                        $comprobar = DB::table('detalle_talonarios')->where('id_talonario','=',$ultimo_id_talonario)->first();
+                        $comprobar = DB::table('detalle_talonario_regulares')->where('id_talonario','=',$ultimo_id_talonario)->first();
                         if ($comprobar) {
                             if ($ultimo_nro_guia < $comprobar->hasta){
                                 //////////////TODAVIA QUEDAN GUIAS EN EL TALONARIO
@@ -558,7 +558,7 @@ class RegistroGuiaController extends Controller
                             }else{
                                 //////////////YA NO QUEDAN GUIAS EN EL TALONARIO
                                 ////////////buscar el siguiente talonario correspondiente al sujeto pasivo
-                                $buscar = DB::table('detalle_talonarios')->where([
+                                $buscar = DB::table('detalle_talonario_regulares')->where([
                                                                         ['id_talonario','>',$ultimo_id_talonario],
                                                                         ['id_cantera','=',$idCantera]
                                                                     ])->orderBy('correlativo','asc')->first();

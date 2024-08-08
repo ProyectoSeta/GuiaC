@@ -666,49 +666,36 @@ class EstadoController extends Controller
         $ids_talonarios = '';
         $hoy = date('Y-m-d');
 
-        $consulta = DB::table('talonarios')->select('id_solicitud')->where('id_talonario', '=', $talonario)->first();
-        $idSolicitud = $consulta->id_solicitud;
+        $idSolicitud = '';
 
         foreach ($talonarios as $talonario) {
             if ($talonario != '') {
+                $consulta = DB::table('talonarios')->select('id_solicitud')->where('id_talonario', '=', $talonario)->first();
+                $idSolicitud = $consulta->id_solicitud;
                 // echo($talonario);
                 $update = DB::table('talonarios')->where('id_talonario', '=', $talonario)->update(['estado' => 23, 'fecha_retiro' => $hoy]);
                 if ($update) {
                     $ids_talonarios .= $talonario.'-';
 
-
-                    $solicitud = DB::table('talonarios')->select('id_solicitud')->where('id_talonario','=',$talonario)->first();
-                    $id_solicitud = $solicitud->id_solicitud;
-
-                    $consulta_solicitud = DB::table('detalle_solicituds')->select('cantidad')->where('id_solicitud','=',$id_solicitud)->first();
-                    $cantidad_solicitada = $consulta_solicitud->cantidad;
-
-                    $consulta_talonarios = DB::table('talonarios')->selectRaw("count(*) as total")->where('estado','=',22)->where('id_solicitud','=',$id_solicitud)->first();
-                    $talonarios_recibidos = $consulta_talonarios->total;
-
-                    if ($talonarios_recibidos >= $cantidad_solicitada) {
-                        $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $id_solicitud)->update(['estado' => 18]);
-                    }
-                    
-
-                    // $comp = true;
-                    // $comprobar = DB::table('talonarios')->select('estado')->where('id_solicitud', '=', $idSolicitud)->get();
-                    // foreach ($comprobar as $c) {
-                    //     if ($c->estado != 23) {
-                    //         $comp = false;
-                    //     }
-                    // }
-                    // if ($comp ==  true) {
-                    //     $update_sol = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 19]);
-                    // }
                 }else{
                     return response()->json(['success' => false]);
                 }
             }else{
 
             }
-           
         } 
+
+
+        $consulta_solicitud = DB::table('detalle_solicituds')->select('cantidad')->where('id_solicitud','=',$idSolicitud)->first();
+        $cantidad_solicitada = $consulta_solicitud->cantidad;
+
+        $consulta_talonarios = DB::table('talonarios')->selectRaw("count(*) as total")->where('estado','=',23)->where('id_solicitud','=',$idSolicitud)->first();
+        $talonarios_entregados = $consulta_talonarios->total;
+
+        if ($talonarios_entregados >= $cantidad_solicitada) {
+            $update_solicitud = DB::table('solicituds')->where('id_solicitud', '=', $idSolicitud)->update(['estado' => 19]);
+        }
+
         $user = auth()->id();
         $accion = 'ACTUALIZACION DE ESTADO (ENTREGADO), ID TALONARIOS: '.$ids_talonarios;
         $bitacora = DB::table('bitacoras')->insert(['id_user' => $user, 'modulo' => 8, 'accion'=> $accion]);

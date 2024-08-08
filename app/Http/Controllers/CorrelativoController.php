@@ -19,12 +19,12 @@ class CorrelativoController extends Controller
 
         foreach ($query as $q) {
             
-                $detalle = DB::table('detalle_talonarios')
-                        ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
-                        ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                        ->join('clasificacions', 'detalle_talonarios.asignacion_talonario', '=', 'clasificacions.id_clasificacion')
-                        ->select('detalle_talonarios.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'clasificacions.nombre_clf')
-                        ->where('detalle_talonarios.id_talonario','=',$q->id_talonario)
+                $detalle = DB::table('detalle_talonario_regulares')
+                        ->join('sujeto_pasivos', 'detalle_talonario_regulares.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                        ->join('canteras', 'detalle_talonario_regulares.id_cantera', '=', 'canteras.id_cantera')
+                        ->join('clasificacions', 'detalle_talonario_regulares.asignacion_talonario', '=', 'clasificacions.id_clasificacion')
+                        ->select('detalle_talonario_regulares.*', 'sujeto_pasivos.razon_social', 'sujeto_pasivos.rif_condicion', 'sujeto_pasivos.rif_nro', 'canteras.nombre', 'clasificacions.nombre_clf')
+                        ->where('detalle_talonario_regulares.id_talonario','=',$q->id_talonario)
                         ->first();
 
                 $desde = $q->desde;
@@ -96,11 +96,11 @@ class CorrelativoController extends Controller
         if ($talonarios) {
             $tr = '';
             foreach ($talonarios as $talonario) {
-                $detalle = DB::table('detalle_talonarios')
-                                            ->join('canteras', 'detalle_talonarios.id_cantera', '=', 'canteras.id_cantera')
-                                            ->join('sujeto_pasivos', 'detalle_talonarios.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
+                $detalle = DB::table('detalle_talonario_regulares')
+                                            ->join('canteras', 'detalle_talonario_regulares.id_cantera', '=', 'canteras.id_cantera')
+                                            ->join('sujeto_pasivos', 'detalle_talonario_regulares.id_sujeto', '=', 'sujeto_pasivos.id_sujeto')
                                             ->select('canteras.nombre', 'sujeto_pasivos.razon_social')
-                                            ->where('detalle_talonarios.id_talonario','=', $idTalonario)->first();
+                                            ->where('detalle_talonario_regulares.id_talonario','=', $idTalonario)->first();
                 $desde = $talonario->desde;
                 $hasta = $talonario->hasta;
                 $count_reportada = 0; 
